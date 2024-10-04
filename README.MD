@@ -1,4 +1,4 @@
-# Wirtshaus Project
+ # Wirtshaus Project
 
 Welcome to the Wirtshaus Project! This README provides an overview of the project, setup instructions, and other essential information.
 
