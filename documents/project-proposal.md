@@ -37,5 +37,5 @@ Then the employees answer if they have time to work or not. This is very confusi
 
 ## Opportunities and risks
 
-* huge companies wich often have temporyry employees use our application.
-* the companies dont like our application
+* huge companies which often have temporary employees use our application.
+* git merge conflicts
