@@ -19,4 +19,23 @@ Then the employees answer if they have time to work or not. This is very confusi
 
 ## Project Objectives
 
-* Application where the manager can 
+ Application where the manager can:
+* create a new company
+* invite employees to his company
+* add new employees
+* manage and edit his employees
+* give his employees specific fields of activity
+* notify them if they are able to work (invite them to an appointment)
+* view his employees in an organized way
+* create new appointments for his employees
+
+  And the employees can:
+* join a company
+* be notified when the manager invites him to an appointment
+* view all his future (and previous) appointments
+* sign up for an appointment or decline an invitation
+
+## Opportunities and risks
+
+* huge companies wich often have temporyry employees use our application.
+* the companies dont like our application
