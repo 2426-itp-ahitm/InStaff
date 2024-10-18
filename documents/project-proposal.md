@@ -35,7 +35,16 @@ Then the employees answer if they have time to work or not. This is very confusi
 * view all his future (and previous) appointments
 * sign up for an appointment or decline an invitation
 
+## Toolstack
+
+* Frontend:
+  + Webpack
+  + HTML, CSS, JS
+* Backend
+  + Quarkus Server
+  + Java
+
 ## Opportunities and risks
 
-* huge companies wich often have temporyry employees use our application.
-* the companies dont like our application
+* huge companies which often have temporary employees use our application.
+* git merge conflicts
