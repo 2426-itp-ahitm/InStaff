@@ -17,6 +17,7 @@
 At the moment asks a manager from a company his employees via WhatsApp, Facebook or Instagram if they can work on a specific day. 
 Then the employees answer if they have time to work or not. This is very confusing and cumbersome for the manager and his employees.
 
+
 ## Project Objectives
 
  Application where the manager can:
@@ -35,7 +36,16 @@ Then the employees answer if they have time to work or not. This is very confusi
 * view all his future (and previous) appointments
 * sign up for an appointment or decline an invitation
 
+## Toolstack
+
+* Frontend:
+  + Webpack
+  + HTML, CSS, JS
+* Backend
+  + Quarkus Server
+  + Java
+
 ## Opportunities and risks
 
-* huge companies wich often have temporyry employees use our application.
-* the companies dont like our application
+* huge companies which often have temporary employees use our application.
+* git merge conflicts
