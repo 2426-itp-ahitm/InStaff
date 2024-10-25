@@ -1,0 +1,9 @@
+{
+    "employees": [
+      { "id": "1", "first_name": "Alexander", "last_name": "Hahn", "birth_date": "03.07.2007" },
+      { "id": "2", "first_name": "Bernhard", "last_name": "Penkner", "birth_date": "01.01.1990" }
+    ],
+    "profile": {
+      "name": "typicode"
+    }
+  }
