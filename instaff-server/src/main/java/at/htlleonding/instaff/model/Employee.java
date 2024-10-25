@@ -9,4 +9,42 @@ public class Employee {
     private String employeeBirthdate;
     private String employeeSalary;
     private Company company;
+
+    public Employee(int employeeId, String employeeName, String employeePassword) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.employeePassword = employeePassword;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public String getEmployeeEmail() {
+        return employeeEmail;
+    }
+
+    public String getEmployeePassword() {
+        return employeePassword;
+    }
+
+    public String getEmployeePhoneNumber() {
+        return employeePhoneNumber;
+    }
+
+    public String getEmployeeBirthdate() {
+        return employeeBirthdate;
+    }
+
+    public String getEmployeeSalary() {
+        return employeeSalary;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
 }
