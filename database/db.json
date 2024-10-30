@@ -1,9 +1,125 @@
 {
-    "employees": [
-      { "id": "1", "first_name": "Alexander", "last_name": "Hahn", "birth_date": "03.07.2007" },
-      { "id": "2", "first_name": "Bernhard", "last_name": "Penkner", "birth_date": "01.01.1990" }
-    ],
-    "profile": {
-      "name": "typicode"
+  "employees": [
+    {
+      "id": "1",
+      "firstname": "Alexander",
+      "lastname": "Hahn",
+      "email": "alexander.hahn@example.com",
+      "telefon": "+491234567800",
+      "password": "password",
+      "birthdate": "03.07.2007",
+      "company_id": 1
+    },
+    {
+      "id": "2",
+      "firstname": "Bernhard",
+      "lastname": "Penkner",
+      "email": "bernhard.penkner@example.com",
+      "telefon": "+491234567801",
+      "password": "password",
+      "birthdate": "01.01.1990",
+      "company_id": 2
+    },
+    {
+      "id": "3",
+      "firstname": "Clara",
+      "lastname": "Müller",
+      "email": "clara.mueller@example.com",
+      "telefon": "+491234567802",
+      "password": "password",
+      "birthdate": "15.05.1985",
+      "company_id": 1
+    },
+    {
+      "id": "4",
+      "firstname": "David",
+      "lastname": "Schmidt",
+      "email": "david.schmidt@example.com",
+      "telefon": "+491234567803",
+      "password": "password",
+      "birthdate": "22.08.1995",
+      "company_id": 2
+    },
+    {
+      "id": "5",
+      "firstname": "Eva",
+      "lastname": "Klein",
+      "email": "eva.klein@example.com",
+      "telefon": "+491234567804",
+      "password": "password",
+      "birthdate": "30.11.1992",
+      "company_id": 1
+    },
+    {
+      "id": "6",
+      "firstname": "Felix",
+      "lastname": "Fischer",
+      "email": "felix.fischer@example.com",
+      "telefon": "+491234567805",
+      "password": "password",
+      "birthdate": "17.12.1988",
+      "company_id": 2
+    },
+    {
+      "id": "7",
+      "firstname": "Greta",
+      "lastname": "Weber",
+      "email": "greta.weber@example.com",
+      "telefon": "+491234567806",
+      "password": "password",
+      "birthdate": "09.04.1975",
+      "company_id": 3
+    },
+    {
+      "id": "8",
+      "firstname": "Hannah",
+      "lastname": "Richter",
+      "email": "hannah.richter@example.com",
+      "telefon": "+491234567807",
+      "password": "password",
+      "birthdate": "11.02.1993",
+      "company_id": 1
+    },
+    {
+      "id": "9",
+      "firstname": "Jan",
+      "lastname": "Kramer",
+      "email": "jan.kramer@example.com",
+      "telefon": "+491234567808",
+      "password": "password",
+      "birthdate": "23.06.1990",
+      "company_id": 3
+    },
+    {
+      "id": "10",
+      "firstname": "Lena",
+      "lastname": "Schneider",
+      "email": "lena.schneider@example.com",
+      "telefon": "+491234567809",
+      "password": "password",
+      "birthdate": "04.09.1991",
+      "company_id": 2
     }
+  ],
+  "fields-of-activity": [
+    {
+      "id": "1",
+      "name": "Abwasch"
+    },
+    {
+      "id": "2",
+      "name": "Koch"
+    },
+    {
+      "id": "3",
+      "name": "Service"
+    },
+    {
+      "id": "4",
+      "name": "Küchenhilfe"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
   }
+}

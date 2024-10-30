@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "my-webpack-project",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,15 +10,17 @@
     "watch": "webpack --watch",
     "start": "webpack serve"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "My webpack project",
   "devDependencies": {
     "@webpack-cli/generators": "^3.0.7",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.1",
     "prettier": "^3.3.3",
+    "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.2",

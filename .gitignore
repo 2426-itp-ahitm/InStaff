@@ -1,2 +1,5 @@
 .DS_Store
 /database/node_modules
+/web/node_modules
+/web/package-lock.json
+/web/target

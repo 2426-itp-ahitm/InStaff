@@ -18,15 +18,18 @@ const tableTemplate = (employees: Employee[]) => {
       <table>
          <thead>
             <tr>
-            <td>ID</td>
-               <td>Vorname</td>
-               <td>Nachname</td>
+               <td>ID</td>
+               <td>Firstname</td>
+               <td>Lastname</td>
                <td>E-mail</td>
                <td>Tel</td>
-               <td>Geburtsdatum</td>
-               <td>Firmen ID</td>
+               <td>Birthdate</td>
+               <td>Company ID</td>
             </tr>
          </thead>
+         <tbody>
+            ${rows}
+         </tbody>
       </table>
    `
 }
@@ -36,4 +39,4 @@ class EmployeeListComponent extends HTMLElement {
       render(tableTemplate(employees), this)
    }
 }
-customElements.define("employee-list", EmployeeListComponent)
+customElements.define("employee-list-component", EmployeeListComponent)
