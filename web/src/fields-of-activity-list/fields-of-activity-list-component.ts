@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
-import { FieldOfActivity } from "../models/fieldOfActivity" // Adjust the import as needed
-import { loadAllFieldsOfActivitiy } from "./fields-of-activity-list-service"
+import { FieldOfActivity } from "../models/fieldOfActivity"
+import { loadAllFieldsOfActivity } from "./fields-of-activity-list-service"
 
 const tableTemplate = (fieldsOfActivity: FieldOfActivity[]) => {
    const rows = fieldsOfActivity.map(field =>
@@ -31,4 +31,4 @@ class FieldOfActivityListComponent extends HTMLElement {
    }
 }
 
-customElements.define("field-of-activity-list-component", FieldOfActivityListComponent)
+customElements.define("fields-of-activity-list-component", FieldOfActivityListComponent)
