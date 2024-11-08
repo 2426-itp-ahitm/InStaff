@@ -1,6 +1,6 @@
 # How to run the project in the Sprint 2 state
 
-# database
+# jsonserver
 * npx json-server db.json
 
 

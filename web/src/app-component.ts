@@ -9,6 +9,8 @@ const content = html`
         <h2>Field of Activity List</h2>
         <activity-list-component></activity-list-component>
     </div>
+
+    
 `
 
 class AppComponent extends HTMLElement {
