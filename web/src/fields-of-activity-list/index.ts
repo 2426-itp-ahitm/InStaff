@@ -1,0 +1,1 @@
+import "./fields-of-activity-list-component"

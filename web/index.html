@@ -4,14 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="./js/script.js" defer></script>
+    <title>InStaff</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background-color: #333;
+            color: #fff;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        td {
+            color: #333;
+        }
+
+        thead tr td {
+            color: #fff;
+        }
+
+        table caption {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>INSTAFF</h1>
-
-
-
+    <h1>InStaff</h1>
+    <app-component></app-component>
 </body>
+
 </html>
