@@ -19,6 +19,9 @@ public class EmployeeResource {
     @GET
     public List<EmployeeDTO> all() {
         var employees = employeeRepository.listAll();
-        return employees.stream().map(employeeMapper::toResource).toList();
+        return employees
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
     }
 }
