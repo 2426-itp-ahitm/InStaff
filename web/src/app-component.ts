@@ -1,7 +1,6 @@
 import { html, render } from "lit-html"
 import "./employee-list"
 import "./activity-list"
-import "./test-component"
 
 const content = html`
     <div class="container">
@@ -13,7 +12,7 @@ const content = html`
         <test-component></test-component>
     </div>
 
-    
+
 `
 
 class AppComponent extends HTMLElement {

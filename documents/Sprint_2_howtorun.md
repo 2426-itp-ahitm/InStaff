@@ -7,3 +7,6 @@
 # web
 * npm install
 * npm start
+
+# after every .ts change
+* npm run build
