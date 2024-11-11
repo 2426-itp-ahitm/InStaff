@@ -5,8 +5,7 @@ import { loadAllRoles } from "./role-list-service"
 const tableTemplate = (Role: Role[]) => {
    const rows = Role.map(field =>
       html`<tr>
-            <td>${field.id}</td>
-            <td>${field.name}</td>
+            <td>${field.roleName}</td>
          </tr>`
    )
    return html`
@@ -14,7 +13,6 @@ const tableTemplate = (Role: Role[]) => {
       <table>
          <thead>
             <tr>
-               <td>ID</td>
                <td>Name</td>
             </tr>
          </thead>
