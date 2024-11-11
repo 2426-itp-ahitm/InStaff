@@ -1,6 +1,6 @@
 import { Employee } from "src/models/employee";
 
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = "/api"
 
 export async function loadAllEmployees(){   
    const response = await fetch(`${BASE_URL}/employees`)
