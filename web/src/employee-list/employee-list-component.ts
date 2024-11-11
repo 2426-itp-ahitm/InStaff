@@ -5,20 +5,19 @@ import { loadAllEmployees } from "./employee-list-service"
 const tableTemplate = (employees: Employee[]) => {
    const rows = employees.map(employee =>
       html`<tr>
-            <td>${employee.id}</td>
             <td>${employee.firstname}</td>
             <td>${employee.lastname}</td>
             <td>${employee.email}</td>
-            <td>${employee.telefon}</td>
+            <td>${employee.telephone}</td>
             <td>${employee.birthdate}</td>
-            <td>${employee.company_id}</td>
+            <td>${employee.companyid}</td>
          </tr>`
    )
    return html`
+   <h2>Employees</h2>
       <table>
          <thead>
             <tr>
-               <td>ID</td>
                <td>Firstname</td>
                <td>Lastname</td>
                <td>E-mail</td>
@@ -34,7 +33,7 @@ const tableTemplate = (employees: Employee[]) => {
    `
 }
 class EmployeeListComponent extends HTMLElement {
-   async connectedCallback(){
+   async connectedCallback() {
       const employees = await loadAllEmployees()
       render(tableTemplate(employees), this)
    }

@@ -1,4 +1,4 @@
-export interface Activity {
+export interface Role {
    id: number
    name: string
 }
