@@ -3,8 +3,10 @@ package at.htlleonding.instaff.features.employee;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
@@ -23,5 +25,16 @@ public class EmployeeResource {
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getEmployeeById(@PathParam("id") Long id) {
+        var employee = employeeRepository.findById(id);
+        if (employee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        EmployeeDTO employeeDTO = employeeMapper.toResource(employee);
+        return Response.ok(employeeDTO).build();
     }
 }

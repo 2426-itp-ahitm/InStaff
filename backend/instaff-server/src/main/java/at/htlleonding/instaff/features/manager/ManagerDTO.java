@@ -1,8 +1,8 @@
-package at.htlleonding.instaff.features.employee;
+package at.htlleonding.instaff.features.manager;
 
 import java.sql.Timestamp;
 
-public record EmployeeDTO(
+public record ManagerDTO(
         Long id,
         String firstname,
         String lastname,
@@ -10,6 +10,6 @@ public record EmployeeDTO(
         String telephone,
         String password,
         Timestamp birthdate,
-        Long companyid,
-        String companyName
-) { }
+        Long companyid
+) {
+}

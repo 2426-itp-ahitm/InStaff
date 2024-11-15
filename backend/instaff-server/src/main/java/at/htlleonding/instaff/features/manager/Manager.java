@@ -1,4 +1,4 @@
-package at.htlleonding.instaff.features.employee;
+package at.htlleonding.instaff.features.manager;
 
 import at.htlleonding.instaff.features.company.Company;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-public class Employee {
+public class Manager {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

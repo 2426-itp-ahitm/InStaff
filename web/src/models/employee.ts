@@ -3,8 +3,8 @@ export interface Employee {
    firstname: string
    lastname: string
    email?: string
-   telefon?: string
+   telephone?: string
    password: string
    birthdate: string
-   company_id: number
+   companyid: number
 }
