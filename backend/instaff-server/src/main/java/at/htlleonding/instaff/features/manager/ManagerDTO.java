@@ -10,6 +10,7 @@ public record ManagerDTO(
         String telephone,
         String password,
         Timestamp birthdate,
-        Long companyid
+        Long companyid,
+        String companyname
 ) {
 }

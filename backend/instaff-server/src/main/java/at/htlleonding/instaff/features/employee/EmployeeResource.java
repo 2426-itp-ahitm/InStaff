@@ -37,4 +37,21 @@ public class EmployeeResource {
         EmployeeDTO employeeDTO = employeeMapper.toResource(employee);
         return Response.ok(employeeDTO).build();
     }
+
+    @GET
+    @Path("/role/{role}")
+    public Response getEmployeeByRole(@PathParam("role") String role) {
+        var employees = employeeRepository.listAll();
+        if (employees == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        List<Employee> employeesWithRole;
+        for (int i = 0; i < employees.size(); i++) {
+
+        }
+        return (Response) employees
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
+    }
 }
