@@ -11,7 +11,7 @@ public record ManagerDTO(
         String telephone,
         String password,
         LocalDateTime birthdate,
-        Long companyid,
-        String companyname
+        Long company_id,
+        String company_name
 ) {
 }

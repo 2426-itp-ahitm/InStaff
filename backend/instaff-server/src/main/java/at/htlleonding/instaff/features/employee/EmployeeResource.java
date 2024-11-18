@@ -1,10 +1,8 @@
 package at.htlleonding.instaff.features.employee;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -13,6 +11,7 @@ import java.util.List;
 
 @Path("/employees")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeResource {
     @Inject
     EmployeeRepository employeeRepository;
@@ -75,5 +74,20 @@ public class EmployeeResource {
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
+    }
+
+    @POST
+    @Transactional
+    public Response createEmployee(EmployeeCreateDTO employeeCreateDTO) {
+        // Map DTO to entity
+        Employee employee = employeeMapper.fromCreateDTO(employeeCreateDTO);
+
+        // Persist the entity
+        employeeRepository.persist(employee);
+
+        // Return a response with the created entity
+        return Response.status(Response.Status.CREATED)
+                .entity(employeeMapper.toResource(employee))
+                .build();
     }
 }

@@ -1,13 +1,24 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.company.CompanyRepository;
+import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.role.RoleRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class EmployeeMapper {
+
+    @Inject
+    CompanyRepository companyRepository;
+    @Inject
+    RoleRepository roleRepository;
+
     public EmployeeDTO toResource(final Employee employee) {
         List<Long> roleIds = new ArrayList<>();
         if (employee.roles != null) {
@@ -26,4 +37,23 @@ public class EmployeeMapper {
                 employee.company.getId(), employee.company.getCompanyName(),
                 roleIds, shiftIds);
     }
+
+    public Employee fromCreateDTO(EmployeeCreateDTO dto) {
+        Employee employee = new Employee();
+        employee.firstname = dto.firstname();
+        employee.lastname = dto.lastname();
+        employee.email = dto.email();
+        employee.telephone = dto.telephone();
+        employee.password = dto.password();
+        employee.birthdate = dto.birthdate();
+
+        // Map company and roles (fetch them from the database)
+        employee.company = companyRepository.findById(dto.companyId());
+        employee.roles = dto.roleIds().stream()
+                .map(roleRepository::findById)
+                .collect(Collectors.toList());
+
+        return employee;
+    }
+
 }

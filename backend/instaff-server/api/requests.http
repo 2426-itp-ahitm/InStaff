@@ -1,2 +1,17 @@
 GET http://localhost:4200/api/employees
 Accept: application/json
+
+### Add a New Employee
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "john.doe@example.com",
+  "telephone": "+1234567890",
+  "password": "securePassword123",
+  "birthdate": "1990-01-01T00:00:00",
+  "companyId": 1,
+  "roleIds": [1, 2]
+}
