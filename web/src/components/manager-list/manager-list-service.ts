@@ -1,4 +1,4 @@
-import { Manager } from "src/models/manager";
+import { Manager } from "../../models/manager";
 
 const BASE_URL = "/api"
 

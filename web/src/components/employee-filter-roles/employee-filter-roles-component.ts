@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
-import { Employee } from "../models/employee"
-import { loadAllEmployees } from "./employee-list-service"
+import { Employee } from "../../models/employee"
+import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service"
 
 const tableTemplate = (employees: Employee[]) => {
    const rows = employees.map(employee =>
@@ -10,7 +10,7 @@ const tableTemplate = (employees: Employee[]) => {
             <td>${employee.email}</td>
             <td>${employee.telephone}</td>
             <td>${employee.birthdate}</td>
-            <td>${employee.companyid}</td>
+            <td>${employee.company_name}</td>
          </tr>`
    )
    return html`
@@ -23,7 +23,7 @@ const tableTemplate = (employees: Employee[]) => {
                <td>E-mail</td>
                <td>Tel</td>
                <td>Birthdate</td>
-               <td>Company ID</td>
+               <td>Company Name</td>
             </tr>
          </thead>
          <tbody>
@@ -32,10 +32,11 @@ const tableTemplate = (employees: Employee[]) => {
       </table>
    `
 }
-class EmployeeListComponent extends HTMLElement {
+
+class EmployeeFilterRolesComponent extends HTMLElement {
    async connectedCallback() {
-      const employees = await loadAllEmployees()
+      const employees = await loadEmployeesFilteredByRole()
       render(tableTemplate(employees), this)
    }
 }
-customElements.define("employee-list-component", EmployeeListComponent)
+customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)

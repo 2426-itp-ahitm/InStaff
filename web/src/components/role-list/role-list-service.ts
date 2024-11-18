@@ -1,4 +1,4 @@
-import { Role } from "src/models/role";
+import { Role } from "../../models/role";
 
 const BASE_URL = "/api"
 
