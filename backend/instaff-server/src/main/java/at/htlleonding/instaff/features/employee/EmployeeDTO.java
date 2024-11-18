@@ -11,5 +11,6 @@ public record EmployeeDTO(
         String password,
         Timestamp birthdate,
         Long companyid,
-        String companyName
+        String companyName,
+        String roles
 ) { }

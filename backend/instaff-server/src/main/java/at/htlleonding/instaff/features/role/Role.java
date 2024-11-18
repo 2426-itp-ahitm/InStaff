@@ -12,4 +12,16 @@ public class Role {
 
     @ManyToOne
     Company company;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
 }

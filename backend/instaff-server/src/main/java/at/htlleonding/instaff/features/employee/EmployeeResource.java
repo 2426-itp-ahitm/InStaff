@@ -8,6 +8,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("/employees")
@@ -36,5 +37,24 @@ public class EmployeeResource {
         }
         EmployeeDTO employeeDTO = employeeMapper.toResource(employee);
         return Response.ok(employeeDTO).build();
+    }
+
+    @GET
+    @Path("role/{role}")
+    public List<EmployeeDTO> getEmployeeByRole(@PathParam("role") Long role) {
+        var employees = employeeRepository.listAll();
+        if (employees == null) {
+            return null;
+        }
+        List<Employee> employeesWithRole = new LinkedList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.hasRoleWithId(role)) {
+                employeesWithRole.add(employee);
+            }
+        }
+        return employeesWithRole
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
     }
 }
