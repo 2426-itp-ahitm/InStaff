@@ -57,4 +57,23 @@ public class EmployeeResource {
                 .map(employeeMapper::toResource)
                 .toList();
     }
+
+    @GET
+    @Path("company/{company_id}")
+    public List<EmployeeDTO> getEmployeeByCompany(@PathParam("company_id") Long companyId) {
+        var employees = employeeRepository.listAll();
+        if (employees == null) {
+            return null;
+        }
+        List<Employee> employeesWithCompany = new LinkedList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.company.getId().equals(companyId)) {
+                employeesWithCompany.add(employee);
+            }
+        }
+        return employeesWithCompany
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
+    }
 }

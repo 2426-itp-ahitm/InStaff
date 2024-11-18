@@ -1,7 +1,9 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
 import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -22,6 +24,8 @@ public class Employee {
     Company company;
     @ManyToMany
     List<Role> roles;
+    @OneToMany(mappedBy = "employee")
+    List<EmployeeShift> employeeShifts;
 
     public boolean hasRoleWithId(Long id) {
         for (Role role : roles) {
@@ -30,5 +34,9 @@ public class Employee {
             }
         }
         return false;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

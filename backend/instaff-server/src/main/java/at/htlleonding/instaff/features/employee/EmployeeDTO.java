@@ -1,6 +1,9 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.shift.Shift;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 public record EmployeeDTO(
         Long id,
@@ -10,7 +13,8 @@ public record EmployeeDTO(
         String telephone,
         String password,
         Timestamp birthdate,
-        Long companyid,
-        String companyName,
-        String roles
+        Long company_id,
+        String company_name,
+        List<Long> roles,
+        List<Long> shifts
 ) { }
