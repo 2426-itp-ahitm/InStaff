@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { Manager } from "../models/manager"
+import { Manager } from "../../models/manager"
 import { loadAllManagers } from "./manager-list-service"
 
 const tableTemplate = (managers: Manager[]) => {

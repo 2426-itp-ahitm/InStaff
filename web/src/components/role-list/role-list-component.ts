@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { Role } from "../models/role"
+import { Role } from "../../models/role"
 import { loadAllRoles } from "./role-list-service"
 
 const tableTemplate = (Role: Role[]) => {

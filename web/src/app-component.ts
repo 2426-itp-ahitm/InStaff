@@ -1,23 +1,26 @@
-import { html, render } from "lit-html"
-import "./employee-list"
-import "./activity-list"
-import "./role-list"
-import "./manager-list"
+import { html, render } from "lit-html";
+import "./components/employee-list";
+import "./components/role-list";
+import "./components/manager-list";
 
-const content = html`
-    <div class="container">
-        <button onclick="document.getElementById('employee-list-component').style.display = 'inline'; document.getElementById('role-list-component').style.display = 'none';">Employee List</button>
-        <button onclick="document.getElementById('role-list-component').style.display = 'inline'; document.getElementById('employee-list-component').style.display = 'none';">Role List</button>
-        
-        <employee-list-component style="display: none" id="employee-list-component"></employee-list-component>
-        <role-list-component style="display: none" id="role-list-component"></role-list-component>
-        <manager-list-component style="display: inline" id="manager-list-component"></manager-list-component>
-    </div>
-`
+const routes: Record<string, any> = {
+    "": html`<h1>Welcome to the App!</h1>`,
+    "employee-list": html`<employee-list-component></employee-list-component>`,
+    "role-list": html`<role-list-component></role-list-component>`,
+    "manager-list": html`<manager-list-component></manager-list-component>`,
+};
 
 class AppComponent extends HTMLElement {
     connectedCallback() {
-        render(content, this)
+        this.updateView();
+        window.addEventListener("hashchange", () => this.updateView());
+    }
+
+    updateView() {
+        const path = location.hash.replace("#/", "") || "";
+        const content = routes[path] || html`<h1>404 - Page Not Found</h1>`;
+        render(content, this);
     }
 }
-customElements.define("app-component", AppComponent)
+
+customElements.define("app-component", AppComponent);

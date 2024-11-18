@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { Employee } from "../models/employee"
+import { Employee } from "../../models/employee"
 import { loadAllEmployees } from "./employee-list-service"
 
 const tableTemplate = (employees: Employee[]) => {
