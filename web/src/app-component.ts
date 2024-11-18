@@ -2,12 +2,14 @@ import { html, render } from "lit-html";
 import "./components/employee-list";
 import "./components/role-list";
 import "./components/manager-list";
+import "./components/employee-filter-roles";
 
 const routes: Record<string, any> = {
     "": html`<h1>Welcome to the App!</h1>`,
     "employee-list": html`<employee-list-component></employee-list-component>`,
     "role-list": html`<role-list-component></role-list-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
+    "employee-filter-roles": html`<employee-filter-roles-component></employee-filter-roles-component>`,
 };
 
 class AppComponent extends HTMLElement {

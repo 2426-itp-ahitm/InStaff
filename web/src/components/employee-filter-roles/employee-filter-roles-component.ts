@@ -33,10 +33,10 @@ const tableTemplate = (employees: Employee[]) => {
    `
 }
 
-class EmployeeListComponent extends HTMLElement {
+class EmployeeFilterRolesComponent extends HTMLElement {
    async connectedCallback() {
       const employees = await loadEmployeesFilteredByRole()
       render(tableTemplate(employees), this)
    }
 }
-customElements.define("employee-list-component", EmployeeListComponent)
+customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)

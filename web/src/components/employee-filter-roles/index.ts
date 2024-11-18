@@ -1,1 +1,1 @@
-import "./employee-filter-roles.ts";
+import "./employee-filter-roles-component";
