@@ -1,6 +1,6 @@
 import { html, render } from "lit-html"
 import { Employee } from "../../models/employee"
-import { loadAllEmployees } from "./employee-list-service"
+import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service"
 
 const tableTemplate = (employees: Employee[]) => {
    const rows = employees.map(employee =>
@@ -35,7 +35,7 @@ const tableTemplate = (employees: Employee[]) => {
 
 class EmployeeListComponent extends HTMLElement {
    async connectedCallback() {
-      const employees = await loadAllEmployees()
+      const employees = await loadEmployeesFilteredByRole()
       render(tableTemplate(employees), this)
    }
 }

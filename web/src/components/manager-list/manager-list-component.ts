@@ -10,7 +10,7 @@ const tableTemplate = (managers: Manager[]) => {
             <td>${manager.email}</td>
             <td>${manager.telephone}</td>
             <td>${manager.birthdate}</td>
-            <td>${manager.companyid}</td>
+            <td>${manager.company_name}</td>
          </tr>`
    )
    return html`
@@ -23,7 +23,7 @@ const tableTemplate = (managers: Manager[]) => {
                <td>E-mail</td>
                <td>Tel</td>
                <td>Birthdate</td>
-               <td>Company ID</td>
+               <td>Company Name</td>
             </tr>
          </thead>
          <tbody>

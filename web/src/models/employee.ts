@@ -6,5 +6,7 @@ export interface Employee {
    telephone: string
    password: string
    birthdate: string
-   companyid: number
+   company_id: number
+   company_name: string
+   role_id: number[]
 }

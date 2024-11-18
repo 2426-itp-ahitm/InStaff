@@ -6,6 +6,6 @@ export interface Manager {
    telephone: string;
    password: string;
    birthdate: string;
-   companyid: string;
-   companyname: string;
+   company_id: string;
+   company_name: string;
 }
