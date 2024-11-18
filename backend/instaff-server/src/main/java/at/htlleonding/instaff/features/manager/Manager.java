@@ -4,6 +4,7 @@ import at.htlleonding.instaff.features.company.Company;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class Manager {
@@ -15,7 +16,7 @@ public class Manager {
     String email;
     String telephone;
     String password;
-    Timestamp birthdate;
+    LocalDateTime birthdate;
     @ManyToOne
     Company company;
 }

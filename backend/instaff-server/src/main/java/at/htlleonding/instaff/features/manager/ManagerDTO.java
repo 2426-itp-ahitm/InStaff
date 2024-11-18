@@ -1,6 +1,7 @@
 package at.htlleonding.instaff.features.manager;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public record ManagerDTO(
         Long id,
@@ -9,7 +10,7 @@ public record ManagerDTO(
         String email,
         String telephone,
         String password,
-        Timestamp birthdate,
+        LocalDateTime birthdate,
         Long companyid,
         String companyname
 ) {

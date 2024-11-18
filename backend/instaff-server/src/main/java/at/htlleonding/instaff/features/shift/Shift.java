@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,8 @@ public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    Timestamp startTime;
-    Timestamp endTime;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
     @ManyToOne
     Company company;
     @OneToMany(mappedBy = "shift")

@@ -7,6 +7,7 @@ import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Employee {
     String email;
     String telephone;
     String password;
-    Timestamp birthdate;
+    LocalDateTime birthdate;
     @ManyToOne
     Company company;
     @ManyToMany
