@@ -16,6 +16,13 @@ public class EmployeeShift {
     @ManyToOne
     Shift shift;
 
+    public EmployeeShift() {}
+
+    public EmployeeShift(Employee employee, Shift shift) {
+        this.employee = employee;
+        this.shift = shift;
+    }
+
     public Long getId() {
         return id;
     }

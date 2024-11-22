@@ -1,8 +1,10 @@
 package at.htlleonding.instaff.features.shift;
 
 import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
+import at.htlleonding.instaff.features.EmployeeShift.EmployeeShiftRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
+import at.htlleonding.instaff.features.employee.EmployeeRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -19,6 +21,10 @@ public class ShiftResource {
     ShiftRepository shiftRepository;
     @Inject
     ShiftMapper shiftMapper;
+    @Inject
+    EmployeeShiftRepository employeeShiftRepository;
+    @Inject
+    EmployeeRepository employeeRepository;
 
     @GET
     public List<ShiftDTO> all() {
@@ -62,13 +68,15 @@ public class ShiftResource {
     @POST
     @Path("assign")
     @Transactional
-    public Response assignEmployee(Long shiftId, Long employeeId) {
-        Shift shift = shiftRepository.findById(shiftId);
-        if (shift == null) {
+    public Response assignEmployee(AssignRequest assignRequest) {
+        Shift shift = shiftRepository.findById(assignRequest.shiftId);
+        Employee employee = employeeRepository.findById(assignRequest.employeeId);
+        if (shift == null || employee == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
-
+            employeeShiftRepository.persist(new EmployeeShift(employee, shift));
         }
-        return null;
+        return Response.status(Response.Status.CREATED)
+                .build();
     }
 }

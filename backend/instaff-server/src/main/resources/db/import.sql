@@ -27,8 +27,6 @@ insert into employee_role (employee_id, roles_id)
 values (2, 2);
 
 insert into employeeshift (employee_id, shift_id)
-values (1, 1);
-insert into employeeshift (employee_id, shift_id)
 values (1, 2);
 insert into employeeshift (employee_id, shift_id)
 values (2, 2);
