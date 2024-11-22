@@ -26,12 +26,8 @@ public class Employee {
     Company company;
     @ManyToMany
     List<Role> roles;
-    //@OneToMany(mappedBy = "employee")
-    //List<EmployeeShift> employeeShifts;
-    @ManyToMany
-    @JsonIgnoreProperties("employees")
-    @JoinColumn(name = "shift_id")
-    List<Shift> shifts;
+    @OneToMany(mappedBy = "employee")
+    List<EmployeeShift> employeeShifts;
 
     public boolean hasRoleWithId(Long id) {
         for (Role role : roles) {

@@ -20,12 +20,8 @@ public class Shift {
     LocalDateTime endTime;
     @ManyToOne
     Company company;
-    //@OneToMany(mappedBy = "shift")
-    //List<EmployeeShift> employeeShifts;
-    @ManyToMany
-    @JsonIgnoreProperties("shifts")
-    @JoinColumn(name = "employee_id")
-    List<Employee> employees;
+    @OneToMany(mappedBy = "shift")
+    List<EmployeeShift> employeeShifts;
     public Long getId() {
         return id;
     }
