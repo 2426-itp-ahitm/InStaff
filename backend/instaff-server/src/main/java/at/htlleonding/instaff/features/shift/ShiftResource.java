@@ -1,12 +1,11 @@
 package at.htlleonding.instaff.features.shift;
 
+import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -58,5 +57,18 @@ public class ShiftResource {
                 .stream()
                 .map(shiftMapper::toResource)
                 .toList();
+    }
+
+    @POST
+    @Path("assign")
+    @Transactional
+    public Response assignEmployee(Long shiftId, Long employeeId) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+
+        }
+        return null;
     }
 }

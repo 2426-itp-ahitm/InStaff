@@ -4,6 +4,7 @@ import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
 import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.shift.Shift;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -25,8 +26,12 @@ public class Employee {
     Company company;
     @ManyToMany
     List<Role> roles;
-    @OneToMany(mappedBy = "employee")
-    List<EmployeeShift> employeeShifts;
+    //@OneToMany(mappedBy = "employee")
+    //List<EmployeeShift> employeeShifts;
+    @ManyToMany
+    @JsonIgnoreProperties("employees")
+    @JoinColumn(name = "shift_id")
+    List<Shift> shifts;
 
     public boolean hasRoleWithId(Long id) {
         for (Role role : roles) {
