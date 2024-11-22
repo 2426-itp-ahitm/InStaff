@@ -49,8 +49,8 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                test: /\.css$/, // Match .css files
+                use: ['style-loader', 'css-loader'], // Apply loaders
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
