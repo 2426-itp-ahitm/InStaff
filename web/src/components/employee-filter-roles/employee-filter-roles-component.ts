@@ -2,7 +2,7 @@ import { html, render } from "lit-html"
 import { Employee } from "../../models/employee"
 import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service"
 
-const tableTemplate = (employees: Employee[]) => {
+const tableTemplate = (employees: Employee[], onInput: (value: string) => void, onSubmit: () => void) => {
    const rows = employees.map(employee =>
       html`<tr>
             <td>${employee.firstname}</td>
@@ -14,7 +14,15 @@ const tableTemplate = (employees: Employee[]) => {
          </tr>`
    )
    return html`
-   <h2>Employees</h2>
+      <h2>Filter employees after roles</h2>
+      <from @submit=${(e: Event) => e.preventDefault()}>
+         <label for="role_name">Role Name</label>
+         <input type="text" id="role_name" name="role_name" 
+            @input=${(e: Event) => onInput((e.target as HTMLInputElement).value)}
+         />
+         <button @click=${onSubmit}>Filter</button>
+      </form>
+
       <table>
          <thead>
             <tr>
@@ -34,9 +42,32 @@ const tableTemplate = (employees: Employee[]) => {
 }
 
 class EmployeeFilterRolesComponent extends HTMLElement {
+   inputValue: string = ""
+   employees: Employee[] = []
+
    async connectedCallback() {
-      const employees = await loadEmployeesFilteredByRole()
-      render(tableTemplate(employees), this)
+      this.renderComponent()   
    }
+   
+   renderComponent() {
+      render(
+         tableTemplate(
+            this.employees,
+            (value: string) => {
+               this.inputValue = value
+            },
+            this.handleFilter
+         ),
+         this
+      )
+   }
+
+   async handleFilter() {
+      if(this.inputValue.trim()) {
+         this.employees = await loadEmployeesFilteredByRole(this.inputValue)
+         this.renderComponent()
+      }
+   }
+
 }
 customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)
