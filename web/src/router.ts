@@ -4,6 +4,7 @@ const routes: Record<string, any> = {
    "employee-filter-roles": "<employee-filter-roles-component></employee-filter-roles-component>",
    "role-list": "<role-list-component></role-list-component>",
    "manager-list": "<manager-list-component></manager-list-component>",
+   "shift-list": "<shift-list-component></shift-list-component>",
 };
 
 export function navigate() {

@@ -4,6 +4,7 @@ import "./components/employee-list";
 import "./components/role-list";
 import "./components/manager-list";
 import "./components/employee-filter-roles";
+import "./components/shift-list";
 
 const routes: Record<string, any> = {
     "": html`<home-component></home-component>`,
@@ -11,6 +12,7 @@ const routes: Record<string, any> = {
     "role-list": html`<role-list-component></role-list-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
     "employee-filter-roles": html`<employee-filter-roles-component></employee-filter-roles-component>`,
+    "shift-list": html`<shift-list-component></shift-list-component>`,
 };
 
 class AppComponent extends HTMLElement {
