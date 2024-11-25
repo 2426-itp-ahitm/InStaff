@@ -14,7 +14,7 @@ public class ShiftMapper {
                 employeeIds.add(shift.employeeShifts.get(i).getEmployee().getId());
             }
         }
-        return new ShiftDTO(shift.id, shift.startTime, shift.endTime, shift.company.getId(),
+        return new ShiftDTO(shift.id, shift.startTime, shift.endTime, shift.company.getId(), shift.company.getCompanyName(),
                 employeeIds);
     }
 }
