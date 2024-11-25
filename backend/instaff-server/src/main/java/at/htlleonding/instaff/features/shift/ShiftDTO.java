@@ -9,6 +9,7 @@ public record ShiftDTO(
         LocalDateTime startTime,
         LocalDateTime endTime,
         Long company_id,
+        String company_name,
         List<Long> employees
 ) {
 }
