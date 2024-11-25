@@ -46,28 +46,27 @@ class EmployeeFilterRolesComponent extends HTMLElement {
    employees: Employee[] = []
 
    async connectedCallback() {
-      this.renderComponent()   
+      this.renderComponent();
    }
-   
+
    renderComponent() {
       render(
          tableTemplate(
             this.employees,
             (value: string) => {
-               this.inputValue = value
+               this.inputValue = value;
             },
-            this.handleFilter
+            this.handleFilter // No binding needed as arrow functions preserve context
          ),
          this
-      )
+      );
    }
 
-   async handleFilter() {
-      if(this.inputValue.trim()) {
-         this.employees = await loadEmployeesFilteredByRole(this.inputValue)
-         this.renderComponent()
+   handleFilter = async () => { // Arrow function ensures `this` is correct
+      if (true) {
+         this.employees = await loadEmployeesFilteredByRole(this.inputValue);
+         this.renderComponent();
       }
    }
-
 }
 customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)
