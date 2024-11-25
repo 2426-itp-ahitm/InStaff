@@ -6,43 +6,49 @@ const dashboardTemplate = () => {
          title: "Remove Shift",
          description: "Remove existing shifts",
          icon: "➖",
-         action: () => alert("Navigating to Remove Shift"),
+         link: "#/remove-shift",
+         class: "small",
       },
       {
          title: "Add Shift",
          description: "Add new shifts",
          icon: "➕",
-         action: () => alert("Navigating to Add Shift"),
+         link: "#/add-shift",
+         class: "small",
       },
       {
          title: "Edit Employees",
          description: "Edit employee details",
          icon: "👤",
-         action: () => alert("Navigating to Edit Employees"),
+         link: "#/edit-employees",
+         class: "small",
       },
       {
          title: "Employee List",
          description: "View all employees",
          icon: "👥",
-         action: () => alert("Navigating to Employee List"),
+         link: "#/employee-list",
+         class: "small",
       },
       {
          title: "Calendar",
          description: "Check schedules",
          icon: "📅",
-         action: () => alert("Navigating to Calendar"),
+         link: "#/calendar",
+         class: "wide",
       },
       {
          title: "Message Employees",
          description: "Communicate with employees",
          icon: "💬",
-         action: () => alert("Navigating to Message Employees"),
+         link: "#/message-employees",
+         class: "wide",
       },
    ];
 
    const cardTemplates = cards.map(
       (card) => html`
-         <div class="card" @click=${card.action}>
+      <a href="${card.link}" class="card">
             <div class="icon">${card.icon}</div>
             <h3>${card.title}</h3>
             <p>${card.description}</p>
