@@ -8,7 +8,7 @@ const tableTemplate = (shifts: Shift[]) => {
             <td>${shift.startTime}</td>
             <td>${shift.endTime}</td>
             <td>${shift.company_id}</td>
-            <td>${shift.employees}</td>
+            <td>${shift.employees.join(', ')}</td>
          </tr>`
    )
    return html`
