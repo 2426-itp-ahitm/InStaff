@@ -42,4 +42,13 @@ public class Employee {
     public Long getId() {
         return id;
     }
+
+    public boolean hasRoleWithName(String name) {
+        for (Role role : roles) {
+            if (role.getRoleName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

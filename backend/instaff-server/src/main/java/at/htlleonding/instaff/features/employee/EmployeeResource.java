@@ -58,6 +58,25 @@ public class EmployeeResource {
     }
 
     @GET
+    @Path("role/name/{role}")
+    public List<EmployeeDTO> getEmployeeByRoleName(@PathParam("role") String role) {
+        var employees = employeeRepository.listAll();
+        if (employees == null) {
+            return null;
+        }
+        List<Employee> employeesWithRole = new LinkedList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.hasRoleWithName(role)) {
+                employeesWithRole.add(employee);
+            }
+        }
+        return employeesWithRole
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
+    }
+
+    @GET
     @Path("name/{name}")
     public List<EmployeeDTO> getEmployeeByName(@PathParam("name") String name) {
         var employees = employeeRepository.listAll();
