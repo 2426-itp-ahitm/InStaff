@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Employee {
     String email;
     String telephone;
     String password;
-    LocalDateTime birthdate;
+    LocalDate birthdate;
     @ManyToOne
     Company company;
     @ManyToMany

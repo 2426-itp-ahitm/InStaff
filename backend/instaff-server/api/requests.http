@@ -6,13 +6,13 @@ POST http://localhost:8080/api/employees
 Content-Type: application/json
 
 {
-  "firstname": "John",
-  "lastname": "Doe",
+  "firstname": "Ben",
+  "lastname": "Dover",
   "email": "john.doe@example.com",
   "telephone": "+1234567890",
   "password": "securePassword123",
   "birthdate": "1990-01-01T00:00:00",
-  "companyId": 1,
+  "companyId": 2,
   "roleIds": [1, 2]
 }
 
@@ -23,3 +23,17 @@ Content-Type: application/json
 {
   "company_name": "Ben's Pizza"
 }
+
+### Assign an employee to a shift
+POST http://localhost:8080/api/shifts/assign
+Content-Type: application/json
+
+
+  {
+    "shiftId": 1,
+    "employeeId": 1
+  }
+
+### Get Employees with name
+GET http://localhost:8080/api/employees/name/John
+Accept: application/json
