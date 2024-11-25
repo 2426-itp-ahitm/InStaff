@@ -68,10 +68,13 @@ class EmployeeFilterRolesComponent extends HTMLElement {
       `
    }
    
-   onButtonClicked() {
+   async onButtonClicked() {
       const input = this.querySelector("input")
-      console.log("Button clicked", input?.value)
+      this.employees = await loadEmployeesFilteredByRole(input?.value)
+      this.connectedCallback()
 
    }
+
+   
 }
 customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)
