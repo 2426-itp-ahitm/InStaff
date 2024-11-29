@@ -16,9 +16,9 @@ insert into employee (birthdate, email, firstname, lastname, password, telephone
 values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', 'hunter34', '65626625', 1);
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-18 09:00:00', '2024-11-18 17:00:00', 1);
+values ('2024-11-11 09:00:00', '2024-11-18 17:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-11 09:00:00', '2024-11-11 17:00:00', 1);
+values ('2024-11-11 17:00:00', '2024-11-11 20:00:00', 1);
 
 /*ASSOTIATIVE*/
 insert into employee_role (employee_id, roles_id)

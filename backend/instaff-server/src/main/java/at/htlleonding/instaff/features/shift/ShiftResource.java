@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +45,26 @@ public class ShiftResource {
         }
         ShiftDTO shiftDTO = shiftMapper.toResource(shift);
         return Response.ok(shiftDTO).build();
+    }
+
+    @GET
+    @Path("date/{date}")
+    public List<ShiftDTO> getShiftsByDate(@PathParam("date") String dateString) {
+        LocalDate date = LocalDate.parse(dateString);
+        var shifts = shiftRepository.listAll();
+        if (shifts == null) {
+            return null;
+        }
+        List<Shift> shiftsWithDate = new LinkedList<Shift>();
+        for (Shift shift : shifts) {
+            if (shift.startTime.toLocalDate().equals(date)) {
+                shiftsWithDate.add(shift);
+            }
+        }
+        return shiftsWithDate
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
     }
 
     @GET
