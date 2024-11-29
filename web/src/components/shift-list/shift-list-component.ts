@@ -30,8 +30,11 @@ const tableTemplate = (shifts: Shift[]) => {
 }
 
 class ShiftListComponent extends HTMLElement {
+   inputValue: string = ""
+   shifts: Shift[] = []
+
    async connectedCallback() {
-      const shifts = await loadAllShifts()
+      const shifts = await loadAllShifts(0)
       render(tableTemplate(shifts), this)
    }
 }

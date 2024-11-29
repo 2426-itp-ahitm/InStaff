@@ -2,10 +2,6 @@ import { html, render } from "lit-html"
 import { Employee } from "../../models/employee"
 import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service"
 
-const tableTemplate = (employees: Employee[], onInput: (value: string) => void, onSubmit: () => void) => {
-   
-}
-
 class EmployeeFilterRolesComponent extends HTMLElement {
    inputValue: string = ""
    employees: Employee[] = []
@@ -72,7 +68,6 @@ class EmployeeFilterRolesComponent extends HTMLElement {
       const input = this.querySelector("input")
       this.employees = await loadEmployeesFilteredByRole(input?.value)
       this.connectedCallback()
-
    }
 
    
