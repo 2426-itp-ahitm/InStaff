@@ -13,7 +13,6 @@ export async function loadAllShifts(shiftId: number) {
       let employeeId = shifts[shiftId].employees[j]
       let employee = await fetch(`${BASE_URL}/employees/${employeeId}`).then(response => response.json())
       employeeNames.push(employee.firstname + " " + employee.lastname)
-      
    }
    for ( let shift of shifts) {
       shift.employees = employeeNames
