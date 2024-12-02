@@ -28,6 +28,16 @@ public class EmployeeResource {
     }
 
     @GET
+    @Path("role/name")
+    public List<EmployeeDTO> allRoles() {
+        var employees = employeeRepository.listAll();
+        return employees
+                .stream()
+                .map(employeeMapper::toResource)
+                .toList();
+    }
+
+    @GET
     @Path("{id}")
     public Response getEmployeeById(@PathParam("id") Long id) {
         var employee = employeeRepository.findById(id);
@@ -61,6 +71,12 @@ public class EmployeeResource {
     @Path("role/name/{role}")
     public List<EmployeeDTO> getEmployeeByRoleName(@PathParam("role") String role) {
         var employees = employeeRepository.listAll();
+        if (role.isEmpty()) {
+            return employees
+                    .stream()
+                    .map(employeeMapper::toResource)
+                    .toList();
+        }
         if (employees == null) {
             return null;
         }
