@@ -3,6 +3,7 @@ import { Shift } from "../../models/shift"
 import { loadAllShifts } from "./shift-list-service"
 
 const tableTemplate = (shifts: Shift[]) => {
+
    const rows = shifts.map(shift =>
       html`<tr>
             <td>${shift.startTime.substring(0,10)}</td>
@@ -11,7 +12,7 @@ const tableTemplate = (shifts: Shift[]) => {
             <td>${shift.endTime.substring(11, shift.endTime.length)}</td>
             <td>${shift.company_name}</td>
             <td>${shift.employees.join(', ')}</td>
-         </tr>`
+         </tr>`   
    )
    return html`
    <h2>Shifts</h2>
