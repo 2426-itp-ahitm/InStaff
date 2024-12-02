@@ -8,7 +8,7 @@ export async function loadAllShifts(shiftId: number) {
    const shifts: Shift[] = await response.json()
 
    let employeeNames = []
-<<<<<<< HEAD
+
    for (let i = 0; i < shifts.length; i++) {
       for (let j = 0; j < shifts[i].employees.length; j++) {
          let employeeId = shifts[i].employees[j]
@@ -18,13 +18,12 @@ export async function loadAllShifts(shiftId: number) {
          
       }
       employeeNames.push(" # ")
-=======
+
 
    for (let j = 0; j < shifts[shiftId].employees.length; j++) {
       let employeeId = shifts[shiftId].employees[j]
       let employee = await fetch(`${BASE_URL}/employees/${employeeId}`).then(response => response.json())
       employeeNames.push(employee.firstname + " " + employee.lastname)
->>>>>>> 41d5bd1f9cf807ae09c1a0343983a7ae4469c682
    }
    /*
    for ( let shift of shifts) {
