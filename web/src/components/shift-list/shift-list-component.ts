@@ -5,9 +5,11 @@ import { loadAllShifts } from "./shift-list-service"
 const tableTemplate = (shifts: Shift[]) => {
    const rows = shifts.map(shift =>
       html`<tr>
-            <td>${shift.startTime}</td>
-            <td>${shift.endTime}</td>
-            <td>${shift.company_id}</td>
+            <td>${shift.startTime.substring(0,10)}</td>
+            <td>${shift.startTime.substring(11, shift.startTime.length)}</td>
+            <td>${shift.endTime.substring(0, 10)}</td>
+            <td>${shift.endTime.substring(11, shift.endTime.length)}</td>
+            <td>${shift.company_name}</td>
             <td>${shift.employees.join(', ')}</td>
          </tr>`
    )
@@ -16,9 +18,11 @@ const tableTemplate = (shifts: Shift[]) => {
       <table>
          <thead>
             <tr>
+               <td>Start date</td>
                <td>Start time</td>
+               <td>End date</td>
                <td>End time</td>
-               <td>Company id</td>
+               <td>Company name</td>
                <td>Employees</td>
             </tr>
          </thead>
