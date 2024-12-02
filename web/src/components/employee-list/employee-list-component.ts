@@ -14,6 +14,56 @@ const tableTemplate = (employees: Employee[]) => {
          </tr>`
    )
    return html`
+   <style>
+body{
+    font-family: Arial, sans-serif;
+    padding: 0%;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #333;
+    color: #fff;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+th {
+    font-weight: bold;
+}
+
+td {
+    color: #333;
+}
+
+thead tr td {
+    color: #fff;
+}
+
+table caption {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+   </style>
    <h2>Employees</h2>
       <table>
          <thead>
@@ -34,9 +84,16 @@ const tableTemplate = (employees: Employee[]) => {
 }
 
 class EmployeeListComponent extends HTMLElement {
+   constructor() {
+      super()
+      this.attachShadow({ mode: "open" })
+   }
+
    async connectedCallback() {
       const employees = await loadAllEmployees()
-      render(tableTemplate(employees), this)
+      render(tableTemplate(employees), this.shadowRoot)
+      const head = this.shadowRoot.querySelector("head")
+      console.log("head is", head)
    }
 }
 customElements.define("employee-list-component", EmployeeListComponent)
