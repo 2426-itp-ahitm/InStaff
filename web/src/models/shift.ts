@@ -5,5 +5,6 @@ export interface Shift {
    startTime: String,
    endTime: String,
    company_id: number,
+   company_name: String,
    employees: Employee[]
 }

@@ -9,7 +9,7 @@ const tableTemplate = (managers: Manager[]) => {
             <td>${manager.lastname}</td>
             <td>${manager.email}</td>
             <td>${manager.telephone}</td>
-            <td>${manager.birthdate}</td>
+            <td>${manager.birthdate.substring(0,10)}</td>
             <td>${manager.company_name}</td>
          </tr>`
    )
