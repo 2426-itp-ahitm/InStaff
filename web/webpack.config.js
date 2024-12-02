@@ -9,17 +9,27 @@ const isProduction = process.env.NODE_ENV == 'production';
 
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-
-
 const config = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'target'),
     },
+    devtool: "cheap-source-map",
     devServer: {
         open: true,
         host: 'localhost',
-        port: 4200
+        port: 4200,
+        proxy: [
+            {
+                context: ["/api"],
+                target: "http://localhost:8080",
+                changeOrigin: true,
+                logLevel: 'debug',
+                secure: false,
+                ws: true,
+                historyApiFallback: true 
+            }
+        ]  
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -39,8 +49,8 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                test: /\.css$/, // Match .css files
+                use: ['style-loader', 'css-loader'], // Apply loaders
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
@@ -50,7 +60,7 @@ const config = {
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
         ],
-    },
+    },  
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
     },
