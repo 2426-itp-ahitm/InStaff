@@ -19,7 +19,8 @@ export async function loadAllShifts(shiftId: number) {
       }
       employeeNames.push(" # ")
 
-
+   }
+   
    for (let j = 0; j < shifts[shiftId].employees.length; j++) {
       let employeeId = shifts[shiftId].employees[j]
       let employee = await fetch(`${BASE_URL}/employees/${employeeId}`).then(response => response.json())
