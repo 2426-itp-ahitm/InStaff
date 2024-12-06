@@ -51,17 +51,12 @@ public class EmployeeResource {
     @GET
     @Path("role/{role}")
     public List<EmployeeDTO> getEmployeeByRole(@PathParam("role") Long role) {
-        var employees = employeeRepository.listAll();
+        var employees = employeeRepository.findByRoleId(role);
         if (employees == null) {
             return null;
         }
-        List<Employee> employeesWithRole = new LinkedList<Employee>();
-        for (Employee employee : employees) {
-            if (employee.hasRoleWithId(role)) {
-                employeesWithRole.add(employee);
-            }
-        }
-        return employeesWithRole
+
+        return employees
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
@@ -70,23 +65,12 @@ public class EmployeeResource {
     @GET
     @Path("role/name/{role}")
     public List<EmployeeDTO> getEmployeeByRoleName(@PathParam("role") String role) {
-        var employees = employeeRepository.listAll();
-        if (role.isEmpty()) {
-            return employees
-                    .stream()
-                    .map(employeeMapper::toResource)
-                    .toList();
-        }
+        var employees = employeeRepository.findByRoleName(role);
         if (employees == null) {
             return null;
         }
-        List<Employee> employeesWithRole = new LinkedList<Employee>();
-        for (Employee employee : employees) {
-            if (employee.hasRoleWithName(role)) {
-                employeesWithRole.add(employee);
-            }
-        }
-        return employeesWithRole
+
+        return employees
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();

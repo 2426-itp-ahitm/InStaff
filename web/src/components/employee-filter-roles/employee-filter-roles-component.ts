@@ -6,7 +6,21 @@ class EmployeeFilterRolesComponent extends HTMLElement {
    inputValue: string = ""
    employees: Employee[] = []
 
+   constructor() {
+      super()
+      this.attachShadow({ mode: "open" })
+   }
+
+
    async connectedCallback() {
+      const cssResponse = await fetch("../../../style.css")
+      const css = await cssResponse.text()
+
+      const styleElement = document.createElement("style")
+      styleElement.textContent = css
+
+      this.shadowRoot.appendChild(styleElement)
+      
       this.renderComponent();
    }
 
@@ -15,7 +29,7 @@ class EmployeeFilterRolesComponent extends HTMLElement {
          this.tableTemplate(
             this.employees
          ),
-         this
+         this.shadowRoot
       );
    }
 
@@ -24,6 +38,12 @@ class EmployeeFilterRolesComponent extends HTMLElement {
          this.employees = await loadEmployeesFilteredByRole(this.inputValue);
          this.renderComponent();
       }
+   }
+   
+   async onButtonClicked() {
+      const input = this.querySelector("input")
+      this.employees = await loadEmployeesFilteredByRole(input?.value)
+      this.connectedCallback()
    }
 
    tableTemplate(employees: Employee[]) {
@@ -37,6 +57,8 @@ class EmployeeFilterRolesComponent extends HTMLElement {
                <td>${employee.company_name}</td>
             </tr>`
       )
+
+
       //TODO: suche direkt nach eingabe debounce
       return html`
          <h2>Filter employees after roles</h2>
@@ -63,13 +85,5 @@ class EmployeeFilterRolesComponent extends HTMLElement {
          </table>
       `
    }
-   
-   async onButtonClicked() {
-      const input = this.querySelector("input")
-      this.employees = await loadEmployeesFilteredByRole(input?.value)
-      this.connectedCallback()
-   }
-
-   
 }
 customElements.define("employee-filter-roles-component", EmployeeFilterRolesComponent)

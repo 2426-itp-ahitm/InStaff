@@ -1,11 +1,9 @@
-// Generated using webpack-cli https://github.com/webpack/webpack-cli
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
-
 
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
@@ -13,6 +11,7 @@ const config = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'target'),
+        filename: '[name].js',  // Sicherstellen, dass die JS-Dateien korrekt benannt werden
     },
     devtool: "cheap-source-map",
     devServer: {
@@ -27,9 +26,9 @@ const config = {
                 logLevel: 'debug',
                 secure: false,
                 ws: true,
-                historyApiFallback: true 
+                historyApiFallback: true
             }
-        ]  
+        ]
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -37,9 +36,15 @@ const config = {
             hash: true,
             scriptLoading: "module"
         }),
-
         // Add your plugins here
-        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+        new MiniCssExtractPlugin({
+            filename: '[name].css',  // Die CSS-Datei richtig ausgeben
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "src/style.css", to: "style.css" }
+            ]
+        })
     ],
     module: {
         rules: [
@@ -49,18 +54,15 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.css$/, // Match .css files
-                use: ['style-loader', 'css-loader'], // Apply loaders
+                test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
+                use: [stylesHandler, 'css-loader'],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
         ],
-    },  
+    },
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
     },
@@ -69,10 +71,6 @@ const config = {
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        
-        config.plugins.push(new MiniCssExtractPlugin());
-        
-        
     } else {
         config.mode = 'development';
     }
