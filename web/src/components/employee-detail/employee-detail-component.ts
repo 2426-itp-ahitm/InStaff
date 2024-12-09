@@ -1,6 +1,7 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../models/employee";
 import { loadEmployeeDetails } from "./employee-detail-service";
+import { loadAllRoles } from "../role-list/role-list-service";
 
 class EmployeeDetailComponent extends HTMLElement {
    private _employeeId: string = "";
@@ -52,15 +53,24 @@ class EmployeeDetailComponent extends HTMLElement {
 
    detailTemplate(employee: Employee) {
       return html`
-      <p>${employee.firstname}</p>
-      <p>${employee.lastname}</p>
-      <p>${employee.email}</p>
-      <p>${employee.telephone}</p>
-      <p>${employee.birthdate}</p>
-      <p>${employee.company_name}</p>
-
+      
+      <h2>${employee.firstname} ${employee.lastname}</h2> 
+      <h3><i>${employee.company_name}</i></h3>
+      <p><b>Birthdate:</b> ${employee.birthdate}</p>
+      <p><b>Email:</b> ${employee.email}</p>
+      <p><b>Telephone:</b> ${employee.telephone}</p>
+      <p><b>Roles:</b> ${employee.roles.join(', ')}</p>
+      
       `;
    }
+
+   async loadRoles() {
+      const roles = await loadAllRoles();
+      return roles.reduce((acc, role) => {
+          acc[role.id] = role.roleName;
+          return acc;
+      }, {} as Record<number, string>);
+  }
 }
 
 customElements.define("employee-detail-component", EmployeeDetailComponent);

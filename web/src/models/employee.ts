@@ -8,5 +8,5 @@ export interface Employee {
    birthdate: string
    company_id: number
    company_name: string
-   role_id: number[]
+   roles: number[]
 }

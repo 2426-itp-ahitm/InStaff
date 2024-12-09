@@ -31,15 +31,8 @@ class EmployeeListComponent extends HTMLElement {
          html`<tr @click=${() => this.showEmployeeDetail(employee.id)}>
                <td>${employee.firstname}</td>
                <td>${employee.lastname}</td>
-               <td>${employee.email}</td>
-               <td>${employee.telephone}</td>
-               <td>${employee.birthdate}</td>
                <td>${employee.company_name}</td>
-            </tr>
-            
-               <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
-            
-            
+            </tr>            
             `
       )
       return html`
@@ -50,9 +43,6 @@ class EmployeeListComponent extends HTMLElement {
                <tr>
                   <td>Firstname</td>
                   <td>Lastname</td>
-                  <td>E-mail</td>
-                  <td>Tel</td>
-                  <td>Birthdate</td>
                   <td>Company Name</td>
                </tr>
             </thead>
@@ -60,11 +50,13 @@ class EmployeeListComponent extends HTMLElement {
                ${rows}
             </tbody>
          </table>
+         <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
+
 
       `
    }
    showEmployeeDetail(id: number) {
-      console.log("showEmployeeDetail", id)
+      
       this.activeEmployeeId = id
       this.reloadEmployeeDetail()
    }
