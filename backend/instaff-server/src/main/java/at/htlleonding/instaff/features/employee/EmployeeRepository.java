@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.role.Role;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -30,4 +31,31 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
 
         return query.getResultList();
     }
+
+    @Transactional
+    public void addRole(Long employeeId, Long roleId) {
+        // Find the Employee entity by ID
+        Employee employee = findById(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        // Find the Role entity by ID
+        Role role = entityManager.find(Role.class, roleId);
+        if (role == null) {
+            throw new IllegalArgumentException("Role with ID " + roleId + " does not exist.");
+        }
+
+        // Check if the role is already assigned to the employee
+        if (employee.getRoles().contains(role)) {
+            throw new IllegalStateException("Role with ID " + roleId + " is already assigned to Employee with ID " + employeeId);
+        }
+
+        // Add the role to the employee's roles collection
+        employee.getRoles().add(role);
+
+        // Persist the updated employee entity
+        persist(employee);
+    }
+
 }

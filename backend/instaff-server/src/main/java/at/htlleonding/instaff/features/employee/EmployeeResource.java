@@ -1,6 +1,8 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.role.Role;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -128,4 +130,13 @@ public class EmployeeResource {
                 .entity(employeeMapper.toResource(employee))
                 .build();
     }
+
+    @PUT
+    @Path("/{employeeId}/assignrole/{roleId}")
+    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
+        employeeRepository.addRole(employeeId, roleId);
+
+        return Response.ok("Role assigned successfully").build();
+    }
+
 }
