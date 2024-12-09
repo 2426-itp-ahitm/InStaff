@@ -6,6 +6,7 @@ const routes: Record<string, any> = {
    "role-list": "<role-list-component></role-list-component>",
    "manager-list": "<manager-list-component></manager-list-component>",
    "shift-list": "<shift-list-component></shift-list-component>",
+   "add-employee": "<add-employee-component></add-employee-component>",
 };
 
 export function navigate() {
