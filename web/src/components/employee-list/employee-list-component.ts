@@ -50,7 +50,7 @@ class EmployeeListComponent extends HTMLElement {
                ${rows}
             </tbody>
          </table>
-         <employee-detail-component employee-id=${this.activeEmployeeId}></employee-detail-component>
+         <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
       `
    }
    showEmployeeDetail(id: number) {
