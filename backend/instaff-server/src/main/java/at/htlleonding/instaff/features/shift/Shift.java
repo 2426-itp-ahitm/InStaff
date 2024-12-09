@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class Shift {
     Company company;
 
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Assignment> assignments;
+    private List<Assignment> assignments = new LinkedList<>();
 
     public List<Long> getEmployeeIds() {
         return assignments.stream()

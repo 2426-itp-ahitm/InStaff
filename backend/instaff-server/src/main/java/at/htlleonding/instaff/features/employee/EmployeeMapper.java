@@ -40,9 +40,7 @@ public class EmployeeMapper {
 
         // Map company and roles (fetch them from the database)
         employee.company = companyRepository.findById(dto.companyId());
-        employee.roles = dto.roleIds().stream()
-                .map(roleRepository::findById)
-                .collect(Collectors.toSet());
+
 
         return employee;
     }

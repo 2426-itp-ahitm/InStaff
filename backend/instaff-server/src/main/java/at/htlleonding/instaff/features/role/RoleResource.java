@@ -3,10 +3,8 @@ package at.htlleonding.instaff.features.role;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -15,6 +13,7 @@ import java.util.List;
 
 @Path("/roles")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class RoleResource {
     @Inject
     RoleRepository roleRepository;
@@ -58,5 +57,20 @@ public class RoleResource {
                 .stream()
                 .map(roleMapper::toResource)
                 .toList();
+    }
+
+    @POST
+    @Transactional
+    public Response createEmployee(RoleCreateDTO roleCreateDTO) {
+        // Map DTO to entity
+        Role role = roleMapper.fromCreateDTO(roleCreateDTO);
+
+        // Persist the entity
+        roleRepository.persist(role);
+
+        // Return a response with the created entity
+        return Response.status(Response.Status.CREATED)
+                .entity(roleMapper.toResource(role))
+                .build();
     }
 }

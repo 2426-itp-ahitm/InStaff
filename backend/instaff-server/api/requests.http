@@ -12,8 +12,26 @@ Content-Type: application/json
   "telephone": "+1234567890",
   "password": "securePassword123",
   "birthdate": "1990-01-01T00:00:00",
-  "companyId": 2,
-  "roleIds": [1, 2]
+  "companyId": 1
+}
+
+### Add a New Shift
+POST http://localhost:8080/api/shifts
+Content-Type: application/json
+
+{
+  "startTime": "2024-12-10T09:00:00",
+  "endTime": "2024-12-10T17:00:00",
+  "companyId": 1
+}
+
+### Add a New Role
+POST http://localhost:8080/api/roles
+Content-Type: application/json
+
+{
+  "roleName": "Putzfrau",
+  "companyId": 1
 }
 
 ### Add a New Company

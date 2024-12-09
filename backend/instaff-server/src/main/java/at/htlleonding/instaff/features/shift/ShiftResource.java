@@ -1,6 +1,7 @@
 package at.htlleonding.instaff.features.shift;
 
 import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import at.htlleonding.instaff.features.employee.EmployeeRepository;
 import jakarta.inject.Inject;
@@ -80,6 +81,21 @@ public class ShiftResource {
                 .stream()
                 .map(shiftMapper::toResource)
                 .toList();
+    }
+
+    @POST
+    @Transactional
+    public Response createShift(ShiftCreateDTO shiftCreateDTO) {
+        // Map DTO to entity
+        Shift shift = shiftMapper.fromCreateDTO(shiftCreateDTO);
+
+        // Persist the entity
+        shiftRepository.persist(shift);
+
+        // Return a response with the created entity
+        return Response.status(Response.Status.CREATED)
+                .entity(shiftMapper.toResource(shift))
+                .build();
     }
 
     /*@POST

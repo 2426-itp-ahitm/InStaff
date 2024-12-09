@@ -6,6 +6,8 @@ import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,10 +27,10 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id")
     )
-    Set<Employee> employees;
+    Set<Employee> employees = new HashSet<>();
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Assignment> assignments;
+    private List<Assignment> assignments = new LinkedList<>();
 
     public Long getId() {
         return id;

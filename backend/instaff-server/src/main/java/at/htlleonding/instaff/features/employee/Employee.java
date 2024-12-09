@@ -11,6 +11,8 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,10 +36,10 @@ public class Employee {
                     joinColumns = @JoinColumn(name = "employee_id"),
                     inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
             )
-    Set<Role> roles;
+    Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Assignment> assignments;
+    private List<Assignment> assignments = new LinkedList<>();
 
     public boolean hasRoleWithId(Long id) {
         for (Role role : roles) {
