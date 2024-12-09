@@ -2,7 +2,7 @@ version: "3.9"
 services:
   backend:
     build:
-      context: ./backend/instaff-server
+      context: ../backend/instaff-server
     ports:
       - "8080:8080"
     depends_on:
