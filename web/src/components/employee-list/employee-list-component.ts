@@ -51,11 +51,10 @@ class EmployeeListComponent extends HTMLElement {
             </tbody>
          </table>
          <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
-
-
       `
    }
    showEmployeeDetail(id: number) {
+      console.log("showEmployeeDetail", id);
       
       this.activeEmployeeId = id
       this.reloadEmployeeDetail()

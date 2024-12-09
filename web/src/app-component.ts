@@ -13,7 +13,7 @@ const routes: Record<string, any> = {
     "": html`<home-component></home-component>`,
     "employee-list": html`<employee-list-component></employee-list-component>`,
     "employee-filter-roles": html`<employee-filter-roles-component></employee-filter-roles-component>`,
-    "employee-detail": html`<employee-detail-component employee-id="2"></employee-detail-component>`,
+    "employee-detail": html`<employee-detail-component employee-id="1"></employee-detail-component>`,
     "role-list": html`<role-list-component></role-list-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
     "shift-list": html`<shift-list-component></shift-list-component>`,
