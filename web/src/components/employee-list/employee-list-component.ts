@@ -18,7 +18,6 @@ class EmployeeListComponent extends HTMLElement {
 
       this.shadowRoot.appendChild(styleElement)
 
-
       const employees = await loadAllEmployees()
       render(this.tableTemplate(employees), this.shadowRoot)
       const head = this.shadowRoot.querySelector("head")

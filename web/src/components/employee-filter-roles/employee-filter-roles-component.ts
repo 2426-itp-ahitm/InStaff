@@ -11,7 +11,6 @@ class EmployeeFilterRolesComponent extends HTMLElement {
       this.attachShadow({ mode: "open" })
    }
 
-
    async connectedCallback() {
       const cssResponse = await fetch("../../../style.css")
       const css = await cssResponse.text()
@@ -33,7 +32,7 @@ class EmployeeFilterRolesComponent extends HTMLElement {
       );
    }
 
-   handleFilter = async () => { // Arrow function ensures `this` is correct
+   handleFilter = async () => {
       if (true) {
          this.employees = await loadEmployeesFilteredByRole(this.inputValue);
          this.renderComponent();
@@ -60,6 +59,8 @@ class EmployeeFilterRolesComponent extends HTMLElement {
 
 
       //TODO: suche direkt nach eingabe debounce
+
+
       return html`
          <h2>Filter employees after roles</h2>
          

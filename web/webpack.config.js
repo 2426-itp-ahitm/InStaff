@@ -11,7 +11,7 @@ const config = {
     entry: './src/index.ts',
     output: {
         path: path.resolve(__dirname, 'target'),
-        filename: '[name].js',  // Sicherstellen, dass die JS-Dateien korrekt benannt werden
+        filename: '[name].js',
     },
     devtool: "cheap-source-map",
     devServer: {
