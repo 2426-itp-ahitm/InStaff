@@ -24,6 +24,8 @@ values ('2024-11-11 17:00:00', '2024-11-11 20:00:00', 1);
 insert into employee_role (employee_id, role_id)
 values (1, 1);
 insert into employee_role (employee_id, role_id)
+values (1, 2);
+insert into employee_role (employee_id, role_id)
 values (2, 2);
 
 insert into assignment (employee_id, shift_id, role_id)
