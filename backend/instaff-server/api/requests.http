@@ -11,7 +11,7 @@ Content-Type: application/json
   "email": "john.doe@example.com",
   "telephone": "+1234567890",
   "password": "securePassword123",
-  "birthdate": "1990-01-01T00:00:00",
+  "birthdate": "1990-01-01",
   "companyId": 1
 }
 
