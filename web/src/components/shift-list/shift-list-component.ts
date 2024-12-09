@@ -28,7 +28,7 @@ class ShiftListComponent extends HTMLElement {
    tableTemplate (shifts: Shift[]) {
 
       const rows = shifts.map(shift =>
-         html`<tr>
+         html`<tr value="${shift.id}">
                <td>${shift.startTime.substring(0,10)}</td>
                <td>${shift.startTime.substring(11, shift.startTime.length)}</td>
                <td>${shift.endTime.substring(0, 10)}</td>
