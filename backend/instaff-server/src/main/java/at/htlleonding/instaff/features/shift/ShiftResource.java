@@ -1,7 +1,5 @@
 package at.htlleonding.instaff.features.shift;
 
-import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
-import at.htlleonding.instaff.features.EmployeeShift.EmployeeShiftRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import at.htlleonding.instaff.features.employee.EmployeeRepository;
@@ -22,8 +20,6 @@ public class ShiftResource {
     ShiftRepository shiftRepository;
     @Inject
     ShiftMapper shiftMapper;
-    @Inject
-    EmployeeShiftRepository employeeShiftRepository;
     @Inject
     EmployeeRepository employeeRepository;
 
@@ -86,7 +82,7 @@ public class ShiftResource {
                 .toList();
     }
 
-    @POST
+    /*@POST
     @Path("assign")
     @Transactional
     public Response assignEmployee(AssignRequest assignRequest) {
@@ -99,5 +95,5 @@ public class ShiftResource {
         }
         return Response.status(Response.Status.CREATED)
                 .build();
-    }
+    }*/
 }

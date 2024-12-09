@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.employee;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.role.RoleRepository;
+import at.htlleonding.instaff.features.shift.ShiftMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -18,24 +19,14 @@ public class EmployeeMapper {
     CompanyRepository companyRepository;
     @Inject
     RoleRepository roleRepository;
+    @Inject
+    ShiftMapper shiftMapper;
 
     public EmployeeDTO toResource(final Employee employee) {
-        List<Long> roleIds = new ArrayList<>();
-        if (employee.roles != null) {
-            for (int i = 0; i < employee.roles.size(); i++) {
-                roleIds.add(employee.roles.get(i).getId());
-            }
-        }
-        List<Long> shiftIds = new ArrayList<>();
-        if (employee.employeeShifts != null) {
-            for (int i = 0; i < employee.employeeShifts.size(); i++) {
-                shiftIds.add(employee.employeeShifts.get(i).getShift().getId());
-            }
-        }
         return new EmployeeDTO(employee.id, employee.firstname, employee.lastname,
                 employee.email, employee.telephone, employee.password, employee.birthdate,
                 employee.company.getId(), employee.company.getCompanyName(),
-                roleIds, shiftIds);
+                employee.getRoleIds(), employee.getShiftIds());
     }
 
     public Employee fromCreateDTO(EmployeeCreateDTO dto) {
@@ -51,7 +42,7 @@ public class EmployeeMapper {
         employee.company = companyRepository.findById(dto.companyId());
         employee.roles = dto.roleIds().stream()
                 .map(roleRepository::findById)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return employee;
     }

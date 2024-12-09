@@ -1,20 +1,20 @@
 package at.htlleonding.instaff.features.shift;
 
+import at.htlleonding.instaff.features.employee.EmployeeMapper;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
 public class ShiftMapper {
+
+    @Inject
+    EmployeeMapper employeeMapper;
+
     public ShiftDTO toResource(final Shift shift) {
-        List<Long> employeeIds = new ArrayList<>();
-        if (shift.employeeShifts != null) {
-            for (int i = 0; i < shift.employeeShifts.size(); i++) {
-                employeeIds.add(shift.employeeShifts.get(i).getEmployee().getId());
-            }
-        }
         return new ShiftDTO(shift.id, shift.startTime, shift.endTime, shift.company.getId(), shift.company.getCompanyName(),
-                employeeIds);
+                shift.getEmployeeIds());
     }
 }
