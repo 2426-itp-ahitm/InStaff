@@ -6,10 +6,7 @@ import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Role {
@@ -48,5 +45,13 @@ public class Role {
 
     public Company getCompany() {
         return company;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void addEmployee(Employee e) {
+        employees.add(e);
     }
 }

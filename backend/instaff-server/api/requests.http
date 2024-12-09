@@ -11,7 +11,7 @@ Content-Type: application/json
   "email": "john.doe@example.com",
   "telephone": "+1234567890",
   "password": "securePassword123",
-  "birthdate": "1990-01-01T00:00:00",
+  "birthdate": "1990-01-01",
   "companyId": 1
 }
 
@@ -41,6 +41,15 @@ Content-Type: application/json
 {
   "company_name": "Ben's Pizza"
 }
+
+### Assign role 2 to employee 1
+PUT http://localhost:8080/api/employees/1/assignrole/2
+Content-Type: application/json
+
+### Assign Shift 3 to employee 1 with Role 1
+PUT http://localhost:8080/api/employees/1/assignshift/3/1
+Content-Type: application/json
+
 
 ### Assign an employee to a shift
 POST http://localhost:8080/api/shifts/assign

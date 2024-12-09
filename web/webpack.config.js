@@ -36,9 +36,8 @@ const config = {
             hash: true,
             scriptLoading: "module"
         }),
-        // Add your plugins here
         new MiniCssExtractPlugin({
-            filename: '[name].css',  // Die CSS-Datei richtig ausgeben
+            filename: '[name].css',
         }),
         new CopyPlugin({
             patterns: [

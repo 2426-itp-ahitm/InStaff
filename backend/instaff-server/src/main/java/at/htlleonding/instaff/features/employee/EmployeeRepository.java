@@ -1,5 +1,8 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.assignment.Assignment;
+import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,5 +32,73 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         query.setParameter(1, "%" + roleName + "%");
 
         return query.getResultList();
+    }
+
+    @Transactional
+    public void addRole(Long employeeId, Long roleId) {
+        // Find the Employee entity by ID
+        Employee employee = findById(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        // Find the Role entity by ID
+        Role role = entityManager.find(Role.class, roleId);
+        if (role == null) {
+            throw new IllegalArgumentException("Role with ID " + roleId + " does not exist.");
+        }
+
+        // Check if the role is already assigned to the employee
+        if (employee.getRoles().contains(role)) {
+            throw new IllegalStateException("Role with ID " + roleId + " is already assigned to Employee with ID " + employeeId);
+        }
+
+        // Add the role to the employee's roles collection
+        employee.getRoles().add(role);
+
+        // Persist the updated employee entity
+        persist(employee);
+    }
+
+    @Transactional
+    public void addShift(Long employeeId, Long roleId, Long shiftId) {
+        // Find the Employee entity by ID
+        Employee employee = findById(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        Shift shift = entityManager.find(Shift.class, shiftId);
+        if (shift == null) {
+            throw new IllegalArgumentException("Shift with ID " + shiftId + " does not exist.");
+        }
+
+        // Find the Role entity by ID
+        Role role = entityManager.find(Role.class, roleId);
+        if (role == null) {
+            throw new IllegalArgumentException("Role with ID " + roleId + " does not exist.");
+        }
+
+        if (employee.getShiftIds().contains(shiftId)) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " is already assigned to Shift with ID " + shiftId + ".");
+        }
+
+        // Check if the role is already assigned to the employee
+        if (!employee.getRoles().contains(role)) {
+            throw new IllegalStateException("Employee with ID " + employeeId + " does not have Role with ID " + roleId + " so it can't be assigned for that shift.");
+        }
+
+        Assignment assignment = new Assignment();
+        assignment.setEmployee(employee);
+        assignment.setShift(shift);
+        assignment.setRole(role);
+
+        entityManager.persist(assignment);
+
+        // Add the role to the employee's roles collection
+        employee.getAssignments().add(assignment);
+
+        // Persist the updated employee entity
+        persist(employee);
     }
 }

@@ -4,6 +4,8 @@ import { loadAllEmployees } from "./employee-list-service"
 
 
 class EmployeeListComponent extends HTMLElement {
+   activeEmployeeId: number = 0
+
    constructor() {
       super()
       this.attachShadow({ mode: "open" })
@@ -24,20 +26,25 @@ class EmployeeListComponent extends HTMLElement {
       console.log("head is", head)
    }
 
-   tableTemplate (employees: Employee[]) {
+   tableTemplate(employees: Employee[]) {
       const rows = employees.map(employee =>
-         html`<tr>
+         html`<tr @click=${() => this.showEmployeeDetail(employee.id)}>
                <td>${employee.firstname}</td>
                <td>${employee.lastname}</td>
                <td>${employee.email}</td>
                <td>${employee.telephone}</td>
                <td>${employee.birthdate}</td>
                <td>${employee.company_name}</td>
-            </tr>`
+            </tr>
+            
+               <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
+            
+            
+            `
       )
       return html`
       
-      <h2>Employees</h2>
+         <h2>Employees</h2>
          <table>
             <thead>
                <tr>
@@ -53,8 +60,20 @@ class EmployeeListComponent extends HTMLElement {
                ${rows}
             </tbody>
          </table>
+
       `
    }
-   
+   showEmployeeDetail(id: number) {
+      console.log("showEmployeeDetail", id)
+      this.activeEmployeeId = id
+      this.reloadEmployeeDetail()
+   }
+
+   reloadEmployeeDetail() {
+      const detailComponent = this.shadowRoot.querySelector("employee-detail-component")
+      if (detailComponent) {
+         detailComponent.setAttribute('employee-id', this.activeEmployeeId.toString())
+      }
+   }
 }
 customElements.define("employee-list-component", EmployeeListComponent)
