@@ -139,4 +139,12 @@ public class EmployeeResource {
         return Response.ok("Role assigned successfully").build();
     }
 
+    @PUT
+    @Path("/{employeeId}/assignshift/{shiftId}/{roleId}")
+    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
+        employeeRepository.addShift(employeeId, roleId, shiftId);
+
+        return Response.ok("Shift assigned successfully").build();
+    }
+
 }
