@@ -1,34 +1,81 @@
- # Wirtshaus Project
+# InStaff
 
-Welcome to the Wirtshaus Project! This README provides an overview of the project, setup instructions, and other essential information.
+## The Staff Management 
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+## Team
 
-## Project Overview
-The Wirtshaus Project is designed to manage and streamline operations for a traditional inn or tavern. It includes features for reservations, menu management, and customer feedback.
+* Klement Tobias
+* Hahn Alexander
+* Pramhas Lauren
+* Pfarrhofer Philip
 
-## Features
-- **Reservation System**: Easily manage table bookings.
-- **Menu Management**: Update and display the menu.
-- **Customer Feedback**: Collect and review customer feedback.
+## General
+
+* Web Application
+* in the future IOs and Android Application
+
+## Initial Situation
+
+At the moment asks a manager from a company his employees via WhatsApp, Facebook or Instagram if they can work on a specific day. 
+Then the employees answer if they have time to work or not. This is very confusing and cumbersome for the manager and his employees.
 
 
+## Project Objectives
 
-## Usage
-To run the project locally, use the following command:
-```sh
-npm start
+ Application where the manager can:
+* create a new company
+* invite employees to his company
+* add new employees
+* manage and edit his employees
+* give his employees specific fields of activity
+* notify them if they are able to work (invite them to an appointment)
+* view his employees in an organized way
+* create new appointments for his employees
+
+  And the employees can:
+* join a company
+* be notified when the manager invites him to an appointment
+* view all his future (and previous) appointments
+* sign up for an appointment or decline an invitation
+
+## Toolstack
+
+* Frontend:
+  + Webpack
+  + HTML, CSS, JS
+* Backend
+  + Quarkus Server
+  + Java
+
+## Opportunities and risks
+
+* huge companies which often have temporary employees use our application.
+* git merge conflicts
+
+# Development using a local docker compose database
+
+## Starting
+
+```bash
+./start.sh
 ```
-Open your browser and navigate to `http://localhost:3000` to see the application in action.
 
-## Contributing
-We welcome contributions! Please read our [contributing guidelines](CONTRIBUTING.md) for more details.
+## delete all docker containers, images and volumes
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+```bash
+./clean-docker.sh
+```
+
+
+## backup the database
+
+```bash
+docker exec -it postgres pg_dump -U demo > demo-backup.sql
+```
+
+## stop the database
+
+```bash
+./down.sh
+```
+
