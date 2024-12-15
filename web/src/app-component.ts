@@ -8,6 +8,7 @@ import "./components/shift-list";
 import "./components/shift-detail";
 import "./components/employee-detail";
 import "./components/add-employee";
+import "./components/add-shift";
 
 const routes: Record<string, any> = {
     "": html`<home-component></home-component>`,
@@ -19,7 +20,7 @@ const routes: Record<string, any> = {
     "shift-list": html`<shift-list-component></shift-list-component>`,
     "shift-detail": html`<shift-detail-component></shift-detail-component>`,
     "add-employee": html`<add-employee-component></add-employee-component>`,
-    
+    "add-shift": html`<add-shift-component></add-shift-component>`
 };
 
 class AppComponent extends HTMLElement {
