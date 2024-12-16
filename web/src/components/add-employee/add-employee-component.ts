@@ -50,8 +50,6 @@ class AddEmployeeComponent extends HTMLElement {
             birthdate: birthdateInput.value,
             companyId: 1
          };
-
-         this.responseMessage = "Employee added successfully!" + JSON.stringify(addingEmployee);
          console.log(addingEmployee);
          
          
@@ -76,15 +74,13 @@ class AddEmployeeComponent extends HTMLElement {
             this.responseMessage = `Error: ${error}`;
          }
 
-         
-
          firstnameInput.value = "";
          lastnameInput.value = "";
          emailInput.value = "";
          telephoneInput.value = "";
          birthdateInput.value = "";
       } else {
-         this.responseMessage = "Error: Please fill out all fields!";
+         this.responseMessage = "Error: Please fill in all fields!";
       }
 
       this.renderComponent();
