@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { Shift } from "../../models/shift";
+
 
 class AddShiftComponent extends HTMLElement {
     responseMessage: string = "";
@@ -65,18 +65,7 @@ class AddShiftComponent extends HTMLElement {
 
         this.renderComponent();
     }
-    /*
- 
-        POST http://localhost:8080/api/shifts
-        Content-Type: application/json
- 
-        {
-        "startTime": "2024-12-10T09:00:00",
-        "endTime": "2024-12-10T17:00:00",
-        "companyId": 1
-        }
- 
-    */
+
     template() {
         return html`
            <h2>Add Shift</h2>

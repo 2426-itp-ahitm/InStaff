@@ -38,9 +38,8 @@ class EmployeeDetailComponent extends HTMLElement {
       this.shadowRoot.appendChild(styleElement);
 
       const employee = await loadEmployeeDetails(Number(this._employeeId));
-      const rolesMap = await this.loadRoles(); // Lade die Rollen
+      const rolesMap = await this.loadRoles();
 
-      // Mappe die role_ids zu roleNames
       const roleNames = employee.roles.map(roleId => rolesMap[roleId]).join(', ');
 
       render(this.detailTemplate(employee, roleNames), this.shadowRoot);
@@ -60,17 +59,18 @@ class EmployeeDetailComponent extends HTMLElement {
       return html`
          <h2>${employee.firstname} ${employee.lastname}</h2> 
          <h3><i>${employee.company_name}</i></h3>
+         <p><b>Employee ID:</b> ${employee.id}</p>
          <p><b>Birthdate:</b> ${employee.birthdate}</p>
          <p><b>Email:</b> ${employee.email}</p>
          <p><b>Telephone:</b> ${employee.telephone}</p>
-         <p><b>Roles:</b> ${roleNames}</p> <!-- Zeige die roleNames an -->
+         <p><b>Roles:</b> ${roleNames}</p>
       `;
    }
 
    async loadRoles() {
       const roles = await loadAllRoles();
       return roles.reduce((acc, role) => {
-         acc[role.id] = role.roleName; // Mappe role_id zu roleName
+         acc[role.id] = role.roleName;
          return acc;
       }, {} as Record<number, string>);
    }
