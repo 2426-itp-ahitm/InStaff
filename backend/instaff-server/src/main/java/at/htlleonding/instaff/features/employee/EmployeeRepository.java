@@ -17,15 +17,23 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     @Inject
     EntityManager entityManager;
 
-    public List<Employee> findByRoleId(Long role) {
-        return find("role", role).stream().toList();
+    public List<Employee> findByRoleId(Long roleId) {
+        String sql = "SELECT e.* " +
+                "FROM Employee e " +
+                "JOIN employee_role er ON e.id = er.employee_id " +
+                "WHERE er.role_id = ?1";
+
+        Query query = entityManager.createNativeQuery(sql, Employee.class);
+        query.setParameter(1, roleId);
+
+        return query.getResultList();
     }
 
     public List<Employee> findByRoleName(String roleName) {
         String sql = "SELECT e.* " +
                 "FROM Employee e " +
                 "JOIN employee_role er ON e.id = er.employee_id " +
-                "JOIN Role r ON er.roles_id = r.id " +
+                "JOIN Role r ON er.role_id = r.id " +
                 "WHERE LOWER(r.rolename) LIKE LOWER(?1)";
 
         Query query = entityManager.createNativeQuery(sql, Employee.class);
