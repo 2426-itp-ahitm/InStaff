@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.shift;
 
+import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
@@ -22,7 +23,7 @@ public class ShiftResource {
     @Inject
     ShiftMapper shiftMapper;
     @Inject
-    EmployeeRepository employeeRepository;
+    CompanyRepository companyRepository;
 
     @GET
     public List<ShiftDTO> all() {
@@ -85,9 +86,9 @@ public class ShiftResource {
 
     @POST
     @Transactional
-    public Response createShift(ShiftCreateDTO shiftCreateDTO) {
+    public Response createShift(ShiftCreateDTO dto) {
         // Map DTO to entity
-        Shift shift = shiftMapper.fromCreateDTO(shiftCreateDTO);
+        Shift shift = new Shift(dto.startTime(), dto.endTime(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         shiftRepository.persist(shift);

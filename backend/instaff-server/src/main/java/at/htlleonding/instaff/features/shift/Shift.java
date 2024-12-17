@@ -28,6 +28,15 @@ public class Shift {
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Assignment> assignments = new LinkedList<>();
 
+    public Shift() {
+    }
+
+    public Shift(LocalDateTime startTime, LocalDateTime endTime, Company company) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.company = company;
+    }
+
     public List<Long> getEmployeeIds() {
         return assignments.stream()
                 .map(Assignment::getEmployee).map(Employee::getId).toList();

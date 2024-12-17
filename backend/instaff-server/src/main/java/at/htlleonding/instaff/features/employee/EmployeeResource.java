@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -17,6 +18,8 @@ import java.util.List;
 public class EmployeeResource {
     @Inject
     EmployeeRepository employeeRepository;
+    @Inject
+    CompanyRepository companyRepository;
     @Inject
     EmployeeMapper employeeMapper;
 
@@ -118,9 +121,10 @@ public class EmployeeResource {
 
     @POST
     @Transactional
-    public Response createEmployee(EmployeeCreateDTO employeeCreateDTO) {
+    public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
-        Employee employee = employeeMapper.fromCreateDTO(employeeCreateDTO);
+        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
+                dto.password(), dto.birthdate(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         employeeRepository.persist(employee);

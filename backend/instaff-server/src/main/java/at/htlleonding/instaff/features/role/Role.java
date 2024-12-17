@@ -29,6 +29,14 @@ public class Role {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Assignment> assignments = new LinkedList<>();
 
+    public Role() {
+    }
+
+    public Role(String roleName, Company company) {
+        this.roleName = roleName;
+        this.company = company;
+    }
+
     public Long getId() {
         return id;
     }

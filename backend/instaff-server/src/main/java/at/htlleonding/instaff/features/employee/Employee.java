@@ -38,6 +38,19 @@ public class Employee {
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Assignment> assignments = new LinkedList<>();
 
+    public Employee() {
+    }
+
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.telephone = telephone;
+        this.password = password;
+        this.birthdate = birthdate;
+        this.company = company;
+    }
+
     public boolean hasRoleWithId(Long id) {
         for (Role role : roles) {
             if (role.getId().equals(id)) {

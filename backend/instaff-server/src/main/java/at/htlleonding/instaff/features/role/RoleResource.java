@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.role;
 
+import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import jakarta.inject.Inject;
@@ -19,6 +20,8 @@ public class RoleResource {
     RoleRepository roleRepository;
     @Inject
     RoleMapper roleMapper;
+    @Inject
+    CompanyRepository companyRepository;
 
     @GET
     public List<RoleDTO> all() {
@@ -61,9 +64,9 @@ public class RoleResource {
 
     @POST
     @Transactional
-    public Response createEmployee(RoleCreateDTO roleCreateDTO) {
+    public Response createRole(RoleCreateDTO dto) {
         // Map DTO to entity
-        Role role = roleMapper.fromCreateDTO(roleCreateDTO);
+        Role role = new Role(dto.roleName(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         roleRepository.persist(role);
