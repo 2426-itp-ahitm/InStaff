@@ -84,6 +84,30 @@ public class ShiftResource {
                 .toList();
     }
 
+    @GET
+    @Path("date/{date}")
+    public List<ShiftDTO> getShiftByDate(@PathParam("date") String dateString) {
+        LocalDate date = LocalDate.parse(dateString);
+        var shifts = shiftRepository.getByDate(date);
+        return shifts
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
+    }
+
+    @GET
+    @Path("betweendates/{startDate}/{endDate}")
+    public List<ShiftDTO> getShiftsBetweenDates(@PathParam("startDate") String startDateString, @PathParam("endDate") String endDateString) {
+        LocalDate startDate = LocalDate.parse(startDateString);
+        LocalDate endDate = LocalDate.parse(endDateString);
+        var shifts = shiftRepository.getBetweenDates(startDate, endDate);
+
+        return shifts
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
+    }
+
     @POST
     @Transactional
     public Response createShift(ShiftCreateDTO dto) {

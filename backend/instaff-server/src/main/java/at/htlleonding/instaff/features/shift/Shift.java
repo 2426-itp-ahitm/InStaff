@@ -42,6 +42,14 @@ public class Shift {
                 .map(Assignment::getEmployee).map(Employee::getId).toList();
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     public Long getId() {
         return id;
     }

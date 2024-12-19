@@ -20,8 +20,8 @@ POST http://localhost:8080/api/shifts
 Content-Type: application/json
 
 {
-  "startTime": "2024-12-10T09:00:00",
-  "endTime": "2024-12-10T17:00:00",
+  "startTime": "2024-12-19T09:00:00",
+  "endTime": "2024-12-19T17:00:00",
   "companyId": 1
 }
 
