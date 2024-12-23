@@ -19,7 +19,7 @@ const routes: Record<string, any> = {
     "role-list": html`<role-list-component></role-list-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
     "shift-list": html`<shift-list-component></shift-list-component>`,
-    "shift-detail": html`<shift-detail-component></shift-detail-component>`,
+    "shift-detail": html`<shift-detail-component shift-id="3"></shift-detail-component>`,
     "add-employee": html`<add-employee-component></add-employee-component>`,
     "add-shift": html`<add-shift-component></add-shift-component>`,
     "edit-shift": html`<edit-shift-component></edit-shift-component>`,

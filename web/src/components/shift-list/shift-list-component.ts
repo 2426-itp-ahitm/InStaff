@@ -2,9 +2,8 @@ import { html, render } from "lit-html"
 import { Shift } from "../../models/shift"
 import { loadAllShifts } from "./shift-list-service"
 
-
 class ShiftListComponent extends HTMLElement {
-   inputValue: string = ""
+   activeShiftId: number = 0
    shifts: Shift[] = []
 
    constructor() {
@@ -21,21 +20,20 @@ class ShiftListComponent extends HTMLElement {
 
       this.shadowRoot.appendChild(styleElement)
 
-      const shifts = await loadAllShifts(0)
+      const shifts = await loadAllShifts()
+      this.shifts = shifts  // Speichere die Shifts für später
       render(this.tableTemplate(shifts), this.shadowRoot)
    }
 
-   tableTemplate (shifts: Shift[]) {
-
+   tableTemplate(shifts: Shift[]) {
       const rows = shifts.map(shift =>
-         html`<tr value="${shift.id}">
+         html`<tr @click=${() => this.showShiftDetail(shift.id)}>
                <td>${shift.startTime.substring(0,10)}</td>
-               <td>${shift.startTime.substring(11, shift.startTime.length)}</td>
+               <td>${shift.startTime.substring(11)}</td>
                <td>${shift.endTime.substring(0, 10)}</td>
-               <td>${shift.endTime.substring(11, shift.endTime.length)}</td>
+               <td>${shift.endTime.substring(11)}</td>
                <td>${shift.company_name}</td>
-               <td>${shift.employees.join(', ')}</td>
-            </tr>`   
+            </tr>`
       )
       return html`
       <h2>Shifts</h2>
@@ -47,14 +45,30 @@ class ShiftListComponent extends HTMLElement {
                   <td>End date</td>
                   <td>End time</td>
                   <td>Company name</td>
-                  <td>Employees</td>
                </tr>
             </thead>
             <tbody>
                ${rows}
             </tbody>
          </table>
+
+         <!-- Dynamische Anzeige des ShiftDetailComponents -->
+         <shift-detail-component .shift-id=${this.activeShiftId}></shift-detail-component>
       `
    }
+
+   showShiftDetail(id: number) {
+      console.log("showShiftDetail", id)
+      this.activeShiftId = id
+      this.reloadShiftDetail()
+   }
+
+   reloadShiftDetail() {
+      const detailComponent = this.shadowRoot.querySelector("shift-detail-component")
+      if (detailComponent) {
+         detailComponent.setAttribute('shift-id', this.activeShiftId.toString())
+      }
+   }
 }
+
 customElements.define("shift-list-component", ShiftListComponent)

@@ -3,7 +3,7 @@ import { Shift } from "../../models/shift";
 
 const BASE_URL = "/api"
 
-export async function loadAllShifts(shiftId: number) {
+export async function loadAllShifts() {
    const response = await fetch(`${BASE_URL}/shifts`)
    const shifts: Shift[] = await response.json()
 
@@ -14,7 +14,7 @@ export async function loadAllShifts(shiftId: number) {
          let employeeId = shifts[i].employees[j]
          let employee = await fetch(`${BASE_URL}/employees/${employeeId}`).then(response => response.json())
          employeeNames.push(employee.firstname + " " + employee.lastname)
-         console.log(employee);
+         //console.log(employee);
          
       }
       employeeNames.push(" # ")
@@ -22,11 +22,11 @@ export async function loadAllShifts(shiftId: number) {
 
    
    
-   for (let j = 0; j < shifts[shiftId].employees.length; j++) {
+   /*for (let j = 0; j < shifts[shiftId].employees.length; j++) {
       let employeeId = shifts[shiftId].employees[j]
       let employee = await fetch(`${BASE_URL}/employees/${employeeId}`).then(response => response.json())
       employeeNames.push(employee.firstname + " " + employee.lastname)
-   }
+   }*/
    /*
    for ( let shift of shifts) {
       shift.employees = employeeNames
@@ -34,7 +34,7 @@ export async function loadAllShifts(shiftId: number) {
    }*/
 
 
-   console.log(employeeNames);
+   //console.log(employeeNames);
    
    return shifts
 }

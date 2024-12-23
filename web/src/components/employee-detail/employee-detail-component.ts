@@ -1,10 +1,11 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../models/employee";
 import { loadEmployeeDetails } from "./employee-detail-service";
-import { loadAllRoles } from "../role-list/role-list-service";
+import RoleMapper from "./../../mapper/role-mapper";
 
 class EmployeeDetailComponent extends HTMLElement {
    private _employeeId: string = "";
+   private roleMapper = new RoleMapper();
 
    constructor() {
       super();
@@ -29,7 +30,7 @@ class EmployeeDetailComponent extends HTMLElement {
 
    async renderEmployeeDetails() {
       if (!this._employeeId) return;
-
+      
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
 
@@ -37,12 +38,13 @@ class EmployeeDetailComponent extends HTMLElement {
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
 
+      console.log(this._employeeId);
+      
       const employee = await loadEmployeeDetails(Number(this._employeeId));
-      const rolesMap = await this.loadRoles();
-
-      const roleNames = employee.roles.map(roleId => rolesMap[roleId]).join(', ');
-
-      render(this.detailTemplate(employee, roleNames), this.shadowRoot);
+      
+      const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
+      
+      render(this.detailTemplate(employee, roleNames.join(', ')), this.shadowRoot);
    }
 
    connectedCallback() {
@@ -65,14 +67,6 @@ class EmployeeDetailComponent extends HTMLElement {
          <p><b>Telephone:</b> ${employee.telephone}</p>
          <p><b>Roles:</b> ${roleNames}</p>
       `;
-   }
-
-   async loadRoles() {
-      const roles = await loadAllRoles();
-      return roles.reduce((acc, role) => {
-         acc[role.id] = role.roleName;
-         return acc;
-      }, {} as Record<number, string>);
    }
 }
 
