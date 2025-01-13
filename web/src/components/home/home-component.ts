@@ -70,8 +70,21 @@ const dashboardTemplate = () => {
 };
 
 class HomeComponent extends HTMLElement {
-   connectedCallback() {
-      render(dashboardTemplate(), this);
+   constructor() {
+      super()
+      this.attachShadow({mode: "open"})
+   }
+
+   async connectedCallback() {
+      const cssResponse = await fetch("../../../style.css")
+      const css = await cssResponse.text()
+
+      const styleElement = document.createElement("style")
+      styleElement.textContent = css
+
+      this.shadowRoot.appendChild(styleElement)
+
+      render(dashboardTemplate(), this.shadowRoot);
    }
 }
 

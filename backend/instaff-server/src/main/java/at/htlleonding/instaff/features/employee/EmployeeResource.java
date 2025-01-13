@@ -1,6 +1,10 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.company.CompanyRepository;
+import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.role.RoleRepository;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,7 +20,11 @@ public class EmployeeResource {
     @Inject
     EmployeeRepository employeeRepository;
     @Inject
+    CompanyRepository companyRepository;
+    @Inject
     EmployeeMapper employeeMapper;
+    @Inject
+    RoleRepository roleRepository;
 
     @GET
     public List<EmployeeDTO> all() {
@@ -51,17 +59,12 @@ public class EmployeeResource {
     @GET
     @Path("role/{role}")
     public List<EmployeeDTO> getEmployeeByRole(@PathParam("role") Long role) {
-        var employees = employeeRepository.listAll();
+        var employees = employeeRepository.findByRoleId(role);
         if (employees == null) {
             return null;
         }
-        List<Employee> employeesWithRole = new LinkedList<Employee>();
-        for (Employee employee : employees) {
-            if (employee.hasRoleWithId(role)) {
-                employeesWithRole.add(employee);
-            }
-        }
-        return employeesWithRole
+
+        return employees
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
@@ -70,23 +73,12 @@ public class EmployeeResource {
     @GET
     @Path("role/name/{role}")
     public List<EmployeeDTO> getEmployeeByRoleName(@PathParam("role") String role) {
-        var employees = employeeRepository.listAll();
-        if (role.isEmpty()) {
-            return employees
-                    .stream()
-                    .map(employeeMapper::toResource)
-                    .toList();
-        }
+        var employees = employeeRepository.findByRoleName(role);
         if (employees == null) {
             return null;
         }
-        List<Employee> employeesWithRole = new LinkedList<Employee>();
-        for (Employee employee : employees) {
-            if (employee.hasRoleWithName(role)) {
-                employeesWithRole.add(employee);
-            }
-        }
-        return employeesWithRole
+
+        return employees
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
@@ -132,9 +124,10 @@ public class EmployeeResource {
 
     @POST
     @Transactional
-    public Response createEmployee(EmployeeCreateDTO employeeCreateDTO) {
+    public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
-        Employee employee = employeeMapper.fromCreateDTO(employeeCreateDTO);
+        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
+                dto.password(), dto.birthdate(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         employeeRepository.persist(employee);
@@ -144,4 +137,21 @@ public class EmployeeResource {
                 .entity(employeeMapper.toResource(employee))
                 .build();
     }
+
+    @PUT
+    @Path("/{employeeId}/assignrole/{roleId}")
+    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
+        employeeRepository.addRole(employeeId, roleId);
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path("/{employeeId}/assignshift/{shiftId}/{roleId}")
+    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
+        employeeRepository.addShift(employeeId, roleId, shiftId);
+
+        return Response.ok("Shift assigned successfully").build();
+    }
+
 }

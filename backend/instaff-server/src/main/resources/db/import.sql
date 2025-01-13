@@ -21,17 +21,18 @@ insert into Shift (starttime, endtime, company_id)
 values ('2024-11-11 17:00:00', '2024-11-11 20:00:00', 1);
 
 /*ASSOTIATIVE*/
-insert into employee_role (employee_id, roles_id)
+insert into employee_role (employee_id, role_id)
 values (1, 1);
-insert into employee_role (employee_id, roles_id)
+insert into employee_role (employee_id, role_id)
+values (1, 2);
+insert into employee_role (employee_id, role_id)
 values (2, 2);
 
-insert into employeeshift (employee_id, shift_id)
-values (1, 2);
-insert into employeeshift (employee_id, shift_id)
-values (2, 2);
-insert into employeeshift (employee_id, shift_id)
-values (2, 1);
+insert into assignment (employee_id, shift_id, role_id)
+values(1, 1, 1);
+
+insert into assignment (employee_id, shift_id, role_id)
+values (1, 2, 1);
 
 /* Neue Mitarbeiter */
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
@@ -50,25 +51,25 @@ insert into Shift (starttime, endtime, company_id)
 values ('2024-11-21 10:00:00', '2024-11-21 18:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
-insert into employee_role (employee_id, roles_id)
+insert into employee_role (employee_id, role_id)
 values (3, 1); -- Michael Brown als Koch
-insert into employee_role (employee_id, roles_id)
+insert into employee_role (employee_id, role_id)
 values (4, 2); -- Sarah Jones als Kellnerin
-insert into employee_role (employee_id, roles_id)
+insert into employee_role (employee_id, role_id)
 values (5, 1); -- Daniel White als Koch
 
 /* Mitarbeiter-Schicht-Zuordnungen */
-insert into employeeshift (employee_id, shift_id)
-values (3, 3); -- Michael Brown arbeitet in Schicht 3
-insert into employeeshift (employee_id, shift_id)
-values (3, 4); -- Michael Brown arbeitet in Schicht 4
-insert into employeeshift (employee_id, shift_id)
-values (4, 4); -- Sarah Jones arbeitet in Schicht 4
-insert into employeeshift (employee_id, shift_id)
-values (4, 5); -- Sarah Jones arbeitet in Schicht 5
-insert into employeeshift (employee_id, shift_id)
-values (5, 5); -- Daniel White arbeitet in Schicht 5
-insert into employeeshift (employee_id, shift_id)
-values (2, 3); -- Alexander Hahn arbeitet in Schicht 3
-insert into employeeshift (employee_id, shift_id)
-values (2, 5); -- Alexander Hahn arbeitet in Schicht 5
+insert into assignment (employee_id, shift_id, role_id)
+values (3, 3, 1); -- Michael Brown arbeitet in Schicht 3
+insert into assignment (employee_id, shift_id, role_id)
+values (3, 4, 1); -- Michael Brown arbeitet in Schicht 4
+insert into assignment (employee_id, shift_id, role_id)
+values (4, 4, 1); -- Sarah Jones arbeitet in Schicht 4
+insert into assignment (employee_id, shift_id, role_id)
+values (4, 5, 2); -- Sarah Jones arbeitet in Schicht 5
+insert into assignment (employee_id, shift_id, role_id)
+values (5, 5, 2); -- Daniel White arbeitet in Schicht 5
+insert into assignment (employee_id, shift_id, role_id)
+values (2, 3, 2); -- Alexander Hahn arbeitet in Schicht 3
+insert into assignment (employee_id, shift_id, role_id)
+values (2, 5, 2); -- Alexander Hahn arbeitet in Schicht 5

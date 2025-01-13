@@ -1,8 +1,8 @@
 package at.htlleonding.instaff.features.shift;
 
-import at.htlleonding.instaff.features.EmployeeShift.EmployeeShift;
-import at.htlleonding.instaff.features.EmployeeShift.EmployeeShiftRepository;
+import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import at.htlleonding.instaff.features.employee.EmployeeRepository;
 import jakarta.inject.Inject;
@@ -23,9 +23,7 @@ public class ShiftResource {
     @Inject
     ShiftMapper shiftMapper;
     @Inject
-    EmployeeShiftRepository employeeShiftRepository;
-    @Inject
-    EmployeeRepository employeeRepository;
+    CompanyRepository companyRepository;
 
     @GET
     public List<ShiftDTO> all() {
@@ -86,7 +84,46 @@ public class ShiftResource {
                 .toList();
     }
 
+    @GET
+    @Path("date/{date}")
+    public List<ShiftDTO> getShiftByDate(@PathParam("date") String dateString) {
+        LocalDate date = LocalDate.parse(dateString);
+        var shifts = shiftRepository.getByDate(date);
+        return shifts
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
+    }
+
+    @GET
+    @Path("betweendates/{startDate}/{endDate}")
+    public List<ShiftDTO> getShiftsBetweenDates(@PathParam("startDate") String startDateString, @PathParam("endDate") String endDateString) {
+        LocalDate startDate = LocalDate.parse(startDateString);
+        LocalDate endDate = LocalDate.parse(endDateString);
+        var shifts = shiftRepository.getBetweenDates(startDate, endDate);
+
+        return shifts
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
+    }
+
     @POST
+    @Transactional
+    public Response createShift(ShiftCreateDTO dto) {
+        // Map DTO to entity
+        Shift shift = new Shift(dto.startTime(), dto.endTime(), companyRepository.findById(dto.companyId()));
+
+        // Persist the entity
+        shiftRepository.persist(shift);
+
+        // Return a response with the created entity
+        return Response.status(Response.Status.CREATED)
+                .entity(shiftMapper.toResource(shift))
+                .build();
+    }
+
+    /*@POST
     @Path("assign")
     @Transactional
     public Response assignEmployee(AssignRequest assignRequest) {
@@ -99,5 +136,5 @@ public class ShiftResource {
         }
         return Response.status(Response.Status.CREATED)
                 .build();
-    }
+    }*/
 }
