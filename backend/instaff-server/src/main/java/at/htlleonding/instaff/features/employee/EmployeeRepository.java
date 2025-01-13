@@ -43,7 +43,7 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     }
 
     @Transactional
-    public Role addRole(Long employeeId, Long roleId) {
+    public void addRole(Long employeeId, Long roleId) {
         // Find the Employee entity by ID
         Employee employee = findById(employeeId);
         if (employee == null) {
@@ -66,7 +66,6 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
 
         // Persist the updated employee entity
         persist(employee);
-        return role;
     }
 
     @Transactional

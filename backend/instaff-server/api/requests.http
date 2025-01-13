@@ -42,8 +42,8 @@ Content-Type: application/json
   "company_name": "Ben's Pizza"
 }
 
-### Assign role 2 to employee 1
-PUT http://localhost:8080/api/employees/1/assignrole/2
+### Assign role 2 to employee 3
+PUT http://localhost:8080/api/employees/3/assignrole/2
 Content-Type: application/json
 
 ### Assign Shift 3 to employee 1 with Role 1

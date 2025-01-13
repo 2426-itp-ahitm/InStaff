@@ -141,9 +141,9 @@ public class EmployeeResource {
     @PUT
     @Path("/{employeeId}/assignrole/{roleId}")
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
-        Role role = employeeRepository.addRole(employeeId, roleId);
+        employeeRepository.addRole(employeeId, roleId);
 
-        return Response.ok().entity(role).build();
+        return Response.ok().build();
     }
 
     @PUT
