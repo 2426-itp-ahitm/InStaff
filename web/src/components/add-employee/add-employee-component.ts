@@ -34,6 +34,8 @@ class AddEmployeeComponent extends HTMLElement {
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
       const roleIdInput = shadowRoot.querySelector<HTMLInputElement>("#role_id");
 
+      let employeeId:Number;
+
       if (
          firstnameInput?.value.trim() &&
          lastnameInput?.value.trim() &&
@@ -50,7 +52,6 @@ class AddEmployeeComponent extends HTMLElement {
             telephone: telephoneInput.value,
             password: "password",
             birthdate: birthdateInput.value,
-            roleId: roleIdInput.value,
             companyId: 1
          };
          console.log(addingEmployee);
@@ -69,6 +70,8 @@ class AddEmployeeComponent extends HTMLElement {
             if (response.ok) {
                const result = await response.json();
                this.responseMessage = JSON.stringify(result);
+               employeeId = result.id;
+               console.log(employeeId);
             } else {
                this.responseMessage = `Error: ${response.statusText}`;
             }
@@ -76,6 +79,31 @@ class AddEmployeeComponent extends HTMLElement {
          } catch (error) {
             this.responseMessage = `Error: ${error}`;
          }
+
+
+
+
+         try{
+            const response = await fetch(`http://localhost:4200/api/employees/${employeeId}/assignrole/${roleIdInput.value}`, {
+               method: 'PUT',
+               headers: {
+                  'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(addingEmployee)
+            });
+
+            
+            if (response.ok) {
+               const result = await response.json();
+               this.responseMessage = JSON.stringify(result);
+            } else {
+               this.responseMessage = `Error: ${response.statusText}`;
+            }
+            
+         } catch (error) {
+            this.responseMessage = `Error: ${error}`;
+         }
+         
 
          firstnameInput.value = "";
          lastnameInput.value = "";
