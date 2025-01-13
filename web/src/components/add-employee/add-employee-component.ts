@@ -68,10 +68,11 @@ class AddEmployeeComponent extends HTMLElement {
 
             
             if (response.ok) {
+               
+
                const result = await response.json();
                this.responseMessage = JSON.stringify(result);
                employeeId = result.id;
-               console.log(employeeId);
             } else {
                this.responseMessage = `Error: ${response.statusText}`;
             }
@@ -89,13 +90,15 @@ class AddEmployeeComponent extends HTMLElement {
                headers: {
                   'Content-Type': 'application/json'
                },
-               body: JSON.stringify(addingEmployee)
             });
 
             
             if (response.ok) {
-               const result = await response.json();
-               this.responseMessage = JSON.stringify(result);
+               const result = await response;
+               this.responseMessage = result.statusText;
+               if(result.statusText == "OK"){
+                  this.responseMessage = "Employee added successfully!";
+               }
             } else {
                this.responseMessage = `Error: ${response.statusText}`;
             }
