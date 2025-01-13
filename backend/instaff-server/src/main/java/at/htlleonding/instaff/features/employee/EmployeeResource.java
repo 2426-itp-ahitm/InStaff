@@ -2,6 +2,7 @@ package at.htlleonding.instaff.features.employee;
 
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.role.RoleRepository;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,8 @@ public class EmployeeResource {
     CompanyRepository companyRepository;
     @Inject
     EmployeeMapper employeeMapper;
+    @Inject
+    RoleRepository roleRepository;
 
     @GET
     public List<EmployeeDTO> all() {
@@ -138,9 +141,9 @@ public class EmployeeResource {
     @PUT
     @Path("/{employeeId}/assignrole/{roleId}")
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
-        employeeRepository.addRole(employeeId, roleId);
+        Role role = employeeRepository.addRole(employeeId, roleId);
 
-        return Response.ok("Role assigned successfully").build();
+        return Response.ok().entity(role).build();
     }
 
     @PUT
