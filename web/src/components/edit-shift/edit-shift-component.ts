@@ -39,7 +39,7 @@ class EditShiftComponent extends HTMLElement {
             const roleId = roleIdInput.value.trim();
 
             const apiEndpoint = `http://localhost:4200/api/employees/${employeeId}/assignshift/${shiftId}/${roleId}`;
-
+            console.log(apiEndpoint);
             try {
                 const response = await fetch(apiEndpoint, {
                     method: "PUT",
@@ -55,7 +55,7 @@ class EditShiftComponent extends HTMLElement {
                     this.responseMessage = `Error: ${response.statusText}`;
                 }
             } catch (error) {
-                this.responseMessage = `Error: ${error}`;
+                this.responseMessage = `1 Error: ${error}`;
             }
 
             employeeIdInput.value = "";

@@ -32,13 +32,15 @@ class AddEmployeeComponent extends HTMLElement {
       const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
       const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
+      const roleIdInput = shadowRoot.querySelector<HTMLInputElement>("#role_id");
 
       if (
          firstnameInput?.value.trim() &&
          lastnameInput?.value.trim() &&
          emailInput?.value.trim() &&
          telephoneInput?.value.trim() &&
-         birthdateInput?.value.trim()
+         birthdateInput?.value.trim() &&
+         roleIdInput?.value.trim()
       ) {         
 
          const addingEmployee = {
@@ -48,6 +50,7 @@ class AddEmployeeComponent extends HTMLElement {
             telephone: telephoneInput.value,
             password: "password",
             birthdate: birthdateInput.value,
+            roleId: roleIdInput.value,
             companyId: 1
          };
          console.log(addingEmployee);
@@ -79,6 +82,7 @@ class AddEmployeeComponent extends HTMLElement {
          emailInput.value = "";
          telephoneInput.value = "";
          birthdateInput.value = "";
+         roleIdInput.value = "";
       } else {
          this.responseMessage = "Error: Please fill in all fields!";
       }
@@ -104,6 +108,9 @@ class AddEmployeeComponent extends HTMLElement {
             <br>
             <label for="birthdate">Birthdate</label>
             <input type="text" id="birthdate" name="birthdate" />
+            <br>
+            <label for="role_id">Role ID</label>
+            <input type="number" id="role_id" name="role_id" />
          </form>
          <button @click=${() => this.addEmployee()}>Add Employee</button>
 
