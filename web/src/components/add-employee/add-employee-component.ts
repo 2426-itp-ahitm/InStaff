@@ -1,8 +1,12 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../models/employee";
+import { Role } from "../../models/role";
+import { loadAllRoles } from "../role-list/role-list-service";
 
 class AddEmployeeComponent extends HTMLElement {
    responseMessage: string = "";
+   roles: Role[];
+   rolesHtml: any = "";
 
    constructor() {
       super();
@@ -17,8 +21,31 @@ class AddEmployeeComponent extends HTMLElement {
       styleElement.textContent = css;
 
       this.shadowRoot.appendChild(styleElement);
-
+      //this.getRolesOptions();
       this.renderComponent();
+   }
+
+   //TODO: Doesnt work for some unknown reason
+
+   async getRolesOptions() {
+      await this.getRoles()
+      console.log(this.roles)
+
+      for(let i = 0; i < this.roles.length; i++){
+         console.log(this.roles[i].roleName)
+        this.rolesHtml+= html`<option value="${this.roles[i].id}">${this.roles[i].roleName}</option>`   
+      }
+
+/*
+      this.rolesHtml = this.roles.map(field => 
+         html`<option value="${field.id}">${field.roleName}</option>`    
+      );*/
+      console.log(String(this.rolesHtml))
+   }  
+
+   async getRoles() {
+      this.roles = await loadAllRoles();
+      
    }
 
    renderComponent() {
@@ -122,6 +149,8 @@ class AddEmployeeComponent extends HTMLElement {
    }
 
    template() {
+
+      this.getRolesOptions();
       return html`
          <h2>Add an Employee</h2>
          <form>
@@ -140,8 +169,13 @@ class AddEmployeeComponent extends HTMLElement {
             <label for="birthdate">Birthdate</label>
             <input type="text" id="birthdate" name="birthdate" />
             <br>
-            <label for="role_id">Role ID</label>
-            <input type="number" id="role_id" name="role_id" />
+            <label for="role_id">Choose a role:</label>
+            <select id="dropdown" name="dropdown">
+               ${this.rolesHtml}
+               <option value="option1">Option 1</option>
+               <option value="option2">Option 2</option>
+               <option value="option3">Option 3</option>
+            </select>
          </form>
          <button @click=${() => this.addEmployee()}>Add Employee</button>
 
