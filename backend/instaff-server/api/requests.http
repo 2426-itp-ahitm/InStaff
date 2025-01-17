@@ -25,6 +25,11 @@ Content-Type: application/json
   "companyId": 1
 }
 
+### Get all Roles
+GET http://localhost:4200/api/roles
+Accept: application/json
+
+
 ### Add a New Role
 POST http://localhost:8080/api/roles
 Content-Type: application/json
