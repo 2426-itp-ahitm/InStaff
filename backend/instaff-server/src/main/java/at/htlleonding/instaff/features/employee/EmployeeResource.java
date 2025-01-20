@@ -138,6 +138,13 @@ public class EmployeeResource {
                 .build();
     }
 
+    @POST
+    @Path("/{employeeId}")
+    public Response updateEmployee(@PathParam("employeeId") Long employeeId, EmployeeEditDTO dto) {
+        employeeRepository.editEmployee(employeeId, dto);
+        return Response.status(Response.Status.OK).build();
+    }
+
     @PUT
     @Path("/{employeeId}/assignrole/{roleId}")
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {

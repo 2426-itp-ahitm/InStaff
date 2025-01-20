@@ -50,7 +50,7 @@ class EmployeeListComponent extends HTMLElement {
                ${rows}
             </tbody>
          </table>
-         <employee-detail-component .employee-id=${this.activeEmployeeId}></employee-detail-component>
+         <employee-edit-component .employee-id=${this.activeEmployeeId}></employee-edit-component>
       `
    }
    showEmployeeDetail(id: number) {
@@ -61,7 +61,7 @@ class EmployeeListComponent extends HTMLElement {
    }
 
    reloadEmployeeDetail() {
-      const detailComponent = this.shadowRoot.querySelector("employee-detail-component")
+      const detailComponent = this.shadowRoot.querySelector("employee-edit-component")
       if (detailComponent) {
          detailComponent.setAttribute('employee-id', this.activeEmployeeId.toString())
       }

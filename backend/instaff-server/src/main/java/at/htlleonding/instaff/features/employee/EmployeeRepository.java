@@ -69,6 +69,21 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     }
 
     @Transactional
+    public void editEmployee(Long employeeId, EmployeeEditDTO dto) {
+        Employee employee = findById(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+        employee.setFirstname(dto.firstname());
+        employee.setLastname(dto.lastname());
+        employee.setEmail(dto.email());
+        employee.setBirthdate(dto.birthdate());
+        employee.setTelephone(dto.telephone());
+
+        persist(employee);
+    }
+
+    @Transactional
     public void addShift(Long employeeId, Long roleId, Long shiftId) {
         // Find the Employee entity by ID
         Employee employee = findById(employeeId);

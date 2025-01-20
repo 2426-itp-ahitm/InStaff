@@ -1,2 +1,2 @@
 import "./employee-list-component"
-import "../employee-detail/employee-detail-component"
+import "../employee-edit/employee-edit-component"
