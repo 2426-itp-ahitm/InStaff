@@ -47,7 +47,7 @@ class EmployeeEditComponent extends HTMLElement {
          this.employeeId = newValue;
       }
    }
-   
+
    async renderEmployeeDetails() {
       if (!this._employeeId) return;
 
@@ -67,39 +67,46 @@ class EmployeeEditComponent extends HTMLElement {
       render(this.detailTemplate(employee, roleNames.join(', ')), this.shadowRoot);
    }
 
+   async updateEmployee() {
+      const input_firstname = this.shadowRoot.querySelector<HTMLElement>("#firstname");
+      this.employee.firstname = input_firstname?.getAttribute("value") || "";
+      
+      console.log(this.employee);
+        
+   }
    
 
    detailTemplate(employee: Employee, roleNames: string) {
       return html`
          <h2>
-            <input type="text"
+            <input type="text" id="firstname"
             value=${employee.firstname} />
-            <input type="text"
+            <input type="text" id="lastname"
             value=${employee.lastname} />
          </h2>
          <h3><i>${employee.company_name}</i></h3>
          <p><b>Employee ID:</b> ${employee.id}</p>
          <p>
             <b>Birthdate:</b>
-            <input type="date"
+            <input type="date" id="birthdate"
               value=${employee.birthdate}
             />
          </p>
          <p>
             <b>Email:</b>
-            <input type="email"
+            <input type="email" id="email"
                value=${employee.email}
             />
          </p>
          <p>
             <b>Telephone:</b>
-            <input type="text"
+            <input type="text" id="telephone"
                value=${employee.telephone}
             />
          </p>
          <p><b>Roles:</b> ${roleNames}</p>
 
-         <button>Edit Employee</button>
+         <button @click=${() => this.updateEmployee()}>Edit Employee</button>
       `;
    }
 }
