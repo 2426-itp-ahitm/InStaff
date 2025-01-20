@@ -60,6 +60,36 @@ public class Employee {
         return false;
     }
 
+    public void setFirstname(String firstname) {
+        if (firstname != null && !firstname.isEmpty()) {
+            this.firstname = firstname;
+        }
+    }
+
+    public void setLastname(String lastname) {
+        if (lastname != null && !lastname.isEmpty()) {
+            this.lastname = lastname;
+        }
+    }
+
+    public void setEmail(String email) {
+        if(email != null && email.contains("@")) {
+            this.email = email;
+        }
+    }
+
+    public void setTelephone(String telephone) {
+        if (telephone != null && !telephone.isEmpty()) {
+            this.telephone = telephone;
+        }
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        if (birthdate != null && birthdate.isBefore(LocalDate.now())) {
+            this.birthdate = birthdate;
+        }
+    }
+
     public List<Assignment> getAssignments() {
         return assignments;
     }
