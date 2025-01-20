@@ -53,10 +53,9 @@ Content-Type: application/json
 
 {
   "firstname": "Bob",
-  "lastname": "",
+  "lastname": "Baumeister",
   "email": "bob@baumeister.com",
-  "birthdate": "1980-11-11",
-  "telephone": "+12546743"
+  "birthdate": "1980-11-11"
 }
 
 ### Assign role 2 to employee 3
