@@ -146,6 +146,14 @@ public class EmployeeResource {
     }
 
     @PUT
+    @Path("/{employeeId}/removerole/{roleId}")
+    public Response removeRole(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
+        employeeRepository.removeRole(employeeId, roleId);
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @PUT
     @Path("/{employeeId}/assignrole/{roleId}")
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
         employeeRepository.addRole(employeeId, roleId);

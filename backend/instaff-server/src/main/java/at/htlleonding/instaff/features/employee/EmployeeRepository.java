@@ -69,6 +69,23 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     }
 
     @Transactional
+    public void removeRole(Long employeeId, Long roleId) {
+        Employee employee = findById(employeeId);
+
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        Role role = entityManager.find(Role.class, roleId);
+        if (role == null) {
+            throw new IllegalArgumentException("Role with ID " + roleId + " does not exist.");
+        }
+
+        employee.getRoles().remove(role);
+        persist(employee);
+    }
+
+    @Transactional
     public void editEmployee(Long employeeId, EmployeeEditDTO dto) {
         Employee employee = findById(employeeId);
         if (employee == null) {
