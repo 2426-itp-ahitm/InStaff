@@ -138,7 +138,7 @@ class AddEmployeeComponent extends HTMLElement {
             <input type="text" id="telephone" name="telephone" />
             <br />
             <label for="birthdate">Birthdate</label>
-            <input type="text" id="birthdate" name="birthdate" />
+            <input type="date" id="birthdate" name="birthdate"/>
             <br />
             <label for="role_id">Choose a role:</label>
             <select id="role_id" name="role_id">
