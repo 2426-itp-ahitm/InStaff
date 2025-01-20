@@ -2,6 +2,7 @@ import { html, render } from "lit-html";
 import "./components/home";
 import "./components/employee-list";
 import "./components/employee-filter-roles";
+import "./components/employee-detail";
 import "./components/role-list";
 import "./components/manager-list";
 import "./components/shift-list";
@@ -16,6 +17,7 @@ const routes: Record<string, any> = {
     "employee-list": html`<employee-list-component></employee-list-component>`,
     "employee-filter-roles": html`<employee-filter-roles-component></employee-filter-roles-component>`,
     "employee-detail": html`<employee-detail-component employee-id="1"></employee-detail-component>`,
+    "employee-edit": html`<employee-edit-component employee-id="1"></employee-edit-component>`,
     "role-list": html`<role-list-component></role-list-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
     "shift-list": html`<shift-list-component></shift-list-component>`,
