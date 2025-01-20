@@ -16,6 +16,7 @@ class AddEmployeeComponent extends HTMLElement {
       await this.loadStyles();
       await this.getRoles();
       this.renderComponent();
+      this.textInput();
    }
 
    private async loadStyles() {
@@ -37,6 +38,30 @@ class AddEmployeeComponent extends HTMLElement {
          console.error("Error loading roles:", error);
          this.responseMessage = "Failed to load roles.";
       }
+   }
+
+   private textInput(){
+      // Assuming you have an input field in your HTML
+      const textInput = document.querySelector<HTMLInputElement>("text_input");
+
+      console.log("textInput", textInput);
+      // Apply the function to the input element
+      if (textInput) {
+         this.preventNumbersInput(textInput);
+      }
+   }
+   private preventNumbersInput(inputElement: HTMLInputElement) {
+      inputElement.addEventListener("input", (event) => {
+         console.log("Input event fired!");
+         const input = event.target as HTMLInputElement;
+   
+         // Remove any number characters from the input value
+         input.value = input.value.replace(/[0-9]/g, "");
+   
+         // Optionally, show a warning or message (if needed)
+         // Example: input.setCustomValidity("Numbers are not allowed.");
+         // input.reportValidity();
+      });
    }
 
    private async addEmployee() {
@@ -125,6 +150,9 @@ class AddEmployeeComponent extends HTMLElement {
       return html`
          <h2>Add an Employee</h2>
          <form>
+            <label for="text_input">Text Input</label>
+            <input type="text" id="text_input" />
+            <br />
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name" />
             <br />
