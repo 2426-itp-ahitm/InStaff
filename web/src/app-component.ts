@@ -35,7 +35,7 @@ class AppComponent extends HTMLElement {
 
     updateView() {
         const path = location.hash.replace("#/", "") || "";
-        const content = routes[path] || html`<h1>404 - Page Not Found</h1>`;
+        const content = routes[path] || html`<div style="text-align: center;"><h1 style="font-size: 3em; margin-top: 35vh">404 - Page Not Found</h1><button onclick="window.history.back()" id="backButton">Go Back</button></div>`;
         render(content, this);
     }
 }

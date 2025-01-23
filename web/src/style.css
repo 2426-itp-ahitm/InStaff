@@ -72,6 +72,21 @@ main {
 }
 
 
+#backButton{
+    background-color: white;
+    border: 3px solid lightgrey;
+    padding: 1vh;
+    transition: 0.2s all;
+}
+#backButton:hover{
+
+    cursor: pointer;
+    background-color: rgb(238, 238, 238);
+    border: 3px solid blue;
+    padding: 1vh;
+    transition: 0.2s all;
+}
+
 
 .dashboard {
     display: grid;

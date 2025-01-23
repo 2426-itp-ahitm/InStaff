@@ -150,9 +150,11 @@ class AddEmployeeComponent extends HTMLElement {
       return html`
          <h2>Add an Employee</h2>
          <form>
+            <!--
             <label for="text_input">Text Input</label>
             <input type="text" id="text_input" />
             <br />
+            -->
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name" />
             <br />
