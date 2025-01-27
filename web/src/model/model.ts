@@ -14,7 +14,7 @@ const initialState: Model = {
     employees: [],
     shifts: [],
     activeEmployeeId: null,
-    activeShiftId: 0
+    activeShiftId: null
 }
 
 // Define the Subscription type

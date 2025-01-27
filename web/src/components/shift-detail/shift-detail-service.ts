@@ -1,5 +1,4 @@
 import { Shift } from '../../interfaces/shift'
-import { Employee } from '../../interfaces/employee'
 
 const BASE_URL = '/api'
 
