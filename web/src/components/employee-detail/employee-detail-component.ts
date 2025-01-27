@@ -1,7 +1,9 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
-import { loadEmployeeDetails } from "./employee-detail-service";
+import { Employee } from "../../interfaces/employee";
+import { model } from "../../model/model";
 import RoleMapper from "./../../mapper/role-mapper";
+import { loadEmployeeDetails } from "../employee-edit/employee-edit-service";
+
 
 class EmployeeDetailComponent extends HTMLElement {
    private _employeeId: string = "";
@@ -30,20 +32,24 @@ class EmployeeDetailComponent extends HTMLElement {
 
    async renderEmployeeDetails() {
       if (!this._employeeId) return;
-      
+
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
-
+      
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
 
-      console.log(this._employeeId);
+      // Hole den Mitarbeiter entweder aus dem Modell oder von der API, wenn nicht im Modell
+      let employee = model.employees.find(emp => emp.id === Number(this._employeeId));
       
-      const employee = await loadEmployeeDetails(Number(this._employeeId));
-      
+      if (!employee) {
+         await loadEmployeeDetails(Number(this._employeeId));
+         model.employees.push(employee); // Speichere den Mitarbeiter im Modell
+      }
+
       const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
-      
+
       render(this.detailTemplate(employee, roleNames.join(', ')), this.shadowRoot);
    }
 

@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
+import { Employee } from "../../interfaces/employee";
 import { loadEmployeeDetails } from "./employee-edit-service";
 import RoleMapper from "../../mapper/role-mapper";
 

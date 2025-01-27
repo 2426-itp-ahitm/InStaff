@@ -1,42 +1,55 @@
-import { html, render } from "lit-html"
-import { Shift } from "../../models/shift"
-import { loadAllShifts } from "./shift-list-service"
+import { html, render } from "lit-html";
+import { model, subscribe } from "../../model/model";
+import { Shift } from "../../interfaces/shift";
+import { loadAllShifts } from "./shift-list-service";
 
 class ShiftListComponent extends HTMLElement {
-   activeShiftId: number = 0
-   shifts: Shift[] = []
-
    constructor() {
-      super()
-      this.attachShadow({ mode: "open" })
+      super();
+      this.attachShadow({ mode: "open" });
    }
 
    async connectedCallback() {
-      const cssResponse = await fetch("../../../style.css")
-      const css = await cssResponse.text()
+      // Load and apply CSS
+      const cssResponse = await fetch("../../../style.css");
+      const css = await cssResponse.text();
 
-      const styleElement = document.createElement("style")
-      styleElement.textContent = css
+      const styleElement = document.createElement("style");
+      styleElement.textContent = css;
+      this.shadowRoot.appendChild(styleElement);
 
-      this.shadowRoot.appendChild(styleElement)
+      // Subscribe to model updates and render when model changes
+      subscribe(model => {
+         console.log("Model updated:", model);
+         this.render(model.shifts, model.activeShiftId);
+      });
 
-      const shifts = await loadAllShifts()
-      this.shifts = shifts  // Speichere die Shifts für später
-      render(this.tableTemplate(shifts), this.shadowRoot)
+      // Load all shifts initially
+      await loadAllShifts();
    }
 
-   tableTemplate(shifts: Shift[]) {
+   render(shifts: Shift[], activeShiftId: number) {
+      // Render the template with the shifts and activeShiftId
+      render(this.template(shifts, activeShiftId), this.shadowRoot);
+   }
+
+   template(shifts: Shift[], activeShiftId: number) {
+      // Generate rows for the shifts table
       const rows = shifts.map(shift =>
-         html`<tr @click=${() => this.showShiftDetail(shift.id)}>
-               <td>${shift.startTime.substring(0,10)}</td>
+         html`
+            <tr @click=${() => this.showShiftDetail(shift.id)}>
+               <td>${shift.startTime.substring(0, 10)}</td>
                <td>${shift.startTime.substring(11)}</td>
                <td>${shift.endTime.substring(0, 10)}</td>
                <td>${shift.endTime.substring(11)}</td>
                <td>${shift.company_name}</td>
-            </tr>`
-      )
+            </tr>
+         `
+      );
+
+      // Return the template for the shift list
       return html`
-      <h2>Shifts</h2>
+         <h2>Shifts</h2>
          <table>
             <thead>
                <tr>
@@ -52,23 +65,16 @@ class ShiftListComponent extends HTMLElement {
             </tbody>
          </table>
 
-         <!-- Dynamische Anzeige des ShiftDetailComponents -->
-         <shift-detail-component .shift-id=${this.activeShiftId}></shift-detail-component>
-      `
+         <!-- Dynamically display the shift detail component -->
+         <shift-detail-component .shift-id=${activeShiftId}></shift-detail-component>
+      `;
    }
 
    showShiftDetail(id: number) {
-      console.log("showShiftDetail", id)
-      this.activeShiftId = id
-      this.reloadShiftDetail()
-   }
-
-   reloadShiftDetail() {
-      const detailComponent = this.shadowRoot.querySelector("shift-detail-component")
-      if (detailComponent) {
-         detailComponent.setAttribute('shift-id', this.activeShiftId.toString())
-      }
+      // Ensure 'this' refers to the component instance when updating the model
+      console.log("showShiftDetail", id);
+      model.activeShiftId = id;
    }
 }
 
-customElements.define("shift-list-component", ShiftListComponent)
+customElements.define("shift-list-component", ShiftListComponent);

@@ -1,4 +1,4 @@
-import { Employee } from "../../models/employee";
+import { Employee } from "../../interfaces/employee";
 
 const BASE_URL = "/api";
 

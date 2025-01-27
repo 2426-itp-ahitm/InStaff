@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
-import { Role } from "../../models/role";
+import { Employee } from "../../interfaces/employee";
+import { Role } from "../../interfaces/role";
 import { loadAllRoles } from "../role-list/role-list-service";
 
 class AddEmployeeComponent extends HTMLElement {

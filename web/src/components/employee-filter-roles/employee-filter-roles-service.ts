@@ -1,4 +1,4 @@
-import { Employee } from "../../models/employee"
+import { Employee } from "../../interfaces/employee"
 const BASE_URL = "/api"
 export async function loadEmployeesFilteredByRole(role_name: string) { 
    const response = await fetch(`${BASE_URL}/employees/role/name/${role_name}`)
