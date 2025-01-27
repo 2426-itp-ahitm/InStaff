@@ -54,8 +54,8 @@ class EmployeeListComponent extends HTMLElement {
                     padding: 8px;
                     text-align: left;
                 }
-                tr:hover {
-                    background-color: #f5f5f5;
+                tbody tr:hover {
+                    background-color:rgb(153, 150, 150);
                     cursor: pointer;
                 }
             </style>

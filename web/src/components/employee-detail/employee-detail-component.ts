@@ -53,6 +53,55 @@ class EmployeeDetailComponent extends HTMLElement {
       render(this.detailTemplate(employee, roleNames.join(', ')), this.shadowRoot);
    }
 
+   async updateEmployee() {
+      const shadowRoot = this.shadowRoot!;
+      const employeeForm = shadowRoot.querySelector<HTMLFormElement>("#employeeForm");
+      const firstnameInput = shadowRoot.querySelector<HTMLInputElement>("#firstname");
+      const lastnameInput = shadowRoot.querySelector<HTMLInputElement>("#lastname");
+      const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
+      const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
+      const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
+      const rolesInput = shadowRoot.querySelector<HTMLInputElement>("#roles");
+
+      if (employeeForm?.checkValidity()) {
+         const updatedEmployee: Employee = {
+            id: Number(this._employeeId),
+            firstname: firstnameInput.value,
+            lastname: lastnameInput.value,
+            email: emailInput.value,
+            telephone: telephoneInput.value,
+            birthdate: birthdateInput.value,
+            password: '', // TODO: get password from the form
+            company_name: shadowRoot.querySelector<HTMLInputElement>("#company_name")?.value || '',
+            company_id: 1, // TODO: get company_id from the form
+            roles: [1, 2] // TODO: Parse rolesInput.value to an array of role IDs
+         };
+
+         // Update the employee in the model
+         const employeeIndex = model.employees.findIndex(emp => emp.id === updatedEmployee.id);
+         if (employeeIndex !== -1) {
+            model.employees[employeeIndex] = updatedEmployee;
+         } else {
+            model.employees.push(updatedEmployee);
+         }
+
+         // Optionally, you can also update the employee on the server
+         const response = await fetch(`/api/employees/${this._employeeId}`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatedEmployee)
+         });
+
+         if (response.ok) {
+            console.log("Employee updated successfully");
+         } else {
+            console.error(`Error: ${response.statusText}`);
+         }
+      }
+   }
+
    connectedCallback() {
       this.renderEmployeeDetails();
    }
@@ -65,13 +114,32 @@ class EmployeeDetailComponent extends HTMLElement {
 
    detailTemplate(employee: Employee, roleNames: string) {
       return html`
-         <h2>${employee.firstname} ${employee.lastname}</h2> 
-         <h3><i>${employee.company_name}</i></h3>
-         <p><b>Employee ID:</b> ${employee.id}</p>
-         <p><b>Birthdate:</b> ${employee.birthdate}</p>
-         <p><b>Email:</b> ${employee.email}</p>
-         <p><b>Telephone:</b> ${employee.telephone}</p>
-         <p><b>Roles:</b> ${roleNames}</p>
+      <form id="employeeForm">
+         <h2><input type="text" id="firstname" name="firstname" placeholder="First Name" value="${employee.firstname}" required> 
+            <input type="text" id="lastname" name="lastname" placeholder="Last Name" value="${employee.lastname}" required>
+         </h2>
+         <h3>
+            ${employee.company_name}
+         </h3>
+         <p>Employee ID: ${employee.id}</p>
+         <p>
+            <b>Birthdate:</b> 
+            <input type="date" id="birthdate" name="birthdate" value="${employee.birthdate}" required>
+         </p>
+         <p>
+            <b>Email:</b> 
+            <input type="email" id="email" name="email" placeholder="Email" value="${employee.email}" required>
+         </p>
+         <p>
+            <b>Telephone:</b> 
+            <input type="tel" id="telephone" name="telephone" placeholder="Telephone" value="${employee.telephone}" required>
+         </p>
+         <p>
+            <b>Roles:</b> 
+            <input type="text" id="roles" name="roles" placeholder="Roles" value="${roleNames}" required>
+         </p>
+         <button @click=${() => this.updateEmployee()} type="button">Submit</button>
+      </form>
       `;
    }
 }
