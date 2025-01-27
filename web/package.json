@@ -30,6 +30,7 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "lit-html": "^3.2.1"
+    "lit-html": "^3.2.1",
+    "luxon": "^3.5.0"
   }
 }

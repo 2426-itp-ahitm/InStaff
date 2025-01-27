@@ -1,119 +1,102 @@
-import { html, render } from "lit-html";
-import { Shift } from "../../interfaces/shift";
-import { model } from "../../model/model"; // Assuming model is the shared data model
-import RoleMapper from "./../../mapper/role-mapper";
-import EmployeeMapper from "./../../mapper/employee-mapper";
-import { loadShiftDetailed } from "./shift-detail-service";
+import { html, render } from "lit-html"
+import { Shift } from "../../interfaces/shift"
+import { loadShiftDetailed } from "./shift-detail-service"
+import RoleMapper from "./../../mapper/role-mapper"
+import EmployeeMapper from "./../../mapper/employee-mapper"
+import { DateTime } from "luxon"
+import { model, subscribe } from "../../model/model" // Assuming model is being used to manage the state
 
 class ShiftDetailComponent extends HTMLElement {
-   private _shiftId: string = "";
-   private roleMapper = new RoleMapper();
-   private employeeMapper = new EmployeeMapper();
+   private roleMapper = new RoleMapper()
+   private employeeMapper = new EmployeeMapper()
 
    constructor() {
-      super();
-      this.attachShadow({ mode: "open" });
-   }
+      super()
+      this.attachShadow({ mode: "open" })
 
-   static get observedAttributes() {
-      return ['shift-id'];
-   }
-
-   get shiftId() {
-      return this._shiftId;
-   }
-
-   set shiftId(value: string) {
-      const newValue = value || '';
-      if (newValue !== this._shiftId) {
-         this._shiftId = newValue;
-         this.renderShiftDetails();
-      }
+      // Subscribe to model updates to re-render when the shiftId changes
+      subscribe(() => this.renderShiftDetails())
    }
 
    async renderShiftDetails() {
-      console.log("Rendering shift details for shiftId:", this._shiftId); // Debugging line
-      if (!this._shiftId) return;
-  
-      const cssResponse = await fetch("../../../style.css");
-      const css = await cssResponse.text();
+      const shiftId = model.activeShiftId // Use model to get the active shiftId
+      if (!shiftId) return;
+
+      // Load CSS dynamically
+      const cssResponse = await fetch("../../../style.css")
+      const css = await cssResponse.text()
+
+      const styleElement = document.createElement("style")
+      styleElement.textContent = css
+      this.shadowRoot.appendChild(styleElement)
+
+      console.log("shift id: " + shiftId);
       
-      const styleElement = document.createElement("style");
-      styleElement.textContent = css;
-      this.shadowRoot.appendChild(styleElement);
-  
-      let shift = model.shifts.find(s => s.id === Number(this._shiftId));
-      if (!shift) {
-         console.log("Shift not found in model, fetching from API..."); // Debugging line
-         await loadShiftDetailed(Number(this._shiftId)); // Load the shift details from the service
-         shift = model.shifts.find(s => s.id === Number(this._shiftId));
-      }
-  
-      console.log("Shift data:", shift); // Debugging line
-  
-      const assignments = await this.loadAssignments(Number(this._shiftId));
-      console.log("Assignments:", assignments); // Debugging line
-  
-      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
-      console.log("Mapped employeeRoleData:", employeeRoleData); // Debugging line
-  
-      render(this.tableTemplate(shift, employeeRoleData), this.shadowRoot);
+      // Fetch shift and assignments based on shiftId
+      const shift = await loadShiftDetailed(shiftId)
+      const assignments = await this.loadAssignments(shiftId)
+      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments)
+
+      render(this.tableTemplate(shift, employeeRoleData), this.shadowRoot)
    }
 
-   connectedCallback() {
-      this.renderShiftDetails();
+   async connectedCallback() {
+      this.renderShiftDetails() // Initial render when the component is added to the DOM
    }
 
    async loadAssignments(shiftId: number) {
-      const response = await fetch(`/api/assignments/shift/${shiftId}`);
-      const assignments = await response.json();
-      return assignments;
+      const response = await fetch(`/api/assignments/shift/${shiftId}`)
+      const assignments = await response.json()
+      return assignments
    }
 
    async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number }[]) {
-      const employeesMap = await this.employeeMapper.loadEmployees();
-      const rolesMap = await this.roleMapper.loadRoles();
-      
-      console.log("Employees Map:", employeesMap); // Debugging line
-      console.log("Roles Map:", rolesMap); // Debugging line
-  
-      return assignments.map(assignment => ({
-         employeeName: employeesMap[assignment.employee],
-         roleName: rolesMap[assignment.role]
-      }));
-   }
+      const employeesMap = await this.employeeMapper.loadEmployees()
+      const rolesMap = await this.roleMapper.loadRoles()
 
-   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-      if (name === "shift-id") {
-         this.shiftId = newValue;
-      }
+      return assignments.map(assignment => ({
+         employeeName: employeesMap[assignment.employee]?.name || "Unknown Employee",
+         roleName: rolesMap[assignment.role]?.name || "Unknown Role"
+      }))
    }
 
    tableTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
+      const shiftStart = DateTime.fromISO(shift.startTime)
+      const shiftEnd = DateTime.fromISO(shift.endTime)
+
+      const formattedDate = shiftStart.toLocaleString(DateTime.DATE_HUGE) // "17. Januar 2025"
+      const formattedTime = `${shiftStart.toFormat("HH:mm")} - ${shiftEnd.toFormat("HH:mm")}` // "08:00 - 16:00"
+   
       return html`
-         <h2>${shift.startTime.substring(0, 10)} - ${shift.endTime.substring(0, 10)}</h2>
-         <h2>${shift.startTime.substring(11)} - ${shift.endTime.substring(11)}</h2>
-         <h3>${shift.company_name}</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Employee Name</th>
-                  <th>Role</th>
-               </tr>
-            </thead>
-            <tbody>
-               ${employeeRoleData.map(
-         data => html`
-                     <tr>
-                        <td>${data.employeeName}</td>
-                        <td>${data.roleName}</td>
-                     </tr>
-                  `
-      )}
-            </tbody>
-         </table>
+         <div class="shift-detail">
+            <div class="shift-datetime">
+               <span class="date">
+                  <time datetime="${shift.startTime}">${formattedDate}</time>
+               </span>
+               <span class="time">${formattedTime}</span>
+            </div>
+            <h3>${shift.company_name}</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Employee Name</th>
+                     <th>Role</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  ${employeeRoleData.map(
+                     data => html`
+                        <tr>
+                           <td>${data.employeeName}</td>
+                           <td>${data.roleName}</td>
+                        </tr>
+                     `
+                  )}
+               </tbody>
+            </table>
+         </div>
       `;
    }
 }
 
-customElements.define("shift-detail-component", ShiftDetailComponent);
+customElements.define("shift-detail-component", ShiftDetailComponent)

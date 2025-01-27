@@ -17,7 +17,6 @@ class EmployeeListComponent extends HTMLElement {
         styleElement.textContent = css
 
         this.shadowRoot.appendChild(styleElement)
-        
         // Subscribe to model updates
         subscribe(model => {
             console.log("Model updated:", model)

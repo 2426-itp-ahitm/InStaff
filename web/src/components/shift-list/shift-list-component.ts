@@ -64,16 +64,19 @@ class ShiftListComponent extends HTMLElement {
                ${rows}
             </tbody>
          </table>
-
-         <!-- Dynamically display the shift detail component -->
-         <shift-detail-component .shift-id=${activeShiftId}></shift-detail-component>
+         ${activeShiftId
+            ? html`
+                <shift-detail-component .shiftId=${activeShiftId}></shift-detail-component>
+              `
+            : html`<p>Select an shift to view details</p>`
+        }
       `;
    }
 
    showShiftDetail(id: number) {
-      // Ensure 'this' refers to the component instance when updating the model
+      // Update the activeShiftId in the model, triggering a re-render
       console.log("showShiftDetail", id);
-      model.activeShiftId = id;
+      model.activeShiftId = id; // This triggers the subscription and updates the shift detail
    }
 }
 
