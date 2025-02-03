@@ -1,52 +1,47 @@
 import { html, render } from "lit-html"
-import { Shift } from "../../models/shift"
+import { Shift } from "../../interfaces/shift"
 import { loadShiftDetailed } from "./shift-detail-service"
 import RoleMapper from "./../../mapper/role-mapper"
 import EmployeeMapper from "./../../mapper/employee-mapper"
+import { DateTime } from "luxon"
+import { model, subscribe } from "../../model/model" // Assuming model is being used to manage the state
 
 class ShiftDetailComponent extends HTMLElement {
-   private _shiftId: string = ""
    private roleMapper = new RoleMapper()
    private employeeMapper = new EmployeeMapper()
 
    constructor() {
       super()
       this.attachShadow({ mode: "open" })
-   }
-   static get observedAttributes() {
-      return ['shift-id']
-   }
-   get shiftId() {
-      return this._shiftId
-   }
-   set shiftId(value: string) {
-      const newValue = value || ''
-      if (newValue !== this._shiftId) {
-         this._shiftId = newValue
-         this.renderShiftDetails()
-      }
-   }  
-   
-   async renderShiftDetails() {
-      if (!this._shiftId) return;
 
+      // Subscribe to model updates to re-render when the shiftId changes
+      subscribe(() => this.renderShiftDetails())
+   }
+
+   async renderShiftDetails() {
+      const shiftId = model.activeShiftId // Use model to get the active shiftId
+      if (!shiftId) return;
+
+      // Load CSS dynamically
       const cssResponse = await fetch("../../../style.css")
       const css = await cssResponse.text()
 
       const styleElement = document.createElement("style")
       styleElement.textContent = css
       this.shadowRoot.appendChild(styleElement)
-      console.log("shift id: " + this._shiftId);
+
+      console.log("shift id: " + shiftId);
       
-      const shift = await loadShiftDetailed(Number(this._shiftId))
-      const assignments = await this.loadAssignments(Number(this._shiftId))
+      // Fetch shift and assignments based on shiftId
+      const shift = await loadShiftDetailed(shiftId)
+      const assignments = await this.loadAssignments(shiftId)
       const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments)
+
       render(this.tableTemplate(shift, employeeRoleData), this.shadowRoot)
    }
 
-
    async connectedCallback() {
-      this.renderShiftDetails()
+      this.renderShiftDetails() // Initial render when the component is added to the DOM
    }
 
    async loadAssignments(shiftId: number) {
@@ -56,44 +51,57 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number }[]) {
-      const employeesMap = await this.employeeMapper.loadEmployees()
-      const rolesMap = await this.roleMapper.loadRoles()
+      const employeeIds = [...new Set(assignments.map(a => a.employee))];
+        const roleIds = [...new Set(assignments.map(a => a.role))];
 
-      return assignments.map(assignment => ({
-         employeeName: employeesMap[assignment.employee],
-         roleName: rolesMap[assignment.role]
-      }))
-   }
-   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-      if (name === "shift-id") {
-         this.shiftId = newValue;
-      }
+        const employeeNames = await this.employeeMapper.mapEmployeeIdsToNames(employeeIds);
+        const roleNames = await this.roleMapper.mapRoleIdsToNames(roleIds);
+
+        const employeeMap = Object.fromEntries(employeeIds.map((id, index) => [id, employeeNames[index]]));
+        const roleMap = Object.fromEntries(roleIds.map((id, index) => [id, roleNames[index]]));
+
+        return assignments.map(a => ({
+            employeeName: employeeMap[a.employee],
+            roleName: roleMap[a.role]
+        }));
    }
 
    tableTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
+      const shiftStart = DateTime.fromISO(shift.startTime)
+      const shiftEnd = DateTime.fromISO(shift.endTime)
+
+      const formattedDate = shiftStart.toLocaleString(DateTime.DATE_HUGE) // "17. Januar 2025"
+      const formattedTime = `${shiftStart.toFormat("HH:mm")} - ${shiftEnd.toFormat("HH:mm")}` // "08:00 - 16:00"
+   
       return html`
-         <h2>${shift.startTime.substring(0, 10)} - ${shift.endTime.substring(0, 10)}</h2>
-         <h2>${shift.startTime.substring(11)} - ${shift.endTime.substring(11)}</h2>
-         <h3>${shift.company_name}</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Employee Name</th>
-                  <th>Role</th>
-               </tr>
-            </thead>
-            <tbody>
-               ${employeeRoleData.map(
-         data => html`
-                     <tr>
-                        <td>${data.employeeName}</td>
-                        <td>${data.roleName}</td>
-                     </tr>
-                  `
-      )}
-            </tbody>
-         </table>
-      `
+         <div class="shift-detail">
+            <div class="shift-datetime">
+               <span class="date">
+                  <time datetime="${shift.startTime}">${formattedDate}</time>
+               </span>
+               <span class="time">${formattedTime}</span>
+            </div>
+            <h3>${shift.company_name}</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Employee Name</th>
+                     <th>Role</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  ${employeeRoleData.map(
+                     data => html`
+                        <tr>
+                           <td>${data.employeeName}</td>
+                           <td>${data.roleName}</td>
+                        </tr>
+                     `
+                  )}
+               </tbody>
+            </table>
+         </div>
+      `;
    }
 }
 

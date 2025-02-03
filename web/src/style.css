@@ -72,6 +72,21 @@ main {
 }
 
 
+#backButton{
+    background-color: white;
+    border: 3px solid lightgrey;
+    padding: 1vh;
+    transition: 0.2s all;
+}
+#backButton:hover{
+
+    cursor: pointer;
+    background-color: rgb(238, 238, 238);
+    border: 3px solid blue;
+    padding: 1vh;
+    transition: 0.2s all;
+}
+
 
 .dashboard {
     display: grid;
@@ -198,5 +213,112 @@ nav a.selected {
     nav a {
         font-size: 0.95rem; /* Etwas größere Schrift für sehr kleine Bildschirme */
         padding: 0.7rem 1.1rem; /* Angepasstes Padding für kleine Bildschirme */
+    }
+}
+
+
+/* Shift Detail Component Styles */
+.shift-detail {
+    font-family: "Inter", sans-serif;
+    color: #333;
+    display: block;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.shift-detail h2, .shift-detail h3 {
+    text-align: center;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.shift-detail h2 {
+    font-size: 1.5rem;
+}
+
+.shift-detail h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #16a085;
+}
+
+/* Shift Date & Time Styling */
+.shift-detail .shift-datetime {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    color: white;
+}
+
+.shift-detail .shift-datetime .date {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.shift-detail .shift-datetime .time {
+    font-size: 1.3rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Table Styles */
+.shift-detail table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8f9fa;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.05);
+}
+
+.shift-detail thead {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: bold;
+}
+
+.shift-detail thead th {
+    padding: 12px;
+    text-align: left;
+}
+
+.shift-detail tbody tr {
+    transition: background 0.3s ease;
+}
+
+.shift-detail tbody tr:nth-child(even) {
+    background-color: #ecf0f1;
+}
+
+.shift-detail tbody tr:hover {
+    background-color: #dfe6e9;
+}
+
+.shift-detail td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .shift-detail {
+        padding: 15px;
+    }
+    
+    .shift-detail table {
+        display: block;
+        overflow-x: auto;
     }
 }

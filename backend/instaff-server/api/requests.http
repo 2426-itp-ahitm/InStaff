@@ -47,8 +47,23 @@ Content-Type: application/json
   "company_name": "Ben's Pizza"
 }
 
+### Edit employee
+POST http://localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "firstname": "Bob",
+  "lastname": "Baumeister",
+  "email": "bob@baumeister.com",
+  "birthdate": "1980-11-11"
+}
+
 ### Assign role 2 to employee 3
 PUT http://localhost:8080/api/employees/3/assignrole/2
+Content-Type: application/json
+
+### Remove role 2 from employee 3
+PUT http://localhost:8080/api/employees/3/removerole/2
 Content-Type: application/json
 
 ### Assign Shift 3 to employee 1 with Role 1

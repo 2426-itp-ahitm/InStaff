@@ -1,6 +1,6 @@
 # InStaff
 
-## The Staff Management 
+## The Staff Management System
 
 ## Team
 
@@ -12,47 +12,51 @@
 ## General
 
 * Web Application
-* in the future IOs and Android Application
+* Future plans: iOS and Android applications
 
 ## Initial Situation
 
-At the moment asks a manager from a company his employees via WhatsApp, Facebook or Instagram if they can work on a specific day. 
-Then the employees answer if they have time to work or not. This is very confusing and cumbersome for the manager and his employees.
-
+Currently, managers in companies ask their employees via WhatsApp, Facebook, or Instagram whether they are available to work on specific days. Employees then respond whether they can work or not. This process is confusing and cumbersome for both managers and employees.
 
 ## Project Objectives
 
- Application where the manager can:
-* create a new company
-* invite employees to his company
-* add new employees
-* manage and edit his employees
-* give his employees specific fields of activity
-* notify them if they are able to work (invite them to an appointment)
-* view his employees in an organized way
-* create new appointments for his employees
+The application will provide the following functionality:
 
-  And the employees can:
-* join a company
-* be notified when the manager invites him to an appointment
-* view all his future (and previous) appointments
-* sign up for an appointment or decline an invitation
+### For Managers:
+* Create a new company
+* Invite employees to their company
+* Add new employees
+* Manage and edit employee details
+* Assign specific fields of activity to employees
+* Notify employees of work opportunities (e.g., invite them to appointments)
+* View employees in an organized way
+* Create new appointments for employees
+
+### For Employees:
+* Join a company
+* Receive notifications when the manager invites them to an appointment
+* View all upcoming and previous appointments
+* Sign up for or decline invitations to appointments
 
 ## Toolstack
 
-* Frontend:
-  + Webpack
-  + HTML, CSS, JS
-* Backend
-  + Quarkus Server
-  + Java
+### Frontend:
+* Webpack
+* HTML, CSS, JavaScript
 
-## Opportunities and risks
+### Backend:
+* Quarkus Server
+* Java
 
-* huge companies which often have temporary employees use our application.
-* git merge conflicts
+## Opportunities and Risks
 
-# Development using a local docker compose database
+### Opportunities:
+* Large companies with many temporary employees can benefit greatly from using our application.
+
+### Risks:
+* Potential challenges with git merge conflicts during development.
+
+# Development Using a Local Docker Compose Database
 
 ## Starting
 
@@ -60,22 +64,20 @@ Then the employees answer if they have time to work or not. This is very confusi
 ./start.sh
 ```
 
-## delete all docker containers, images and volumes
+## Deleting All Docker Containers, Images, and Volumes
 
 ```bash
 ./clean-docker.sh
 ```
 
-
-## backup the database
+## Backing Up the Database
 
 ```bash
 docker exec -it postgres pg_dump -U demo > demo-backup.sql
 ```
 
-## stop the database
+## Stopping the Database
 
 ```bash
 ./down.sh
 ```
-

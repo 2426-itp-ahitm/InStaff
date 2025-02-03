@@ -12,15 +12,3 @@ export async function loadEmployeeDetails(employeeId: number): Promise<Employee>
       return {} as Employee
    }
 }
-
-export async function updateEmployee(employee: Employee): Promise<Employee> {
-   const response = await fetch(`${BASE_URL}/employees/${employee.id}`, {
-      method: "POST",
-      headers: {
-         "Content-Type": "application/json"
-      },
-      body: JSON.stringify(employee)
-   })
-
-   return await response.json()
-}

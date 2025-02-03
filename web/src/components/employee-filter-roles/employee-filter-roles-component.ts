@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
+import { Employee } from "../../interfaces/employee";
 import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service";
 
 class EmployeeFilterRolesComponent extends HTMLElement {

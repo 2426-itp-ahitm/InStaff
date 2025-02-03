@@ -1,5 +1,5 @@
 import { html, render } from "lit-html"
-import { Role } from "../../models/role"
+import { Role } from "../../interfaces/role"
 import { loadAllRoles } from "./role-list-service"
 
 
