@@ -4,7 +4,6 @@ import { model } from "../../model/model";
 import RoleMapper from "./../../mapper/role-mapper";
 import { loadEmployeeDetails } from "../employee-edit/employee-edit-service";
 
-
 class EmployeeDetailComponent extends HTMLElement {
    private _employeeId: string = "";
    private roleMapper = new RoleMapper();
@@ -72,10 +71,12 @@ class EmployeeDetailComponent extends HTMLElement {
             telephone: telephoneInput.value,
             birthdate: birthdateInput.value,
             password: '', // TODO: get password from the form
-            company_name: shadowRoot.querySelector<HTMLInputElement>("#company_name")?.value || '',
+            company_name: model.employees.find(emp => emp.id === Number(this._employeeId))?.company_name, // TODO: get company_name from the form
             company_id: 1, // TODO: get company_id from the form
             roles: [1, 2] // TODO: Parse rolesInput.value to an array of role IDs
          };
+         console.log();
+         
 
          // Update the employee in the model
          const employeeIndex = model.employees.findIndex(emp => emp.id === updatedEmployee.id);
@@ -115,8 +116,9 @@ class EmployeeDetailComponent extends HTMLElement {
    detailTemplate(employee: Employee, roleNames: string) {
       return html`
       <form id="employeeForm">
-         <h2><input type="text" id="firstname" name="firstname" placeholder="First Name" value="${employee.firstname}" required> 
-            <input type="text" id="lastname" name="lastname" placeholder="Last Name" value="${employee.lastname}" required>
+         <h2>
+            <input type="text" id="firstname" name="firstname" placeholder="First Name" .value="${employee.firstname}" required> 
+            <input type="text" id="lastname" name="lastname" placeholder="Last Name" .value="${employee.lastname}" required>
          </h2>
          <h3>
             ${employee.company_name}
@@ -124,19 +126,19 @@ class EmployeeDetailComponent extends HTMLElement {
          <p>Employee ID: ${employee.id}</p>
          <p>
             <b>Birthdate:</b> 
-            <input type="date" id="birthdate" name="birthdate" value="${employee.birthdate}" required>
+            <input type="date" id="birthdate" name="birthdate" .value="${employee.birthdate}" required>
          </p>
          <p>
             <b>Email:</b> 
-            <input type="email" id="email" name="email" placeholder="Email" value="${employee.email}" required>
+            <input type="email" id="email" name="email" placeholder="Email" .value="${employee.email}" required>
          </p>
          <p>
             <b>Telephone:</b> 
-            <input type="tel" id="telephone" name="telephone" placeholder="Telephone" value="${employee.telephone}" required>
+            <input type="tel" id="telephone" name="telephone" placeholder="Telephone" .value="${employee.telephone}" required>
          </p>
          <p>
             <b>Roles:</b> 
-            <input type="text" id="roles" name="roles" placeholder="Roles" value="${roleNames}" required>
+            <input type="text" id="roles" name="roles" placeholder="Roles" .value="${roleNames}" required>
          </p>
          <button @click=${() => this.updateEmployee()} type="button">Submit</button>
       </form>
