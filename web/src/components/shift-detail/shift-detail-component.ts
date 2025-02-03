@@ -51,13 +51,19 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number }[]) {
-      const employeesMap = await this.employeeMapper.loadEmployees()
-      const rolesMap = await this.roleMapper.loadRoles()
+      const employeeIds = [...new Set(assignments.map(a => a.employee))];
+        const roleIds = [...new Set(assignments.map(a => a.role))];
 
-      return assignments.map(assignment => ({
-         employeeName: employeesMap[assignment.employee]?.name || "Unknown Employee",
-         roleName: rolesMap[assignment.role]?.name || "Unknown Role"
-      }))
+        const employeeNames = await this.employeeMapper.mapEmployeeIdsToNames(employeeIds);
+        const roleNames = await this.roleMapper.mapRoleIdsToNames(roleIds);
+
+        const employeeMap = Object.fromEntries(employeeIds.map((id, index) => [id, employeeNames[index]]));
+        const roleMap = Object.fromEntries(roleIds.map((id, index) => [id, roleNames[index]]));
+
+        return assignments.map(a => ({
+            employeeName: employeeMap[a.employee],
+            roleName: roleMap[a.role]
+        }));
    }
 
    tableTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
