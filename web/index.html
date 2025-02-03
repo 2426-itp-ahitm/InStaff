@@ -9,26 +9,40 @@
 </head>
 
 <body>
-    <h1></h1>
-    <nav>
-        <a href="#/">Home</a>
-        <a href="#/employee-list">Employee List</a>
-        <a href="#/shift-list">Shift List</a>
-        <a href="#/shift-detail">Shift Detail</a>
-        <a href="#/add-employee">Add Employee</a>
-        <a href="#/add-shift">Add Shift</a>
-        <a href="#/edit-shift">Edit Shift</a>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">InStaff</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/employee-list">Employee List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/add-employee">Add Employee</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/shift-list">Shift List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/add-shift">Add Shift</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#/edit-shift">Edit Shift</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-
     <app-component></app-component>
-    
+
 
 </body>
 
 </html>
-<!--
-<a href="#/employee-detail">Employee Detail</a>
-<a href="#/employee-filter-roles">Employee Roles Filtered</a>
-<a href="#/role-list">Role List</a>
-<a href="#/manager-list">Manager List</a>
--->

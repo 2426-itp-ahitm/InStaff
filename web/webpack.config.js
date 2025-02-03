@@ -54,12 +54,23 @@ const config = {
             },
             {
                 test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
-                use: [stylesHandler, 'css-loader'],
+                use: [
+                    stylesHandler,
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader', // For autoprefixing
+                        options: {
+                            postcssOptions: {
+                                plugins: [require('autoprefixer')]
+                            }
+                        }
+                    }],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
+
         ],
     },
     resolve: {
