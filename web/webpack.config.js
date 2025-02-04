@@ -55,14 +55,15 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    stylesHandler,
-                    'css-loader',
-                    'sass-loader',
-                ],
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+                include: /node_modules/,
             },
-            // Other file types (unchanged)
+            {
+                test: /\.s[ac]ss$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+                exclude: /node_modules/,
+            },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
