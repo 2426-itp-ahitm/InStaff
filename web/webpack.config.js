@@ -15,6 +15,10 @@ const config = {
     },
     devtool: "cheap-source-map",
     devServer: {
+        static: {
+            directory: path.resolve(__dirname, 'target'),
+            publicPath: '/',
+        },
         open: true,
         host: 'localhost',
         port: 4200,
@@ -28,7 +32,10 @@ const config = {
                 ws: true,
                 historyApiFallback: true
             }
-        ]
+        ],
+        headers: {
+            "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:;"
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -37,7 +44,7 @@ const config = {
             scriptLoading: "module"
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].css',
+            filename: 'style.css',
         })
     ],
     module: {
@@ -46,13 +53,6 @@ const config = {
                 test: /\.(ts|tsx)$/i,
                 loader: 'ts-loader',
                 exclude: ['/node_modules/'],
-            },
-            {
-                test: /node_modules\/bulma\/css\/bulma.min.css$/i,
-                use: [
-                    stylesHandler,
-                    'css-loader',
-                ],
             },
             {
                 test: /\.s[ac]ss$/i,

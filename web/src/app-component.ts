@@ -11,6 +11,7 @@ import "./components/employee-detail";
 import "./components/add-employee";
 import "./components/add-shift";
 import "./components/edit-shift";
+import "./components/nav-bar";
 
 const routes: Record<string, any> = {
     "": html`<home-component></home-component>`,

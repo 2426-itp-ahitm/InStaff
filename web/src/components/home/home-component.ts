@@ -64,6 +64,7 @@ const dashboardTemplate = () => {
 
    return html`
    <link rel="stylesheet" href="style.css">
+   <nav-bar-component></nav-bar-component>
    <div>
       <h1 class="title">Alexander's Company</h1>
       <p class="subtitle">Manager: Alexander Hahn</p>
