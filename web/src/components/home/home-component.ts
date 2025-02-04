@@ -5,42 +5,42 @@ const dashboardTemplate = () => {
       {
          title: "Remove Shift",
          description: "Remove existing shifts",
-         icon: "bi-calendar-x", // Bootstrap Icon für das Minuszeichen
+         icon: "bi-calendar-x",
          link: "#/remove-shift",
          class: "small",
       },
       {
          title: "Add Shift",
          description: "Add new shifts",
-         icon: "bi-calendar-plus", // Bootstrap Icon für das Pluszeichen
+         icon: "bi-calendar-plus",
          link: "#/add-shift",
          class: "small",
       },
       {
          title: "Edit Employees",
          description: "Edit employee details",
-         icon: "bi-person", // Bootstrap Icon für eine Person
+         icon: "bi-person",
          link: "#/edit-employees",
          class: "small",
       },
       {
          title: "Employee List",
          description: "View all employees",
-         icon: "bi-person-lines-fill", // Bootstrap Icon für mehrere Personen
+         icon: "bi-person-lines-fill",
          link: "#/employee-list",
          class: "small",
       },
       {
          title: "Calendar",
          description: "Check schedules",
-         icon: "bi-calendar", // Bootstrap Icon für einen Kalender
+         icon: "bi-calendar",
          link: "#/calendar",
          class: "wide",
       },
       {
          title: "Message Employees",
          description: "Communicate with employees",
-         icon: "bi-chat", // Bootstrap Icon für Chat
+         icon: "bi-chat",
          link: "#/message-employees",
          class: "wide",
       },
@@ -86,18 +86,6 @@ class HomeComponent extends HTMLElement {
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
-
-      // Bootstrap CSS hinzufügen
-      const bootstrapLink = document.createElement('link');
-      bootstrapLink.rel = 'stylesheet';
-      bootstrapLink.href = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';  // Oder dein lokales Stylesheet
-      this.shadowRoot.appendChild(bootstrapLink);
-
-      // Bootstrap Icons hinzufügen
-      const iconsLink = document.createElement('link');
-      iconsLink.rel = 'stylesheet';
-      iconsLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css';
-      this.shadowRoot.appendChild(iconsLink);
 
       render(dashboardTemplate(), this.shadowRoot);
    }
