@@ -48,28 +48,31 @@ const dashboardTemplate = () => {
 
    const cardTemplates = cards.map(
       (card) => html`
-      <a href="${card.link}" class="card ${card.class} col-md-3 m-4">
-         <div class="card-body">
-            <div class="card-icon mb-3">
-               <i class="bi ${card.icon}" style="font-size: 25px"></i>
+      <div class="cell">
+         <div class="card">
+            <div class="card-content" href="${card.link}">
+               <div class="content">
+                  <p class="text">${card.icon}</p>
+                  <p class="title">${card.title}</p>
+                  <p class="subtitle">${card.description}</p>
+               </div>
             </div>
-            <h5 class="card-title">${card.title}</h5>
-            <p class="card-text">${card.description}</p>
          </div>
-      </a>
+      </div>
       `
    );
 
    return html`
-      <div class="container">
-         <h1 class="display-4 text-center my-4">Alexander's Company</h1>
-         <p class="text-center">Manager: Alexander Hahn</p>
+   <link rel="stylesheet" href="style.css">
+   <div>
+      <h1 class="title">Alexander's Company</h1>
+      <p class="subtitle">Manager: Alexander Hahn</p>
+   </div>
+   <div class="fixed-grid has-3-cols" is-light>
+      <div class="grid">
+         ${cardTemplates}
       </div>
-      <main class="container">
-         <section class="row justify-content-center">
-            ${cardTemplates}
-         </section>
-      </main>
+   </div>
    `;
 };
 
@@ -80,13 +83,14 @@ class HomeComponent extends HTMLElement {
    }
 
    async connectedCallback() {
-      const cssResponse = await fetch("../../../style/style.css")
-      const css = await cssResponse.text();
+      /*
+         const cssResponse = await fetch("../../../style.css")
+         const css = await cssResponse.text();
 
-      const styleElement = document.createElement("style");
-      styleElement.textContent = css;
-      this.shadowRoot.appendChild(styleElement);
-
+         const styleElement = document.createElement("style");
+         styleElement.textContent = css;
+         this.shadowRoot.appendChild(styleElement);
+      */
       render(dashboardTemplate(), this.shadowRoot);
    }
 }

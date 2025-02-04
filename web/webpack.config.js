@@ -55,10 +55,8 @@ const config = {
             {
                 test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
                 use: [
-                    MiniCssExtractPlugin.loader,
                     stylesHandler,
                     'css-loader',
-                    'sass-loader'
                 ]
             },
             {
