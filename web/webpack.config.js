@@ -41,7 +41,7 @@ const config = {
         }),
         new CopyPlugin({
             patterns: [
-                { from: "src/style.css", to: "style.css" }
+                { from: "src/style/style.css", to: "style.css" }
             ]
         })
     ],

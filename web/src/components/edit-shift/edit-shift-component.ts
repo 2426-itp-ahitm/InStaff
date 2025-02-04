@@ -9,7 +9,7 @@ class EditShiftComponent extends HTMLElement {
     }
 
     async connectedCallback() {
-        const cssResponse = await fetch("../../../style.css");
+        const cssResponse = await fetch("../../../style/style.css")
         const css = await cssResponse.text();
 
         const styleElement = document.createElement("style");

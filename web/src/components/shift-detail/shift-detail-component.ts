@@ -23,7 +23,7 @@ class ShiftDetailComponent extends HTMLElement {
       if (!shiftId) return;
 
       // Load CSS dynamically
-      const cssResponse = await fetch("../../../style.css")
+      const cssResponse = await fetch("../../../style/style.css")
       const css = await cssResponse.text()
 
       const styleElement = document.createElement("style")

@@ -11,7 +11,7 @@ class ShiftListComponent extends HTMLElement {
 
    async connectedCallback() {
       // Load and apply CSS
-      const cssResponse = await fetch("../../../style.css");
+      const cssResponse = await fetch("../../../style/style.css")
       const css = await cssResponse.text();
 
       const styleElement = document.createElement("style");
