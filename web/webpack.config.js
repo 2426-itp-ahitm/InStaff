@@ -55,16 +55,11 @@ const config = {
             {
                 test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
                 use: [
+                    MiniCssExtractPlugin.loader,
                     stylesHandler,
                     'css-loader',
-                    {
-                        loader: 'postcss-loader', // For autoprefixing
-                        options: {
-                            postcssOptions: {
-                                plugins: [require('autoprefixer')]
-                            }
-                        }
-                    }],
+                    'sass-loader'
+                ]
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,

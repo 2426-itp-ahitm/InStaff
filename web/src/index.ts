@@ -1,6 +1,6 @@
 import './app-component';
 import { navigate } from './router';
-//import '../src/style.css';
+import '../src/style/style.css';
 
 
 window.addEventListener('load', navigate)
