@@ -38,11 +38,6 @@ const config = {
         }),
         new MiniCssExtractPlugin({
             filename: '[name].css',
-        }),
-        new CopyPlugin({
-            patterns: [
-                { from: "src/style/style.css", to: "style.css" }
-            ]
         })
     ],
     module: {
@@ -53,17 +48,25 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
+                test: /node_modules\/bulma\/css\/bulma.min.css$/i,
                 use: [
                     stylesHandler,
                     'css-loader',
-                ]
+                ],
             },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    stylesHandler,
+                    'css-loader',
+                    'sass-loader',
+                ],
+            },
+            // Other file types (unchanged)
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
                 type: 'asset',
             },
-
         ],
     },
     resolve: {

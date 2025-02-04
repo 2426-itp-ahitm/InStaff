@@ -1,7 +1,8 @@
 import 'bulma/css/bulma.min.css';
+import '../src/style/style.scss';
 import './app-component';
 import { navigate } from './router';
-//import '../src/style/style.css';
+
 
 
 window.addEventListener('load', navigate)
