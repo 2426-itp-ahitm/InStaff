@@ -3,6 +3,8 @@
 ## CSS libraries
 * tailwind
 * bootstrap
+* bulma
+* pure
 
 ## bootstrap
 [Bootstrap](https://getbootstrap.com/)\
