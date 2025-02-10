@@ -23,6 +23,29 @@ class EditShiftComponent extends HTMLElement {
         render(this.template(), this.shadowRoot);
     }
 
+    employees: any[] = [];
+
+    getEmployeeNames() {
+        fetch("http://localhost:4200/api/employees")
+            .then((response) => response.json())
+            .then((data) => {
+                const employeeIdSelect = this.shadowRoot!.querySelector<HTMLSelectElement>("#employee_id");
+                if (employeeIdSelect) {
+                    console.log(data);
+                    data.forEach((employee: any) => {
+                        const option = document.createElement("option");
+                        option.value = employee.id;
+                        option.text = `${employee.firstname} ${employee.lastname}`;
+                        employeeIdSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch((error) => {
+                this.responseMessage = `Error: ${error}`;
+                this.renderComponent();
+            });
+    }
+
     async assignShiftToEmployee() {
         const shadowRoot = this.shadowRoot!;
         const employeeIdInput = shadowRoot.querySelector<HTMLInputElement>("#employee_id");
@@ -47,10 +70,10 @@ class EditShiftComponent extends HTMLElement {
                         "Content-Type": "application/json"
                     }
                 });
+                console.log(response)
 
                 if (response.ok) {
-                    const result = await response.json();
-                    this.responseMessage = JSON.stringify(result);
+                    this.responseMessage = "Shift assigned successfully";
                 } else {
                     this.responseMessage = `Error: ${response.statusText}`;
                 }
@@ -73,7 +96,9 @@ class EditShiftComponent extends HTMLElement {
             <h2>Assign Shift to Employee</h2>
             <form>
                 <label for="employee_id">Employee ID</label>
-                <input type="number" id="employee_id" name="employee_id" />
+                <select id="employee_id" name="employee_id" value="Select Employee">
+                    ${this.getEmployeeNames()}
+                </select>
                 <br />
                 <label for="shift_id">Shift ID</label>
                 <input type="number" id="shift_id" name="shift_id" />
@@ -86,6 +111,7 @@ class EditShiftComponent extends HTMLElement {
             <div id="responseMessage">${this.responseMessage}</div>
         `;
     }
+   
 }
 
 customElements.define("edit-shift-component", EditShiftComponent);

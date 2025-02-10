@@ -50,13 +50,13 @@ const dashboardTemplate = () => {
       (card) => html`
       <div class="cell">
          <div class="card">
-            <div class="card-content" href="${card.link}">
+            <a class="card-content" href="${card.link}">
                <div class="content">
                   <p class="text">${card.icon}</p>
                   <p class="title">${card.title}</p>
                   <p class="subtitle">${card.description}</p>
                </div>
-            </div>
+            </a>
          </div>
       </div>
       `
@@ -66,8 +66,8 @@ const dashboardTemplate = () => {
    <link rel="stylesheet" href="style.css">
    <nav-bar-component></nav-bar-component>
    <div>
-      <h1 class="title">Alexander's Company</h1>
-      <p class="subtitle">Manager: Alexander Hahn</p>
+      <h1>Alexander's Company</h1>
+      <p>Manager: Alexander Hahn</p>
    </div>
    <div class="fixed-grid has-3-cols" is-light>
       <div class="grid">
