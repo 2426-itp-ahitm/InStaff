@@ -21,7 +21,7 @@ class AddEmployeeComponent extends HTMLElement {
 
    private async loadStyles() {
       try {
-         const cssResponse = await fetch("../../../style/style.css")
+         const cssResponse = await fetch("../../../style.css");
          const css = await cssResponse.text();
          const styleElement = document.createElement("style");
          styleElement.textContent = css;
@@ -40,7 +40,7 @@ class AddEmployeeComponent extends HTMLElement {
       }
    }
 
-   private textInput(){
+   private textInput() {
       // Assuming you have an input field in your HTML
       const textInput = document.querySelector<HTMLInputElement>("text_input");
 
@@ -50,14 +50,15 @@ class AddEmployeeComponent extends HTMLElement {
          this.preventNumbersInput(textInput);
       }
    }
+
    private preventNumbersInput(inputElement: HTMLInputElement) {
       inputElement.addEventListener("input", (event) => {
          console.log("Input event fired!");
          const input = event.target as HTMLInputElement;
-   
+
          // Remove any number characters from the input value
          input.value = input.value.replace(/[0-9]/g, "");
-   
+
          // Optionally, show a warning or message (if needed)
          // Example: input.setCustomValidity("Numbers are not allowed.");
          // input.reportValidity();
@@ -148,39 +149,66 @@ class AddEmployeeComponent extends HTMLElement {
 
    private template() {
       return html`
-         <h2>Add an Employee</h2>
-         <form>
-            <!--
-            <label for="text_input">Text Input</label>
-            <input type="text" id="text_input" />
-            <br />
-            -->
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" />
-            <br />
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" />
-            <br />
-            <label for="email">Email</label>
-            <input type="text" id="email" name="email" />
-            <br />
-            <label for="telephone">Telephone</label>
-            <input type="text" id="telephone" name="telephone" />
-            <br />
-            <label for="birthdate">Birthdate</label>
-            <input type="date" id="birthdate" name="birthdate"/>
-            <br />
-            <label for="role_id">Choose a role:</label>
-            <select id="role_id" name="role_id">
-               ${this.roles.map(
-                  (role) =>
-                     html`<option value="${role.id}">${role.roleName}</option>`
-               )}
-            </select>
-         </form>
-         <button @click=${() => this.addEmployee()}>Add Employee</button>
+         <h2 class="title is-3">Add an Employee</h2>
+         <form class="box">
+            <div class="field">
+               <label for="first_name" class="label">First Name</label>
+               <div class="control">
+                  <input type="text" id="first_name" name="first_name" class="input" placeholder="First Name" />
+               </div>
+            </div>
 
-         <div id="responseMessage">${this.responseMessage}</div>
+            <div class="field">
+               <label for="last_name" class="label">Last Name</label>
+               <div class="control">
+                  <input type="text" id="last_name" name="last_name" class="input" placeholder="Last Name" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="email" class="label">Email</label>
+               <div class="control">
+                  <input type="email" id="email" name="email" class="input" placeholder="Email" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="telephone" class="label">Telephone</label>
+               <div class="control">
+                  <input type="text" id="telephone" name="telephone" class="input" placeholder="Telephone" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="birthdate" class="label">Birthdate</label>
+               <div class="control">
+                  <input type="date" id="birthdate" name="birthdate" class="input" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="role_id" class="label">Choose a role:</label>
+               <div class="control">
+                  <div class="select">
+                     <select id="role_id" name="role_id">
+                        ${this.roles.map(
+                           (role) => html`<option value="${role.id}">${role.roleName}</option>`
+                        )}
+                     </select>
+                  </div>
+               </div>
+            </div>
+
+            <div class="field">
+               <div class="control">
+                  <button type="button" class="button is-primary" @click=${() => this.addEmployee()}>Add Employee</button>
+               </div>
+            </div>
+         </form>
+
+         <div id="responseMessage" class="notification is-light">
+            ${this.responseMessage}
+         </div>
       `;
    }
 }

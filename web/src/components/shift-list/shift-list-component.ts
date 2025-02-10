@@ -10,34 +10,29 @@ class ShiftListComponent extends HTMLElement {
    }
 
    async connectedCallback() {
-      // Load and apply CSS
-      const cssResponse = await fetch("../../../style/style.css")
+      const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
 
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
 
-      // Subscribe to model updates and render when model changes
       subscribe(model => {
          console.log("Model updated:", model);
          this.render(model.shifts, model.activeShiftId);
       });
 
-      // Load all shifts initially
       await loadAllShifts();
    }
 
    render(shifts: Shift[], activeShiftId: number) {
-      // Render the template with the shifts and activeShiftId
       render(this.template(shifts, activeShiftId), this.shadowRoot);
    }
 
    template(shifts: Shift[], activeShiftId: number) {
-      // Generate rows for the shifts table
       const rows = shifts.map(shift =>
          html`
-            <tr @click=${() => this.showShiftDetail(shift.id)}>
+            <tr @click=${() => this.showShiftDetail(shift.id)} class="is-clickable">
                <td>${shift.startTime.substring(0, 10)}</td>
                <td>${shift.startTime.substring(11)}</td>
                <td>${shift.endTime.substring(0, 10)}</td>
@@ -47,36 +42,36 @@ class ShiftListComponent extends HTMLElement {
          `
       );
 
-      // Return the template for the shift list
       return html`
-         <h2>Shifts</h2>
-         <table>
-            <thead>
-               <tr>
-                  <td>Start date</td>
-                  <td>Start time</td>
-                  <td>End date</td>
-                  <td>End time</td>
-                  <td>Company name</td>
-               </tr>
-            </thead>
-            <tbody>
-               ${rows}
-            </tbody>
-         </table>
-         ${activeShiftId
-            ? html`
-                <shift-detail-component .shiftId=${activeShiftId}></shift-detail-component>
-              `
-            : html`<p>Select an shift to view details</p>`
-        }
+         <div class="container">
+            <h2 class="title is-3">Shifts</h2>
+            <table class="table is-fullwidth is-striped is-bordered is-hoverable">
+               <thead>
+                  <tr>
+                     <th>Start date</th>
+                     <th>Start time</th>
+                     <th>End date</th>
+                     <th>End time</th>
+                     <th>Company name</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  ${rows}
+               </tbody>
+            </table>
+            ${activeShiftId
+               ? html`
+                   <shift-detail-component .shiftId=${activeShiftId}></shift-detail-component>
+                 `
+               : html`<p class="subtitle">Select a shift to view details</p>`
+            }
+         </div>
       `;
    }
 
    showShiftDetail(id: number) {
-      // Update the activeShiftId in the model, triggering a re-render
       console.log("showShiftDetail", id);
-      model.activeShiftId = id; // This triggers the subscription and updates the shift detail
+      model.activeShiftId = id;
    }
 }
 

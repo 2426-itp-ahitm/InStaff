@@ -1,46 +1,46 @@
 import { html, render } from "lit-html";
 
-const dashboardTemplate = () => {
+const dashboardTemplate = (handleClick) => {
    const cards = [
       {
          title: "Remove Shift",
          description: "Remove existing shifts",
-         icon: "bi-calendar-x",
+         icon: "➖",
          link: "#/remove-shift",
          class: "small",
       },
       {
          title: "Add Shift",
          description: "Add new shifts",
-         icon: "bi-calendar-plus",
+         icon: "➕",
          link: "#/add-shift",
          class: "small",
       },
       {
          title: "Edit Employees",
          description: "Edit employee details",
-         icon: "bi-person",
+         icon: "👤",
          link: "#/edit-employees",
          class: "small",
       },
       {
          title: "Employee List",
          description: "View all employees",
-         icon: "bi-person-lines-fill",
+         icon: "👥",
          link: "#/employee-list",
          class: "small",
       },
       {
          title: "Calendar",
          description: "Check schedules",
-         icon: "bi-calendar",
+         icon: "📅",
          link: "#/calendar",
          class: "wide",
       },
       {
          title: "Message Employees",
          description: "Communicate with employees",
-         icon: "bi-chat",
+         icon: "🗣️",
          link: "#/message-employees",
          class: "wide",
       },
@@ -48,12 +48,14 @@ const dashboardTemplate = () => {
 
    const cardTemplates = cards.map(
       (card) => html`
-      <div class="cell">
-         <div class="card">
-            <a class="card-content" href="${card.link}">
+      <div class="">
+         <div class="card" style="min-width: 20vw" @click="${() => handleClick(card.link)}">
+            <div class="card-content">
                <div class="content">
-                  <p class="text">${card.icon}</p>
-                  <p class="title">${card.title}</p>
+                  <div class="is-flex is-align-items-bottom" style="">   
+                     <p class="title ml-auto mr-2">${card.icon}</p>
+                     <p class="title mr-auto">${card.title}</p>
+                  </div>
                   <p class="subtitle">${card.description}</p>
                </div>
             </a>
@@ -63,16 +65,14 @@ const dashboardTemplate = () => {
    );
 
    return html`
-   <link rel="stylesheet" href="style.css">
-   <nav-bar-component></nav-bar-component>
-   <div>
-      <h1>Alexander's Company</h1>
-      <p>Manager: Alexander Hahn</p>
+   
+   <div class="container has-text-centered mb-6 mt-6">
+      <h1 class="title is-2">Alexander's Company</h1>
+      <p class="subtitle is-4">Manager: Alexander Hahn</p>
    </div>
-   <div class="fixed-grid has-3-cols" is-light>
-      <div class="grid">
-         ${cardTemplates}
-      </div>
+   
+   <div class="grid-container">
+      ${cardTemplates}
    </div>
    `;
 };
@@ -84,15 +84,18 @@ class HomeComponent extends HTMLElement {
    }
 
    async connectedCallback() {
-      /*
-         const cssResponse = await fetch("../../../style.css")
-         const css = await cssResponse.text();
+      const cssResponse = await fetch("../../../style.css");
+      const css = await cssResponse.text();
 
-         const styleElement = document.createElement("style");
-         styleElement.textContent = css;
-         this.shadowRoot.appendChild(styleElement);
-      */
-      render(dashboardTemplate(), this.shadowRoot);
+      const styleElement = document.createElement("style");
+      styleElement.textContent = css;
+      this.shadowRoot.appendChild(styleElement);
+
+      const handleClick = (link) => {
+         window.location.href = link;
+      };
+
+      render(dashboardTemplate(handleClick), this.shadowRoot);
    }
 }
 
