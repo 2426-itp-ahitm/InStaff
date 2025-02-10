@@ -1,6 +1,5 @@
 import { html, render } from "lit-html";
 
-
 class AddShiftComponent extends HTMLElement {
     responseMessage: string = "";
 
@@ -10,7 +9,7 @@ class AddShiftComponent extends HTMLElement {
     }
 
     async connectedCallback() {
-        const cssResponse = await fetch("../../../style/style.css")
+        const cssResponse = await fetch("../../../style.css");
         const css = await cssResponse.text();
 
         const styleElement = document.createElement("style");
@@ -29,8 +28,7 @@ class AddShiftComponent extends HTMLElement {
         const startTimeInput = shadowRoot.querySelector<HTMLInputElement>("#start_time");
         const endTimeInput = shadowRoot.querySelector<HTMLInputElement>("#end_time");
 
-        if (startTimeInput?.value.trim() &&
-            endTimeInput?.value.trim()) {
+        if (startTimeInput?.value.trim() && endTimeInput?.value.trim()) {
             const addingShift = {
                 startTime: startTimeInput.value + ":00",
                 endTime: endTimeInput.value + ":00",
@@ -45,11 +43,11 @@ class AddShiftComponent extends HTMLElement {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(addingShift)
-                })
+                });
 
                 if (response.ok) {
                     const result = await response.json();
-                    this.responseMessage = JSON.stringify(result);
+                    this.responseMessage = "Shift added successfully!";
                 } else {
                     this.responseMessage = `Error: ${response.statusText}`;
                 }
@@ -68,20 +66,33 @@ class AddShiftComponent extends HTMLElement {
 
     template() {
         return html`
-           <h2>Add Shift</h2>
-           <form>
-              <label for="start_time">Start Time</label>
-              <input type="datetime-local" id="start_time" name="start_time" />
-              <br>
-              <label for="end_time">End Time</label>
-              <input type="datetime-local" id="end_time" name="end_time" />
-              <br>
+           <h2 class="title is-3">Add Shift</h2>
+           <form class="box">
+              <div class="field">
+                 <label for="start_time" class="label">Start Time</label>
+                 <div class="control">
+                    <input type="datetime-local" id="start_time" name="start_time" class="input" />
+                 </div>
+              </div>
+              
+              <div class="field">
+                 <label for="end_time" class="label">End Time</label>
+                 <div class="control">
+                    <input type="datetime-local" id="end_time" name="end_time" class="input" />
+                 </div>
+              </div>
            </form>
-           <button @click=${() => this.addShift()}>Add Shift</button>
-           <div id="responseMessage">${this.responseMessage}</div>
-           
-        `;
 
+           <div class="field">
+              <div class="control">
+                 <button class="button is-primary" @click=${() => this.addShift()}>Add Shift</button>
+              </div>
+           </div>
+
+           <div id="responseMessage" class="notification is-light">
+              ${this.responseMessage}
+           </div>
+        `;
     }
 }
 

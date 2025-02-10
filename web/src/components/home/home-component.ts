@@ -65,6 +65,7 @@ const dashboardTemplate = (handleClick) => {
    );
 
    return html`
+   
    <div class="container has-text-centered mb-6 mt-6">
       <h1 class="title is-2">Alexander's Company</h1>
       <p class="subtitle is-4">Manager: Alexander Hahn</p>
