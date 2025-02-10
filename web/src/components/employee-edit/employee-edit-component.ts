@@ -77,35 +77,39 @@ class EmployeeEditComponent extends HTMLElement {
 
    detailTemplate(employee: Employee, roleNames: string) {
       return html`
-         <h2>
-            <input type="text" id="firstname"
-            .value=${employee.firstname} />
-            <input type="text" id="lastname"
-            .value=${employee.lastname} />
-         </h2>
-         <h3><i>${employee.company_name}</i></h3>
-         <p><b>Employee ID:</b> ${employee.id}</p>
-         <p>
-            <b>Birthdate:</b>
-            <input type="date" id="birthdate"
-              .value=${employee.birthdate}
-            />
-         </p>
-         <p>
-            <b>Email:</b>
-            <input type="email" id="email"
-               .value=${employee.email}
-            />
-         </p>
-         <p>
-            <b>Telephone:</b>
-            <input type="text" id="telephone"
-               .value=${employee.telephone}
-            />
-         </p>
-         <p><b>Roles:</b> ${roleNames}</p>
+         <div class="modal">
+            <div class="modal-content">
+               <h2>
+                  <input type="text" id="firstname"
+                  .value=${employee.firstname} />
+                  <input type="text" id="lastname"
+                  .value=${employee.lastname} />
+               </h2>
+               <h3><i>${employee.company_name}</i></h3>
+               <p><b>Employee ID:</b> ${employee.id}</p>
+               <p>
+                  <b>Birthdate:</b>
+                  <input type="date" id="birthdate"
+                  .value=${employee.birthdate}
+                  />
+               </p>
+               <p>
+                  <b>Email:</b>
+                  <input type="email" id="email"
+                     .value=${employee.email}
+                  />
+               </p>
+               <p>
+                  <b>Telephone:</b>
+                  <input type="text" id="telephone"
+                     .value=${employee.telephone}
+                  />
+               </p>
+               <p><b>Roles:</b> ${roleNames}</p>
 
-         <button @click=${() => this.updateEmployee()}>Edit Employee</button>
+               <button @click=${() => this.updateEmployee()}>Edit Employee</button>
+            </div>
+         </div>
       `;
    }
 }
