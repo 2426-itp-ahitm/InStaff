@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
-import { Role } from "../../models/role";
+import { Employee } from "../../interfaces/employee";
+import { Role } from "../../interfaces/role";
 import { loadAllRoles } from "../role-list/role-list-service";
 
 class AddEmployeeComponent extends HTMLElement {
@@ -21,7 +21,7 @@ class AddEmployeeComponent extends HTMLElement {
 
    private async loadStyles() {
       try {
-         const cssResponse = await fetch("../../../style.css");
+         const cssResponse = await fetch("../../../style/style.css")
          const css = await cssResponse.text();
          const styleElement = document.createElement("style");
          styleElement.textContent = css;
@@ -150,9 +150,11 @@ class AddEmployeeComponent extends HTMLElement {
       return html`
          <h2>Add an Employee</h2>
          <form>
+            <!--
             <label for="text_input">Text Input</label>
             <input type="text" id="text_input" />
             <br />
+            -->
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name" />
             <br />

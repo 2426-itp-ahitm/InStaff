@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { Employee } from "../../models/employee";
+import { Employee } from "../../interfaces/employee";
 import { loadEmployeeDetails } from "./employee-edit-service";
 import RoleMapper from "../../mapper/role-mapper";
 
@@ -50,8 +50,9 @@ class EmployeeEditComponent extends HTMLElement {
 
    async renderEmployeeDetails() {
       if (!this._employeeId) return;
+      this.shadowRoot.innerHTML = "";
 
-      const cssResponse = await fetch("../../../style.css");
+      const cssResponse = await fetch("../../../style/style.css")
       const css = await cssResponse.text();
 
       const styleElement = document.createElement("style");
@@ -70,9 +71,7 @@ class EmployeeEditComponent extends HTMLElement {
    async updateEmployee() {
       const input_firstname = this.shadowRoot.querySelector<HTMLElement>("#firstname");
       this.employee.firstname = input_firstname?.getAttribute("value") || "";
-      
       console.log(this.employee);
-        
    }
    
 
@@ -80,28 +79,28 @@ class EmployeeEditComponent extends HTMLElement {
       return html`
          <h2>
             <input type="text" id="firstname"
-            value=${employee.firstname} />
+            .value=${employee.firstname} />
             <input type="text" id="lastname"
-            value=${employee.lastname} />
+            .value=${employee.lastname} />
          </h2>
          <h3><i>${employee.company_name}</i></h3>
          <p><b>Employee ID:</b> ${employee.id}</p>
          <p>
             <b>Birthdate:</b>
             <input type="date" id="birthdate"
-              value=${employee.birthdate}
+              .value=${employee.birthdate}
             />
          </p>
          <p>
             <b>Email:</b>
             <input type="email" id="email"
-               value=${employee.email}
+               .value=${employee.email}
             />
          </p>
          <p>
             <b>Telephone:</b>
             <input type="text" id="telephone"
-               value=${employee.telephone}
+               .value=${employee.telephone}
             />
          </p>
          <p><b>Roles:</b> ${roleNames}</p>

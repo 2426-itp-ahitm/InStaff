@@ -1,0 +1,10 @@
+@use "bulma" as bulma;
+
+$primary-color: #ffffff;
+$secondary-color: #000000;
+
+body {
+   background-color: $primary-color;
+   color: $secondary-color;
+   font-family: 'Arial', sans-serif;
+}

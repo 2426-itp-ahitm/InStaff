@@ -1,7 +1,7 @@
 {
   "name": "my-webpack-project",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "webpack.config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production --node-env=production",
@@ -16,11 +16,15 @@
   "description": "My webpack project",
   "devDependencies": {
     "@webpack-cli/generators": "^3.0.7",
+    "bulma": "^1.0.3",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.2",
+    "postcss-loader": "^8.1.1",
     "prettier": "^3.3.3",
+    "sass": "^1.83.4",
+    "sass-loader": "^16.0.4",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
@@ -30,6 +34,9 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "lit-html": "^3.2.1"
+    "autoprefixer": "^10.4.20",
+    "bulma": "^0.9.4",
+    "lit-html": "^3.2.1",
+    "luxon": "^3.5.0"
   }
 }
