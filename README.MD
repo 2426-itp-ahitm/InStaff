@@ -6,7 +6,6 @@
 
 * Klement Tobias
 * Hahn Alexander
-* Pramhas Laurent
 * Pfarrhofer Philip
 
 ## General
