@@ -34,7 +34,7 @@ const dashboardTemplate = (handleClick) => {
          title: "Calendar",
          description: "Check schedules",
          icon: "📅",
-         link: "#/calendar",
+         link: "#/shift-list",
          class: "wide",
       },
       {
@@ -48,6 +48,8 @@ const dashboardTemplate = (handleClick) => {
 
    const cardTemplates = cards.map(
       (card) => html`
+
+
       <div class="">
          <div class="card" style="min-width: 20vw" @click="${() => handleClick(card.link)}">
             <div class="card-content">
@@ -65,7 +67,6 @@ const dashboardTemplate = (handleClick) => {
    );
 
    return html`
-   
    <div class="container has-text-centered mb-6 mt-6">
       <h1 class="title is-2">Alexander's Company</h1>
       <p class="subtitle is-4">Manager: Alexander Hahn</p>

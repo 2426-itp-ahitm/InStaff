@@ -26,7 +26,20 @@ class EmployeeDetailComponent extends HTMLElement {
       if (newValue !== this._employeeId) {
          this._employeeId = newValue;
          this.renderEmployeeDetails();
+      } else {
+         // Close the modal if the same employee is clicked
+         this.closeModal();
+         setTimeout(() => this.renderEmployeeDetails(), 0);  // Reopen the modal
       }
+   }
+
+   connectedCallback() {
+      this.renderEmployeeDetails()
+   }
+
+   // Close the modal
+   closeModal() {
+      this.shadowRoot.getElementById('myModal')?.classList.remove('is-active')
    }
 
    async renderEmployeeDetails() {
@@ -34,77 +47,64 @@ class EmployeeDetailComponent extends HTMLElement {
 
       const cssResponse = await fetch("../../../style.css")
       const css = await cssResponse.text();
-      
+
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
 
       // Hole den Mitarbeiter entweder aus dem Modell oder von der API, wenn nicht im Modell
       let employee = model.employees.find(emp => emp.id === Number(this._employeeId));
-      
+
       if (!employee) {
          await loadEmployeeDetails(Number(this._employeeId));
          model.employees.push(employee); // Speichere den Mitarbeiter im Modell
       }
 
       const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
+      // add is-active class to modal to show it
+      this.shadowRoot.getElementById('myModal')?.classList.add('is-active')
 
-      render(this.detailTemplate(employee, roleNames.join(', ')), this.shadowRoot);
+      render(this.detailTemplate(employee, roleNames.join(', '), this), this.shadowRoot);
    }
 
    async updateEmployee() {
-      const shadowRoot = this.shadowRoot!;
-      const employeeForm = shadowRoot.querySelector<HTMLFormElement>("#employeeForm");
-      const firstnameInput = shadowRoot.querySelector<HTMLInputElement>("#firstname");
-      const lastnameInput = shadowRoot.querySelector<HTMLInputElement>("#lastname");
-      const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
-      const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
-      const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
-      const rolesInput = shadowRoot.querySelector<HTMLInputElement>("#roles");
+      const firstname = this.shadowRoot.querySelector<HTMLInputElement>("#firstname")?.value
+      const lastname = this.shadowRoot.querySelector<HTMLInputElement>("#lastname")?.value
+      const email = this.shadowRoot.querySelector<HTMLInputElement>("#email")?.value
+      const telephone = this.shadowRoot.querySelector<HTMLInputElement>("#telephone")?.value
+      const birthdate = this.shadowRoot.querySelector<HTMLInputElement>("#birthdate")?.value
+      const roles = this.shadowRoot.querySelector<HTMLInputElement>("#roles")?.value?.split(',').map(Number)
 
-      if (employeeForm?.checkValidity()) {
-         const updatedEmployee: Employee = {
-            id: Number(this._employeeId),
-            firstname: firstnameInput.value,
-            lastname: lastnameInput.value,
-            email: emailInput.value,
-            telephone: telephoneInput.value,
-            birthdate: birthdateInput.value,
-            password: '', // TODO: get password from the form
-            company_name: model.employees.find(emp => emp.id === Number(this._employeeId))?.company_name, // TODO: get company_name from the form
-            company_id: 1, // TODO: get company_id from the form
-            roles: [1, 2] // TODO: Parse rolesInput.value to an array of role IDs
-         };
-         console.log();
-         
-
-         // Update the employee in the model
-         const employeeIndex = model.employees.findIndex(emp => emp.id === updatedEmployee.id);
-         if (employeeIndex !== -1) {
-            model.employees[employeeIndex] = updatedEmployee;
-         } else {
-            model.employees.push(updatedEmployee);
-         }
-
-         // Optionally, you can also update the employee on the server
-         const response = await fetch(`/api/employees/${this._employeeId}`, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json"
-            },
-            body: JSON.stringify(updatedEmployee)
-         });
-
-         if (response.ok) {
-            console.log("Employee updated successfully");
-         } else {
-            console.error(`Error: ${response.statusText}`);
-         }
+      const updatedEmployee: Employee = {
+         id: Number(this._employeeId),
+         firstname,
+         lastname,
+         email,
+         telephone,
+         birthdate,
+         password: '', // TODO: get password from the form
+         company_name: model.employees.find(emp => emp.id === Number(this._employeeId))?.company_name,
+         company_id: 1, // TODO: get company_id from the form
+         roles: roles // TODO: Parse rolesInput.value to an array of role IDs
       }
-   }
 
-   connectedCallback() {
-      this.renderEmployeeDetails();
+      const response = await fetch(`/api/employees/${this._employeeId}`, {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(updatedEmployee)
+      })
+
+      if (response.ok) {
+         const employeeIndex = model.employees.findIndex(emp => emp.id === updatedEmployee.id)
+         if (employeeIndex !== -1) {
+            model.employees[employeeIndex] = updatedEmployee
+         } else {
+            model.employees.push(updatedEmployee)
+         }
+         this.closeModal()
+      } else {
+         console.error(`Failed to update employee: ${response.statusText}`)
+      }
    }
 
    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -113,36 +113,46 @@ class EmployeeDetailComponent extends HTMLElement {
       }
    }
 
-   detailTemplate(employee: Employee, roleNames: string) {
+   detailTemplate(employee: Employee, roleNames: string, component: EmployeeDetailComponent) {
       return html`
-      <form id="employeeForm">
-         <h2>
-            <input type="text" id="firstname" name="firstname" placeholder="First Name" .value="${employee.firstname}" required> 
-            <input type="text" id="lastname" name="lastname" placeholder="Last Name" .value="${employee.lastname}" required>
-         </h2>
-         <h3>
-            ${employee.company_name}
-         </h3>
-         <p>Employee ID: ${employee.id}</p>
-         <p>
-            <b>Birthdate:</b> 
-            <input type="date" id="birthdate" name="birthdate" .value="${employee.birthdate}" required>
-         </p>
-         <p>
-            <b>Email:</b> 
-            <input type="email" id="email" name="email" placeholder="Email" .value="${employee.email}" required>
-         </p>
-         <p>
-            <b>Telephone:</b> 
-            <input type="tel" id="telephone" name="telephone" placeholder="Telephone" .value="${employee.telephone}" required>
-         </p>
-         <p>
-            <b>Roles:</b> 
-            <input type="text" id="roles" name="roles" placeholder="Roles" .value="${roleNames}" required>
-         </p>
-         <button @click=${() => this.updateEmployee()} type="button">Submit</button>
-      </form>
-      `;
+      <div class="modal" id="myModal">
+         <div class="modal-background"></div>
+         <div class="modal-card">
+            <header class="modal-card-head">
+               <p class="modal-card-title">
+                  <input type="text" id="firstname" name="firstname" placeholder="First Name" .value="${employee.firstname}" required> 
+                  <input type="text" id="lastname" name="lastname" placeholder="Last Name" .value="${employee.lastname}" required>
+               </p>
+               <button class="delete" aria-label="close" @click=${() => this.closeModal()}></button>
+            </header>
+            <section class="modal-card-body">
+               <h3>
+                  ${employee.company_name}
+               </h3>
+               <p>Employee ID: ${employee.id}</p>
+               <p>
+                  <b>Birthdate:</b> 
+                  <input type="date" id="birthdate" name="birthdate" .value="${employee.birthdate}" required>
+               </p>
+               <p>
+                  <b>Email:</b> 
+                  <input type="email" id="email" name="email" placeholder="Email" .value="${employee.email}" required>
+               </p>
+               <p>
+                  <b>Telephone:</b> 
+                  <input type="tel" id="telephone" name="telephone" placeholder="Telephone" .value="${employee.telephone}" required>
+               </p>
+               <p>
+                  <b>Roles:</b> 
+                  <input type="text" id="roles" name="roles" placeholder="Roles" .value="${roleNames}" required>
+               </p>
+            </section>
+            <footer class="modal-card-foot">
+               <button class="button is-success" @click=${() => this.updateEmployee()}>Save changes</button>
+               <button class="button" @click=${() => this.closeModal()}>Cancel</button>
+            </footer>
+         </div>
+      </div>`;
    }
 }
 
