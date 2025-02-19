@@ -63,7 +63,7 @@ class EmployeeDetailComponent extends HTMLElement {
       const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
       // add is-active class to modal to show it
       this.shadowRoot.getElementById('myModal')?.classList.add('is-active')
-
+      
       render(this.detailTemplate(employee, roleNames.join(', '), this), this.shadowRoot);
    }
 

@@ -37,6 +37,7 @@ body {
    transition: 0.2s all;
 }
 .modal {
+   margin-top: 20vh;
    display: none;
 }
 .modal.is-active {
