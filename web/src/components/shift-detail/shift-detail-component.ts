@@ -85,11 +85,22 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    modalTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
-      const shiftStart = DateTime.fromISO(shift.startTime)
-      const shiftEnd = DateTime.fromISO(shift.endTime)
+      const shiftStart = DateTime.fromISO(shift.startTime);
+      const shiftEnd = DateTime.fromISO(shift.endTime);
 
-      const formattedDate = shiftStart.toLocaleString(DateTime.DATE_HUGE)
-      const formattedTime = `${shiftStart.toFormat("HH:mm")} - ${shiftEnd.toFormat("HH:mm")}`
+      let formattedDate: string;
+
+      if (shiftStart.hasSame(shiftEnd, "day") && shiftStart.hasSame(shiftEnd, "month") && shiftStart.hasSame(shiftEnd, "year")) {
+         formattedDate = shiftStart.toLocaleString(DateTime.DATE_HUGE) + ` ${shiftStart.toFormat("HH:mm")}` +
+            " - " +
+            shiftEnd.toFormat("HH:mm");      
+      } else {
+         formattedDate = shiftStart.toLocaleString(DateTime.DATE_MID) + ` ${shiftStart.toFormat("HH:mm")}` +
+            " - " +
+            shiftEnd.toLocaleString(DateTime.DATE_MID) + ` ${shiftEnd.toFormat("HH:mm")}`;
+      }
+
+      console.log(formattedDate);
 
       return html`
          <div class="modal" id="shiftModal">
@@ -98,23 +109,22 @@ class ShiftDetailComponent extends HTMLElement {
                <header class="modal-card-head">
                   <p class="modal-card-title">
                      <time datetime="${shift.startTime}">${formattedDate}</time>
-                     <span class="time">${formattedTime}</span>
                   </p>
                   <button class="delete" aria-label="close" @click=${() => this.closeModal()}></button>
                </header>
                <section class="modal-card-body">
                   <h3 class="">${shift.company_name}</h3>
                   <h2 style="font-weight: bold">Employees:</h2>
-                  <table>
+                  <table class="styled-table">
                      <tbody>
                         ${employeeRoleData.map(
-                           data => html`
+         data => html`
                               <tr>
                                  <td>${data.employeeName}</td>
                                  <td>${data.roleName}</td>
                               </tr>
                            `
-                        )}
+      )}
                      </tbody>
                   </table>
                </section>
