@@ -65,6 +65,11 @@ class AddEmployeeComponent extends HTMLElement {
       });
    }
 
+   getSelectedRoles() {
+      const checkboxes = document.querySelectorAll('input[name="role_id"]:checked');
+      return Array.from(checkboxes).map(checkbox => (checkbox as HTMLInputElement).value);
+   }
+
    private async addEmployee() {
       const shadowRoot = this.shadowRoot!;
       const firstnameInput = shadowRoot.querySelector<HTMLInputElement>("#first_name");
@@ -72,15 +77,14 @@ class AddEmployeeComponent extends HTMLElement {
       const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
       const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
-      const roleIdInput = shadowRoot.querySelector<HTMLSelectElement>("#role_id");
-
+      const roleIdInput = this.getSelectedRoles();
+      
       if (
          firstnameInput?.value.trim() &&
          lastnameInput?.value.trim() &&
          emailInput?.value.trim() &&
          telephoneInput?.value.trim() &&
-         birthdateInput?.value.trim() &&
-         roleIdInput?.value.trim()
+         birthdateInput?.value.trim()
       ) {
          const addingEmployee = {
             firstname: firstnameInput.value,
@@ -103,7 +107,7 @@ class AddEmployeeComponent extends HTMLElement {
                const result = await response.json();
                const employeeId = result.id;
 
-               await this.assignRole(employeeId, roleIdInput.value);
+               await this.assignRole(employeeId, roleIdInput);
                this.responseMessage = "Employee added successfully!";
                this.resetForm();
             } else {
@@ -119,22 +123,25 @@ class AddEmployeeComponent extends HTMLElement {
       this.renderComponent();
    }
 
-   private async assignRole(employeeId: number, roleId: string) {
-      try {
-         const response = await fetch(
-            `http://localhost:4200/api/employees/${employeeId}/assignrole/${roleId}`,
-            {
-               method: "PUT",
-               headers: { "Content-Type": "application/json" },
-            }
-         );
+   private async assignRole(employeeId: number, roleIdInput: string[]) {
+      for (let index = 0; index < roleIdInput.length; index++) {
+         
+         try {
+            const response = await fetch(
+               `http://localhost:4200/api/employees/${employeeId}/assignrole/${roleIdInput[index]}`,
+               {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+               }
+            );
 
-         if (!response.ok) {
-            throw new Error(`Failed to assign role: ${response.statusText}`);
+            if (!response.ok) {
+               throw new Error(`Failed to assign role: ${response.statusText}`);
+            }
+         } catch (error) {
+            console.error("Error assigning role:", error);
+            throw error;
          }
-      } catch (error) {
-         console.error("Error assigning role:", error);
-         throw error;
       }
    }
 
@@ -187,15 +194,15 @@ class AddEmployeeComponent extends HTMLElement {
             </div>
 
             <div class="field">
-               <label for="role_id" class="label">Choose a role:</label>
+               <label class="label">Choose a role:</label>
                <div class="control">
-                  <div class="select">
-                     <select id="role_id" name="role_id">
-                        ${this.roles.map(
-                           (role) => html`<option value="${role.id}">${role.roleName}</option>`
-                        )}
-                     </select>
-                  </div>
+                  ${this.roles.map(
+                        (role) => html`
+                           <label>
+                              <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
+                           </label><br>
+                        `
+                  )}
                </div>
             </div>
 
