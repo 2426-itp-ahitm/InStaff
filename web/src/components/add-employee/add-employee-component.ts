@@ -65,10 +65,11 @@ class AddEmployeeComponent extends HTMLElement {
       });
    }
 
-   getSelectedRoles() {
-      const checkboxes = document.querySelectorAll('input[name="role_id"]:checked');
-      return Array.from(checkboxes).map(checkbox => (checkbox as HTMLInputElement).value);
-   }
+   getCheckedRoleIds(): string[] {
+      const checkboxes = this.shadowRoot?.querySelectorAll<HTMLInputElement>('input[name="role_id"]:checked')
+      console.log(document.querySelectorAll('.control input[name="role_id"]:checked'));
+      return Array.from(checkboxes).map(checkbox => checkbox.value);
+  }
 
    private async addEmployee() {
       const shadowRoot = this.shadowRoot!;
@@ -77,7 +78,8 @@ class AddEmployeeComponent extends HTMLElement {
       const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
       const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
-      const roleIdInput = this.getSelectedRoles();
+      const roleIdInput = this.getCheckedRoleIds();
+      console.log(roleIdInput)
       
       if (
          firstnameInput?.value.trim() &&
@@ -124,8 +126,8 @@ class AddEmployeeComponent extends HTMLElement {
    }
 
    private async assignRole(employeeId: number, roleIdInput: string[]) {
+      
       for (let index = 0; index < roleIdInput.length; index++) {
-         
          try {
             const response = await fetch(
                `http://localhost:4200/api/employees/${employeeId}/assignrole/${roleIdInput[index]}`,
