@@ -118,13 +118,13 @@ class ShiftDetailComponent extends HTMLElement {
                   <table class="styled-table">
                      <tbody>
                         ${employeeRoleData.map(
-         data => html`
+                           data => html`
                               <tr>
                                  <td>${data.employeeName}</td>
                                  <td>${data.roleName}</td>
                               </tr>
                            `
-      )}
+                        )}
                      </tbody>
                   </table>
                </section>

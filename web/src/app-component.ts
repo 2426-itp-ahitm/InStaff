@@ -1,4 +1,5 @@
 import { html, render } from "lit-html";
+import "./components/landing-page";
 import "./components/home";
 import "./components/employee-list";
 import "./components/employee-filter-roles";
@@ -14,7 +15,8 @@ import "./components/edit-shift";
 import "./components/nav-bar";
 
 const routes: Record<string, any> = {
-    "": html`<home-component></home-component>`,
+    "": html`<landing-page-component></landing-page-component>`,
+    "instaff": html`<home-component></home-component>`,
     "employee-list": html`<employee-list-component></employee-list-component>`,
     "employee-filter-roles": html`<employee-filter-roles-component></employee-filter-roles-component>`,
     "employee-detail": html`<employee-detail-component employee-id="1"></employee-detail-component>`,
@@ -36,7 +38,16 @@ class AppComponent extends HTMLElement {
 
     updateView() {
         const path = location.hash.replace("#/", "") || "";
-        const content = routes[path] || html`<h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>`;
+
+        const showNav = path != ""; // Only show navbar on /instaff
+
+        const content = html`
+            ${showNav ? html`<nav-bar-component></nav-bar-component>` : ""}
+            ${routes[path] || html`
+                <h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>
+            `}
+        `;
+
         render(content, this);
     }
 }

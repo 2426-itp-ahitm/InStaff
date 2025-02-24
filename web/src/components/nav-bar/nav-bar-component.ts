@@ -4,7 +4,7 @@ const template = () => {
    return html`
    <nav class="navbar">
       <div class="navbar-brand">
-         <a class="navbar-item" href="#">InStaff</a>
+         <a class="navbar-item" href="#/">InStaff</a>
          <button class="navbar-burger burger" data-target="navbarMenu" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -14,7 +14,7 @@ const template = () => {
 
       <div id="navbarMenu" class="navbar-menu">
          <div class="navbar-start">
-            <a class="navbar-item" href="#">Home</a>
+            <a class="navbar-item" href="#/instaff">Home</a>
             <a class="navbar-item" href="#/employee-list">Employee List</a>
             <a class="navbar-item" href="#/add-employee">Add Employee</a>
             <a class="navbar-item" href="#/shift-list">Shift List</a>

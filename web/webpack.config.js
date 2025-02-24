@@ -45,6 +45,14 @@ const config = {
         }),
         new MiniCssExtractPlugin({
             filename: 'style.css',
+        }),
+        new CopyPlugin({
+            patterns: [
+                { 
+                    from: path.resolve(__dirname, "src/assets/images"),
+                    to: path.resolve(__dirname, "target/images")
+                }
+            ]
         })
     ],
     module: {
