@@ -100,6 +100,7 @@ class ShiftDetailComponent extends HTMLElement {
             shiftEnd.toLocaleString(DateTime.DATE_MID) + ` ${shiftEnd.toFormat("HH:mm")}`;
       }
 
+      
       console.log(formattedDate);
 
       return html`
