@@ -70,7 +70,7 @@ class AddRoleComponent extends HTMLElement {
                     <input type="text" id="role_name" name="role_name" class="input" placeholder="Role Name" />
                  </div>
               </div>
-           </form>
+           
 
            <div class="field">
               <div class="control">
@@ -81,6 +81,7 @@ class AddRoleComponent extends HTMLElement {
            <div id="responseMessage" class="notification is-light">
               ${this.responseMessage}
            </div>
+           </form>
         `;
     }
 }
