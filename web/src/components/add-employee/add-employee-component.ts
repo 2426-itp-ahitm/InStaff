@@ -40,7 +40,7 @@ class AddEmployeeComponent extends HTMLElement {
       }
    }
 
-   private textInput(){
+   private textInput() {
       // Assuming you have an input field in your HTML
       const textInput = document.querySelector<HTMLInputElement>("text_input");
 
@@ -50,19 +50,26 @@ class AddEmployeeComponent extends HTMLElement {
          this.preventNumbersInput(textInput);
       }
    }
+
    private preventNumbersInput(inputElement: HTMLInputElement) {
       inputElement.addEventListener("input", (event) => {
          console.log("Input event fired!");
          const input = event.target as HTMLInputElement;
-   
+
          // Remove any number characters from the input value
          input.value = input.value.replace(/[0-9]/g, "");
-   
+
          // Optionally, show a warning or message (if needed)
          // Example: input.setCustomValidity("Numbers are not allowed.");
          // input.reportValidity();
       });
    }
+
+   getCheckedRoleIds(): string[] {
+      const checkboxes = this.shadowRoot?.querySelectorAll<HTMLInputElement>('input[name="role_id"]:checked')
+      console.log(document.querySelectorAll('.control input[name="role_id"]:checked'));
+      return Array.from(checkboxes).map(checkbox => checkbox.value);
+  }
 
    private async addEmployee() {
       const shadowRoot = this.shadowRoot!;
@@ -71,15 +78,15 @@ class AddEmployeeComponent extends HTMLElement {
       const emailInput = shadowRoot.querySelector<HTMLInputElement>("#email");
       const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
-      const roleIdInput = shadowRoot.querySelector<HTMLSelectElement>("#role_id");
-
+      const roleIdInput = this.getCheckedRoleIds();
+      console.log(roleIdInput)
+      
       if (
          firstnameInput?.value.trim() &&
          lastnameInput?.value.trim() &&
          emailInput?.value.trim() &&
          telephoneInput?.value.trim() &&
-         birthdateInput?.value.trim() &&
-         roleIdInput?.value.trim()
+         birthdateInput?.value.trim()
       ) {
          const addingEmployee = {
             firstname: firstnameInput.value,
@@ -102,7 +109,7 @@ class AddEmployeeComponent extends HTMLElement {
                const result = await response.json();
                const employeeId = result.id;
 
-               await this.assignRole(employeeId, roleIdInput.value);
+               await this.assignRole(employeeId, roleIdInput);
                this.responseMessage = "Employee added successfully!";
                this.resetForm();
             } else {
@@ -118,22 +125,25 @@ class AddEmployeeComponent extends HTMLElement {
       this.renderComponent();
    }
 
-   private async assignRole(employeeId: number, roleId: string) {
-      try {
-         const response = await fetch(
-            `http://localhost:4200/api/employees/${employeeId}/assignrole/${roleId}`,
-            {
-               method: "PUT",
-               headers: { "Content-Type": "application/json" },
-            }
-         );
+   private async assignRole(employeeId: number, roleIdInput: string[]) {
+      
+      for (let index = 0; index < roleIdInput.length; index++) {
+         try {
+            const response = await fetch(
+               `http://localhost:4200/api/employees/${employeeId}/assignrole/${roleIdInput[index]}`,
+               {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+               }
+            );
 
-         if (!response.ok) {
-            throw new Error(`Failed to assign role: ${response.statusText}`);
+            if (!response.ok) {
+               throw new Error(`Failed to assign role: ${response.statusText}`);
+            }
+         } catch (error) {
+            console.error("Error assigning role:", error);
+            throw error;
          }
-      } catch (error) {
-         console.error("Error assigning role:", error);
-         throw error;
       }
    }
 
@@ -148,39 +158,66 @@ class AddEmployeeComponent extends HTMLElement {
 
    private template() {
       return html`
-         <h2>Add an Employee</h2>
-         <form>
-            <!--
-            <label for="text_input">Text Input</label>
-            <input type="text" id="text_input" />
-            <br />
-            -->
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" />
-            <br />
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" />
-            <br />
-            <label for="email">Email</label>
-            <input type="text" id="email" name="email" />
-            <br />
-            <label for="telephone">Telephone</label>
-            <input type="text" id="telephone" name="telephone" />
-            <br />
-            <label for="birthdate">Birthdate</label>
-            <input type="date" id="birthdate" name="birthdate"/>
-            <br />
-            <label for="role_id">Choose a role:</label>
-            <select id="role_id" name="role_id">
-               ${this.roles.map(
-                  (role) =>
-                     html`<option value="${role.id}">${role.roleName}</option>`
-               )}
-            </select>
-         </form>
-         <button @click=${() => this.addEmployee()}>Add Employee</button>
+         <h2 class="title is-3">Add an Employee</h2>
+         <form class="box">
+            <div class="field">
+               <label for="first_name" class="label">First Name</label>
+               <div class="control">
+                  <input type="text" id="first_name" name="first_name" class="input" placeholder="First Name" />
+               </div>
+            </div>
 
-         <div id="responseMessage">${this.responseMessage}</div>
+            <div class="field">
+               <label for="last_name" class="label">Last Name</label>
+               <div class="control">
+                  <input type="text" id="last_name" name="last_name" class="input" placeholder="Last Name" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="email" class="label">Email</label>
+               <div class="control">
+                  <input type="email" id="email" name="email" class="input" placeholder="Email" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="telephone" class="label">Telephone</label>
+               <div class="control">
+                  <input type="text" id="telephone" name="telephone" class="input" placeholder="Telephone" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label for="birthdate" class="label">Birthdate</label>
+               <div class="control">
+                  <input type="date" id="birthdate" name="birthdate" class="input" />
+               </div>
+            </div>
+
+            <div class="field">
+               <label class="label">Choose a role:</label>
+               <div class="control">
+                  ${this.roles.map(
+                        (role) => html`
+                           <label>
+                              <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
+                           </label><br>
+                        `
+                  )}
+               </div>
+            </div>
+
+            <div class="field">
+               <div class="control">
+                  <button type="button" class="button is-primary" @click=${() => this.addEmployee()}>Add Employee</button>
+               </div>
+            </div>
+         </form>
+
+         <div id="responseMessage" class="notification is-light">
+            ${this.responseMessage}
+         </div>
       `;
    }
 }

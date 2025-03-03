@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 
-class AddShiftComponent extends HTMLElement {
+class AddRoleComponent extends HTMLElement {
     responseMessage: string = "";
 
     constructor() {
@@ -23,31 +23,28 @@ class AddShiftComponent extends HTMLElement {
         render(this.template(), this.shadowRoot);
     }
 
-    async addShift() {
+    async addRole() {
         const shadowRoot = this.shadowRoot!;
-        const startTimeInput = shadowRoot.querySelector<HTMLInputElement>("#start_time");
-        const endTimeInput = shadowRoot.querySelector<HTMLInputElement>("#end_time");
-
-        if (startTimeInput?.value.trim() && endTimeInput?.value.trim()) {
-            const addingShift = {
-                startTime: startTimeInput.value + ":00",
-                endTime: endTimeInput.value + ":00",
+        const roleNameInput = shadowRoot.querySelector<HTMLInputElement>("#role_name");
+      
+        if (roleNameInput?.value.trim()) {
+            const addingRole = {
+                roleName: roleNameInput.value,
                 companyId: 1
             };
 
-            console.log(addingShift);
             try {
-                const response = await fetch('http://localhost:4200/api/shifts', {
+                const response = await fetch('http://localhost:4200/api/roles', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(addingShift)
+                    body: JSON.stringify(addingRole)
                 });
 
                 if (response.ok) {
                     const result = await response.json();
-                    this.responseMessage = "Shift added successfully!";
+                    this.responseMessage = "Role added successfully!";
                 } else {
                     this.responseMessage = `Error: ${response.statusText}`;
                 }
@@ -55,8 +52,7 @@ class AddShiftComponent extends HTMLElement {
                 this.responseMessage = `Error: ${error}`;
             }
 
-            startTimeInput.value = "";
-            endTimeInput.value = "";
+            roleNameInput.value = "";
         } else {
             this.responseMessage = "Please fill in all fields";
         }
@@ -66,34 +62,28 @@ class AddShiftComponent extends HTMLElement {
 
     template() {
         return html`
-           <h2 class="title is-3">Add Shift</h2>
+           <h2 class="title is-3">Add Role</h2>
            <form class="box">
               <div class="field">
-                 <label for="start_time" class="label">Start Time</label>
+                 <label for="role_name" class="label">Role Name</label>
                  <div class="control">
-                    <input type="datetime-local" id="start_time" name="start_time" class="input" />
+                    <input type="text" id="role_name" name="role_name" class="input" placeholder="Role Name" />
                  </div>
               </div>
-              
-              <div class="field">
-                 <label for="end_time" class="label">End Time</label>
-                 <div class="control">
-                    <input type="datetime-local" id="end_time" name="end_time" class="input" />
-                 </div>
-              </div>
-           </form>
+           
 
            <div class="field">
               <div class="control">
-                 <button class="button is-primary" @click=${() => this.addShift()}>Add Shift</button>
+                 <button class="button is-primary" @click=${() => this.addRole()}>Add Role</button>
               </div>
            </div>
 
            <div id="responseMessage" class="notification is-light">
               ${this.responseMessage}
            </div>
+           </form>
         `;
     }
 }
 
-customElements.define("add-shift-component", AddShiftComponent);
+customElements.define("add-role-component", AddRoleComponent);

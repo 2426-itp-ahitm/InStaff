@@ -2,6 +2,9 @@ import { html, render } from "lit-html";
 
 class EditShiftComponent extends HTMLElement {
     responseMessage: string = "";
+    employees: any[] = [];
+    shifts: any[] = [];
+    roles: any[] = [];
 
     constructor() {
         super();
@@ -16,18 +19,70 @@ class EditShiftComponent extends HTMLElement {
         styleElement.textContent = css;
         this.shadowRoot.appendChild(styleElement);
 
+        await this.getEmployeeNames();  // Make sure to fetch data before rendering
         this.renderComponent();
     }
 
-    renderComponent() {
-        render(this.template(), this.shadowRoot);
+    // Fetch employee, shift, and role data
+    async getEmployeeNames() {
+        try {
+            const [employeeResponse, shiftResponse, roleResponse] = await Promise.all([
+                fetch("http://localhost:4200/api/employees"),
+                fetch("http://localhost:4200/api/shifts"),
+                fetch("http://localhost:4200/api/roles")
+            ]);
+
+            const employees = await employeeResponse.json();
+            const shifts = await shiftResponse.json();
+            const roles = await roleResponse.json();
+
+            this.employees = employees;
+            this.shifts = shifts;
+            this.roles = roles;
+
+            const employeeIdSelect = this.shadowRoot!.querySelector<HTMLSelectElement>("#employee_id");
+            const shiftIdSelect = this.shadowRoot!.querySelector<HTMLSelectElement>("#shift_id");
+            const roleIdSelect = this.shadowRoot!.querySelector<HTMLSelectElement>("#role_id");
+
+            if (employeeIdSelect) {
+                this.employees.forEach((employee: any) => {
+                    const option = document.createElement("option");
+                    option.value = employee.id;
+                    option.text = `${employee.firstname} ${employee.lastname}`;
+                    employeeIdSelect.appendChild(option);
+                });
+            }
+
+            if (shiftIdSelect) {
+                this.shifts.forEach((shift: any) => {
+                    const option = document.createElement("option");
+                    option.value = shift.id;
+                    option.text = `${shift.startTime} - ${shift.endTime}`;
+                    shiftIdSelect.appendChild(option);
+                });
+            }
+
+            if (roleIdSelect) {
+                this.roles.forEach((role: any) => {
+                    const option = document.createElement("option");
+                    option.value = role.id;
+                    option.text = role.name;  // Assuming roles have a 'name' property
+                    roleIdSelect.appendChild(option);
+                });
+            }
+
+        } catch (error) {
+            this.responseMessage = `Error: ${error}`;
+        }
+
+        this.renderComponent();  // Always re-render after data fetch
     }
 
     async assignShiftToEmployee() {
         const shadowRoot = this.shadowRoot!;
-        const employeeIdInput = shadowRoot.querySelector<HTMLInputElement>("#employee_id");
-        const shiftIdInput = shadowRoot.querySelector<HTMLInputElement>("#shift_id");
-        const roleIdInput = shadowRoot.querySelector<HTMLInputElement>("#role_id");
+        const employeeIdInput = shadowRoot.querySelector<HTMLSelectElement>("#employee_id");
+        const shiftIdInput = shadowRoot.querySelector<HTMLSelectElement>("#shift_id");
+        const roleIdInput = shadowRoot.querySelector<HTMLSelectElement>("#role_id");
 
         if (
             employeeIdInput?.value.trim() &&
@@ -39,7 +94,6 @@ class EditShiftComponent extends HTMLElement {
             const roleId = roleIdInput.value.trim();
 
             const apiEndpoint = `http://localhost:4200/api/employees/${employeeId}/assignshift/${shiftId}/${roleId}`;
-            console.log(apiEndpoint);
             try {
                 const response = await fetch(apiEndpoint, {
                     method: "PUT",
@@ -49,13 +103,12 @@ class EditShiftComponent extends HTMLElement {
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
-                    this.responseMessage = JSON.stringify(result);
+                    this.responseMessage = "Shift assigned successfully";
                 } else {
                     this.responseMessage = `Error: ${response.statusText}`;
                 }
             } catch (error) {
-                this.responseMessage = `1 Error: ${error}`;
+                this.responseMessage = `Error: ${error}`;
             }
 
             employeeIdInput.value = "";
@@ -70,21 +123,71 @@ class EditShiftComponent extends HTMLElement {
 
     template() {
         return html`
-            <h2>Assign Shift to Employee</h2>
-            <form>
-                <label for="employee_id">Employee ID</label>
-                <input type="number" id="employee_id" name="employee_id" />
-                <br />
-                <label for="shift_id">Shift ID</label>
-                <input type="number" id="shift_id" name="shift_id" />
-                <br />
-                <label for="role_id">Role ID</label>
-                <input type="number" id="role_id" name="role_id" />
-                <br />
+            <h2 class="title is-3">Assign Shift to Employee</h2>
+            <form class="box">
+                <div class="field">
+                    <label class="label" for="employee_id">Employee</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="employee_id" name="employee_id">
+                                <option value="">Select Employee</option>
+                                ${this.employees.length > 0
+                                    ? this.employees.map(
+                                          (employee: any) =>
+                                              html`<option value="${employee.id}">${employee.firstname} ${employee.lastname}</option>`
+                                      )
+                                    : html`<option value="">Loading employees...</option>`}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="shift_id">Shift</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="shift_id" name="shift_id">
+                                <option value="">Select Shift</option>
+                                ${this.shifts.length > 0
+                                    ? this.shifts.map(
+                                          (shift: any) =>
+                                              html`<option value="${shift.id}">${shift.startTime} - ${shift.endTime}</option>`
+                                      )
+                                    : html`<option value="">Loading shifts...</option>`}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="role_id">Role</label>
+                    <div class="control">
+                        <div class="select">
+                            <select id="role_id" name="role_id">
+                                <option value="">Select Role</option>
+                                ${this.roles.length > 0
+                                    ? this.roles.map(
+                                          (role: any) =>
+                                              html`<option value="${role.id}">${role.roleName}</option>`
+                                      )
+                                    : html`<option value="">Loading roles...</option>`}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <button 
+                        class="button is-primary" 
+                        @click=${() => this.assignShiftToEmployee()} 
+                        ?disabled="${!this.employees.length || !this.shifts.length || !this.roles.length}">
+                        Assign
+                    </button>
+                </div>
+                <div id="responseMessage" class="notification ">${this.responseMessage}</div>
             </form>
-            <button @click=${() => this.assignShiftToEmployee()}>Assign</button>
-            <div id="responseMessage">${this.responseMessage}</div>
         `;
+    }
+
+    renderComponent() {
+        render(this.template(), this.shadowRoot);
     }
 }
 

@@ -15,6 +15,10 @@ const config = {
     },
     devtool: "cheap-source-map",
     devServer: {
+        static: {
+            directory: path.resolve(__dirname, 'target'),
+            publicPath: '/',
+        },
         open: true,
         host: 'localhost',
         port: 4200,
@@ -28,7 +32,10 @@ const config = {
                 ws: true,
                 historyApiFallback: true
             }
-        ]
+        ],
+        headers: {
+            "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:;"
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -37,11 +44,14 @@ const config = {
             scriptLoading: "module"
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].css',
+            filename: 'style.css',
         }),
         new CopyPlugin({
             patterns: [
-                { from: "src/style.css", to: "style.css" }
+                { 
+                    from: path.resolve(__dirname, "src/assets/images"),
+                    to: path.resolve(__dirname, "target/images")
+                }
             ]
         })
     ],
@@ -53,8 +63,14 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.css$/, // CSS-Dateien werden hier mit den richtigen Loadern behandelt
-                use: [stylesHandler, 'css-loader'],
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+                include: /node_modules/,
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+                exclude: /node_modules/,
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,

@@ -1,0 +1,81 @@
+@use "bulma";
+
+$white: #fff;
+$black: #000;
+$lightgray: #ddd;
+
+body {
+   font-family: 'Arial', sans-serif;
+   margin: 1vh 1vw 1vh 1vw;
+}
+
+.grid-container {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1.5rem;
+   align-items: flex-start;
+   max-width: 90vw;
+   margin-left: auto;
+   margin-right: auto;
+   justify-content: center;
+}
+
+.card {
+   flex: 1 1 30%;
+   min-width: 15em;
+   max-width: 100%;
+   padding: 1rem;
+   border: 1px solid $lightgray;
+   border-radius: 8px;
+   background: $white;
+   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+   transition: 0.2s all;
+}
+
+.card:hover {
+   cursor: pointer;
+   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+   transition: 0.2s all;
+}
+
+.modal {
+   margin-top: 20vh;
+   display: none;
+}
+
+.modal.is-active {
+   display: block;
+}
+
+.modal-background {
+   background-color: rgba(0, 0, 0, 0.5);
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+}
+
+.modal-content {
+   background-color: white;
+   padding: 20px;
+   max-width: 500px;
+   margin: 100px auto;
+}
+
+
+.styled-table {
+   width: 250px;
+   border-collapse: collapse;
+}
+
+.styled-table th,
+.styled-table td {
+   border: 1px solid rgb(203, 203, 203);
+   padding: 5px 10px;
+   text-align: left;
+}
+
+.styled-table tbody tr:nth-child(even) {
+   background: rgb(234, 235, 234);
+}

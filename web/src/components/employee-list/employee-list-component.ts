@@ -1,89 +1,73 @@
-import { html, render } from "lit-html"
-import { Employee } from "../../interfaces/employee"
-import { loadAllEmployees } from "./employee-list-service"
-import { model, subscribe } from "../../model/model"
+import { html, render } from "lit-html";
+import { Employee } from "../../interfaces/employee";
+import { loadAllEmployees } from "./employee-list-service";
+import { model, subscribe } from "../../model/model";
 
 class EmployeeListComponent extends HTMLElement {
-    constructor() {
-        super()
-        this.attachShadow({ mode: "open" })
-    }
+   constructor() {
+      super();
+      this.attachShadow({ mode: "open" });
+   }
 
-    async connectedCallback() {
-        const cssResponse = await fetch("../../../style.css")
-        const css = await cssResponse.text()
+   async connectedCallback() {
+      const cssResponse = await fetch("../../../style.css");
+      const css = await cssResponse.text();
 
-        const styleElement = document.createElement("style")
-        styleElement.textContent = css
+      const styleElement = document.createElement("style");
+      styleElement.textContent = css;
 
-        this.shadowRoot.appendChild(styleElement)
-        // Subscribe to model updates
-        subscribe(model => {
-            console.log("Model updated:", model)
-            this.render(model.employees, model.activeEmployeeId)
-        })
+      this.shadowRoot.appendChild(styleElement);
 
-        // Load employees initially
-        await loadAllEmployees()
-    }
+      subscribe(model => {
+         console.log("Model updated:", model);
+         this.render(model.employees, model.activeEmployeeId);
+      });
 
-    render(employees: Employee[], activeEmployeeId: number) {
-        render(this.template(employees, activeEmployeeId), this.shadowRoot)
-    }
+      await loadAllEmployees();
+   }
 
-    template(employees: Employee[], activeEmployeeId: number) {
-        const rows = employees.map(employee =>
-            html`
-                <tr @click=${() => this.showEmployeeDetail(employee.id)}>
-                    <td>${employee.firstname}</td>
-                    <td>${employee.lastname}</td>
-                    <td>${employee.company_name}</td>
-                </tr>
-            `
-        )
+   render(employees: Employee[], activeEmployeeId: number) {
+      render(this.template(employees, activeEmployeeId), this.shadowRoot);
+   }
 
-        return html`
-            <style>
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    border: 1px solid #ccc;
-                    padding: 8px;
-                    text-align: left;
-                }
-                tbody tr:hover {
-                    background-color:rgb(153, 150, 150);
-                    cursor: pointer;
-                }
-            </style>
-            <h2>Employees</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Company Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rows}
-                </tbody>
+   template(employees: Employee[], activeEmployeeId: number) {
+      const rows = employees.map(employee =>
+         html`
+            <tr @click=${() => this.showEmployeeDetail(employee.id)} class="is-clickable">
+               <td>${employee.firstname}</td>
+               <td>${employee.lastname}</td>
+            </tr>
+         `
+      );
+
+      return html`
+         <div class="container">
+            <h2 class="title is-3">Employees</h2>
+            <table class="table is-fullwidth is-striped is-bordered is-hoverable">
+               <thead>
+                  <tr>
+                     <th>Firstname</th>
+                     <th>Lastname</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  ${rows}
+               </tbody>
             </table>
             ${activeEmployeeId
-                ? html`
-                    <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
-                  `
-                : html`<p>Select an employee to view details</p>`
+               ? html`
+                   <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
+                 `
+               : html`<p class="subtitle">Select an employee to view details</p>`
             }
-        `
-    }
+         </div>
+      `;
+   }
 
-    showEmployeeDetail(id: number) {
-        console.log("Selected Employee ID:", id)
-        model.activeEmployeeId = id // Update the model with the selected employee ID
-    }
+   showEmployeeDetail(id: number) {
+      console.log("Selected Employee ID:", id);
+      model.activeEmployeeId = id; // Update the model with the selected employee ID
+   }
 }
 
-customElements.define("employee-list-component", EmployeeListComponent)
+customElements.define("employee-list-component", EmployeeListComponent);

@@ -1,5 +1,6 @@
 const routes: Record<string, any> = {
-   "": "<h1>Welcome to the App!</h1>",
+   "": "<landing-page-component></landing-page-component>",
+   "instaff": "<home-component></home-component>",
    "employee-list": "<employee-list-component></employee-list-component>",
    "employee-filter-roles": "<employee-filter-roles-component></employee-filter-roles-component>",
    "employee-detail": "<employee-detail-component></employee-detail-component>",
