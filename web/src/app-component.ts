@@ -5,6 +5,7 @@ import "./components/employee-list";
 import "./components/employee-filter-roles";
 import "./components/employee-detail";
 import "./components/role-list";
+import "./components/add-role";
 import "./components/manager-list";
 import "./components/shift-list";
 import "./components/shift-detail";
@@ -14,6 +15,7 @@ import "./components/add-shift";
 import "./components/edit-shift";
 import "./components/nav-bar";
 
+
 const routes: Record<string, any> = {
     "": html`<landing-page-component></landing-page-component>`,
     "instaff": html`<home-component></home-component>`,
@@ -22,6 +24,7 @@ const routes: Record<string, any> = {
     "employee-detail": html`<employee-detail-component employee-id="1"></employee-detail-component>`,
     "employee-edit": html`<employee-edit-component employee-id="1"></employee-edit-component>`,
     "role-list": html`<role-list-component></role-list-component>`,
+    "add-role": html`<add-role-component></add-role-component>`,
     "manager-list": html`<manager-list-component></manager-list-component>`,
     "shift-list": html`<shift-list-component></shift-list-component>`,
     "shift-detail": html`<shift-detail-component shift-id="3"></shift-detail-component>`,

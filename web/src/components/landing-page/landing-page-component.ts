@@ -120,7 +120,7 @@ class LandingPageComponent extends HTMLElement {
       return html`
          <div class="hero is-fullheight is-flex is-justify-content-center is-align-items-center">
             <div class="has-text-centered">
-               <img src="../../../images/logo-temp.webp" style="width: 200px; height: 200px;" alt="InStaff">
+               <img src="../../../images/logo-black.svg" style="width: 40vw; height: 40vh;" alt="InStaff">
                <p class="subtitle">employee management at its finest</p>
 
                <div class="buttons is-centered">

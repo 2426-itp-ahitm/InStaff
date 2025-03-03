@@ -3,46 +3,40 @@ import { html, render } from "lit-html";
 const dashboardTemplate = (handleClick) => {
    const cards = [
       {
-         title: "Remove Shift",
-         description: "Remove existing shifts",
-         icon: "➖",
-         link: "#/remove-shift",
-         class: "small",
+         title: "Add Role",
+         description: "Add new roles",
+         icon: "➕",
+         link: "#/add-role"
       },
       {
          title: "Add Shift",
          description: "Add new shifts",
          icon: "➕",
-         link: "#/add-shift",
-         class: "small",
+         link: "#/add-shift"
       },
       {
          title: "Edit Employees",
          description: "Edit employee details",
          icon: "👤",
-         link: "#/edit-employees",
-         class: "small",
+         link: "#/edit-employees"
       },
       {
          title: "Employee List",
          description: "View all employees",
          icon: "👥",
-         link: "#/employee-list",
-         class: "small",
+         link: "#/employee-list"
       },
       {
          title: "Calendar",
          description: "Check schedules",
          icon: "📅",
-         link: "#/shift-list",
-         class: "wide",
+         link: "#/shift-list"
       },
       {
          title: "Message Employees",
          description: "Communicate with employees",
          icon: "🗣️",
-         link: "#/message-employees",
-         class: "wide",
+         link: "#/message-employees"
       },
    ];
 
