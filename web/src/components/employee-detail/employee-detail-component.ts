@@ -61,10 +61,11 @@ class EmployeeDetailComponent extends HTMLElement {
       }
 
       const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
+      console.log(roleNames)
       // add is-active class to modal to show it
       this.shadowRoot.getElementById('myModal')?.classList.add('is-active')
       
-      render(this.detailTemplate(employee, roleNames.join(', '), this), this.shadowRoot);
+      render(this.detailTemplate(employee, roleNames, this), this.shadowRoot);
    }
 
    async updateEmployee() {
@@ -113,7 +114,7 @@ class EmployeeDetailComponent extends HTMLElement {
       }
    }
 
-   detailTemplate(employee: Employee, roleNames: string, component: EmployeeDetailComponent) {
+   detailTemplate(employee: Employee, roleNames: string[], component: EmployeeDetailComponent) {
       return html`
       <div class="modal" id="myModal">
          <div class="modal-background"></div>
@@ -146,6 +147,18 @@ class EmployeeDetailComponent extends HTMLElement {
                   <b>Roles:</b> 
                   <input type="text" id="roles" name="roles" placeholder="Roles" .value="${roleNames}" required>
                </p>
+               <form>
+                  <label>
+                        <input type="checkbox" name="option1" value="${employee.roles[0]}"> ${roleNames[1]}
+                  </label><br>
+                  <label>
+                        <input type="checkbox" name="option2" value="2"> Option 2
+                  </label><br>
+                  <label>
+                        <input type="checkbox" name="option3" value="3"> Option 3
+                  </label><br>
+                  <button type="submit">Absenden</button>
+               </form>
             </section>
             <footer class="modal-card-foot">
                <button class="button is-success" @click=${() => this.updateEmployee()}>Save changes</button>
