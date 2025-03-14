@@ -79,3 +79,17 @@ body {
 .styled-table tbody tr:nth-child(even) {
    background: rgb(234, 235, 234);
 }
+
+#responseMessage {
+   position: fixed;
+   top: 20px;
+   right: 20px;
+   z-index: 1000;
+   opacity: 1;
+   transition: opacity 0.5s ease-in-out;
+}
+
+#responseMessage[hidden] {
+   opacity: 0;
+   pointer-events: none;
+}
