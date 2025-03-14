@@ -75,8 +75,6 @@ Content-Type: application/json
 ### Assign an employee to a shift
 POST http://localhost:8080/api/shifts/assign
 Content-Type: application/json
-
-
   {
     "shiftId": 1,
     "employeeId": 1
