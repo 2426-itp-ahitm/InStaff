@@ -26,7 +26,7 @@ class AddRoleComponent extends HTMLElement {
     async addRole() {
         const shadowRoot = this.shadowRoot!;
         const roleNameInput = shadowRoot.querySelector<HTMLInputElement>("#role_name");
-      
+        debugger
         if (roleNameInput?.value.trim()) {
             const addingRole = {
                 roleName: roleNameInput.value,
@@ -63,7 +63,7 @@ class AddRoleComponent extends HTMLElement {
     template() {
         return html`
            <h2 class="title is-3">Add Role</h2>
-           <form class="box">
+           <div class="box">
               <div class="field">
                  <label for="role_name" class="label">Role Name</label>
                  <div class="control">
@@ -81,7 +81,7 @@ class AddRoleComponent extends HTMLElement {
            <div id="responseMessage" class="notification is-light">
               ${this.responseMessage}
            </div>
-           </form>
+           </div>
         `;
     }
 }

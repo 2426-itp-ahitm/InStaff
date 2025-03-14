@@ -159,7 +159,7 @@ class AddEmployeeComponent extends HTMLElement {
    private template() {
       return html`
          <h2 class="title is-3">Add an Employee</h2>
-         <form class="box">
+         <div class="box">
             <div class="field">
                <label for="first_name" class="label">First Name</label>
                <div class="control">
@@ -213,7 +213,7 @@ class AddEmployeeComponent extends HTMLElement {
                   <button type="button" class="button is-primary" @click=${() => this.addEmployee()}>Add Employee</button>
                </div>
             </div>
-         </form>
+         </div>
 
          <div id="responseMessage" class="notification is-light">
             ${this.responseMessage}
