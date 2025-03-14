@@ -115,6 +115,15 @@ class EmployeeDetailComponent extends HTMLElement {
    }
 
    detailTemplate(employee: Employee, roleNames: string[], component: EmployeeDetailComponent) {
+      const roles = roleNames.map(role => //TODO: use the role interface, so it has both id and name
+         html`
+         <label>
+            <input type="checkbox" name="option1" value="${role}"> ${role}
+         </label><br>
+         `
+      );
+
+
       return html`
       <div class="modal" id="myModal">
          <div class="modal-background"></div>
@@ -145,19 +154,9 @@ class EmployeeDetailComponent extends HTMLElement {
                </p>
                <p>
                   <b>Roles:</b> 
-                  <input type="text" id="roles" name="roles" placeholder="Roles" .value="${roleNames}" required>
                </p>
                <form>
-                  <label>
-                        <input type="checkbox" name="option1" value="${employee.roles[0]}"> ${roleNames[1]}
-                  </label><br>
-                  <label>
-                        <input type="checkbox" name="option2" value="2"> Option 2
-                  </label><br>
-                  <label>
-                        <input type="checkbox" name="option3" value="3"> Option 3
-                  </label><br>
-                  <button type="submit">Absenden</button>
+                  ${roles}
                </form>
             </section>
             <footer class="modal-card-foot">
