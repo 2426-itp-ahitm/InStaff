@@ -4,7 +4,7 @@ import { Role } from "../../interfaces/role";
 import { loadAllRoles } from "../role-list/role-list-service";
 
 class AddEmployeeComponent extends HTMLElement {
-   private responseMessage: string = "";
+   private responseMessage = { text: "", type: "" };
    private roles: Role[] = [];
 
    constructor() {
@@ -36,16 +36,14 @@ class AddEmployeeComponent extends HTMLElement {
          this.roles = await loadAllRoles();
       } catch (error) {
          console.error("Error loading roles:", error);
-         this.responseMessage = "Failed to load roles.";
+         this.responseMessage = { text: "Failed to load roles.", type: "is-danger" };
       }
    }
 
    private textInput() {
-      // Assuming you have an input field in your HTML
       const textInput = document.querySelector<HTMLInputElement>("text_input");
 
       console.log("textInput", textInput);
-      // Apply the function to the input element
       if (textInput) {
          this.preventNumbersInput(textInput);
       }
@@ -58,15 +56,11 @@ class AddEmployeeComponent extends HTMLElement {
 
          // Remove any number characters from the input value
          input.value = input.value.replace(/[0-9]/g, "");
-
-         // Optionally, show a warning or message (if needed)
-         // Example: input.setCustomValidity("Numbers are not allowed.");
-         // input.reportValidity();
       });
    }
 
    getCheckedRoleIds(): string[] {
-      const checkboxes = this.shadowRoot?.querySelectorAll<HTMLInputElement>('input[name="role_id"]:checked')
+      const checkboxes = this.shadowRoot?.querySelectorAll<HTMLInputElement>('input[name="role_id"]:checked');
       console.log(document.querySelectorAll('.control input[name="role_id"]:checked'));
       return Array.from(checkboxes).map(checkbox => checkbox.value);
   }
@@ -79,7 +73,6 @@ class AddEmployeeComponent extends HTMLElement {
       const telephoneInput = shadowRoot.querySelector<HTMLInputElement>("#telephone");
       const birthdateInput = shadowRoot.querySelector<HTMLInputElement>("#birthdate");
       const roleIdInput = this.getCheckedRoleIds();
-      console.log(roleIdInput)
       
       if (
          firstnameInput?.value.trim() &&
@@ -109,24 +102,27 @@ class AddEmployeeComponent extends HTMLElement {
                const result = await response.json();
                const employeeId = result.id;
 
-               await this.assignRole(employeeId, roleIdInput);
-               this.responseMessage = "Employee added successfully!";
+                try {
+                  await this.assignRole(employeeId, roleIdInput);
+                  this.responseMessage = { text: "Employee added successfully!", type: "is-success" };
+                } catch (error) {
+                  this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
+                }
                this.resetForm();
             } else {
-               this.responseMessage = `Error: ${response.statusText}`;
+               this.responseMessage = { text: `Error: ${response.statusText}`, type: "is-danger" };
             }
          } catch (error) {
-            this.responseMessage = `Error: ${error}`;
+            this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
          }
       } else {
-         this.responseMessage = "Error: Please fill in all fields!";
+         this.responseMessage = { text: "Error: Please fill in all fields!", type: "is-danger" };
       }
 
       this.renderComponent();
    }
 
    private async assignRole(employeeId: number, roleIdInput: string[]) {
-      
       for (let index = 0; index < roleIdInput.length; index++) {
          try {
             const response = await fetch(
@@ -154,6 +150,11 @@ class AddEmployeeComponent extends HTMLElement {
 
    private renderComponent() {
       render(this.template(), this.shadowRoot!);
+   }
+
+   private closeNotification() {
+      this.responseMessage = { text: "", type: "" };
+      this.renderComponent
    }
 
    private template() {
@@ -215,11 +216,14 @@ class AddEmployeeComponent extends HTMLElement {
             </div>
          </div>
 
-         <div id="responseMessage" class="notification is-light">
-            ${this.responseMessage}
+         <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${this.responseMessage.text == ""}>
+            <button class="delete" @click=${this.closeNotification}></button>
+            <p>${this.responseMessage.text}</p>
          </div>
       `;
    }
+
+   
 }
 
 customElements.define("add-employee-component", AddEmployeeComponent);
