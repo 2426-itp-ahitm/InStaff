@@ -93,3 +93,11 @@ body {
    opacity: 0;
    pointer-events: none;
 }
+
+.navbar-burger {
+   cursor: pointer;
+}
+
+.is-active {
+   display: block !important;
+}
