@@ -3,17 +3,13 @@ import { html, render } from "lit-html";
 const template = () => html`
    <nav class="navbar">
       <div class="navbar-brand">
-         <a class="navbar-item" href="#/">InStaff</a>
-         <button class="navbar-burger burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-         </button>
+         <a class="navbar-item" href="#/instaff" >
+            <img src="../../images/logo-black.png" style="width: 10vw, height:auto; padding: 0,1%" alt="InStaff" />
+         </a>
       </div>
 
       <div class="navbar-menu">
          <div class="navbar-start">
-            <a class="navbar-item" href="#/instaff">Home</a>
             <a class="navbar-item" href="#/employee-list">Employee List</a>
             <a class="navbar-item" href="#/add-employee">Add Employee</a>
             <a class="navbar-item" href="#/shift-list">Shift List</a>
