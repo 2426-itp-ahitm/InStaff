@@ -8,27 +8,25 @@ body {
    font-family: 'Arial', sans-serif;
    margin: 1vh 1vw 1vh 1vw;
 }
+.home-grid-element {
+   display: block;
+   width: 50vw;
+}
 
 .grid-container {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 1.5rem;
-   align-items: flex-start;
-   max-width: 90vw;
-   margin-left: auto;
-   margin-right: auto;
+   display: grid;
+   grid-template-columns: auto auto;
+   gap: 0.5rem;
    justify-content: center;
+   width: 50vw;
 }
 
 .card {
-   flex: 1 1 30%;
-   min-width: 15em;
-   max-width: 100%;
-   padding: 1rem;
-   border: 1px solid $lightgray;
-   border-radius: 8px;
-   background: $white;
-   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+   padding: 0.5rem;
+   border: 1px solid #ddd;
+   border-radius: 6px;
+   background: #fff;
+   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
    transition: 0.2s all;
 }
 
