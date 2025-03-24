@@ -6,6 +6,11 @@ const template = () => html`
          <a class="navbar-item" href="#/instaff" >
             <img src="../../images/logo-black.png" style="width: 10vw, height:auto; padding: 0,1%" alt="InStaff" />
          </a>
+         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+         </a>
       </div>
 
       <div class="navbar-menu">

@@ -43,7 +43,7 @@ class EmployeeListComponent extends HTMLElement {
       return html`
          <div class="container">
             <h2 class="title is-3">Employees</h2>
-            <table class="table is-fullwidth is-striped is-bordered is-hoverable">
+            <table class="table is-fullwidth is-bordered is-hoverable">
                <thead>
                   <tr>
                      <th>Firstname</th>

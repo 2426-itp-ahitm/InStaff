@@ -35,8 +35,8 @@ const dashboardTemplate = (handleClick) => {
             <div class="card-content">
                <div class="content">
                   <div class="is-flex is-align-items-bottom" style="">   
-                     <p class="title ml-auto mr-2">${card.icon}</p>
-                     <p class="title mr-auto">${card.title}</p>
+                     <p class="title">${card.icon}</p>
+                     <p class="title">${card.title}</p>
                   </div>
                   <p class="subtitle">${card.description}</p>
                </div>
