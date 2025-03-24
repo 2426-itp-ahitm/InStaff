@@ -62,7 +62,7 @@ class AddShiftComponent extends HTMLElement {
             this.responseMessage = { text: "Please fill in all fields", type: "is-danger" };
         }
 
-        this.isModalVisible = true; // Show the notification
+        this.isModalVisible = true;
         this.renderComponent();
     }
 
@@ -101,7 +101,6 @@ class AddShiftComponent extends HTMLElement {
                 </div>
             </div>
 
-            <!-- Notification -->
             <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${!this.isModalVisible}>
                 <button class="delete" @click=${this.closeNotification}></button>
                 <p>${this.responseMessage.text}</p>

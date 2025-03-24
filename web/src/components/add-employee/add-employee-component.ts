@@ -6,7 +6,7 @@ import { loadAllRoles } from "../role-list/role-list-service";
 class AddEmployeeComponent extends HTMLElement {
    private responseMessage = { text: "", type: "" };
    private roles: Role[] = [];
-   private isModalVisible: boolean = false; // Boolean to control modal visibility
+   private isModalVisible: boolean = false;
 
    constructor() {
       super();
@@ -87,23 +87,23 @@ class AddEmployeeComponent extends HTMLElement {
                try {
                   await this.assignRole(employeeId, roleIdInput);
                   this.responseMessage = { text: "Employee added successfully!", type: "is-success" };
-                  this.isModalVisible = true; // Show success modal
+                  this.isModalVisible = true;
                } catch (error) {
                   this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
-                  this.isModalVisible = true; // Show error modal
+                  this.isModalVisible = true;
                }
                this.resetForm();
             } else {
                this.responseMessage = { text: `Error: ${response.statusText}`, type: "is-danger" };
-               this.isModalVisible = true; // Show error modal
+               this.isModalVisible = true;
             }
          } catch (error) {
             this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
-            this.isModalVisible = true; // Show error modal
+            this.isModalVisible = true;
          }
       } else {
          this.responseMessage = { text: "Error: Please fill in all fields!", type: "is-danger" };
-         this.isModalVisible = true; // Show error modal
+         this.isModalVisible = true;
       }
 
       this.renderComponent();
@@ -136,7 +136,7 @@ class AddEmployeeComponent extends HTMLElement {
    }
 
    private closeNotification = () => {
-      this.isModalVisible = false; // Hide the modal when closing
+      this.isModalVisible = false;
       this.responseMessage = { text: "", type: "" };
       this.renderComponent();
    }
@@ -202,7 +202,7 @@ class AddEmployeeComponent extends HTMLElement {
             </div>
          </div>
 
-         <!-- Notification Modal -->
+         
          ${this.isModalVisible
             ? html`
                  <div id="responseMessage" class="notification ${this.responseMessage.type}">
