@@ -2,6 +2,7 @@ import { html, render } from "lit-html";
 
 class AddShiftComponent extends HTMLElement {
     private responseMessage = { text: "", type: "" };
+    private isModalVisible: boolean = false;
 
     constructor() {
         super();
@@ -52,7 +53,7 @@ class AddShiftComponent extends HTMLElement {
                     this.responseMessage = { text: `Error: ${response.statusText}`, type: "is-danger" };
                 }
             } catch (error) {
-                this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
+                this.responseMessage = { text: `Network Error: ${error}`, type: "is-danger" };
             }
 
             startTimeInput.value = "";
@@ -61,13 +62,15 @@ class AddShiftComponent extends HTMLElement {
             this.responseMessage = { text: "Please fill in all fields", type: "is-danger" };
         }
 
+        this.isModalVisible = true; // Show the notification
         this.renderComponent();
     }
 
-    private closeNotification() {
+    private closeNotification = () => {
+        this.isModalVisible = false;
         this.responseMessage = { text: "", type: "" };
-        this.renderComponent;
-    }
+        this.renderComponent();
+    };
 
     private renderComponent() {
         render(this.template(), this.shadowRoot!);
@@ -99,7 +102,7 @@ class AddShiftComponent extends HTMLElement {
             </div>
 
             <!-- Notification -->
-            <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${this.responseMessage.text === ""}>
+            <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${!this.isModalVisible}>
                 <button class="delete" @click=${this.closeNotification}></button>
                 <p>${this.responseMessage.text}</p>
             </div>

@@ -6,6 +6,7 @@ import { loadAllRoles } from "../role-list/role-list-service";
 class AddEmployeeComponent extends HTMLElement {
    private responseMessage = { text: "", type: "" };
    private roles: Role[] = [];
+   private isModalVisible: boolean = false; // Boolean to control modal visibility
 
    constructor() {
       super();
@@ -16,9 +17,10 @@ class AddEmployeeComponent extends HTMLElement {
       await this.loadStyles();
       await this.getRoles();
       this.renderComponent();
-      this.textInput();
    }
-
+   private renderComponent() {
+      render(this.template(), this.shadowRoot!);
+   }
    private async loadStyles() {
       try {
          const cssResponse = await fetch("../../../style.css");
@@ -40,30 +42,10 @@ class AddEmployeeComponent extends HTMLElement {
       }
    }
 
-   private textInput() {
-      const textInput = document.querySelector<HTMLInputElement>("text_input");
-
-      console.log("textInput", textInput);
-      if (textInput) {
-         this.preventNumbersInput(textInput);
-      }
-   }
-
-   private preventNumbersInput(inputElement: HTMLInputElement) {
-      inputElement.addEventListener("input", (event) => {
-         console.log("Input event fired!");
-         const input = event.target as HTMLInputElement;
-
-         // Remove any number characters from the input value
-         input.value = input.value.replace(/[0-9]/g, "");
-      });
-   }
-
-   getCheckedRoleIds(): string[] {
+   private getCheckedRoleIds(): string[] {
       const checkboxes = this.shadowRoot?.querySelectorAll<HTMLInputElement>('input[name="role_id"]:checked');
-      console.log(document.querySelectorAll('.control input[name="role_id"]:checked'));
       return Array.from(checkboxes).map(checkbox => checkbox.value);
-  }
+   }
 
    private async addEmployee() {
       const shadowRoot = this.shadowRoot!;
@@ -102,21 +84,26 @@ class AddEmployeeComponent extends HTMLElement {
                const result = await response.json();
                const employeeId = result.id;
 
-                try {
+               try {
                   await this.assignRole(employeeId, roleIdInput);
                   this.responseMessage = { text: "Employee added successfully!", type: "is-success" };
-                } catch (error) {
+                  this.isModalVisible = true; // Show success modal
+               } catch (error) {
                   this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
-                }
+                  this.isModalVisible = true; // Show error modal
+               }
                this.resetForm();
             } else {
                this.responseMessage = { text: `Error: ${response.statusText}`, type: "is-danger" };
+               this.isModalVisible = true; // Show error modal
             }
          } catch (error) {
             this.responseMessage = { text: `Error: ${error}`, type: "is-danger" };
+            this.isModalVisible = true; // Show error modal
          }
       } else {
          this.responseMessage = { text: "Error: Please fill in all fields!", type: "is-danger" };
+         this.isModalVisible = true; // Show error modal
       }
 
       this.renderComponent();
@@ -148,14 +135,13 @@ class AddEmployeeComponent extends HTMLElement {
       inputs?.forEach((input) => input.setAttribute("value", ""));
    }
 
-   private renderComponent() {
-      render(this.template(), this.shadowRoot!);
+   private closeNotification = () => {
+      this.isModalVisible = false; // Hide the modal when closing
+      this.responseMessage = { text: "", type: "" };
+      this.renderComponent();
    }
 
-   private closeNotification() {
-      this.responseMessage = { text: "", type: "" };
-      this.renderComponent
-   }
+   
 
    private template() {
       return html`
@@ -200,11 +186,11 @@ class AddEmployeeComponent extends HTMLElement {
                <label class="label">Choose a role:</label>
                <div class="control">
                   ${this.roles.map(
-                        (role) => html`
-                           <label>
-                              <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
-                           </label><br>
-                        `
+                     (role) => html`
+                        <label>
+                           <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
+                        </label><br />
+                     `
                   )}
                </div>
             </div>
@@ -216,14 +202,17 @@ class AddEmployeeComponent extends HTMLElement {
             </div>
          </div>
 
-         <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${this.responseMessage.text == ""}>
-            <button class="delete" @click=${this.closeNotification}></button>
-            <p>${this.responseMessage.text}</p>
-         </div>
+         <!-- Notification Modal -->
+         ${this.isModalVisible
+            ? html`
+                 <div id="responseMessage" class="notification ${this.responseMessage.type}">
+                    <button class="delete" @click=${this.closeNotification}></button>
+                    <p>${this.responseMessage.text}</p>
+                 </div>
+              `
+            : ""}
       `;
    }
-
-   
 }
 
 customElements.define("add-employee-component", AddEmployeeComponent);
