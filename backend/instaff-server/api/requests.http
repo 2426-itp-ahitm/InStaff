@@ -1,3 +1,5 @@
+GET http://localhost:8080/api/mail/6
+
 GET http://localhost:4200/api/employees
 Accept: application/json
 
@@ -8,7 +10,7 @@ Content-Type: application/json
 {
   "firstname": "Ben",
   "lastname": "Dover",
-  "email": "john.doe@example.com",
+  "email": "p.pfarrhofer@students.htl-leonding.ac.at",
   "telephone": "+1234567890",
   "password": "securePassword123",
   "birthdate": "1990-01-01",
