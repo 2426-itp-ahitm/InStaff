@@ -40,6 +40,7 @@ class EmployeeDetailComponent extends HTMLElement {
 
    // Close the modal
    closeModal() {
+      model.activeEmployeeId = null;
       this.shadowRoot.getElementById('myModal')?.classList.remove('is-active')
    }
 
@@ -139,7 +140,7 @@ class EmployeeDetailComponent extends HTMLElement {
 
    detailTemplate(employee: Employee, roles, component: EmployeeDetailComponent) {
       const htmlRoles = roles.map(role => {
-         const isChecked = employee.roles.includes(role.id) ? 'checked' : ''; //TODO: if user changes roles, update employee.roles
+         const isChecked = employee.roles.includes(role.id) ? 'checked' : '';
          return html`
              <label>
                  <input type="checkbox" name="roles" value="${role.id}" ?checked=${isChecked}> ${role.roleName}

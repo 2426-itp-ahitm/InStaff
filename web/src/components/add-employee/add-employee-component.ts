@@ -131,8 +131,19 @@ class AddEmployeeComponent extends HTMLElement {
    }
 
    private resetForm() {
-      const inputs = this.shadowRoot?.querySelectorAll("input, select");
-      inputs?.forEach((input) => input.setAttribute("value", ""));
+      const shadowRoot = this.shadowRoot!;
+      
+      // Reset all text, email, date, and number input fields
+      const inputs = shadowRoot.querySelectorAll<HTMLInputElement>('input[type="text"], input[type="email"], input[type="date"], input[type="number"]');
+      inputs.forEach(input => input.value = "");
+   
+      // Reset all checkboxes
+      const checkboxes = shadowRoot.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => checkbox.checked = false);
+   
+      // Reset all select elements (if any)
+      const selects = shadowRoot.querySelectorAll<HTMLSelectElement>('select');
+      selects.forEach(select => select.selectedIndex = 0);
    }
 
    private closeNotification = () => {

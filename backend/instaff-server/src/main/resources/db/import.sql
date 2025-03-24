@@ -10,7 +10,13 @@ values ('2000-11-20 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', 'p
 insert into role (roleName, company_id)
 values ('Koch', 1);
 insert into role (roleName, company_id)
+values ('Küchenhilfe', 1);
+insert into role (roleName, company_id)
 values ('Kellner', 1);
+insert into role (roleName, company_id)
+values ('Barkeeper', 1);
+insert into role (roleName, company_id)
+values ('Abwasch', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
@@ -28,7 +34,7 @@ values ('2025-03-25 17:00:00', '2025-03-25 20:00:00', 1);
 insert into employee_role (employee_id, role_id)
 values (1, 1);
 insert into employee_role (employee_id, role_id)
-values (1, 2);
+values (1, 3);
 insert into employee_role (employee_id, role_id)
 values (2, 2);
 
@@ -57,9 +63,9 @@ values ('2025-03-28 10:00:00', '2025-03-28 18:00:00', 1);
 insert into employee_role (employee_id, role_id)
 values (3, 1); -- Michael Brown als Koch
 insert into employee_role (employee_id, role_id)
-values (4, 2); -- Sarah Jones als Kellnerin
+values (4, 4); -- Sarah Jones als Kellnerin
 insert into employee_role (employee_id, role_id)
-values (5, 1); -- Daniel White als Koch
+values (5, 3); -- Daniel White als Koch
 
 /* Mitarbeiter-Schicht-Zuordnungen */
 insert into assignment (employee_id, shift_id, role_id)
