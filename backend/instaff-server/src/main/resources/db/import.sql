@@ -1,26 +1,30 @@
 /*COMPANY*/
 insert into company (companyName)
 values ('Stoaboch Wirt');
+
 /*MANAGER*/
 insert into manager (birthdate, email, firstname, lastname, password, telephone, company_id)
 values ('2000-11-20 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', 'passwort', '+43677238384878', 1);
+
 /*ROLE*/
 insert into role (roleName, company_id)
 values ('Koch', 1);
 insert into role (roleName, company_id)
 values ('Kellner', 1);
+
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
 values ('2004-11-11 00:00:00', 'john.doe@example.com', 'john', 'doe', 'hunter2', '1233456899', 1);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
 values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', 'hunter34', '65626625', 1);
+
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-11 09:00:00', '2024-11-18 17:00:00', 1);
+values ('2025-03-25 09:00:00', '2025-03-25 17:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-11 17:00:00', '2024-11-11 20:00:00', 1);
+values ('2025-03-25 17:00:00', '2025-03-25 20:00:00', 1);
 
-/*ASSOTIATIVE*/
+/*ASSOCIATIVE*/
 insert into employee_role (employee_id, role_id)
 values (1, 1);
 insert into employee_role (employee_id, role_id)
@@ -30,7 +34,6 @@ values (2, 2);
 
 insert into assignment (employee_id, shift_id, role_id)
 values(1, 1, 1);
-
 insert into assignment (employee_id, shift_id, role_id)
 values (1, 2, 1);
 
@@ -44,11 +47,11 @@ values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', 's
 
 /* Neue Schichten */
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-19 08:00:00', '2024-11-19 16:00:00', 1);
+values ('2025-03-26 08:00:00', '2025-03-26 16:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-20 14:00:00', '2024-11-20 22:00:00', 1);
+values ('2025-03-27 14:00:00', '2025-03-27 22:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2024-11-21 10:00:00', '2024-11-21 18:00:00', 1);
+values ('2025-03-28 10:00:00', '2025-03-28 18:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
 insert into employee_role (employee_id, role_id)

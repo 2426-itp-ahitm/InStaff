@@ -14,6 +14,7 @@ import "./components/add-employee";
 import "./components/add-shift";
 import "./components/edit-shift";
 import "./components/nav-bar";
+import "./components/calendar";
 
 
 const routes: Record<string, any> = {
@@ -31,6 +32,7 @@ const routes: Record<string, any> = {
     "add-employee": html`<add-employee-component></add-employee-component>`,
     "add-shift": html`<add-shift-component></add-shift-component>`,
     "edit-shift": html`<edit-shift-component></edit-shift-component>`,
+    "calendar": html`<calendar-component></calendar-component>`
 };
 
 class AppComponent extends HTMLElement {

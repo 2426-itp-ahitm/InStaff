@@ -3,18 +3,6 @@ import { html, render } from "lit-html";
 const dashboardTemplate = (handleClick) => {
    const cards = [
       {
-         title: "Add Role",
-         description: "Add new roles",
-         icon: "➕",
-         link: "#/add-role"
-      },
-      {
-         title: "Add Shift",
-         description: "Add new shifts",
-         icon: "➕",
-         link: "#/add-shift"
-      },
-      {
          title: "Employee List",
          description: "View all employees",
          icon: "👥",
@@ -26,6 +14,26 @@ const dashboardTemplate = (handleClick) => {
          icon: "🗣️",
          link: "#/message-employees"
       },
+      {
+         title: "Add Shift",
+         description: "Add new shifts",
+         icon: "➕",
+         link: "#/add-shift"
+      },
+      {
+         title: "Add Role",
+         description: "Add new roles",
+         icon: "➕",
+         link: "#/add-role"
+      },
+      ,
+      {
+         title: "Calendar",
+         description: "Look up the calendar",
+         icon: "📅",
+         link: "#/calendar"
+      }
+
    ];
 
    const cardTemplates = cards.map(
