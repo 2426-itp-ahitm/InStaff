@@ -130,6 +130,12 @@ class AddEmployeeComponent extends HTMLElement {
       }
    }
 
+   private closeForm() { //TODO: close the form
+      this.resetForm();
+      this.isModalVisible = false;
+      this.renderComponent();
+   }
+
    private resetForm() {
       const shadowRoot = this.shadowRoot!;
       
@@ -156,61 +162,74 @@ class AddEmployeeComponent extends HTMLElement {
 
    private template() {
       return html`
-         <h2 class="title is-3">Add an Employee</h2>
-         <div class="box">
-            <div class="field">
-               <label for="first_name" class="label">First Name</label>
-               <div class="control">
-                  <input type="text" id="first_name" name="first_name" class="input" placeholder="First Name" />
-               </div>
-            </div>
+      <div class="modal is-active mt-6">
+         <div class="modal-background"></div>
+         <div class="modal-card ">
+            <header class="modal-card-head">
+               <h2 class="title is-3">Add an Employee</h2>
+            </header>
+            <section class="modal-card-body py-2">
+               <div class="box">
+                  <div class="field">
+                     <label for="first_name" class="label">First Name</label>
+                     <div class="control">
+                        <input type="text" id="first_name" name="first_name" class="input" placeholder="First Name" />
+                     </div>
+                  </div>
 
-            <div class="field">
-               <label for="last_name" class="label">Last Name</label>
-               <div class="control">
-                  <input type="text" id="last_name" name="last_name" class="input" placeholder="Last Name" />
-               </div>
-            </div>
+                  <div class="field">
+                     <label for="last_name" class="label">Last Name</label>
+                     <div class="control">
+                        <input type="text" id="last_name" name="last_name" class="input" placeholder="Last Name" />
+                     </div>
+                  </div>
 
-            <div class="field">
-               <label for="email" class="label">Email</label>
-               <div class="control">
-                  <input type="email" id="email" name="email" class="input" placeholder="Email" />
-               </div>
-            </div>
+                  <div class="field">
+                     <label for="email" class="label">Email</label>
+                     <div class="control">
+                        <input type="email" id="email" name="email" class="input" placeholder="Email" />
+                     </div>
+                  </div>
 
-            <div class="field">
-               <label for="telephone" class="label">Telephone</label>
-               <div class="control">
-                  <input type="text" id="telephone" name="telephone" class="input" placeholder="Telephone" />
-               </div>
-            </div>
+                  <div class="field">
+                     <label for="telephone" class="label">Telephone</label>
+                     <div class="control">
+                        <input type="text" id="telephone" name="telephone" class="input" placeholder="Telephone" />
+                     </div>
+                  </div>
 
-            <div class="field">
-               <label for="birthdate" class="label">Birthdate</label>
-               <div class="control">
-                  <input type="date" id="birthdate" name="birthdate" class="input" />
-               </div>
-            </div>
+                  <div class="field">
+                     <label for="birthdate" class="label">Birthdate</label>
+                     <div class="control">
+                        <input type="date" id="birthdate" name="birthdate" class="input" />
+                     </div>
+                  </div>
 
-            <div class="field">
-               <label class="label">Choose a role:</label>
-               <div class="control">
-                  ${this.roles.map(
-                     (role) => html`
-                        <label>
-                           <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
-                        </label><br />
-                     `
-                  )}
+                  <div class="field">
+                     <label class="label">Choose a role:</label>
+                     <div class="control">
+                        ${this.roles.map(
+                           (role) => html`
+                              <label>
+                                 <input type="checkbox" name="role_id" value="${role.id}"> ${role.roleName}
+                              </label><br />
+                           `
+                        )}
+                     </div>
+                  </div>
                </div>
-            </div>
-
-            <div class="field">
+            </section>
+            <footer class="modal-card-foot" >
+               <div class="field">
                <div class="control">
                   <button type="button" class="button is-primary" @click=${() => this.addEmployee()}>Add Employee</button>
+                  <button type="button" class="button is-danger" @click=${() => this.closeForm()}>Cancel</button>
                </div>
-            </div>
+            </footer>
+         </div>
+         </div>
+
+            
          </div>
 
          

@@ -12,6 +12,24 @@ class EmployeeDetailComponent extends HTMLElement {
    constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      this.initListeners(); // Add event listeners
+   }
+
+
+   //Keyboard event listeners
+   initListeners() {
+      document.addEventListener("keydown", this.handleKeyDown);
+   }
+   handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+         this.updateEmployee();
+      } else if (event.key === "Escape") {
+         this.closeModal();
+      }
+   };
+   destroy() {
+      // Remove event listeners to avoid memory leaks
+      document.removeEventListener("keydown", this.handleKeyDown);
    }
 
    static get observedAttributes() {
@@ -142,7 +160,7 @@ class EmployeeDetailComponent extends HTMLElement {
       const htmlRoles = roles.map(role => {
          const isChecked = employee.roles.includes(role.id) ? 'checked' : '';
          return html`
-             <label>
+             <label class="checkbox">
                  <input type="checkbox" name="roles" value="${role.id}" ?checked=${isChecked}> ${role.roleName}
              </label><br>
          `;
@@ -155,28 +173,27 @@ class EmployeeDetailComponent extends HTMLElement {
          <div class="modal-background"></div>
          <div class="modal-card">
             <header class="modal-card-head">
-               <p class="modal-card-title">
-                  <input type="text" id="firstname" name="firstname" placeholder="First Name" .value="${employee.firstname}" required> 
-                  <input type="text" id="lastname" name="lastname" placeholder="Last Name" .value="${employee.lastname}" required>
-               </p>
-               <button class="delete" aria-label="close" @click=${() => this.closeModal()}></button>
+               <div class="modal-card-title grid mb-0 ">
+                  <input type="text" class="input cell " id="firstname" name="firstname" placeholder="First Name" .value="${employee.firstname}" required> 
+                  <input type="text" class="input cell" id="lastname" name="lastname" placeholder="Last Name" .value="${employee.lastname}" required>
+               </div>
             </header>
-            <section class="modal-card-body">
+            <section class="modal-card-body py-2">
                <h3>
                   ${employee.company_name}
                </h3>
                <p>Employee ID: ${employee.id}</p>
                <p>
                   <b>Birthdate:</b> 
-                  <input type="date" id="birthdate" name="birthdate" .value="${employee.birthdate}" required>
+                  <input type="date" class="input" id="birthdate" name="birthdate" .value="${employee.birthdate}" required>
                </p>
                <p>
                   <b>Email:</b> 
-                  <input type="email" id="email" name="email" placeholder="Email" .value="${employee.email}" required>
+                  <input type="email" class="input" id="email" name="email" placeholder="Email" .value="${employee.email}" required>
                </p>
                <p>
                   <b>Telephone:</b> 
-                  <input type="tel" id="telephone" name="telephone" placeholder="Telephone" .value="${employee.telephone}" required>
+                  <input type="tel" class="input" id="telephone" name="telephone" placeholder="Telephone" .value="${employee.telephone}" required>
                </p>
                <p>
                   <b>Roles:</b> 
@@ -186,8 +203,8 @@ class EmployeeDetailComponent extends HTMLElement {
                </form>
             </section>
             <footer class="modal-card-foot">
-               <button class="button is-success" @click=${() => this.updateEmployee()}>Save changes</button>
-               <button class="button" @click=${() => this.closeModal()}>Cancel</button>
+               <button class="button is-success mx-1" @click=${() => this.updateEmployee()}>Save changes</button>
+               <button class="button is-danger mx-1" @click=${() => this.closeModal()}>Cancel</button>
             </footer>
          </div>
       </div>`;

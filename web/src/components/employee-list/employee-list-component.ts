@@ -9,6 +9,9 @@ class EmployeeListComponent extends HTMLElement {
       this.attachShadow({ mode: "open" });
    }
 
+   private isFirstClick = false;
+   private isAddingEmployee = false; // State variable to track visibility
+
    async connectedCallback() {
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
@@ -43,7 +46,7 @@ class EmployeeListComponent extends HTMLElement {
       return html`
          <div class="container">
             <h2 class="title is-3">Employees</h2>
-            <table class="table is-fullwidth is-bordered is-hoverable">
+            <table class="table is-fullwidth is-bordered is-hoverable my-1">
                <thead>
                   <tr>
                      <th>Firstname</th>
@@ -54,19 +57,39 @@ class EmployeeListComponent extends HTMLElement {
                   ${rows}
                </tbody>
             </table>
-            ${activeEmployeeId
+            ${this.isFirstClick
                ? html`
                    <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
                  `
-               : html`<p class="subtitle">Select an employee to view details</p>`
+               : html`<p class="subtitle is-6 my-1">Select an employee to view details</p>`
             }
+
+            <div>
+               ${this.isAddingEmployee 
+                  ? html`
+                     <add-employee-component></add-employee-component>
+                     
+                  ` 
+                  : html`
+                     <button class="button is-primary my-1" @click=${() => this.showAddEmployee()}>
+                        Add New Employee
+                     </button>
+                  `}
+            </div>
          </div>
       `;
    }
 
+   showAddEmployee() {
+      this.isAddingEmployee = !this.isAddingEmployee; // Toggle visibility
+      this.render(model.employees, model.activeEmployeeId); // Re-render
+   }
+
    showEmployeeDetail(id: number) {
       console.log("Selected Employee ID:", id);
-      model.activeEmployeeId = id; // Update the model with the selected employee ID
+      model.activeEmployeeId = id;
+      this.isFirstClick = true;
+      this.render(model.employees, model.activeEmployeeId);
    }
 }
 

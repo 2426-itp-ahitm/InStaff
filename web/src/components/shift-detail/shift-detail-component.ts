@@ -126,6 +126,20 @@ class ShiftDetailComponent extends HTMLElement {
                               </tr>
                            `
                         )}
+                        <tr>
+                           <td>
+                              <select>
+                                 <option value="1" selected>Emp 1</option>
+                                 <option value="2">Emp 2</option>
+                              </select>
+                           </td>
+                           <td>
+                              <select>
+                                 <option value="1" selected>Koch</option>
+                                 <option value="2">Kellner</option>
+                              </select>
+                           </td>
+                        </tr>
                      </tbody>
                   </table>
                </section>
