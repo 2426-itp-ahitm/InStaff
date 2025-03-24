@@ -3,10 +3,16 @@ import { html, render } from "lit-html";
 const dashboardTemplate = (handleClick) => {
    const cards = [
       {
-         title: "Add Role",
-         description: "Add new roles",
-         icon: "➕",
-         link: "#/add-role"
+         title: "Employee List",
+         description: "View all employees",
+         icon: "👥",
+         link: "#/employee-list"
+      },
+      {
+         title: "Message Employees",
+         description: "Communicate with employees",
+         icon: "🗣️",
+         link: "#/message-employees"
       },
       {
          title: "Add Shift",
@@ -15,42 +21,30 @@ const dashboardTemplate = (handleClick) => {
          link: "#/add-shift"
       },
       {
-         title: "Edit Employees",
-         description: "Edit employee details",
-         icon: "👤",
-         link: "#/edit-employees"
+         title: "Add Role",
+         description: "Add new roles",
+         icon: "➕",
+         link: "#/add-role"
       },
-      {
-         title: "Employee List",
-         description: "View all employees",
-         icon: "👥",
-         link: "#/employee-list"
-      },
+      ,
       {
          title: "Calendar",
-         description: "Check schedules",
+         description: "Look up the calendar",
          icon: "📅",
-         link: "#/shift-list"
-      },
-      {
-         title: "Message Employees",
-         description: "Communicate with employees",
-         icon: "🗣️",
-         link: "#/message-employees"
-      },
+         link: "#/calendar"
+      }
+
    ];
 
    const cardTemplates = cards.map(
       (card) => html`
-
-
-      <div class="">
-         <div class="card" style="min-width: 20vw" @click="${() => handleClick(card.link)}">
+      <div>
+         <div class="card" @click="${() => handleClick(card.link)}">
             <div class="card-content">
                <div class="content">
                   <div class="is-flex is-align-items-bottom" style="">   
-                     <p class="title ml-auto mr-2">${card.icon}</p>
-                     <p class="title mr-auto">${card.title}</p>
+                     <p class="title">${card.icon}</p>
+                     <p class="title">${card.title}</p>
                   </div>
                   <p class="subtitle">${card.description}</p>
                </div>
@@ -61,14 +55,15 @@ const dashboardTemplate = (handleClick) => {
    );
 
    return html`
-   <div class="container has-text-centered mb-6 mt-6">
-      <h1 class="title is-2">Alexander's Company</h1>
-      <p class="subtitle is-4">Manager: Alexander Hahn</p>
+   <div class="is-flex mt-6">
+      <div class="grid-container home-grid-element">
+         ${cardTemplates}
+      </div>
+      <shift-list-component class="home-grid-element"></shift-list-component>
    </div>
    
-   <div class="grid-container">
-      ${cardTemplates}
-   </div>
+   
+   
    `;
 };
 

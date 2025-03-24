@@ -1,7 +1,8 @@
 import { html, render } from "lit-html";
 
 class AddShiftComponent extends HTMLElement {
-    responseMessage: string = "";
+    private responseMessage = { text: "", type: "" };
+    private isModalVisible: boolean = false;
 
     constructor() {
         super();
@@ -9,21 +10,23 @@ class AddShiftComponent extends HTMLElement {
     }
 
     async connectedCallback() {
-        const cssResponse = await fetch("../../../style.css");
-        const css = await cssResponse.text();
-
-        const styleElement = document.createElement("style");
-        styleElement.textContent = css;
-        this.shadowRoot.appendChild(styleElement);
-
+        await this.loadStyles();
         this.renderComponent();
     }
 
-    renderComponent() {
-        render(this.template(), this.shadowRoot);
+    private async loadStyles() {
+        try {
+            const cssResponse = await fetch("../../../style.css");
+            const css = await cssResponse.text();
+            const styleElement = document.createElement("style");
+            styleElement.textContent = css;
+            this.shadowRoot?.appendChild(styleElement);
+        } catch (error) {
+            console.error("Error loading styles:", error);
+        }
     }
 
-    async addShift() {
+    private async addShift() {
         const shadowRoot = this.shadowRoot!;
         const startTimeInput = shadowRoot.querySelector<HTMLInputElement>("#start_time");
         const endTimeInput = shadowRoot.querySelector<HTMLInputElement>("#end_time");
@@ -35,7 +38,6 @@ class AddShiftComponent extends HTMLElement {
                 companyId: 1
             };
 
-            console.log(addingShift);
             try {
                 const response = await fetch('http://localhost:4200/api/shifts', {
                     method: 'POST',
@@ -46,52 +48,63 @@ class AddShiftComponent extends HTMLElement {
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
-                    this.responseMessage = "Shift added successfully!";
+                    this.responseMessage = { text: "Shift added successfully!", type: "is-success" };
                 } else {
-                    this.responseMessage = `Error: ${response.statusText}`;
+                    this.responseMessage = { text: `Error: ${response.statusText}`, type: "is-danger" };
                 }
             } catch (error) {
-                this.responseMessage = `Error: ${error}`;
+                this.responseMessage = { text: `Network Error: ${error}`, type: "is-danger" };
             }
 
             startTimeInput.value = "";
             endTimeInput.value = "";
         } else {
-            this.responseMessage = "Please fill in all fields";
+            this.responseMessage = { text: "Please fill in all fields", type: "is-danger" };
         }
 
+        this.isModalVisible = true;
         this.renderComponent();
     }
 
-    template() {
+    private closeNotification = () => {
+        this.isModalVisible = false;
+        this.responseMessage = { text: "", type: "" };
+        this.renderComponent();
+    };
+
+    private renderComponent() {
+        render(this.template(), this.shadowRoot!);
+    }
+
+    private template() {
         return html`
-           <h2 class="title is-3">Add Shift</h2>
-           <form class="box">
-              <div class="field">
-                 <label for="start_time" class="label">Start Time</label>
-                 <div class="control">
-                    <input type="datetime-local" id="start_time" name="start_time" class="input" />
-                 </div>
-              </div>
-              
-              <div class="field">
-                 <label for="end_time" class="label">End Time</label>
-                 <div class="control">
-                    <input type="datetime-local" id="end_time" name="end_time" class="input" />
-                 </div>
-              </div>
-           </form>
+            <h2 class="title is-3">Add Shift</h2>
+            <div class="box">
+                <div class="field">
+                    <label for="start_time" class="label">Start Time</label>
+                    <div class="control">
+                        <input type="datetime-local" id="start_time" name="start_time" class="input" />
+                    </div>
+                </div>
+    
+                <div class="field">
+                    <label for="end_time" class="label">End Time</label>
+                    <div class="control">
+                        <input type="datetime-local" id="end_time" name="end_time" class="input" />
+                    </div>
+                </div>
+            </div>
 
-           <div class="field">
-              <div class="control">
-                 <button class="button is-primary" @click=${() => this.addShift()}>Add Shift</button>
-              </div>
-           </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary" @click=${() => this.addShift()}>Add Shift</button>
+                </div>
+            </div>
 
-           <div id="responseMessage" class="notification is-light">
-              ${this.responseMessage}
-           </div>
+            <div id="responseMessage" class="notification ${this.responseMessage.type}" ?hidden=${!this.isModalVisible}>
+                <button class="delete" @click=${this.closeNotification}></button>
+                <p>${this.responseMessage.text}</p>
+            </div>
         `;
     }
 }
