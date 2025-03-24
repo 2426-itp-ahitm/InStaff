@@ -1,5 +1,6 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
+import { Role } from "../../interfaces/role";
 import { model } from "../../model/model";
 import RoleMapper from "./../../mapper/role-mapper";
 import { loadEmployeeDetails } from "../employee-edit/employee-edit-service";
@@ -60,12 +61,31 @@ class EmployeeDetailComponent extends HTMLElement {
          model.employees.push(employee); // Speichere den Mitarbeiter im Modell
       }
 
-      const roleNames = await this.roleMapper.mapRoleIdsToNames(employee.roles);
-      console.log(roleNames)
+      const employeeRoles = ["Admin", "Manager"]; // Example employee roles array
+
+      const roles = await fetch("api/roles", {
+         method: "GET",
+         headers: { "Content-Type": "application/json" }
+      })
+         .then(response => response.json())
+         .then((data: Role[]) => 
+             data.map(role => ({
+                 id: role.id,
+                 roleName: role.roleName,
+                 hasRole: employee.roles.includes(role.id) // Checks if employee has this role
+             }))
+         )
+         .catch(error => {
+             console.error(`Failed to fetch roles: ${error}`);
+             return [];
+         });
+             
+      console.log(roles); // This will log an array of objects with id and roleName
+      
       // add is-active class to modal to show it
       this.shadowRoot.getElementById('myModal')?.classList.add('is-active')
       
-      render(this.detailTemplate(employee, roleNames, this), this.shadowRoot);
+      render(this.detailTemplate(employee, roles, this), this.shadowRoot);
    }
 
    async updateEmployee() {
@@ -74,7 +94,10 @@ class EmployeeDetailComponent extends HTMLElement {
       const email = this.shadowRoot.querySelector<HTMLInputElement>("#email")?.value
       const telephone = this.shadowRoot.querySelector<HTMLInputElement>("#telephone")?.value
       const birthdate = this.shadowRoot.querySelector<HTMLInputElement>("#birthdate")?.value
-      const roles = this.shadowRoot.querySelector<HTMLInputElement>("#roles")?.value?.split(',').map(Number)
+      const selectedRoles = Array.from(
+         this.shadowRoot.querySelectorAll<HTMLInputElement>('input[name="roles"]:checked')
+      ).map(input => Number(input.value));  //TODO: if user changes roles, update employee.roles
+
 
       const updatedEmployee: Employee = {
          id: Number(this._employeeId),
@@ -86,7 +109,7 @@ class EmployeeDetailComponent extends HTMLElement {
          password: '', // TODO: get password from the form
          company_name: model.employees.find(emp => emp.id === Number(this._employeeId))?.company_name,
          company_id: 1, // TODO: get company_id from the form
-         roles: roles // TODO: Parse rolesInput.value to an array of role IDs
+         roles: selectedRoles // TODO: Parse rolesInput.value to an array of role IDs
       }
 
       const response = await fetch(`/api/employees/${this._employeeId}`, {
@@ -114,14 +137,16 @@ class EmployeeDetailComponent extends HTMLElement {
       }
    }
 
-   detailTemplate(employee: Employee, roleNames: string[], component: EmployeeDetailComponent) {
-      const roles = roleNames.map(role => //TODO: use the role interface, so it has both id and name
-         html`
-         <label>
-            <input type="checkbox" name="option1" value="${role}"> ${role}
-         </label><br>
-         `
-      );
+   detailTemplate(employee: Employee, roles, component: EmployeeDetailComponent) {
+      const htmlRoles = roles.map(role => {
+         const isChecked = employee.roles.includes(role.id) ? 'checked' : ''; //TODO: if user changes roles, update employee.roles
+         return html`
+             <label>
+                 <input type="checkbox" name="roles" value="${role.id}" ?checked=${isChecked}> ${role.roleName}
+             </label><br>
+         `;
+     });
+            
 
 
       return html`
@@ -156,7 +181,7 @@ class EmployeeDetailComponent extends HTMLElement {
                   <b>Roles:</b> 
                </p>
                <form>
-                  ${roles}
+                  ${htmlRoles}
                </form>
             </section>
             <footer class="modal-card-foot">
