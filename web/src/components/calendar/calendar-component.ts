@@ -47,6 +47,7 @@ class CalendarComponent extends HTMLElement {
       initialView: "timeGridWeek",
       slotMinTime: "06:00:00",
       slotMaxTime: "24:00:00",
+      firstDay: 1,
       views: {
         timeGridWeek: {
           allDaySlot: false,
