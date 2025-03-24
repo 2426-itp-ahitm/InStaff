@@ -25,6 +25,7 @@ public class EmployeeResource {
     EmployeeMapper employeeMapper;
     @Inject
     RoleRepository roleRepository;
+    
 
     @GET
     public List<EmployeeDTO> all() {
