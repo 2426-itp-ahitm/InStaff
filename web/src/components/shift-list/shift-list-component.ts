@@ -37,14 +37,13 @@ class ShiftListComponent extends HTMLElement {
                <td>${shift.startTime.substring(11)}</td>
                <td>${shift.endTime.substring(0, 10)}</td>
                <td>${shift.endTime.substring(11)}</td>
-               <td>${shift.company_name}</td>
             </tr>
          `
       );
 
       return html`
-         <div class="container">
-            <h2 class="title is-3">Shifts</h2>
+         <div>
+            <h2 class="title is-4">Shifts</h2>
             <table class="table is-fullwidth is-striped is-bordered is-hoverable">
                <thead>
                   <tr>
@@ -52,7 +51,6 @@ class ShiftListComponent extends HTMLElement {
                      <th>Start time</th>
                      <th>End date</th>
                      <th>End time</th>
-                     <th>Company name</th>
                   </tr>
                </thead>
                <tbody>
