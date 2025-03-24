@@ -98,7 +98,7 @@ class EmployeeDetailComponent extends HTMLElement {
          this.shadowRoot.querySelectorAll<HTMLInputElement>('input[name="roles"]:checked')
       ).map(input => Number(input.value));  //TODO: if user changes roles, update employee.roles
 
-
+//des is a ssh kommentar
       const updatedEmployee: Employee = {
          id: Number(this._employeeId),
          firstname,
