@@ -60,6 +60,10 @@ public class Employee {
         return false;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setFirstname(String firstname) {
         if (firstname != null && !firstname.isEmpty()) {
             this.firstname = firstname;

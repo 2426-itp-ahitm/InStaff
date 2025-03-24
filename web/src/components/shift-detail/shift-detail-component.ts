@@ -25,12 +25,11 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    set shiftId(value: number | null) {
-      if (value !== this._shiftId) {
-         this._shiftId = value
-         this.renderShiftDetails()
+      if (this._shiftId === value) {
+         this.renderShiftDetails();
       } else {
-         this.closeModal()
-         setTimeout(() => this.renderShiftDetails(), 0)
+         this._shiftId = value;
+         this.renderShiftDetails();
       }
    }
 
@@ -42,25 +41,24 @@ class ShiftDetailComponent extends HTMLElement {
 
    closeModal() {
       this.shadowRoot.getElementById('shiftModal')?.classList.remove('is-active')
+      model.activeShiftId = null
    }
 
    async renderShiftDetails() {
-      if (!this._shiftId) return
-
-      const cssResponse = await fetch("../../../style.css")
-      const css = await cssResponse.text()
-
-      const styleElement = document.createElement("style")
-      styleElement.textContent = css
-      this.shadowRoot.appendChild(styleElement)
-
-      const shift = await loadShiftDetailed(this._shiftId)
-      const assignments = await this.loadAssignments(this._shiftId)
-      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments)
-
-      this.shadowRoot.getElementById('shiftModal')?.classList.add('is-active')
-
-      render(this.modalTemplate(shift, employeeRoleData), this.shadowRoot)
+      if (!this._shiftId) return;
+   
+      const cssResponse = await fetch("../../../style.css");
+      const css = await cssResponse.text();
+      const styleElement = document.createElement("style");
+      styleElement.textContent = css;
+      this.shadowRoot.appendChild(styleElement);
+   
+      const shift = await loadShiftDetailed(this._shiftId);
+      const assignments = await this.loadAssignments(this._shiftId);
+      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
+   
+      render(this.modalTemplate(shift, employeeRoleData), this.shadowRoot);
+      this.shadowRoot.getElementById("shiftModal")?.classList.add("is-active");
    }
 
    async loadAssignments(shiftId: number) {
