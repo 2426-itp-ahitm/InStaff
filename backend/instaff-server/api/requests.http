@@ -57,7 +57,9 @@ Content-Type: application/json
   "firstname": "Bob",
   "lastname": "Baumeister",
   "email": "bob@baumeister.com",
-  "birthdate": "1980-11-11"
+  "birthdate": "1980-11-11",
+  "telephone": "133",
+  "roleIds": [1,2,3,4,5]
 }
 
 
