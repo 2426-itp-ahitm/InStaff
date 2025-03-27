@@ -20,7 +20,7 @@ values ('Abwasch', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
-values ('2004-11-11 00:00:00', 'john.doe@example.com', 'john', 'doe', 'hunter2', '1233456899', 1);
+values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', 'hunter2', '1233456899', 1);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
 values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', 'hunter34', '65626625', 1);
 

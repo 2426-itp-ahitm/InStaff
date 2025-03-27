@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -23,5 +24,12 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
         query.setParameter(1, shiftId);
 
         return query.getResultList();
+    }
+
+    @Transactional
+    public void setConfirmed(boolean confirmed, Long assignmentId) {
+        Assignment assignment = entityManager.find(Assignment.class, assignmentId);
+        assignment.setConfirmed(confirmed);
+        entityManager.persist(assignment);
     }
 }

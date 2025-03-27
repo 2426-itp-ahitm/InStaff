@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/mail/6
+GET http://localhost:8080/api/mail/1
 
 GET http://localhost:4200/api/employees
 Accept: application/json
