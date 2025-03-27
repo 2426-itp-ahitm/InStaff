@@ -106,8 +106,7 @@ class AddEmployeeComponent extends HTMLElement {
          this.responseMessage = { text: "Error: Please fill in all fields!", type: "is-danger" };
          this.isModalVisible = true;
       }
-
-      this.renderComponent();
+      this.closeForm();
    }
 
    private async assignRole(employeeId: number, roleIdInput: string[]) {
