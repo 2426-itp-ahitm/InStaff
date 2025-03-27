@@ -7,6 +7,7 @@ interface Model {
     shifts: Shift[];
     activeEmployeeId: number | null;
     activeShiftId: number | null;
+    isAddingEmployee: boolean;
 }
 
 // Initial state for the model
@@ -14,7 +15,8 @@ const initialState: Model = {
     employees: [],
     shifts: [],
     activeEmployeeId: null,
-    activeShiftId: null
+    activeShiftId: null,
+    isAddingEmployee: false,
 }
 
 // Define the Subscription type

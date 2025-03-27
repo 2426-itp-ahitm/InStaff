@@ -2,6 +2,7 @@ import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
 import { Role } from "../../interfaces/role";
 import { loadAllRoles } from "../role-list/role-list-service";
+import { model, subscribe } from "../../model/model";
 
 class AddEmployeeComponent extends HTMLElement {
    private responseMessage = { text: "", type: "" };
@@ -130,9 +131,11 @@ class AddEmployeeComponent extends HTMLElement {
       }
    }
 
-   private closeForm() { //TODO: close the form
+   private closeForm() {
+      model.isAddingEmployee = false;
       this.resetForm();
       this.isModalVisible = false;
+      this.shadowRoot.getElementById('addEmpModal')?.classList.remove('is-active')
       this.renderComponent();
    }
 
@@ -162,7 +165,7 @@ class AddEmployeeComponent extends HTMLElement {
 
    private template() {
       return html`
-      <div class="modal is-active mt-6">
+      <div class="modal is-active mt-6" id="addEmpModal">
          <div class="modal-background"></div>
          <div class="modal-card ">
             <header class="modal-card-head">

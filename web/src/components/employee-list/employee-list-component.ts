@@ -10,7 +10,7 @@ class EmployeeListComponent extends HTMLElement {
    }
 
    private isFirstClick = false;
-   private isAddingEmployee = false; // State variable to track visibility
+   public isAddingEmployee = false; // State variable to track visibility
 
    async connectedCallback() {
       const cssResponse = await fetch("../../../style.css");
@@ -65,23 +65,24 @@ class EmployeeListComponent extends HTMLElement {
             }
 
             <div>
-               ${this.isAddingEmployee 
+               ${model.isAddingEmployee
                   ? html`
                      <add-employee-component></add-employee-component>
                      
                   ` 
-                  : html`
-                     <button class="button is-primary my-1" @click=${() => this.showAddEmployee()}>
-                        Add New Employee
-                     </button>
-                  `}
+                  : html``}
+                  
+                  <button class="button is-primary my-1" @click=${() => this.showAddEmployee()}>
+                  Add New Employee
+               </button>
+            
             </div>
          </div>
       `;
    }
 
    showAddEmployee() {
-      this.isAddingEmployee = !this.isAddingEmployee; // Toggle visibility
+      model.isAddingEmployee = true; // Toggle visibility
       this.render(model.employees, model.activeEmployeeId); // Re-render
    }
 
