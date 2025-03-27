@@ -1,6 +1,7 @@
 package at.htlleonding.instaff.features.employee;
 
-import javax.management.relation.Role;
+import at.htlleonding.instaff.features.role.Role;
+
 import java.time.LocalDate;
 import java.util.List;
 
