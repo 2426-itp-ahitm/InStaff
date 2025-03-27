@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
@@ -96,7 +97,14 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         employee.setEmail(dto.email());
         employee.setBirthdate(dto.birthdate());
         employee.setTelephone(dto.telephone());
-        employee.setRoles(dto.roles());
+
+        if (dto.roleIds() != null) {
+            List<Role> roles = new LinkedList<>();
+            for (Long roleId : dto.roleIds()) {
+                roles.add(entityManager.find(Role.class, roleId));
+            }
+            employee.setRoles(roles);
+        }
 
         persist(employee);
     }
