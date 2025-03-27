@@ -116,6 +116,8 @@ class EmployeeDetailComponent extends HTMLElement {
       const selectedRoles = Array.from(
          this.shadowRoot.querySelectorAll<HTMLInputElement>('input[name="roles"]:checked')
       ).map(input => Number(input.value));  //TODO: if user changes roles, update employee.roles
+      console.log("########selected roles#########")
+      console.log(selectedRoles); // This will log an array of role IDs
 
 //des is a ssh kommentar tst 
       const updatedEmployee: Employee = {
