@@ -70,6 +70,10 @@ public class Employee {
         }
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = new HashSet<>(roles);
+    }
+
     public void setLastname(String lastname) {
         if (lastname != null && !lastname.isEmpty()) {
             this.lastname = lastname;
