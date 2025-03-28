@@ -2,8 +2,11 @@ import { html, render } from "lit-html";
 import { Calendar } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from '@fullcalendar/interaction';
 import { loadAllShifts } from "../shift-list/shift-list-service";
 import { model, subscribe } from "../../model/model";
+
+
 
 const template = (activeShiftId: number) => html`
   <style>
@@ -41,18 +44,30 @@ class CalendarComponent extends HTMLElement {
       const start = new Date(String(shift.startTime));
       const end = new Date(String(shift.endTime));
       
+      const employees: String[] = []
+
+      for (let i = 0; i < shift.employees.length; i++) {
+        const employeeId = shift.employees[i].id;
+        const employee = shift.employees.find(emp => emp.id === employeeId);
+        
+        
+        employees.push(employee.firstname + " " + employee.lastname);
+      }
+
       return {
         title: String(shift.company_name),
         start,
         end,
         extendedProps: {
           shiftId: shift.id,
-        }
+          employees: employees,
+        },
       };
     });
 
     const calendar = new Calendar(calendarEl, {
-      plugins: [timeGridPlugin, dayGridPlugin],
+      plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
+      selectable: true,
       themeSystem: "standard",
       initialView: "timeGridWeek",
       slotMinTime: "00:00:00",
@@ -68,6 +83,11 @@ class CalendarComponent extends HTMLElement {
         timeGridWeek: { allDaySlot: false },
         timeGridDay: { allDaySlot: false },
       },
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay",
+      },
       dayHeaderFormat: {
         weekday: "long",
         year: "numeric",
@@ -76,15 +96,17 @@ class CalendarComponent extends HTMLElement {
       },
       slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
       eventTimeFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
-      events: events,
-      headerToolbar: {
-        left: "prev,next today",
-        center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay",
+      dateClick : (info) => {
+        alert('Clicked on: ' + info.dateStr);
       },
+      select: (info) => {
+        alert('Selected: ' + info.startStr + ' to ' + info.endStr);
+      },
+      events: events,
       eventClick: (info) => {
         const shiftId = info.event.extendedProps.shiftId;
-        this.showShiftDetail(shiftId);
+        alert(info.event.extendedProps.employees)
+        //this.showShiftDetail(shiftId);
       },
     });
 
