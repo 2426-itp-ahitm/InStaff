@@ -134,19 +134,55 @@ class ShiftDetailComponent extends HTMLElement {
                               </tr>
                            `
                         )}
+                     </tbody>
+                  </table>
+                  <br>
+                  <p>This is a hard coded to show the idea<p>
+                  <table class="styled-table">
+                     <tbody>
                         <tr>
                            <td>
-                              <select>
-                                 <option value="1" selected>Emp 1</option>
-                                 <option value="2">Emp 2</option>
-                              </select>
+                              <div class="select">
+                                 <select>
+                                    <option value="1" selected>Emp 1</option>
+                                    <option value="2">Emp 2</option>
+                                 </select>
+                              </div>
                            </td>
                            <td>
-                              <select>
-                                 <option value="1" selected>Koch</option>
-                                 <option value="2">Kellner</option>
-                              </select>
+                              <div class="select">
+                                 <select>
+                                    <option value="1" selected>Koch</option>
+                                    <option value="2">Kellner</option>
+                                 </select>
+                              </div>
                            </td>
+                           <td>
+                              
+                           </td>
+                           <td>
+                              <p>Manager View</p>
+                           </td> 
+                        </tr>
+
+                        <tr>
+                           <td>
+                              <p>John Doe</p>
+                           </td>
+                           <td>
+                              <p>Koch</p>
+                           </td>
+                           <td>
+                              <div class="select">
+                                 <select>
+                                    <option value="1" selected>Confirmed</option>
+                                    <option value="2">Dismissed</option>
+                                 </select>
+                              </div>
+                           </td>
+                           <td>
+                              <p>Employee View</p>
+                           </td>  
                         </tr>
                      </tbody>
                   </table>
