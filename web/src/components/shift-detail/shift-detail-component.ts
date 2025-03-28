@@ -66,9 +66,10 @@ class ShiftDetailComponent extends HTMLElement {
       return await response.json()
    }
 
-   async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number }[]) {
+   async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number; confirmed: boolean }[]) {
       const employeeIds = [...new Set(assignments.map(a => a.employee))]
       const roleIds = [...new Set(assignments.map(a => a.role))]
+      const confirmed = [...new Set(assignments.map(a => a.confirmed))]
 
       const employeeNames = await this.employeeMapper.mapEmployeeIdsToNames(employeeIds)
       const roleNames = await this.roleMapper.mapRoleIdsToNames(roleIds)
@@ -78,11 +79,12 @@ class ShiftDetailComponent extends HTMLElement {
 
       return assignments.map(a => ({
          employeeName: employeeMap[a.employee],
-         roleName: roleMap[a.role]
+         roleName: roleMap[a.role],
+         confirmed: a.confirmed
       }))
    }
 
-   modalTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
+   modalTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string; confirmed: boolean}[]) {
       const shiftStart = DateTime.fromISO(shift.startTime);
       const shiftEnd = DateTime.fromISO(shift.endTime);
 
@@ -121,6 +123,14 @@ class ShiftDetailComponent extends HTMLElement {
                               <tr>
                                  <td>${data.employeeName}</td>
                                  <td>${data.roleName}</td>
+                                 <td>${data.confirmed === true ? html`
+                                    <p class="subtitle is-6 my-1 has-text-success">Confirmed</p>
+                                  ` : data.confirmed === false ? html`
+                                    <p class="subtitle is-6 my-1 has-text-danger">Dismissed</p>
+                                  ` : html`
+                                    <p class="subtitle is-6 my-1 has-text-warning">Not confirmed yet</p>
+                                  `
+                                }</td>
                               </tr>
                            `
                         )}
