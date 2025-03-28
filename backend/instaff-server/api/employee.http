@@ -1,0 +1,58 @@
+### Get all Employees
+GET http://localhost:8080/api/employees
+
+### Get Employee with id
+GET http://localhost:8080/api/employees/1
+
+### Get Employees with role id
+GET http://localhost:8080/api/employees/role/1
+
+### Get Employees with role name
+GET http://localhost:8080/api/employees/role/name/Koch
+
+### Get Employees with name that contains
+GET http://localhost:8080/api/employees/name/Jo
+
+### Get Employees with company id
+GET http://localhost:8080/api/employees/company/1
+
+### Add a New Employee
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "firstname": "Ben",
+  "lastname": "Dover",
+  "email": "ben.dover@example.com",
+  "telephone": "+1234567890",
+  "password": "securePassword123",
+  "birthdate": "1990-01-01",
+  "companyId": 1
+}
+
+### Edit employee
+POST http://localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "firstname": "Bob",
+  "lastname": "Baumeister",
+  "email": "bob@baumeister.com",
+  "birthdate": "1980-11-11",
+  "telephone": "133",
+  "roles": [1,2,3,4,5]
+}
+
+### Assign role to employee
+PUT http://localhost:8080/api/employees/3/assignrole/2
+Content-Type: application/json
+
+### Remove role from employee
+PUT http://localhost:8080/api/employees/3/removerole/2
+Content-Type: application/json
+
+### Assign a Shift to Employee (employeeId, shiftId, roleId)
+PUT http://localhost:8080/api/employees/1/assignshift/3/1
+
+### Unassign a Shift from Employee (employeeId, shiftId)
+PUT http://localhost:8080/api/employees/1/unassignshift/3

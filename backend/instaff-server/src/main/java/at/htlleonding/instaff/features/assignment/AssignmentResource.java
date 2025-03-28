@@ -6,6 +6,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
@@ -24,6 +25,12 @@ public class AssignmentResource {
                 .stream()
                 .map(assignmentMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getById(@PathParam("id") Long id) {
+        return Response.ok(assignmentMapper.toResource(assignmentRepository.findById(id))).build();
     }
 
     @GET

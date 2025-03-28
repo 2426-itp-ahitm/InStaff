@@ -25,7 +25,7 @@ public class MailResource {
     @Inject
     AssignmentRepository assignmentRepository;
 
-    @GET
+    @PUT
     @Path("/{assignmentId}")
     public Response send(@PathParam("assignmentId") Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId);
@@ -33,7 +33,7 @@ public class MailResource {
         Shift shift = assignment.getShift();
         Role role = assignment.getRole();
         DateTimeFormatter formatterStart = DateTimeFormatter.ofPattern("dd.MM.yyyy 'from' HH:mm");
-        DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("'to' HH:mm");
+        DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("HH:mm");
 
         String message = String.format("""
         <h1>You have been added to a Shift on %s to %s as %s on Instaff</h1>
@@ -55,7 +55,7 @@ public class MailResource {
         return Response.ok().build();
     }
 
-    @GET
+    @PUT
     @Path("/confirm/{assignmentId}")
     public Response confirm(@PathParam("assignmentId") Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId);
@@ -63,7 +63,7 @@ public class MailResource {
         return Response.ok("Assignment confirmed").build();
     }
 
-    @GET
+    @PUT
     @Path("/decline/{assignmentId}")
     public Response decline(@PathParam("assignmentId") Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId);

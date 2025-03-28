@@ -2,10 +2,7 @@ package at.htlleonding.instaff.features.company;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -26,6 +23,12 @@ public class CompanyResource {
                 .stream()
                 .map(companyMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getById(@PathParam("id") long id) {
+        return Response.ok(companyMapper.toResource(companyRepository.findById(id))).build();
     }
 
     @POST

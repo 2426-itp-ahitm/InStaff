@@ -37,16 +37,6 @@ public class EmployeeResource {
     }
 
     @GET
-    @Path("role/name")
-    public List<EmployeeDTO> allRoles() {
-        var employees = employeeRepository.listAll();
-        return employees
-                .stream()
-                .map(employeeMapper::toResource)
-                .toList();
-    }
-
-    @GET
     @Path("{id}")
     public Response getEmployeeById(@PathParam("id") Long id) {
         var employee = employeeRepository.findById(id);
@@ -143,7 +133,7 @@ public class EmployeeResource {
     @Path("/{employeeId}")
     public Response updateEmployee(@PathParam("employeeId") Long employeeId, EmployeeEditDTO dto) {
         employeeRepository.editEmployee(employeeId, dto);
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
@@ -151,7 +141,7 @@ public class EmployeeResource {
     public Response removeRole(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
         employeeRepository.removeRole(employeeId, roleId);
 
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
@@ -159,15 +149,23 @@ public class EmployeeResource {
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
         employeeRepository.addRole(employeeId, roleId);
 
-        return Response.ok().build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
     @Path("/{employeeId}/assignshift/{shiftId}/{roleId}")
-    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
+    public Response assignShiftToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
         employeeRepository.addShift(employeeId, roleId, shiftId);
 
         return Response.ok("Shift assigned successfully").build();
+    }
+
+    @PUT
+    @Path("/{employeeId}/unassignshift/{shiftId}")
+    public Response unassignShiftFromEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId) {
+        employeeRepository.removeShift(employeeId, shiftId);
+
+        return Response.ok("Shift unassigned successfully").build();
     }
 
 }

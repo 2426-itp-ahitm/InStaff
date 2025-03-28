@@ -1,0 +1,13 @@
+### Get all Companies
+GET http://localhost:8080/api/companies
+
+### Get Company by id
+GET http://localhost:8080/api/companies/1
+
+### Add a New Company
+POST http://localhost:8080/api/companies
+Content-Type: application/json
+
+{
+  "company_name": "Ben's Pizza"
+}
