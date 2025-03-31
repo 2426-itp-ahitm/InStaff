@@ -41,6 +41,14 @@ public class Shift {
         this.company = company;
     }
 
+    public List<Long> getReservationIds() {
+        List<Long> reservationIds = new LinkedList<>();
+        for (Reservation reservation : reservations) {
+            reservationIds.add(reservation.getId());
+        }
+        return reservationIds;
+    }
+
     public List<Long> getEmployeeIds() {
         return assignments.stream()
                 .map(Assignment::getEmployee).map(Employee::getId).toList();

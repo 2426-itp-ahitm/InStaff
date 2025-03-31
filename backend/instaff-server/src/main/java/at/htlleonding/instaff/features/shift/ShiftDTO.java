@@ -12,6 +12,7 @@ public record ShiftDTO(
         LocalDateTime endTime,
         Long company_id,
         String company_name,
-        List<Long> employees
+        List<Long> employees,
+        List<Long> reservations
 ) {
 }
