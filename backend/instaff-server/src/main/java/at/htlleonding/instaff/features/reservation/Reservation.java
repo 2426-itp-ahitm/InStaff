@@ -19,4 +19,15 @@ public class Reservation {
 
     @ManyToOne
     Shift shift;
+
+    public Reservation() {}
+
+    public Reservation(String name, String infos, int numberOfPeople, LocalTime startTime, LocalTime endTime, Shift shift) {
+        this.name = name;
+        this.infos = infos;
+        this.numberOfPeople = numberOfPeople;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.shift = shift;
+    }
 }
