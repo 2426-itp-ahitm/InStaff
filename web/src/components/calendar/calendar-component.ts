@@ -61,6 +61,7 @@ class CalendarComponent extends HTMLElement {
         extendedProps: {
           shiftId: shift.id,
           employees: employees,
+          reservations: shift.reservations,
         },
       };
     });

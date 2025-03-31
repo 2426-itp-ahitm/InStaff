@@ -1,4 +1,5 @@
 import { Employee } from "./employee"
+import { Reservation } from "./reservation"
 
 export interface Shift {
    id: number,
@@ -6,5 +7,6 @@ export interface Shift {
    endTime: String,
    company_id: number,
    company_name: String,
-   employees: Employee[]
+   employees: Employee[],
+   reservations: Reservation[]
 }
