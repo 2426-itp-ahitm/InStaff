@@ -40,25 +40,39 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    closeModal() {
-      this.shadowRoot.getElementById('shiftModal')?.classList.remove('is-active')
-      model.activeShiftId = null
+      const modal = this.shadowRoot.getElementById("shiftModal");
+      if (modal) {
+         modal.classList.remove("is-active");
+      }
+      model.activeShiftId = null;
    }
 
    async renderShiftDetails() {
       if (!this._shiftId) return;
-   
+
+      // Remove only the modal element before re-rendering
+      const existingModal = this.shadowRoot.getElementById("shiftModal");
+      if (existingModal) {
+         existingModal.remove();
+      }
+
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
       this.shadowRoot.appendChild(styleElement);
-   
+
       const shift = await loadShiftDetailed(this._shiftId);
       const assignments = await this.loadAssignments(this._shiftId);
       const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
-   
+
       render(this.modalTemplate(shift, employeeRoleData), this.shadowRoot);
-      this.shadowRoot.getElementById("shiftModal")?.classList.add("is-active");
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
+      const modal = this.shadowRoot.getElementById("shiftModal") as HTMLDialogElement;
+      if (modal) {
+         modal.classList.add("is-active");
+      }
    }
 
    async loadAssignments(shiftId: number) {
@@ -100,96 +114,45 @@ class ShiftDetailComponent extends HTMLElement {
             shiftEnd.toLocaleString(DateTime.DATE_MID) + ` ${shiftEnd.toFormat("HH:mm")}`;
       }
 
-      
-      console.log(formattedDate);
-
       return html`
-         <div class="modal" id="shiftModal">
+         <div id="shiftModal" class="modal">
             <div class="modal-background"></div>
-            <div class="modal-card">
-               <header class="modal-card-head">
-                  <p class="modal-card-title">
-                     <time datetime="${shift.startTime}">${formattedDate}</time>
-                  </p>
-                  <button class="delete" aria-label="close" @click=${() => this.closeModal()}></button>
-               </header>
-               <section class="modal-card-body">
-                  <h3 class="">${shift.company_name}</h3>
-                  <h2 style="font-weight: bold">Employees:</h2>
-                  <table class="styled-table">
-                     <tbody>
-                        ${employeeRoleData.map(
-                           data => html`
-                              <tr>
-                                 <td>${data.employeeName}</td>
-                                 <td>${data.roleName}</td>
-                                 <td>${data.confirmed === true ? html`
-                                    <p class="subtitle is-6 my-1 has-text-success">Confirmed</p>
-                                  ` : data.confirmed === false ? html`
-                                    <p class="subtitle is-6 my-1 has-text-danger">Dismissed</p>
-                                  ` : html`
-                                    <p class="subtitle is-6 my-1 has-text-warning">Not confirmed yet</p>
-                                  `
-                                }</td>
-                              </tr>
-                           `
-                        )}
-                     </tbody>
-                  </table>
-                  <br>
-                  <p>This is a hard coded to show the idea<p>
-                  <table class="styled-table">
-                     <tbody>
-                        <tr>
-                           <td>
-                              <div class="select">
-                                 <select>
-                                    <option value="1" selected>Emp 1</option>
-                                    <option value="2">Emp 2</option>
-                                 </select>
-                              </div>
-                           </td>
-                           <td>
-                              <div class="select">
-                                 <select>
-                                    <option value="1" selected>Koch</option>
-                                    <option value="2">Kellner</option>
-                                 </select>
-                              </div>
-                           </td>
-                           <td>
-                              
-                           </td>
-                           <td>
-                              <p>Manager View</p>
-                           </td> 
-                        </tr>
-
-                        <tr>
-                           <td>
-                              <p>John Doe</p>
-                           </td>
-                           <td>
-                              <p>Koch</p>
-                           </td>
-                           <td>
-                              <div class="select">
-                                 <select>
-                                    <option value="1" selected>Confirmed</option>
-                                    <option value="2">Dismissed</option>
-                                 </select>
-                              </div>
-                           </td>
-                           <td>
-                              <p>Employee View</p>
-                           </td>  
-                        </tr>
-                     </tbody>
-                  </table>
-               </section>
-               <footer class="modal-card-foot">
-                  <button class="button" @click=${() => this.closeModal()}>Close</button>
-               </footer>
+            <div class="modal-content">
+               <form method="dialog">
+                  <header class="modal-card-head">
+                     <p class="modal-card-title">
+                        <time datetime="${shift.startTime}">${formattedDate}</time>
+                     </p>
+                     <button class="delete" aria-label="close" type="button" @click="${() => this.closeModal()}"></button>
+                  </header>
+                  <section class="modal-card-body">
+                     <h3 class="">${shift.company_name}</h3>
+                     <h2 style="font-weight: bold">Employees:</h2>
+                     <table class="styled-table">
+                        <tbody>
+                           ${employeeRoleData.map(
+                              data => html`
+                                 <tr>
+                                    <td>${data.employeeName}</td>
+                                    <td>${data.roleName}</td>
+                                    <td>${data.confirmed === true ? html`
+                                       <p class="subtitle is-6 my-1 has-text-success">Confirmed</p>
+                                     ` : data.confirmed === false ? html`
+                                       <p class="subtitle is-6 my-1 has-text-danger">Dismissed</p>
+                                     ` : html`
+                                       <p class="subtitle is-6 my-1 has-text-warning">Not confirmed yet</p>
+                                     `
+                                   }</td>
+                                 </tr>
+                              `
+                           )}
+                        </tbody>
+                     </table>
+                  </section>
+                  <footer class="modal-card-foot">
+                     <button class="button" type="button" @click="${() => this.closeModal()}">Close</button>
+                  </footer>
+               </form>
             </div>
          </div>
       `
