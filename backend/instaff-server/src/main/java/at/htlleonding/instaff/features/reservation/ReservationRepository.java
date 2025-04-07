@@ -14,8 +14,17 @@ public class ReservationRepository implements PanacheRepository<Reservation> {
 
     @Transactional
     public Reservation create(ReservationCreateDTO dto) {
-        Reservation reservation = new Reservation(dto.name(), dto.infos(), dto.numberOfPeople(), dto.startTime(), dto.endTime(),
-                entityManager.find(Shift.class, dto.shiftId()));
+        Shift shift = entityManager.find(Shift.class, dto.shiftId());
+
+        if (shift == null) {
+            throw new NullPointerException("Shift not found");
+        } else if (dto.startTime().isAfter(dto.endTime())) {
+            throw new IllegalArgumentException("Start time is after end time");
+        } else if (shift.getStartTime().toLocalTime().isAfter(dto.startTime()) || shift.getEndTime().toLocalTime().isBefore(dto.endTime())) {
+            throw new IllegalArgumentException("Reservation time is outside of shift time");
+        }
+
+        Reservation reservation = new Reservation(dto.name(), dto.infos(), dto.numberOfPeople(), dto.startTime(), dto.endTime(), shift);
         persist(reservation);
         return reservation;
     }

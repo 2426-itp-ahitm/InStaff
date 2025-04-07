@@ -14,5 +14,5 @@ Content-Type: application/json
   "numberOfPeople": 12,
   "startTime": "11:30:00",
   "endTime": "13:00:00",
-  "shiftId": 2
+  "shiftId": 3
 }
