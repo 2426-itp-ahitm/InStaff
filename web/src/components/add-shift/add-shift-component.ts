@@ -1,17 +1,56 @@
 import { html, render } from "lit-html";
 
-class AddShiftComponent extends HTMLElement {
+class AddShiftComponent extends HTMLElement {    
     private responseMessage = { text: "", type: "" };
     private isModalVisible: boolean = false;
+    private _shiftStartTime: Date | null = null;
+    private _shiftEndTime: Date | null = null;
 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
+    get shiftStartTime() {
+        return this._shiftStartTime;
+    }
+    set shiftStartTime(value: Date | null) {
+        if (this._shiftStartTime !== value) {
+            this._shiftStartTime = value;
+            this.renderComponent();
+        }
+    }
+    get shiftEndTime() {
+        return this._shiftEndTime;
+    }
+    set shiftEndTime(value: Date | null) {
+        if (this._shiftEndTime !== value) {
+            this._shiftEndTime = value;
+            this.renderComponent();
+        }
+    }
+
     async connectedCallback() {
         await this.loadStyles();
         this.renderComponent();
+        console.log('start time: ' + this.shiftStartTime);
+        console.log('end time: ' + this.shiftEndTime);
+    }
+
+    static get observedAttributes() {
+        return ['shift-start-time', 'shift-end-time'];
+    }
+    
+    attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+        if (oldValue === newValue) return;
+    
+        if (name === 'shift-start-time') {
+            this.shiftStartTime = new Date(newValue!);
+            console.log('shiftStartTime set via attribute:', this.shiftStartTime);
+        } else if (name === 'shift-end-time') {
+            this.shiftEndTime = new Date(newValue!);
+            console.log('shiftEndTime set via attribute:', this.shiftEndTime);
+        }
     }
 
     private async loadStyles() {
@@ -74,6 +113,21 @@ class AddShiftComponent extends HTMLElement {
 
     private renderComponent() {
         render(this.template(), this.shadowRoot!);
+    
+        const startInput = this.shadowRoot?.querySelector<HTMLInputElement>("#start_time");
+        const endInput = this.shadowRoot?.querySelector<HTMLInputElement>("#end_time");
+    
+        if (startInput && this.shiftStartTime) {
+            startInput.value = this.formatDateTimeLocal(this.shiftStartTime);
+        }
+        if (endInput && this.shiftEndTime) {
+            endInput.value = this.formatDateTimeLocal(this.shiftEndTime);
+        }
+    }
+
+    private formatDateTimeLocal(date: Date): string {
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
     private template() {
@@ -86,7 +140,6 @@ class AddShiftComponent extends HTMLElement {
                         <input type="datetime-local" id="start_time" name="start_time" class="input" />
                     </div>
                 </div>
-    
                 <div class="field">
                     <label for="end_time" class="label">End Time</label>
                     <div class="control">
@@ -105,8 +158,10 @@ class AddShiftComponent extends HTMLElement {
                 <button class="delete" @click=${this.closeNotification}></button>
                 <p>${this.responseMessage.text}</p>
             </div>
+            </div>
         `;
     }
+
 }
 
 customElements.define("add-shift-component", AddShiftComponent);

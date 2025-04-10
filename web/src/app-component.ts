@@ -30,7 +30,7 @@ const routes: Record<string, any> = {
     "shift-list": html`<shift-list-component></shift-list-component>`,
     "shift-detail": html`<shift-detail-component shift-id="3"></shift-detail-component>`,
     "add-employee": html`<add-employee-component></add-employee-component>`,
-    "add-shift": html`<add-shift-component></add-shift-component>`,
+    "add-shift": html`<add-shift-component shift-start-time="2025-04-10T09:00" shift-end-time="2025-04-10T17:00"></add-shift-component>`,
     "edit-shift": html`<edit-shift-component></edit-shift-component>`,
     "calendar": html`<calendar-component></calendar-component>`
 };
