@@ -5,8 +5,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import { loadAllShifts } from "../shift-list/shift-list-service";
 import { model, subscribe } from "../../model/model";
-
-
+import { loadAllReservations } from "../../services/reservation-service";
+import { Employee } from "src/interfaces/employee";
+import { Reservation } from "src/interfaces/reservation";
 
 const template = (activeShiftId: number) => html`
   <style>
@@ -36,6 +37,7 @@ class CalendarComponent extends HTMLElement {
     render(template(this.activeShiftId), this.shadowRoot!);
 
     await loadAllShifts();
+    await loadAllReservations();
 
     const calendarEl = this.shadowRoot?.getElementById("calendar");
     if (!calendarEl) return;
@@ -44,24 +46,19 @@ class CalendarComponent extends HTMLElement {
       const start = new Date(String(shift.startTime));
       const end = new Date(String(shift.endTime));
       
-      const employees: String[] = []
+      const employees: Employee[] = []
 
-      for (let i = 0; i < shift.employees.length; i++) {
-        const employeeId = shift.employees[i].id;
-        const employee = shift.employees.find(emp => emp.id === employeeId);
-        
-        
-        employees.push(employee.firstname + " " + employee.lastname);
+      for(let i = 0; i < shift.employees.length; i++){
+        const employee = model.employees.find((employee) => shift.employees[i].id === employee.id);
+        employees.push(employee);
       }
-
+      
       return {
-        title: String(shift.company_name),
+        title: '',
         start,
         end,
         extendedProps: {
           shiftId: shift.id,
-          employees: employees,
-          reservations: shift.reservations,
         },
       };
     });
@@ -104,10 +101,24 @@ class CalendarComponent extends HTMLElement {
         alert('Selected: ' + info.startStr + ' to ' + info.endStr);
       },
       events: events,
+      eventDidMount: (info) => {
+        const resCount = info.event.extendedProps.reservations?.length || 0;
+        const empCount = info.event.extendedProps.employeesCount || 0;
+
+        const isMonthView = calendar.view.type === 'dayGridMonth';
+        const title = isMonthView
+          ? `Res: ${resCount}\nEmp: ${empCount}`
+          : `Reservations: ${resCount}\nEmployees: ${empCount}`;
+
+        const titleEl = info.el.querySelector('.fc-event-title');
+        if (titleEl) {
+          titleEl.textContent = title;
+        }
+      },
       eventClick: (info) => {
         const shiftId = info.event.extendedProps.shiftId;
-        alert(info.event.extendedProps.employees)
-        //this.showShiftDetail(shiftId);
+        //alert(info.event.extendedProps.reservations);
+        this.showShiftDetail(shiftId);
       },
     });
 

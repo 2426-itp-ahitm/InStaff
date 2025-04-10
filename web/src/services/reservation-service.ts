@@ -1,9 +1,9 @@
 import { Reservation } from "src/interfaces/reservation";
-import { model } from "Model/model";
+import { model } from "../model/model";
 
 const BASE_URL = '/api'
 
-export async function loadAllReservation() {
+export async function loadAllReservations() {
    const response = await fetch(`${BASE_URL}/reservations`);
    const reservations: Reservation[] = await response.json();
    model.reservations = reservations;
