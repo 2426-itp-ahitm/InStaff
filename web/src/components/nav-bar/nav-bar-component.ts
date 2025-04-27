@@ -17,7 +17,6 @@ const template = () => html`
          <div class="navbar-start">
             <a class="navbar-item" href="#/employee-list">Employee List</a>
             <a class="navbar-item" href="#/shift-list">Shift List</a>
-            <a class="navbar-item" href="#/add-shift">Add Shift</a>
             <a class="navbar-item" href="#/edit-shift">Edit Shift</a>
          </div>
       </div>
