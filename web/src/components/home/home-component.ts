@@ -26,7 +26,6 @@ const dashboardTemplate = (handleClick) => {
          icon: "➕",
          link: "#/add-role"
       },
-      ,
       {
          title: "Calendar",
          description: "Look up the calendar",
@@ -56,7 +55,7 @@ const dashboardTemplate = (handleClick) => {
 
    return html`
    <div class="is-flex mt-6">
-      <div class="grid-container home-grid-element">
+      <div class="grid-container home-grid-element is-gap-1">
          ${cardTemplates}
       </div>
       <!-- old version with shift-list-component
