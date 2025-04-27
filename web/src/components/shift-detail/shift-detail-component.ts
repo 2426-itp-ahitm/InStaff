@@ -15,7 +15,7 @@ class ShiftDetailComponent extends HTMLElement {
       super()
       this.attachShadow({ mode: "open" })
    }
-
+ 
    static get observedAttributes() {
       return ['shift-id']
    }
@@ -50,12 +50,14 @@ class ShiftDetailComponent extends HTMLElement {
    async renderShiftDetails() {
       if (!this._shiftId) return;
 
-      // Remove only the modal element before re-rendering
+ 
+      /* Remove only the modal element before re-rendering
       const existingModal = this.shadowRoot.getElementById("shiftModal");
+      
       if (existingModal) {
          existingModal.remove();
       }
-
+      */
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
       const styleElement = document.createElement("style");

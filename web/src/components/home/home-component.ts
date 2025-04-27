@@ -59,7 +59,10 @@ const dashboardTemplate = (handleClick) => {
       <div class="grid-container home-grid-element">
          ${cardTemplates}
       </div>
+      <!-- old version with shift-list-component
       <shift-list-component class="home-grid-element"></shift-list-component>
+      -->
+      <calendar-component class="home-grid-element"></calendar-component>
    </div>
    
    

@@ -8,20 +8,25 @@ import { model, subscribe } from "../../model/model";
 import { loadAllReservations } from "../../services/reservation-service";
 import { Employee } from "src/interfaces/employee";
 import { Reservation } from "src/interfaces/reservation";
+import "../add-shift/add-shift-component"
 
-const template = (activeShiftId: number) => html`
+const template = (activeShiftId: number, startTime: Date | null, endTime: Date | null) => html`
   <style>
     #calendar {
-      width: 90vw;
-      height: 80vh;
+      max-width: 90vw;
+      max-height: 80vh;
     }
   </style>
   <shift-detail-component .shiftId="${activeShiftId}"></shift-detail-component>
+  <add-shift-component id="add-shift-component" shift-start-time="${startTime}" shift-end-time="${endTime}"></add-shift-component>
   <div id="calendar"></div>
 `;
 
 class CalendarComponent extends HTMLElement {
   activeShiftId: number;
+  private startTime: Date | null = null;
+  private endTime: Date | null = null;
+  private calendar: Calendar | null = null;
 
   constructor() {
     super();
@@ -34,7 +39,7 @@ class CalendarComponent extends HTMLElement {
       this.updateTemplate();
     });
 
-    render(template(this.activeShiftId), this.shadowRoot!);
+    render(template(this.activeShiftId, this.startTime, this.endTime), this.shadowRoot!);
 
     await loadAllShifts();
     await loadAllReservations();
@@ -45,14 +50,14 @@ class CalendarComponent extends HTMLElement {
     const events = model.shifts.map(shift => {
       const start = new Date(String(shift.startTime));
       const end = new Date(String(shift.endTime));
-      
+
       const employees: Employee[] = []
 
-      for(let i = 0; i < shift.employees.length; i++){
+      for (let i = 0; i < shift.employees.length; i++) {
         const employee = model.employees.find((employee) => shift.employees[i].id === employee.id);
         employees.push(employee);
       }
-      
+
       return {
         title: '',
         start,
@@ -63,7 +68,7 @@ class CalendarComponent extends HTMLElement {
       };
     });
 
-    const calendar = new Calendar(calendarEl, {
+    this.calendar = new Calendar(calendarEl, {
       plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
       selectable: true,
       themeSystem: "standard",
@@ -71,7 +76,7 @@ class CalendarComponent extends HTMLElement {
       slotMinTime: "00:00:00",
       slotMaxTime: "24:00:00",
       firstDay: 1,
-      businessHours:{
+      businessHours: {
         daysOfWeek: [2, 3, 4, 5, 6, 7],
         startTime: "10:00",
         endTime: "24:00"
@@ -94,18 +99,19 @@ class CalendarComponent extends HTMLElement {
       },
       slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
       eventTimeFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
-      dateClick : (info) => {
-        alert('Clicked on: ' + info.dateStr);
-      },
       select: (info) => {
-        alert('Selected: ' + info.startStr + ' to ' + info.endStr);
+        const addShiftComponent = this.shadowRoot?.querySelector("add-shift-component") as any;
+        if (addShiftComponent?.openWithTimes) {
+          addShiftComponent.openWithTimes(info.startStr, info.endStr);
+        }
+        this.reloadEvents();
       },
       events: events,
       eventDidMount: (info) => {
         const resCount = info.event.extendedProps.reservations?.length || 0;
         const empCount = info.event.extendedProps.employeesCount || 0;
 
-        const isMonthView = calendar.view.type === 'dayGridMonth';
+        const isMonthView = this.calendar?.view.type === 'dayGridMonth';
         const title = isMonthView
           ? `Res: ${resCount}\nEmp: ${empCount}`
           : `Reservations: ${resCount}\nEmployees: ${empCount}`;
@@ -117,22 +123,44 @@ class CalendarComponent extends HTMLElement {
       },
       eventClick: (info) => {
         const shiftId = info.event.extendedProps.shiftId;
-        //alert(info.event.extendedProps.reservations);
         this.showShiftDetail(shiftId);
       },
     });
 
-    calendar.render();
+    this.calendar.render();
   }
-  //TODO: Implement add shift with dateClick and selectable date/times https://fullcalendar.io/docs/date-clicking-selecting
+
+  async reloadEvents() {
+    if (!this.calendar) return;
+
+    await loadAllShifts();
+    const events = model.shifts.map(shift => {
+      const start = new Date(String(shift.startTime));
+      const end = new Date(String(shift.endTime));
+      return {
+        title: '',
+        start,
+        end,
+        extendedProps: {
+          shiftId: shift.id,
+        },
+      };
+    });
+    this.calendar.removeAllEvents();
+    this.calendar.addEventSource(events);
+  }
 
   showShiftDetail(shiftId: number) {
-    this.activeShiftId = shiftId;
+    model.activeShiftId = shiftId;
+    this.updateTemplate();
+  }
+
+  showAddShift() {
     this.updateTemplate();
   }
 
   updateTemplate() {
-    render(template(this.activeShiftId), this.shadowRoot!);
+    render(template(this.activeShiftId, this.startTime, this.endTime), this.shadowRoot!);
   }
 }
 
