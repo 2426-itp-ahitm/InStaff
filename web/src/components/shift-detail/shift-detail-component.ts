@@ -1,6 +1,7 @@
 import { html, render } from "lit-html"
 import { Shift } from "../../interfaces/shift"
 import { loadShiftDetailed } from "./shift-detail-service"
+import { loadReservationsFromShift } from "../../services/reservation-service"
 import RoleMapper from "../../mapper/role-mapper"
 import EmployeeMapper from "../../mapper/employee-mapper"
 import { DateTime } from "luxon"
@@ -67,8 +68,9 @@ class ShiftDetailComponent extends HTMLElement {
       const shift = await loadShiftDetailed(this._shiftId);
       const assignments = await this.loadAssignments(this._shiftId);
       const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
+      const reservations = await loadReservationsFromShift(this._shiftId);
 
-      render(this.modalTemplate(shift, employeeRoleData), this.shadowRoot);
+      render(this.modalTemplate(shift, employeeRoleData, reservations), this.shadowRoot)
       await new Promise(resolve => requestAnimationFrame(resolve));
 
       const modal = this.shadowRoot.getElementById("shiftModal") as HTMLDialogElement;
@@ -100,7 +102,11 @@ class ShiftDetailComponent extends HTMLElement {
       }))
    }
 
-   modalTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string; confirmed: boolean}[]) {
+   modalTemplate(
+      shift: Shift,
+      employeeRoleData: { employeeName: string; roleName: string; confirmed: boolean }[],
+      reservations: { id: number; name: string; infos: string; number_of_people: number; start_time: string; end_time: string; shift: number }[]
+   ) {
       const shiftStart = DateTime.fromISO(shift.startTime);
       const shiftEnd = DateTime.fromISO(shift.endTime);
 
@@ -150,6 +156,29 @@ class ShiftDetailComponent extends HTMLElement {
                            )}
                         </tbody>
                      </table>
+                     <h2 style="font-weight: bold; margin-top: 1em;">Reservations:</h2>
+                     <table class="styled-table">
+                        <thead>
+                           <tr>
+                              <th>Name</th>
+                              <th>Infos</th>
+                              <th>People</th>
+                              <th>Start</th>
+                              <th>End</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           ${reservations.map(reservation => html`
+                              <tr>
+                                 <td>${reservation.name}</td>
+                                 <td>${reservation.infos || "-"}</td>
+                                 <td>${reservation.number_of_people}</td>
+                                 <td>${reservation.start_time}</td>
+                                 <td>${reservation.end_time}</td>
+                              </tr>
+                           `)}
+                        </tbody>
+</table>
                   </section>
                   <footer class="modal-card-foot">
                      <button class="button" type="button" @click="${() => this.closeModal()}">Close</button>

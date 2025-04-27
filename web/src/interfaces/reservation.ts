@@ -3,7 +3,7 @@ export interface Reservation {
    name: string,
    infos: string,
    number_of_people: number,
-   start_time: String,
-   end_time: String,
+   start_time: string,
+   end_time: string,
    shift: number
 }
