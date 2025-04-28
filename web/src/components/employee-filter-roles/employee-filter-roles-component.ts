@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
-import { loadEmployeesFilteredByRole } from "./employee-filter-roles-service";
+import { loadEmployeesFilteredByRole } from "../../services/employee-service";
 
 class EmployeeFilterRolesComponent extends HTMLElement {
    inputValue: string = "";

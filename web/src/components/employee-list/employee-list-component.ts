@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
-import { loadAllEmployees } from "./employee-list-service";
+import { loadAllEmployees } from "../../services/employee-service";
 import { model, subscribe } from "../../model/model";
 
 class EmployeeListComponent extends HTMLElement {
