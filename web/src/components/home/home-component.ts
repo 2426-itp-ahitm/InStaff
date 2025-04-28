@@ -26,7 +26,6 @@ const dashboardTemplate = (handleClick) => {
          icon: "📅",
          link: "#/calendar"
       }
-
    ];
 
    const cardTemplates = cards.map(
