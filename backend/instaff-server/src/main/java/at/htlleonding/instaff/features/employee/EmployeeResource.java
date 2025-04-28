@@ -9,7 +9,10 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.xml.bind.DatatypeConverter;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -118,7 +121,7 @@ public class EmployeeResource {
     public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                dto.password(), dto.birthdate(), companyRepository.findById(dto.companyId()));
+                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         employeeRepository.persist(employee);
@@ -166,6 +169,27 @@ public class EmployeeResource {
         employeeRepository.removeShift(employeeId, shiftId);
 
         return Response.ok("Shift unassigned successfully").build();
+    }
+
+    @PUT
+    @Path("/{employeeId}/verify-password/{password}")
+    public Response verifyPassword(@PathParam("employeeId") Long employeeId, @PathParam("password") String password) {
+        boolean isCorrect = employeeRepository.verifyPassword(employeeId, password);
+        if (isCorrect) {
+            return Response.ok("Password verified successfully").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            return DatatypeConverter.printHexBinary(hash).toLowerCase();
+        } catch (Exception e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
     }
 
 }

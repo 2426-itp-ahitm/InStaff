@@ -14,9 +14,13 @@ class ShiftConfirmationComponent extends HTMLElement {
     private _assignment: Assignment | null = null;
     private _shift: Shift | null = null;
     private _roleName: string | null = null;
+    private _employeeName: string | null = null;
     private _isLoading: boolean = false;
     private _isUpdating: boolean = false;
+    private _isAuthenticated: boolean = false;
+    private _passwordInput: string = "";
     private _error: string | null = null;
+    private _authError: string | null = null;
 
     constructor() {
         super();
@@ -33,8 +37,7 @@ class ShiftConfirmationComponent extends HTMLElement {
         const styleElement = document.createElement("style");
         styleElement.textContent = css;
         this.shadowRoot.appendChild(styleElement);
-        // Get assignmentId from URL
-        //const params = new URLSearchParams(window.location.search);
+
         const assignmentId = this.getAttribute("assignment-id");
 
         if (!assignmentId) {
@@ -73,6 +76,10 @@ class ShiftConfirmationComponent extends HTMLElement {
             const roleNames = await this.roleMapper.mapRoleIdsToNames([this._assignment.role]);
             this._roleName = roleNames.length > 0 ? roleNames[0] : "Unknown Role";
 
+            // Load Employee
+            const employee = (await fetch(`/api/employees/${this._assignment.employee}`)).json;
+            this._employeeName = employee?.name || "Unknown Employee";
+
         } catch (err) {
             console.error(err);
             this._error = "Failed to load shift or assignment details.";
@@ -83,6 +90,44 @@ class ShiftConfirmationComponent extends HTMLElement {
             this._isLoading = false;
             this.renderComponent();
         }
+    }
+
+    async authenticateEmployee() {
+        if (!this._assignment || !this._passwordInput) {
+            this._authError = "Please enter your password.";
+            this.renderComponent();
+            return;
+        }
+
+        try {
+            const hashedPassword = await hashPassword(this._passwordInput);
+            const response = await fetch(`/api/employees/${this._assignment.employee}/verify-password/${hashedPassword}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error('Incorrect password.');
+            }
+
+            this._isAuthenticated = true;
+            this._authError = null;
+            this.renderComponent();
+        } catch (err) {
+            this._authError = err.message;
+            this._isAuthenticated = false;
+            this.renderComponent();
+        }
+
+        async function hashPassword(password: string): Promise<string> {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+        
     }
 
     async updateAssignmentStatus(confirmed: boolean) {
@@ -107,7 +152,6 @@ class ShiftConfirmationComponent extends HTMLElement {
                     headers: { 'Content-Type': 'application/json' }
                 });
             }
-            
 
             if (!response.ok) {
                 throw new Error(`Failed to update status: ${response.status}`);
@@ -152,6 +196,35 @@ class ShiftConfirmationComponent extends HTMLElement {
             return html`<div class="container"><p>No shift details available.</p></div>`;
         }
 
+        if (!this._isAuthenticated) {
+            return html`
+                <div class="container">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Employee Login
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <p>Please enter your password, ${this._employeeName || 'Employee'}:</p>
+                                <input class="input" type="password" 
+                                    .value=${this._passwordInput} 
+                                    @input=${(e: Event) => this._passwordInput = (e.target as HTMLInputElement).value}
+                                    placeholder="Password">
+                                ${this._authError ? html`<p class="has-text-danger">${this._authError}</p>` : nothing}
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <button class="card-footer-item button is-primary" @click=${() => this.authenticateEmployee()}>
+                                Submit
+                            </button>
+                        </footer>
+                    </div>
+                </div>
+            `;
+        }
+
         const shiftStart = DateTime.fromISO(this._shift.startTime);
         const shiftEnd = DateTime.fromISO(this._shift.endTime);
         const formattedDate = shiftStart.hasSame(shiftEnd, "day")
@@ -176,11 +249,12 @@ class ShiftConfirmationComponent extends HTMLElement {
                             <p><strong>Status:</strong> <span class="${status.cssClass}">${status.text}</span></p>
                         </div>
                     </div>
-                    <footer class="card-footer">
-                        
-                            <button class="card-footer-item button ${this._assignment.confirmed === true ? 'is-light' : 'is-success'}" @click=${() => this.updateAssignmentStatus(true)}>Confirm</button>
-                            <button class="card-footer-item button ${this._assignment.confirmed === false ? 'is-light' : 'is-danger'}" @click=${() => this.updateAssignmentStatus(false)}>Decline</button>                        
-                    </footer>
+                    ${canConfirmDecline ? html`
+                        <footer class="card-footer">
+                            <button class="card-footer-item button is-success" @click=${() => this.updateAssignmentStatus(true)}>Confirm</button>
+                            <button class="card-footer-item button is-danger" @click=${() => this.updateAssignmentStatus(false)}>Decline</button>
+                        </footer>
+                    ` : nothing}
                 </div>
             </div>
         `;
