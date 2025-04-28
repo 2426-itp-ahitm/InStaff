@@ -207,7 +207,7 @@ class ShiftConfirmationComponent extends HTMLElement {
                         </header>
                         <div class="card-content">
                             <div class="content">
-                                <p>Please enter your password, ${this._employeeName || 'Employee'}:</p>
+                                <p>Please enter your password:</p>
                                 <input class="input" type="password" 
                                     .value=${this._passwordInput} 
                                     @input=${(e: Event) => this._passwordInput = (e.target as HTMLInputElement).value}
@@ -249,12 +249,11 @@ class ShiftConfirmationComponent extends HTMLElement {
                             <p><strong>Status:</strong> <span class="${status.cssClass}">${status.text}</span></p>
                         </div>
                     </div>
-                    ${canConfirmDecline ? html`
+                    
                         <footer class="card-footer">
-                            <button class="card-footer-item button is-success" @click=${() => this.updateAssignmentStatus(true)}>Confirm</button>
-                            <button class="card-footer-item button is-danger" @click=${() => this.updateAssignmentStatus(false)}>Decline</button>
+                            <button class="card-footer-item button ${this._assignment.confirmed === true ? 'is-light' : 'is-success'}" @click=${() => this.updateAssignmentStatus(true)}>Confirm</button>
+                            <button class="card-footer-item button ${this._assignment.confirmed === false ? 'is-light' : 'is-danger'}" @click=${() => this.updateAssignmentStatus(false)}>Decline</button>
                         </footer>
-                    ` : nothing}
                 </div>
             </div>
         `;
