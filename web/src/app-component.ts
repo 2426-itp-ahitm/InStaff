@@ -49,15 +49,23 @@ class AppComponent extends HTMLElement {
      
         const showNav = path != ""
      
+        let route = routes[path]
+        if (!route) {
+            route = html`
+               <h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>
+            `
+        } else if (typeof route === "function") {
+            route = route(params)
+        }
+    
         const content = html`
            ${showNav ? html`<nav-bar-component></nav-bar-component>` : ""}
-           ${routes[path] ? routes[path](params) : html`
-              <h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>
-           `}
+           ${route}
         `
      
         render(content, this)
-     }
+    }
+    
 }
 
 customElements.define("app-component", AppComponent);
