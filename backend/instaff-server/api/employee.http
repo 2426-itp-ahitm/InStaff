@@ -56,3 +56,6 @@ PUT http://localhost:8080/api/employees/1/assignshift/3/1
 
 ### Unassign a Shift from Employee (employeeId, shiftId)
 PUT http://localhost:8080/api/employees/1/unassignshift/3
+
+### Verify Employee Password
+PUT http://localhost:8080/api/employees/1/verify-password/hunter2

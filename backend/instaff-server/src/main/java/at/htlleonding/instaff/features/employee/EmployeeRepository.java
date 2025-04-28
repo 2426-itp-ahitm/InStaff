@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class EmployeeRepository implements PanacheRepository<Employee> {
@@ -180,5 +181,10 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
 
         // Persist the updated employee entity
         persist(employee);
+    }
+
+    public boolean verifyPassword(Long employeeId, String password) {
+        Employee employee = findById(employeeId);
+        return employee != null && Objects.equals(employee.password, password);
     }
 }
