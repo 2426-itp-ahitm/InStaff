@@ -24,6 +24,8 @@ public class MailResource {
     Mailer mailer;
     @Inject
     AssignmentRepository assignmentRepository;
+    @Inject
+    AssignmentMapper assignmentMapper;
 
     @PUT
     @Path("/{assignmentId}")
@@ -58,17 +60,17 @@ public class MailResource {
     @PUT
     @Path("/confirm/{assignmentId}")
     public Response confirm(@PathParam("assignmentId") Long assignmentId) {
-        Assignment assignment = assignmentRepository.findById(assignmentId);
         assignmentRepository.setConfirmed(true, assignmentId);
-        return Response.ok("Assignment confirmed").build();
+        Assignment assignment = assignmentRepository.findById(assignmentId);
+        return Response.ok(assignmentMapper.toResource(assignment)).build();
     }
 
     @PUT
     @Path("/decline/{assignmentId}")
     public Response decline(@PathParam("assignmentId") Long assignmentId) {
-        Assignment assignment = assignmentRepository.findById(assignmentId);
         assignmentRepository.setConfirmed(false, assignmentId);
-        return Response.ok("Assignment declined").build();
+        Assignment assignment = assignmentRepository.findById(assignmentId);
+        return Response.ok(assignmentMapper.toResource(assignment)).build();
     }
 
     public void sendEmail(String to, String subject, String body) {
