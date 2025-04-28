@@ -20,7 +20,7 @@ values ('Abwasch', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
-values ('2004-11-11 00:00:00', 'john.doe@example.com', 'john', 'doe', 'hunter2', '1233456899', 1);
+values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', 'hunter2', '1233456899', 1);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id)
 values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', 'hunter34', '65626625', 1);
 
@@ -82,3 +82,9 @@ insert into assignment (employee_id, shift_id, role_id)
 values (2, 3, 2); -- Alexander Hahn arbeitet in Schicht 3
 insert into assignment (employee_id, shift_id, role_id)
 values (2, 5, 2); -- Alexander Hahn arbeitet in Schicht 5
+
+/* Reservierungen */
+insert into reservation (name, infos, numberofpeople, starttime, endtime, shift_id)
+values ('Geburtstag Loisi', 'Die Loisi feiert ihren 60er.', 120, '13:00:00', '17:00:00', 1);
+insert into reservation (name, infos, numberofpeople, starttime, endtime, shift_id)
+values ('Reservierung Riener', '', 4, '12:00:00', '13:30:00', 1);

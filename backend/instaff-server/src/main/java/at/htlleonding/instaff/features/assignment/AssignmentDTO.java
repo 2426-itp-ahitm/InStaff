@@ -4,6 +4,7 @@ public record AssignmentDTO(
         Long id,
         Long employee,
         Long shift,
-        Long role
+        Long role,
+        Boolean confirmed
 ) {
 }

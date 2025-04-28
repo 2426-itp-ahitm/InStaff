@@ -15,6 +15,7 @@ import "./components/add-shift";
 import "./components/edit-shift";
 import "./components/nav-bar";
 import "./components/calendar";
+import "./components/shift-confirmation";
 
 
 const routes: Record<string, any> = {
@@ -30,9 +31,10 @@ const routes: Record<string, any> = {
     "shift-list": html`<shift-list-component></shift-list-component>`,
     "shift-detail": html`<shift-detail-component shift-id="3"></shift-detail-component>`,
     "add-employee": html`<add-employee-component></add-employee-component>`,
-    "add-shift": html`<add-shift-component></add-shift-component>`,
+    "add-shift": html`<add-shift-component shift-start-time="2025-04-10T09:00" shift-end-time="2025-04-10T17:00"></add-shift-component>`,
     "edit-shift": html`<edit-shift-component></edit-shift-component>`,
-    "calendar": html`<calendar-component></calendar-component>`
+    "calendar": html`<calendar-component></calendar-component>`,
+    "shift-confirmation": (params) => html`<shift-confirmation-component assignment-id="${params.get("assignmentId") || ""}"></shift-confirmation-component>`,
 };
 
 class AppComponent extends HTMLElement {
@@ -42,19 +44,28 @@ class AppComponent extends HTMLElement {
     }
 
     updateView() {
-        const path = location.hash.replace("#/", "") || "";
-
-        const showNav = path != ""; // Only show navbar on /instaff
-
+        const [path, queryString] = location.hash.replace("#/", "").split("?")
+        const params = new URLSearchParams(queryString || "")
+     
+        const showNav = path != ""
+     
+        let route = routes[path]
+        if (!route) {
+            route = html`
+               <h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>
+            `
+        } else if (typeof route === "function") {
+            route = route(params)
+        }
+    
         const content = html`
-            ${showNav ? html`<nav-bar-component></nav-bar-component>` : ""}
-            ${routes[path] || html`
-                <h1 style="font-size: 3em; margin-top: 35vh; text-align: center">404 - Page Not Found</h1>
-            `}
-        `;
-
-        render(content, this);
+           ${showNav ? html`<nav-bar-component></nav-bar-component>` : ""}
+           ${route}
+        `
+     
+        render(content, this)
     }
+    
 }
 
 customElements.define("app-component", AppComponent);

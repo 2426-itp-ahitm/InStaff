@@ -1,4 +1,4 @@
-import { loadAllEmployees } from "./../components/employee-list/employee-list-service"
+import { loadAllEmployees } from "../services/employee-service";
 import { model } from "../model/model"
 
 class EmployeeMapper {

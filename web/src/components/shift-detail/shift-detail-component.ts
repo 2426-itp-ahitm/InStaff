@@ -1,6 +1,7 @@
 import { html, render } from "lit-html"
 import { Shift } from "../../interfaces/shift"
 import { loadShiftDetailed } from "./shift-detail-service"
+import { loadReservationsFromShift } from "../../services/reservation-service"
 import RoleMapper from "../../mapper/role-mapper"
 import EmployeeMapper from "../../mapper/employee-mapper"
 import { DateTime } from "luxon"
@@ -15,7 +16,7 @@ class ShiftDetailComponent extends HTMLElement {
       super()
       this.attachShadow({ mode: "open" })
    }
-
+ 
    static get observedAttributes() {
       return ['shift-id']
    }
@@ -25,12 +26,11 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    set shiftId(value: number | null) {
-      if (value !== this._shiftId) {
-         this._shiftId = value
-         this.renderShiftDetails()
+      if (this._shiftId === value) {
+         this.renderShiftDetails();
       } else {
-         this.closeModal()
-         setTimeout(() => this.renderShiftDetails(), 0)
+         this._shiftId = value;
+         this.renderShiftDetails();
       }
    }
 
@@ -41,26 +41,42 @@ class ShiftDetailComponent extends HTMLElement {
    }
 
    closeModal() {
-      this.shadowRoot.getElementById('shiftModal')?.classList.remove('is-active')
+      const modal = this.shadowRoot.getElementById("shiftModal");
+      if (modal) {
+         modal.classList.remove("is-active");
+      }
+      model.activeShiftId = null;
    }
 
    async renderShiftDetails() {
-      if (!this._shiftId) return
+      if (!this._shiftId) return;
 
-      const cssResponse = await fetch("../../../style.css")
-      const css = await cssResponse.text()
+ 
+      /* Remove only the modal element before re-rendering
+      const existingModal = this.shadowRoot.getElementById("shiftModal");
+      
+      if (existingModal) {
+         existingModal.remove();
+      }
+      */
+      const cssResponse = await fetch("../../../style.css");
+      const css = await cssResponse.text();
+      const styleElement = document.createElement("style");
+      styleElement.textContent = css;
+      this.shadowRoot.appendChild(styleElement);
 
-      const styleElement = document.createElement("style")
-      styleElement.textContent = css
-      this.shadowRoot.appendChild(styleElement)
+      const shift = await loadShiftDetailed(this._shiftId);
+      const assignments = await this.loadAssignments(this._shiftId);
+      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
+      const reservations = await loadReservationsFromShift(this._shiftId);
 
-      const shift = await loadShiftDetailed(this._shiftId)
-      const assignments = await this.loadAssignments(this._shiftId)
-      const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments)
+      render(this.modalTemplate(shift, employeeRoleData, reservations), this.shadowRoot)
+      await new Promise(resolve => requestAnimationFrame(resolve));
 
-      this.shadowRoot.getElementById('shiftModal')?.classList.add('is-active')
-
-      render(this.modalTemplate(shift, employeeRoleData), this.shadowRoot)
+      const modal = this.shadowRoot.getElementById("shiftModal") as HTMLDialogElement;
+      if (modal) {
+         modal.classList.add("is-active");
+      }
    }
 
    async loadAssignments(shiftId: number) {
@@ -68,9 +84,10 @@ class ShiftDetailComponent extends HTMLElement {
       return await response.json()
    }
 
-   async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number }[]) {
+   async mapAssignmentsToEmployeeRoles(assignments: { employee: number; role: number; confirmed: boolean }[]) {
       const employeeIds = [...new Set(assignments.map(a => a.employee))]
       const roleIds = [...new Set(assignments.map(a => a.role))]
+      const confirmed = [...new Set(assignments.map(a => a.confirmed))]
 
       const employeeNames = await this.employeeMapper.mapEmployeeIdsToNames(employeeIds)
       const roleNames = await this.roleMapper.mapRoleIdsToNames(roleIds)
@@ -80,11 +97,16 @@ class ShiftDetailComponent extends HTMLElement {
 
       return assignments.map(a => ({
          employeeName: employeeMap[a.employee],
-         roleName: roleMap[a.role]
+         roleName: roleMap[a.role],
+         confirmed: a.confirmed
       }))
    }
 
-   modalTemplate(shift: Shift, employeeRoleData: { employeeName: string; roleName: string }[]) {
+   modalTemplate(
+      shift: Shift,
+      employeeRoleData: { employeeName: string; roleName: string; confirmed: boolean }[],
+      reservations: { id: number; name: string; infos: string; number_of_people: number; start_time: string; end_time: string; shift: number }[]
+   ) {
       const shiftStart = DateTime.fromISO(shift.startTime);
       const shiftEnd = DateTime.fromISO(shift.endTime);
 
@@ -100,38 +122,68 @@ class ShiftDetailComponent extends HTMLElement {
             shiftEnd.toLocaleString(DateTime.DATE_MID) + ` ${shiftEnd.toFormat("HH:mm")}`;
       }
 
-      
-      console.log(formattedDate);
-
       return html`
-         <div class="modal" id="shiftModal">
+         <div id="shiftModal" class="modal">
             <div class="modal-background"></div>
-            <div class="modal-card">
-               <header class="modal-card-head">
-                  <p class="modal-card-title">
-                     <time datetime="${shift.startTime}">${formattedDate}</time>
-                  </p>
-                  <button class="delete" aria-label="close" @click=${() => this.closeModal()}></button>
-               </header>
-               <section class="modal-card-body">
-                  <h3 class="">${shift.company_name}</h3>
-                  <h2 style="font-weight: bold">Employees:</h2>
-                  <table class="styled-table">
-                     <tbody>
-                        ${employeeRoleData.map(
-                           data => html`
+            <div class="modal-content">
+               <form method="dialog">
+                  <header class="modal-card-head">
+                     <p class="modal-card-title">
+                        <time datetime="${shift.startTime}">${formattedDate}</time>
+                     </p>
+                     <button class="delete" aria-label="close" type="button" @click="${() => this.closeModal()}"></button>
+                  </header>
+                  <section class="modal-card-body">
+                     <h3 class="">${shift.company_name}</h3>
+                     <h2 style="font-weight: bold">Employees:</h2>
+                     <table class="styled-table">
+                        <tbody>
+                           ${employeeRoleData.map(
+                              data => html`
+                                 <tr>
+                                    <td>${data.employeeName}</td>
+                                    <td>${data.roleName}</td>
+                                    <td>${data.confirmed === true ? html`
+                                       <p class="subtitle is-6 my-1 has-text-success">Confirmed</p>
+                                     ` : data.confirmed === false ? html`
+                                       <p class="subtitle is-6 my-1 has-text-danger">Dismissed</p>
+                                     ` : html`
+                                       <p class="subtitle is-6 my-1 has-text-warning">Not confirmed yet</p>
+                                     `
+                                   }</td>
+                                 </tr>
+                              `
+                           )}
+                        </tbody>
+                     </table>
+                     <h2 style="font-weight: bold; margin-top: 1em;">Reservations:</h2>
+                     <table class="styled-table">
+                        <thead>
+                           <tr>
+                              <th>Name</th>
+                              <th>Infos</th>
+                              <th>People</th>
+                              <th>Start</th>
+                              <th>End</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           ${reservations.map(reservation => html`
                               <tr>
-                                 <td>${data.employeeName}</td>
-                                 <td>${data.roleName}</td>
+                                 <td>${reservation.name}</td>
+                                 <td>${reservation.infos || "-"}</td>
+                                 <td>${reservation.number_of_people}</td>
+                                 <td>${reservation.start_time}</td>
+                                 <td>${reservation.end_time}</td>
                               </tr>
-                           `
-                        )}
-                     </tbody>
-                  </table>
-               </section>
-               <footer class="modal-card-foot">
-                  <button class="button" @click=${() => this.closeModal()}>Close</button>
-               </footer>
+                           `)}
+                        </tbody>
+</table>
+                  </section>
+                  <footer class="modal-card-foot">
+                     <button class="button" type="button" @click="${() => this.closeModal()}">Close</button>
+                  </footer>
+               </form>
             </div>
          </div>
       `

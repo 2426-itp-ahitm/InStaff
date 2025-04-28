@@ -1,6 +1,6 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
-import { loadEmployeeDetails } from "./employee-edit-service";
+import { loadEmployeeDetails } from "../../services/employee-service";
 import RoleMapper from "../../mapper/role-mapper";
 
 class EmployeeEditComponent extends HTMLElement {

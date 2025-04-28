@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.shift;
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.reservation.Reservation;
 import at.htlleonding.instaff.features.role.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,7 +27,10 @@ public class Shift {
     Company company;
 
     @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Assignment> assignments = new LinkedList<>();
+    List<Assignment> assignments = new LinkedList<>();
+
+    @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Reservation> reservations = new LinkedList<>();
 
     public Shift() {
     }
@@ -35,6 +39,14 @@ public class Shift {
         this.startTime = startTime;
         this.endTime = endTime;
         this.company = company;
+    }
+
+    public List<Long> getReservationIds() {
+        List<Long> reservationIds = new LinkedList<>();
+        for (Reservation reservation : reservations) {
+            reservationIds.add(reservation.getId());
+        }
+        return reservationIds;
     }
 
     public List<Long> getEmployeeIds() {

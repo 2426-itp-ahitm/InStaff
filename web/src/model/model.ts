@@ -1,20 +1,28 @@
 import { Employee } from "src/interfaces/employee"
+import { Reservation } from "src/interfaces/reservation";
 import { Shift } from "src/interfaces/shift"
+import { Role } from "src/interfaces/role";
 
 // Define the Model type
 interface Model {
+    roles: Role[];
     employees: Employee[];
     shifts: Shift[];
+    reservations: Reservation[];
     activeEmployeeId: number | null;
     activeShiftId: number | null;
+    isAddingEmployee: boolean;
 }
 
 // Initial state for the model
 const initialState: Model = {
+    roles: [],
     employees: [],
     shifts: [],
+    reservations: [],
     activeEmployeeId: null,
-    activeShiftId: null
+    activeShiftId: null,
+    isAddingEmployee: false,
 }
 
 // Define the Subscription type

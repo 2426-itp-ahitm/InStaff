@@ -1,6 +1,7 @@
 package at.htlleonding.instaff.features.employee;
 
 import at.htlleonding.instaff.features.assignment.Assignment;
+import at.htlleonding.instaff.features.assignment.AssignmentRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -10,12 +11,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class EmployeeRepository implements PanacheRepository<Employee> {
     @Inject
     EntityManager entityManager;
+    @Inject
+    AssignmentRepository assignmentRepository;
 
     public List<Employee> findByRoleId(Long roleId) {
         String sql = "SELECT e.* " +
@@ -97,6 +102,14 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         employee.setBirthdate(dto.birthdate());
         employee.setTelephone(dto.telephone());
 
+        if (dto.roles() != null) {
+            List<Role> roles = new LinkedList<>();
+            for (Long roleId : dto.roles()) {
+                roles.add(entityManager.find(Role.class, roleId));
+            }
+            employee.setRoles(roles);
+        }
+
         persist(employee);
     }
 
@@ -140,5 +153,38 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
 
         // Persist the updated employee entity
         persist(employee);
+    }
+
+    @Transactional
+    public void removeShift(Long employeeId, Long shiftId) {
+        // Find the Employee entity by ID
+        Employee employee = findById(employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " does not exist.");
+        }
+
+        Shift shift = entityManager.find(Shift.class, shiftId);
+        if (shift == null) {
+            throw new IllegalArgumentException("Shift with ID " + shiftId + " does not exist.");
+        }
+
+        if (!employee.getShiftIds().contains(shiftId)) {
+            throw new IllegalArgumentException("Employee with ID " + employeeId + " is not assigned to Shift with ID " + shiftId + ".");
+        }
+
+        Assignment assignment = assignmentRepository.findByEmployeeAndShiftId(employeeId, shiftId);
+
+        // Add the role to the employee's roles collection
+        employee.getAssignments().remove(assignment);
+
+        assignmentRepository.delete(assignment);
+
+        // Persist the updated employee entity
+        persist(employee);
+    }
+
+    public boolean verifyPassword(Long employeeId, String password) {
+        Employee employee = findById(employeeId);
+        return employee != null && Objects.equals(employee.password, password);
     }
 }

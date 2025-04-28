@@ -122,19 +122,4 @@ public class ShiftResource {
                 .entity(shiftMapper.toResource(shift))
                 .build();
     }
-
-    /*@POST
-    @Path("assign")
-    @Transactional
-    public Response assignEmployee(AssignRequest assignRequest) {
-        Shift shift = shiftRepository.findById(assignRequest.shiftId);
-        Employee employee = employeeRepository.findById(assignRequest.employeeId);
-        if (shift == null || employee == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } else {
-            employeeShiftRepository.persist(new EmployeeShift(employee, shift));
-        }
-        return Response.status(Response.Status.CREATED)
-                .build();
-    }*/
 }

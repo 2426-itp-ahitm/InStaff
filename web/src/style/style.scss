@@ -11,6 +11,7 @@ body {
 .home-grid-element {
    display: block;
    width: 50vw;
+   max-height: 10vh;
 }
 
 .grid-container {
@@ -54,16 +55,10 @@ body {
    bottom: 0;
 }
 
-.modal-content {
-   background-color: white;
-   padding: 20px;
-   max-width: 500px;
-   margin: 100px auto;
-}
 
 
 .styled-table {
-   width: 250px;
+   //width: 250px;
    border-collapse: collapse;
 }
 

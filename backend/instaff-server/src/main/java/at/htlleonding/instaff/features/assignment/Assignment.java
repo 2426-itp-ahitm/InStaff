@@ -24,6 +24,8 @@ public class Assignment {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    private Boolean confirmed;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -55,5 +57,13 @@ public class Assignment {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }

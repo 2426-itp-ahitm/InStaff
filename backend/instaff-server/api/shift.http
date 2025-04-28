@@ -1,0 +1,24 @@
+### Get all Shifts
+GET http://localhost:8080/api/shifts
+
+### Get Shift by id
+GET http://localhost:8080/api/shifts/1
+
+### Get Shifts by company id
+GET http://localhost:8080/api/shifts/company/1
+
+### Get Shifts by date
+GET http://localhost:8080/api/shifts/date/2025-03-25
+
+### Get Shifts between two dates
+GET http://localhost:8080/api/shifts/betweendates/2025-03-25/2025-03-27
+
+### Add a New Shift
+POST http://localhost:8080/api/shifts
+Content-Type: application/json
+
+{
+  "startTime": "2024-12-19T09:00:00",
+  "endTime": "2024-12-19T17:00:00",
+  "companyId": 1
+}

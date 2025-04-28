@@ -15,25 +15,17 @@ const dashboardTemplate = (handleClick) => {
          link: "#/message-employees"
       },
       {
-         title: "Add Shift",
-         description: "Add new shifts",
-         icon: "➕",
-         link: "#/add-shift"
-      },
-      {
          title: "Add Role",
          description: "Add new roles",
          icon: "➕",
          link: "#/add-role"
       },
-      ,
       {
          title: "Calendar",
          description: "Look up the calendar",
          icon: "📅",
          link: "#/calendar"
       }
-
    ];
 
    const cardTemplates = cards.map(
@@ -56,10 +48,13 @@ const dashboardTemplate = (handleClick) => {
 
    return html`
    <div class="is-flex mt-6">
-      <div class="grid-container home-grid-element">
+      <div class="grid-container home-grid-element is-gap-1">
          ${cardTemplates}
       </div>
+      <!-- old version with shift-list-component
       <shift-list-component class="home-grid-element"></shift-list-component>
+      -->
+      <calendar-component class="home-grid-element"></calendar-component>
    </div>
    
    

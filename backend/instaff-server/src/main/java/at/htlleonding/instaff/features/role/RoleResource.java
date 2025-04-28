@@ -34,7 +34,7 @@ public class RoleResource {
 
     @GET
     @Path("{id}")
-    public Response getEmployeeById(@PathParam("id") Long id) {
+    public Response getRoleById(@PathParam("id") Long id) {
         var role = roleRepository.findById(id);
         if (role == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -75,5 +75,14 @@ public class RoleResource {
         return Response.status(Response.Status.CREATED)
                 .entity(roleMapper.toResource(role))
                 .build();
+    }
+
+    @PUT
+    @Path("remove/{id}")
+    @Transactional
+    public Response removeRole(@PathParam("id") Long id) {
+        roleRepository.deleteById(id);
+
+        return Response.ok().build();
     }
 }

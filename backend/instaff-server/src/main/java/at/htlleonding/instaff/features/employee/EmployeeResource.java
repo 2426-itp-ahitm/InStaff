@@ -9,7 +9,10 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.xml.bind.DatatypeConverter;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,16 +32,6 @@ public class EmployeeResource {
 
     @GET
     public List<EmployeeDTO> all() {
-        var employees = employeeRepository.listAll();
-        return employees
-                .stream()
-                .map(employeeMapper::toResource)
-                .toList();
-    }
-
-    @GET
-    @Path("role/name")
-    public List<EmployeeDTO> allRoles() {
         var employees = employeeRepository.listAll();
         return employees
                 .stream()
@@ -128,7 +121,7 @@ public class EmployeeResource {
     public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                dto.password(), dto.birthdate(), companyRepository.findById(dto.companyId()));
+                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         employeeRepository.persist(employee);
@@ -143,7 +136,7 @@ public class EmployeeResource {
     @Path("/{employeeId}")
     public Response updateEmployee(@PathParam("employeeId") Long employeeId, EmployeeEditDTO dto) {
         employeeRepository.editEmployee(employeeId, dto);
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
@@ -151,7 +144,7 @@ public class EmployeeResource {
     public Response removeRole(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
         employeeRepository.removeRole(employeeId, roleId);
 
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
@@ -159,15 +152,44 @@ public class EmployeeResource {
     public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("roleId") Long roleId) {
         employeeRepository.addRole(employeeId, roleId);
 
-        return Response.ok().build();
+        return Response.ok(employeeMapper.toResource(employeeRepository.findById(employeeId))).build();
     }
 
     @PUT
     @Path("/{employeeId}/assignshift/{shiftId}/{roleId}")
-    public Response assignRoleToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
+    public Response assignShiftToEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId, @PathParam("roleId") Long roleId) {
         employeeRepository.addShift(employeeId, roleId, shiftId);
 
         return Response.ok("Shift assigned successfully").build();
+    }
+
+    @PUT
+    @Path("/{employeeId}/unassignshift/{shiftId}")
+    public Response unassignShiftFromEmployee(@PathParam("employeeId") Long employeeId, @PathParam("shiftId") Long shiftId) {
+        employeeRepository.removeShift(employeeId, shiftId);
+
+        return Response.ok("Shift unassigned successfully").build();
+    }
+
+    @PUT
+    @Path("/{employeeId}/verify-password/{password}")
+    public Response verifyPassword(@PathParam("employeeId") Long employeeId, @PathParam("password") String password) {
+        boolean isCorrect = employeeRepository.verifyPassword(employeeId, password);
+        if (isCorrect) {
+            return Response.ok("Password verified successfully").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            return DatatypeConverter.printHexBinary(hash).toLowerCase();
+        } catch (Exception e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
     }
 
 }
