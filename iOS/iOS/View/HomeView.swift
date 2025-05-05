@@ -18,6 +18,7 @@ struct HomeView: View {
             Text("Current Requests").font(.title).bold()
             
             Text("More").font(.title).bold()
+            RequestCardView(assignment: Assignment(id: 1, shift: 1, role: 1, employee: 1, confirmed: nil))
         }
         
     }

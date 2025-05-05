@@ -1,4 +1,5 @@
-//  ShiftViewModel.swift
+//
+//  EmployeeViewModel.swift
 //  iOS
 //
 //  Created by Alexander Hahn on 05.05.25.
@@ -7,41 +8,53 @@
 import Foundation
 
 class ShiftViewModel: ObservableObject {
-    @Published var shifts: [Int64: String] = [:]
+    @Published var shifts: [Shift] = []
 
     init() {
-        loadShifts()
+        loadShiftsAsync()
     }
 
-    func loadShifts() {
+    private func load() -> [Shift] {
+        var shifts: [Shift] = []
+        let jsonDecoder = JSONDecoder()
+
         guard let url = URL(string: "http://localhost:8080/api/shifts") else {
             print("Invalid URL")
-            return
+            return shifts
         }
 
-        URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-            if let error = error {
-                print("Error fetching shifts: \(error)")
-                return
+        if let data = try? Data(contentsOf: url) {
+            if let loadedShifts = try? jsonDecoder.decode([Shift].self, from: data) {
+                shifts = loadedShifts
+                print("Shifts loaded: \(shifts.count)")
+            } else {
+                print("Failed to decode shifts")
             }
+        } else {
+            print("Failed to load data from URL")
+        }
 
-            guard let data = data else {
-                print("No data received")
-                return
-            }
-
-            do {
-                let fetchedShifts = try JSONDecoder().decode([Shift].self, from: data)
-                DispatchQueue.main.async {
-                    self.shifts = Dictionary(uniqueKeysWithValues: fetchedShifts.map { ($0.id, "\($0.startTime) - \($0.endTime)") })
-                }
-            } catch {
-                print("Failed to decode shifts: \(error)")
-            }
-        }.resume()
+        return shifts
     }
 
-    func shiftTime(for shiftId: Int64) -> String {
-        return shifts[shiftId] ?? "Unbekannt"
+    private func loadShiftsAsync() {
+        DispatchQueue.global(qos: .background).async {
+            let loadedShifts = self.load()
+            DispatchQueue.main.async {
+                self.shifts = loadedShifts
+            }
+        }
+    }
+
+    func count() -> Int {
+        return shifts.count
+    }
+
+    func shiftStartTime(index: Int) -> String? {
+        return shifts[index].startTime
+    }
+
+    func shiftEndTime(index: Int) -> String? {
+        return shifts[index].endTime
     }
 }

@@ -8,41 +8,52 @@
 import Foundation
 
 class EmployeeViewModel: ObservableObject {
-    @Published var employees: [Int64: String] = [:]
+    @Published var employees: [Employee] = []
 
     init() {
-        loadEmployees()
+        loadEmployeesAsync()
     }
 
-    func loadEmployees() {
+    private func load() -> [Employee] {
+        var employees: [Employee] = []
+        let jsonDecoder = JSONDecoder()
+
         guard let url = URL(string: "http://localhost:8080/api/employees") else {
             print("Invalid URL for employees")
-            return
+            return employees
         }
 
-        URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-            if let error = error {
-                print("Error fetching employees: \(error)")
-                return
+        if let data = try? Data(contentsOf: url) {
+            if let fetchedEmployees = try? jsonDecoder.decode([Employee].self, from: data) {
+                employees = fetchedEmployees
+                print("Employees loaded: \(employees.count)")
+            } else {
+                print("Failed to decode employees")
             }
+        } else {
+            print("Failed to load data from URL")
+        }
 
-            guard let data = data else {
-                print("No data received for employees")
-                return
-            }
-
-            do {
-                let fetchedEmployees = try JSONDecoder().decode([Employee].self, from: data)
-                DispatchQueue.main.async {
-                    self.employees = Dictionary(uniqueKeysWithValues: fetchedEmployees.map { ($0.id, "\($0.firstname) \($0.lastname)") })
-                }
-            } catch {
-                print("Failed to decode employees: \(error)")
-            }
-        }.resume()
+        return employees
     }
 
-    func employeeName(for employeeId: Int64) -> String {
-        return employees[employeeId] ?? "Unbekannt"
+    private func loadEmployeesAsync() {
+        DispatchQueue.global(qos: .background).async {
+            let loadedEmployees = self.load()
+            DispatchQueue.main.async {
+                self.employees = loadedEmployees
+            }
+        }
+    }
+
+    func employeeName(for employeeId: Int) -> String {
+        guard let employee = employees.first(where: { $0.id == employeeId }) else {
+            return "Unknown"
+        }
+        return employee.firstname + " " + employee.lastname
+    }
+
+    func count() -> Int {
+        return employees.count
     }
 }

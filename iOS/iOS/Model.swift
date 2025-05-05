@@ -7,47 +7,49 @@
 import Foundation
 
 struct Shift: Identifiable, Decodable {
-    let id: Int64
-    let startTime: String
-    let endTime: String
-    let company_id: Int64
-    let company_name: String
-    let employees: [Employee]
-    let reservations: [Reservation]
+    let id: Int
+    var startTime: String
+    var endTime: String
+    var company_id: Int
+    var company_name: String
+    var employees: [Int]
+    var reservations: [Int]
 }
 
 struct Employee: Identifiable, Decodable {
-    let id: Int64
-    let firstname: String
-    let lastname: String
-    let email: String
-    let telephone: String
-    let password: String
-    let birthdate: String
-    let company_id: Int64
-    let company_name: String
-    let roles: [Int]
+    let id: Int
+    var firstname: String
+    var lastname: String
+    var email: String
+    var telephone: String
+    var password: String
+    var birthdate: String
+    var company_id: Int64
+    var company_name: String
+    var roles: [Int]
 }
 
 struct Reservation: Identifiable, Decodable {
-    let id: Int64
-    let name: String
-    let infos: String
-    let number_of_people: Int
-    let start_time: String
-    let end_time: String
-    let shift: Int
+    let id: Int
+    var name: String
+    var infos: String
+    var number_of_people: Int
+    var start_time: String
+    var end_time: String
+    var shift: Int
 }
 
-struct Assignement: Identifiable, Decodable {
-    let id: Int64
-    let shift: Int64
-    let role: Int64
-    let employee: Int64
-    let confirmed: Bool?
+struct Assignment: Identifiable, Decodable {
+    let id: Int
+    var shift: Int
+    var role: Int
+    var employee: Int
+    var confirmed: Bool?
 }
 
 struct Role: Identifiable, Decodable {
-    let id: Int64
-    let name: String
+    let id: Int
+    var roleName: String
+    var company_id: Int
+    var employees: [Int]
 }
