@@ -9,6 +9,7 @@ export async function loadAllEmployees() {
     const employees: Employee[] = await response.json()
     model.employees = employees // Update the model with the fetched employees
     console.log("All employees loaded", model.employees)
+    return employees
 }
 
 // Load employees filtered by role and update the model

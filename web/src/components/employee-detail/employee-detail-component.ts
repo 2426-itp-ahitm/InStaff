@@ -82,7 +82,7 @@ class EmployeeDetailComponent extends HTMLElement {
       const css = await cssResponse.text();
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
-      //this.shadowRoot?.appendChild(styleElement);      
+      this.shadowRoot?.appendChild(styleElement);      
       console.log("Connected " + this._employeeId);
    }
 
@@ -172,13 +172,22 @@ class EmployeeDetailComponent extends HTMLElement {
                   </section>
       
                   <footer class="modal-card-foot">
-                  
+                     <button class="button is-success" @click=${() => this.saveEmployeeDetails(employee)}>Save changes</button>
+                     <button class="button" @click=${() => this.closeModal()}>Cancel</button>
                   </footer>
                </div>
             </div>
          
       
       `;
+   }
+   closeModal() {
+      const modal = this.shadowRoot?.getElementById("employeeModal");
+      if (modal) {
+         modal.classList.remove("is-active");
+      }
+   }
+   saveEmployeeDetails(employee: Employee) {
    }
 }
 
