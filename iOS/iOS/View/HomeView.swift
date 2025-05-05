@@ -14,8 +14,15 @@ struct HomeView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100)
-            Text("Home")
+                .padding()
+            Text("Current Requests").font(.title).bold()
+            
+            Text("More").font(.title).bold()
         }
         
     }
+}
+
+#Preview {
+    HomeView()
 }
