@@ -24,6 +24,8 @@ public class ShiftResource {
     ShiftMapper shiftMapper;
     @Inject
     CompanyRepository companyRepository;
+    @Inject
+    ShiftSocket shiftSocket;
 
     @GET
     public List<ShiftDTO> all() {
@@ -116,6 +118,7 @@ public class ShiftResource {
 
         // Persist the entity
         shiftRepository.persist(shift);
+        shiftSocket.broadcast("New Shift Id: " + shift.getId());
 
         // Return a response with the created entity
         return Response.status(Response.Status.CREATED)

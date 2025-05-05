@@ -39,19 +39,13 @@ public class MailResource {
 
         String message = String.format("""
         <h1>You have been added to a Shift on %s to %s as %s on Instaff</h1>
-                <a href="http://localhost:8080/api/mail/confirm/%d"\s
+                <a href="http://localhost:4200/#/shift-confirmation?assignmentId=%d"\s
                        style="display: inline-block; padding: 10px 20px; font-size: 16px;\s
                               color: white; background-color: #007BFF; text-decoration: none;\s
                               border-radius: 5px; text-align: center;">
-                        Confirm
+                        View Assignment
                     </a>
-                <a href="http://localhost:8080/api/mail/decline/%d"\s
-                               style="display: inline-block; padding: 10px 20px; font-size: 16px;\s
-                                      color: white; background-color: red; text-decoration: none;\s
-                                      border-radius: 5px; text-align: center;">
-                                Decline
-                            </a>
-        """, shift.getStartTime().format(formatterStart), shift.getEndTime().format(formatterEnd), role.getRoleName(), assignmentId, assignmentId);
+        """, shift.getStartTime().format(formatterStart), shift.getEndTime().format(formatterEnd), role.getRoleName(), assignmentId);
 
         sendEmail(employee.getEmail(), "Shift Confirmation", message);
         return Response.ok().build();

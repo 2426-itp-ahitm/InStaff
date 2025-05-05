@@ -9,6 +9,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
@@ -25,6 +27,30 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
         query.setParameter(1, shiftId);
 
         return query.getResultList();
+    }
+
+    public List<Assignment> findByEmployeeId(Long employeeId) {
+        String sql = "SELECT a.* " +
+                "FROM Assignment a " +
+                "WHERE a.employee_id = ?1";
+        Query query = entityManager.createNativeQuery(sql, Assignment.class);
+        query.setParameter(1, employeeId);
+        return query.getResultList();
+    }
+
+    public List<Assignment> findByEmployeeIdBetweenDates(Long employeeId, LocalDate startDate, LocalDate endDate) {
+        String sql = "SELECT a.* " +
+                "FROM assignment a " +
+                "JOIN shift s ON a.shift_id = s.id " +
+                "WHERE a.employee_id = ?3 AND s.starttime > ?1 AND s.endtime < ?2";
+
+        Query query = entityManager.createNativeQuery(sql, Assignment.class);
+        query.setParameter(1, startDate);
+        query.setParameter(2, endDate);
+        query.setParameter(3, employeeId);
+
+        return query.getResultList();
+
     }
 
     public Assignment findByEmployeeAndShiftId(Long employeeId, Long shiftId) {

@@ -1,5 +1,7 @@
 package at.htlleonding.instaff.features.employee;
 
+import at.htlleonding.instaff.features.assignment.Assignment;
+import at.htlleonding.instaff.features.assignment.AssignmentMapper;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.role.RoleRepository;
@@ -13,6 +15,7 @@ import jakarta.xml.bind.DatatypeConverter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +31,9 @@ public class EmployeeResource {
     EmployeeMapper employeeMapper;
     @Inject
     RoleRepository roleRepository;
-    
+    @Inject
+    AssignmentMapper assignmentMapper;
+
 
     @GET
     public List<EmployeeDTO> all() {

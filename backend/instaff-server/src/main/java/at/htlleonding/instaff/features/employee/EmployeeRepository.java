@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

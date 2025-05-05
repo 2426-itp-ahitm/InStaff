@@ -8,6 +8,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Path("/assignments")
@@ -41,5 +43,24 @@ public class AssignmentResource {
                 .stream()
                 .map(assignmentMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("employee/{employeeId}")
+    public Response getAllAssignments(@PathParam("employeeId") Long employeeId) {
+        List<Assignment> assignments = assignmentRepository.findByEmployeeId(employeeId);
+        return Response.ok(assignments.stream().map(assignmentMapper::toResource)).build();
+    }
+
+    @GET
+    @Path("employee/{employeeId}/{startDate}/{endDate}")
+    public Response getAssignmentsBetweenDates(@PathParam("employeeId") Long employeeId, @PathParam("startDate") String startDateString, @PathParam("endDate") String endDateString) {
+        LocalDate startDate = LocalDate.parse(startDateString);
+        LocalDate endDate = LocalDate.parse(endDateString);
+        if (endDate.isBefore(startDate)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<Assignment> assignments = assignmentRepository.findByEmployeeIdBetweenDates(employeeId, startDate, endDate);
+        return Response.ok(assignments.stream().map(assignmentMapper::toResource)).build();
     }
 }

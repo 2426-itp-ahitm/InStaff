@@ -6,3 +6,9 @@ GET http://localhost:8080/api/assignments/1
 
 ### Get Assignments by shift id
 GET http://localhost:8080/api/assignments/shift/1
+
+### Get Assignments by employee id
+GET http://localhost:8080/api/assignments/employee/1
+
+### Get Assignments by employee id between two Dates
+GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
