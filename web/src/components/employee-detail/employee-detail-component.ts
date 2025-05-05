@@ -1,189 +1,195 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
-import { Role } from "../../interfaces/role";
 import { model } from "../../model/model";
-import RoleMapper from "./../../mapper/role-mapper";
-import { loadEmployeeDetails } from "../employee-edit/employee-edit-service";
+import { Role } from "../../interfaces/role";
+import { loadAllRoles } from "../../services/roles-service";
 
 class EmployeeDetailComponent extends HTMLElement {
-   private _employeeId: string = "";
-   private roleMapper = new RoleMapper();
 
    constructor() {
-      super();
+      super();      
       this.attachShadow({ mode: "open" });
-      this.initListeners();
+      loadAllRoles();
+      console.log("EmployeeDetailComponent initialized" + this._employeeId);
    }
 
-   // Initialize event listeners
-   private initListeners() {
-      document.addEventListener("keydown", this.handleKeyDown);
+
+   private _employeeId: string = "";
+   private roles = model.roles;
+   
+   
+
+   selEmp: Employee = {
+      id: -999,
+      firstname: "Test",
+      lastname: "Employee",
+      email: "string",
+      telephone: "string",
+      password: "string",
+      birthdate: "string",
+      company_id: -9,
+      company_name: "string",
+      roles: [1,2]
    }
 
-   private handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-         this.updateEmployee();
-      } else if (event.key === "Escape") {
-         this.closeModal();
+   private empHasRoles:Boolean[] = [];
+
+
+   checkIfEmpHasRoles(employee: Employee): Boolean[] {
+      console.log("checkIfEmpHasRoles");
+      console.log(this.roles)
+      const empHasRoles: Boolean[] = [];
+      this.roles.forEach((role) => {
+         const hasRole = employee.roles.includes(role.id);
+         empHasRoles.push(hasRole);
       }
-   };
+      );
+      console.log("empHasRoles: " + empHasRoles);
+      return empHasRoles;
+   }
+   
 
-   // Cleanup event listeners to prevent memory leaks
-   private destroy() {
-      document.removeEventListener("keydown", this.handleKeyDown);
+  
+
+   set employeeId(value: string) {
+      const newValue = value || '';
+      if (newValue !== this._employeeId) {
+         this._employeeId = newValue;
+         this.getEmployeeDetails(this._employeeId);
+      } else {
+         //this.closeModal();
+         //setTimeout(() => this.renderEmployeeDetails(), 0); // Reopen modal
+      }
+   }
+
+   async getEmployeeDetails(_employeeId: string) {
+      console.log("Fetching employee details for ID: " + _employeeId);
+      await fetch(`/api/employees/${_employeeId}`)
+          .then(response => response.json())
+          .then(data => {
+             this.selEmp = data;
+             this.renderEmployeeDetails();
+             this.empHasRoles = this.checkIfEmpHasRoles(this.selEmp);
+      });
    }
 
    static get observedAttributes() {
       return ['employee-id'];
    }
 
-   get employeeId() {
-      return this._employeeId;
-   }
-
-   set employeeId(value: string) {
-      const newValue = value || '';
-      if (newValue !== this._employeeId) {
-         this._employeeId = newValue;
-         this.renderEmployeeDetails();
-      } else {
-         this.closeModal();
-         setTimeout(() => this.renderEmployeeDetails(), 0); // Reopen modal
-      }
-   }
-
-   connectedCallback() {
-      this.renderEmployeeDetails();
-   }
-
-   // Close the modal
-   private closeModal() {
-      model.activeEmployeeId = null;
-      const modal = this.shadowRoot.getElementById("employeeModal");
-      modal?.classList.remove("is-active");
-   }
-
-   // Render employee details inside the modal
-   private async renderEmployeeDetails() {
-      if (!this._employeeId) return;
-
+   async connectedCallback() {
       const cssResponse = await fetch("../../../style.css");
       const css = await cssResponse.text();
       const styleElement = document.createElement("style");
       styleElement.textContent = css;
-      this.shadowRoot.appendChild(styleElement);
-
-      let employee = model.employees.find(emp => emp.id === Number(this._employeeId));
-
-      if (!employee) {
-         await loadEmployeeDetails(Number(this._employeeId));
-         employee = model.employees.find(emp => emp.id === Number(this._employeeId));
-      }
-
-      const roles = await this.loadRoles(employee);
-
-      render(this.modalTemplate(employee, roles), this.shadowRoot);
-
-      const modal = this.shadowRoot.getElementById("employeeModal");
-      modal?.classList.add("is-active");
+      this.shadowRoot?.appendChild(styleElement);      
+      console.log("Connected " + this._employeeId);
    }
 
-   // Fetch roles for the employee
-   private async loadRoles(employee: Employee) {
-      const response = await fetch("api/roles", {
-         method: "GET",
-         headers: { "Content-Type": "application/json" },
-      });
+   
 
-      return response.json().then((data: Role[]) =>
-         data.map((role) => ({
-            id: role.id,
-            roleName: role.roleName,
-            hasRole: employee.roles.includes(role.id),
-         }))
-      );
+   private async renderEmployeeDetails() {
+      render(this.template(this.selEmp), this.shadowRoot);
    }
 
-   // Update employee details
-   private async updateEmployee() {
-      const firstname = this.shadowRoot.querySelector<HTMLInputElement>("#firstname")?.value;
-      const lastname = this.shadowRoot.querySelector<HTMLInputElement>("#lastname")?.value;
-      const email = this.shadowRoot.querySelector<HTMLInputElement>("#email")?.value;
-      const telephone = this.shadowRoot.querySelector<HTMLInputElement>("#telephone")?.value;
-      const birthdate = this.shadowRoot.querySelector<HTMLInputElement>("#birthdate")?.value;
-      const selectedRoles = Array.from(
-         this.shadowRoot.querySelectorAll<HTMLInputElement>('input[name="roles"]:checked')
-      ).map((input) => Number(input.value));
-
-      const updatedEmployee: Employee = {
-         id: Number(this._employeeId),
-         firstname,
-         lastname,
-         email,
-         telephone,
-         birthdate,
-         password: "", // TODO: get password from the form
-         company_name: model.employees.find((emp) => emp.id === Number(this._employeeId))?.company_name,
-         company_id: 1, // TODO: get company_id from the form
-         roles: selectedRoles,
-      };
-
-      const response = await fetch(`/api/employees/${this._employeeId}`, {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(updatedEmployee),
-      });
-
-      if (response.ok) {
-         const employeeIndex = model.employees.findIndex((emp) => emp.id === updatedEmployee.id);
-         if (employeeIndex !== -1) {
-            model.employees[employeeIndex] = updatedEmployee;
-         } else {
-            model.employees.push(updatedEmployee);
-         }
-         this.closeModal();
-      } else {
-         console.error(`Failed to update employee: ${response.statusText}`);
-      }
-   }
-
-   // Template to render employee details in the modal
-   private modalTemplate(employee: Employee, roles) {
-      const htmlRoles = roles.map((role) => {
-         const isChecked = employee.roles.includes(role.id) ? "checked" : "";
+   
+   
+   
+   template(employee: Employee) {
+      const htmlRoles = this.roles.map((role, index) => {
          return html`
-            <label class="checkbox">
-               <input type="checkbox" name="roles" value="${role.id}" ?checked=${isChecked}> ${role.roleName}
-            </label><br>
+            <div>
+               <input type="checkbox" id="role${index}" ?checked="${this.empHasRoles[index]}">
+               <label for="role${index}">${role.roleName}</label>
+            </div>
          `;
       });
-
+      console.log("########")
+      console.log(this.roles);
       return html`
-         <div id="employeeModal" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-               <form method="dialog">
+            <div class="modal is-active mt-6" id="employeeModal">
+
+               <div class="modal-background"></div>
+               <div class="modal-card">
                   <header class="modal-card-head">
-                     <p class="modal-card-title">Employee Details</p>
-                     <button class="delete" aria-label="close" type="button" @click="${() => this.closeModal()}"></button>
+                     <h2 class="title is-3">Employee Details: ${employee.firstname} ${employee.lastname}</h2>
                   </header>
-                  <section class="modal-card-body">
-                     <p><b>First Name:</b> <input type="text" id="firstname" .value="${employee.firstname}"></p>
-                     <p><b>Last Name:</b> <input type="text" id="lastname" .value="${employee.lastname}"></p>
-                     <p><b>Email:</b> <input type="email" id="email" .value="${employee.email}"></p>
-                     <p><b>Telephone:</b> <input type="tel" id="telephone" .value="${employee.telephone}"></p>
-                     <p><b>Birthdate:</b> <input type="date" id="birthdate" .value="${employee.birthdate}"></p>
-                     <div><b>Roles:</b> ${htmlRoles}</div>
+                  <section class="modal-card-body py-2">
+                     <div class="box">
+                        <div class="field">
+                           <label for="firstname" class="label">First Name</label>
+                           <div class="control">
+                              <input type="text" id="firstname" name="firstname" class="input" .value=${employee.firstname} placeholder="First Name" />
+                           </div>
+                        </div>
+      
+                        <div class="field">
+                           <label for="lastname" class="label">Last Name</label>
+                           <div class="control">
+                              <input type="text" id="lastname" name="lastname" class="input" .value=${employee.lastname} placeholder="Last Name" />
+                           </div>
+                        </div>
+      
+                        <div class="field">
+                           <label for="email" class="label">Email</label>
+                           <div class="control">
+                              <input type="email" id="email" name="email" class="input" .value=${employee.email} placeholder="Email" />
+                           </div>
+                        </div>
+      
+                        <div class="field">
+                           <label for="telephone" class="label">Telephone</label>
+                           <div class="control">
+                              <input type="text" id="telephone" name="telephone" class="input" .value=${employee.telephone} placeholder="Telephone" />
+                           </div>
+                        </div>
+      
+                        <div class="field">
+                           <label for="birthdate" class="label">Birthdate</label>
+                           <div class="control">
+                              <input type="date" id="birthdate" name="birthdate" class="input" .value=${employee.birthdate} />
+                           </div>
+                        </div>
+      
+                        <div class="field">
+                           <label class="label">Roles</label>
+                           <div class="control">
+                              ${this.roles.map(
+                                 (role, index) => html`
+                                    <label class="checkbox">
+                                       <input 
+                                          type="checkbox" 
+                                          name="role_id" 
+                                          value="${role.id}" 
+                                          ?checked=${this.empHasRoles[index]}>
+                                       ${role.roleName}
+                                    </label><br />
+                                 `
+                              )}
+                           </div>
+                        </div>
+                     </div>
                   </section>
+      
                   <footer class="modal-card-foot">
-                     <button class="button is-success" type="submit" @click="${() => this.updateEmployee()}">Save Changes</button>
-                     <button class="button is-danger" type="button" @click="${() => this.closeModal()}">Cancel</button>
+                     <button class="button is-success" @click=${() => this.saveEmployeeDetails(employee)}>Save changes</button>
+                     <button class="button" @click=${() => this.closeModal()}>Cancel</button>
                   </footer>
-               </form>
+               </div>
             </div>
-         </div>
+         
+      
       `;
+   }
+   closeModal() {
+      const modal = this.shadowRoot?.getElementById("employeeModal");
+      if (modal) {
+         modal.classList.remove("is-active");
+      }
+   }
+   saveEmployeeDetails(employee: Employee) {
    }
 }
 
 customElements.define("employee-detail-component", EmployeeDetailComponent);
+

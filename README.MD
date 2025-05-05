@@ -7,7 +7,6 @@
 
 * Klement Tobias
 * Hahn Alexander
-* Pramhas Laurent
 * Pfarrhofer Philip
 
 ## General
@@ -82,3 +81,4 @@ docker exec -it postgres pg_dump -U demo > demo-backup.sql
 ```bash
 ./down.sh
 ```
+

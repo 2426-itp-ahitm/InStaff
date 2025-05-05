@@ -1,7 +1,7 @@
 // src/components/shift-confirmation/shift-confirmation-component.ts
 import { html, render, nothing } from "lit-html";
 import { Shift } from "../../interfaces/shift";
-import { Assignment } from "../../interfaces/assignment";
+import { Assignment } from "../../interfaces/assignement";
 import { loadShiftDetailed } from "../shift-detail/shift-detail-service";
 import RoleMapper from "../../mapper/role-mapper";
 import EmployeeMapper from "../../mapper/employee-mapper";

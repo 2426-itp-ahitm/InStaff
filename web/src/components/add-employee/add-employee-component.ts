@@ -229,11 +229,9 @@ class AddEmployeeComponent extends HTMLElement {
                </div>
             </footer>
          </div>
-         </div>
+      </div>
 
             
-         </div>
-
          
          ${this.isModalVisible
             ? html`

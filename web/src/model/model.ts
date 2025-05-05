@@ -1,9 +1,11 @@
 import { Employee } from "src/interfaces/employee"
 import { Reservation } from "src/interfaces/reservation";
 import { Shift } from "src/interfaces/shift"
+import { Role } from "src/interfaces/role";
 
 // Define the Model type
 interface Model {
+    roles: Role[];
     employees: Employee[];
     shifts: Shift[];
     reservations: Reservation[];
@@ -14,6 +16,7 @@ interface Model {
 
 // Initial state for the model
 const initialState: Model = {
+    roles: [],
     employees: [],
     shifts: [],
     reservations: [],

@@ -1,7 +1,9 @@
 import { html, render } from "lit-html";
 import { Employee } from "../../interfaces/employee";
-import { loadAllEmployees } from "./employee-list-service";
+import { loadAllEmployees } from "../../services/employee-service";
 import { model, subscribe } from "../../model/model";
+import { loadAllRoles } from "../../services/roles-service";
+
 
 class EmployeeListComponent extends HTMLElement {
    constructor() {
@@ -20,6 +22,8 @@ class EmployeeListComponent extends HTMLElement {
       styleElement.textContent = css;
 
       this.shadowRoot.appendChild(styleElement);
+      loadAllRoles();
+      
 
       subscribe(model => {
          console.log("Model updated:", model);
@@ -57,12 +61,7 @@ class EmployeeListComponent extends HTMLElement {
                   ${rows}
                </tbody>
             </table>
-            ${this.isFirstClick
-               ? html`
-                   <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
-                 `
-               : html`<p class="subtitle is-6 my-1">Select an employee to view details</p>`
-            }
+            
 
             <div>
                ${model.isAddingEmployee
@@ -76,6 +75,15 @@ class EmployeeListComponent extends HTMLElement {
                   Add New Employee
                </button>
             
+            </div>
+
+            <div>
+               ${this.isFirstClick
+                  ? html`
+                     <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
+                  `
+                  : html`<p class="subtitle is-6 my-1">Select an employee to view details</p>`
+               }
             </div>
          </div>
       `;

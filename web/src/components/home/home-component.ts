@@ -15,12 +15,6 @@ const dashboardTemplate = (handleClick) => {
          link: "#/message-employees"
       },
       {
-         title: "Add Shift",
-         description: "Add new shifts",
-         icon: "➕",
-         link: "#/add-shift"
-      },
-      {
          title: "Add Role",
          description: "Add new roles",
          icon: "➕",
@@ -32,7 +26,6 @@ const dashboardTemplate = (handleClick) => {
          icon: "📅",
          link: "#/calendar"
       }
-
    ];
 
    const cardTemplates = cards.map(

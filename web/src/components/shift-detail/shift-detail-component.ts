@@ -6,11 +6,16 @@ import RoleMapper from "../../mapper/role-mapper"
 import EmployeeMapper from "../../mapper/employee-mapper"
 import { DateTime } from "luxon"
 import { model, subscribe } from "../../model/model"
+import { Employee } from "src/interfaces/employee"
+import { Role } from "src/interfaces/role"
+//import { loadAllEmployees } from "src/services/employee-service"
 
 class ShiftDetailComponent extends HTMLElement {
    private roleMapper = new RoleMapper()
    private employeeMapper = new EmployeeMapper()
    private _shiftId: number | null = null
+   private empRoles: number[] = [1,2,3,4,5]
+   private temRoles: String[] = ["---","Koch", "Kochhilfe", "Service", "Bar", "Barkeeper"]
 
    constructor() {
       super()
@@ -69,8 +74,9 @@ class ShiftDetailComponent extends HTMLElement {
       const assignments = await this.loadAssignments(this._shiftId);
       const employeeRoleData = await this.mapAssignmentsToEmployeeRoles(assignments);
       const reservations = await loadReservationsFromShift(this._shiftId);
+      const employees = model.employees
 
-      render(this.modalTemplate(shift, employeeRoleData, reservations), this.shadowRoot)
+      render(this.modalTemplate(shift, employeeRoleData, reservations, employees), this.shadowRoot)
       await new Promise(resolve => requestAnimationFrame(resolve));
 
       const modal = this.shadowRoot.getElementById("shiftModal") as HTMLDialogElement;
@@ -105,7 +111,8 @@ class ShiftDetailComponent extends HTMLElement {
    modalTemplate(
       shift: Shift,
       employeeRoleData: { employeeName: string; roleName: string; confirmed: boolean }[],
-      reservations: { id: number; name: string; infos: string; number_of_people: number; start_time: string; end_time: string; shift: number }[]
+      reservations: { id: number; name: string; infos: string; number_of_people: number; start_time: string; end_time: string; shift: number }[],
+      employees: Employee[]
    ) {
       const shiftStart = DateTime.fromISO(shift.startTime);
       const shiftEnd = DateTime.fromISO(shift.endTime);
@@ -154,6 +161,23 @@ class ShiftDetailComponent extends HTMLElement {
                                  </tr>
                               `
                            )}
+                           <tr>
+                              <td>
+                                <select class="select" id="employeeSelect">
+                                  ${employees.map(employee => html`
+                                    <option value="${employee.id}" @click="${() => {this.empRoles = employee.roles; console.log(this.empRoles)}}" > ${employee.firstname} ${employee.lastname} </option>
+                                  `)}
+                                </select>
+                              </td>
+                              <td>
+                                 <select class="select" id="roleSelect">
+                                    ${this.temRoles.map(role => html`
+                                       <option value="${role}">${role}</option>
+                                    `)}
+                                 </select>
+                              </td>
+                              <td><button class="button" type="button" >Send Request</button></td>
+                           </tr>
                         </tbody>
                      </table>
                      <h2 style="font-weight: bold; margin-top: 1em;">Reservations:</h2>
@@ -187,6 +211,13 @@ class ShiftDetailComponent extends HTMLElement {
             </div>
          </div>
       `
+   }
+
+
+
+   loadRoleForEmp(id: number) {
+      
+
    }
 }
 
