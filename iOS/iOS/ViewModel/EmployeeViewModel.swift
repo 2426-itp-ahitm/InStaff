@@ -26,7 +26,6 @@ class EmployeeViewModel: ObservableObject {
         if let data = try? Data(contentsOf: url) {
             if let fetchedEmployees = try? jsonDecoder.decode([Employee].self, from: data) {
                 employees = fetchedEmployees
-                print("Employees loaded: \(employees.count)")
             } else {
                 print("Failed to decode employees")
             }

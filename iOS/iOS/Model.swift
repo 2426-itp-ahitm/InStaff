@@ -61,3 +61,9 @@ func formatDateComponents(_ dateString: String) -> (date: String, time: String)?
     let time = String(parts[1].prefix(5)) // HH:MM
     return (date, time)
 }
+
+func getRoleNames(for employee: Employee, from allRoles: [Role]) -> [String] {
+    return allRoles
+        .filter { role in employee.roles.contains(role.id) }
+        .map { $0.roleName }
+}

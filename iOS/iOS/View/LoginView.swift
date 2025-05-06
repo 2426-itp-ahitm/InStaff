@@ -42,6 +42,11 @@ struct LoginView: View {
                 if id != -1 {
                     session.employeeId = id
                     session.isLoggedIn = true
+                    
+                    if let matchedEmployee = employeeViewModel.employees.first(where: { $0.id == id }) {
+                        session.employee = matchedEmployee
+                    }
+                    
                 } else {
                     alertMessage = "No matching employee called \(employeeFirstNameInput) \(employeeLastNameInput) found"
                     showAlert = true

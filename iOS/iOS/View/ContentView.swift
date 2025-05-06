@@ -10,6 +10,7 @@ import SwiftUI
 class SessionManager: ObservableObject {
     @Published var isLoggedIn = false
     @Published var employeeId: Int? = nil
+    @Published var employee: Employee? = nil
 }
 
 struct ContentView: View {

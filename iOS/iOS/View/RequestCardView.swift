@@ -23,10 +23,10 @@ struct RequestCardView: View {
             if shiftViewModel.shifts.indices.contains(assignment.shift) {
                 let shift = shiftViewModel.shifts[assignment.shift]
                 Text("Start: \(formatDateComponents(shift.startTime)?.date ?? "") um \(formatDateComponents(shift.startTime)?.time ?? "")")                    .font(.headline)
-                Text("Ende: \(formatDateComponents(shift.endTime)?.date ?? "") um \(formatDateComponents(shift.endTime)?.time ?? "")")
+                Text("End: \(formatDateComponents(shift.endTime)?.date ?? "") um \(formatDateComponents(shift.endTime)?.time ?? "")")
                     .font(.headline)
             } else {
-                Text("Lade Schichtdaten...")
+                Text("Loading shift data...")
                     .italic()
                     .foregroundColor(.gray)
             }
@@ -39,7 +39,7 @@ struct RequestCardView: View {
             HStack {
                 Button(action: {
                 }) {
-                    Text("Annehmen")
+                    Text("Accept")
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -49,7 +49,7 @@ struct RequestCardView: View {
 
                 Button(action: {
                 }) {
-                    Text("Ablehnen")
+                    Text("Decline")
                         .foregroundColor(.black)
                         .padding()
                         .frame(maxWidth: .infinity)
