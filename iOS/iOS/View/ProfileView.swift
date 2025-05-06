@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @EnvironmentObject var session: SessionManager
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if let id = session.employeeId {
+            VStack {
+                    Text("Profile: \(id)")
+            }
+        } else {
+            VStack {
+                Text("Not logged in")
+            }
+        }
     }
 }
 

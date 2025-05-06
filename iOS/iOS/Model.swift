@@ -53,3 +53,11 @@ struct Role: Identifiable, Decodable {
     var company_id: Int
     var employees: [Int]
 }
+
+func formatDateComponents(_ dateString: String) -> (date: String, time: String)? {
+    let parts = dateString.split(separator: "T")
+    guard parts.count == 2 else { return nil }
+    let date = String(parts[0])
+    let time = String(parts[1].prefix(5)) // HH:MM
+    return (date, time)
+}

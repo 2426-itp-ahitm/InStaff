@@ -7,17 +7,23 @@
 
 import SwiftUI
 
+class SessionManager: ObservableObject {
+    @Published var isLoggedIn = false
+    @Published var employeeId: Int? = nil
+}
+
 struct ContentView: View {
+    @StateObject private var session = SessionManager()
+
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem { Label("Home", systemImage: "house") }
-            CalendarView()
-                .tabItem { Label("Calendar", systemImage: "calendar") }
-            RequestView()
-                .tabItem{Label("RequestView", systemImage: "list.bullet.clipboard")}
-            ProfileView()
-                .tabItem { Label("Profile", systemImage: "person.circle") }
+        Group {
+            if session.isLoggedIn {
+                MainTabView()
+                    .environmentObject(session)
+            } else {
+                LoginView()
+                    .environmentObject(session)
+            }
         }
     }
 }

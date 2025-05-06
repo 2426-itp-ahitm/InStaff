@@ -16,16 +16,21 @@ struct RequestCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            let shift: Shift = shiftViewModel.shifts[assignment.shift]
-            Text(shiftViewModel.shiftStartTime(index: assignment.shift) ?? "")
-            //        .font(.headline)
-            //Text($shiftViewModel.shiftTime(for: shift))
-            //        .font(.subheadline)
-            
-            
             Text(employeeViewModel.employeeName(for: assignment.employee))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+            
+            if shiftViewModel.shifts.indices.contains(assignment.shift) {
+                let shift = shiftViewModel.shifts[assignment.shift]
+                Text("Start: \(formatDateComponents(shift.startTime)?.date ?? "") um \(formatDateComponents(shift.startTime)?.time ?? "")")                    .font(.headline)
+                Text("Ende: \(formatDateComponents(shift.endTime)?.date ?? "") um \(formatDateComponents(shift.endTime)?.time ?? "")")
+                    .font(.headline)
+            } else {
+                Text("Lade Schichtdaten...")
+                    .italic()
+                    .foregroundColor(.gray)
+            }
+            
 
             Text("Role: \(roleViewModel.roleName(for: assignment.role))")
                 .font(.headline)
@@ -52,7 +57,6 @@ struct RequestCardView: View {
                         .cornerRadius(8)
                 }
             }
-            //Text("Hallo")
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 3))
@@ -73,5 +77,5 @@ struct RequestCardView: View {
 }
 
 #Preview {
-    RequestCardView(assignment: Assignment(id: 1, shift: 0, role: 1, employee: 1, confirmed: nil))
+    RequestCardView(assignment: Assignment(id: 1, shift: 1, role: 1, employee: 1, confirmed: nil))
 }
