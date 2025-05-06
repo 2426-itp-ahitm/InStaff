@@ -42,6 +42,7 @@ class EmployeeViewModel: ObservableObject {
             let loadedEmployees = self.load()
             DispatchQueue.main.async {
                 self.employees = loadedEmployees
+                print(self.employees)
             }
         }
     }
