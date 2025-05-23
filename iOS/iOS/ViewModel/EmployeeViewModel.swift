@@ -35,6 +35,35 @@ class EmployeeViewModel: ObservableObject {
 
         return employees
     }
+    func saveEmployeeChanges(_ employee: Employee, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "http://localhost:8080/api/employees/\(employee.id)") else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0)))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let encoder = JSONEncoder()
+
+        do {
+            request.httpBody = try encoder.encode(employee)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+
+        URLSession.shared.dataTask(with: request) { _, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+        }.resume()
+    }
 
     private func loadEmployeesAsync() {
         DispatchQueue.global(qos: .background).async {

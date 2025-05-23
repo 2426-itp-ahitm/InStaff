@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ProfileView: View {
     @ObservedObject var roleViewModel: RoleViewModel  // Verwende @ObservedObject
+    @ObservedObject var employeeViewModel: EmployeeViewModel
     @EnvironmentObject var session: SessionManager
 
     @State private var firstName: String = ""
@@ -18,6 +20,38 @@ struct ProfileView: View {
     @State private var birthdate: String = ""
     @State private var companyName: String = ""
     @State private var isEditing: Bool = false
+    
+
+    private func saveProfileChanges() {
+        guard var employee = session.employee else { return }
+
+        let hasChanges =
+            employee.firstname != firstName ||
+            employee.lastname != lastName ||
+            employee.email != email ||
+            employee.telephone != telephone ||
+            employee.birthdate != birthdate
+
+        if hasChanges {
+            employee.firstname = firstName
+            employee.lastname = lastName
+            employee.email = email
+            employee.telephone = telephone
+            employee.birthdate = birthdate
+
+            employeeViewModel.saveEmployeeChanges(employee) { result in
+                switch result {
+                case .success:
+                    print("Employee saved successfully")
+                    session.employee = employee
+                case .failure(let error):
+                    print("Failed to save employee: \(error.localizedDescription)")
+                }
+            }
+        } else {
+            print("No changes to save.")
+        }
+    }
 
     var body: some View {
         if let employee = session.employee {
@@ -29,61 +63,41 @@ struct ProfileView: View {
                             Text("First Name:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("First Name", text: $firstName)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(firstName)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("First Name", text: $firstName)
+                                .disabled(!isEditing)
+                                .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
                             Text("Last Name:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("Last Name", text: $lastName)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(lastName)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("Last Name", text: $lastName)
+                                .disabled(!isEditing)
+                                .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
                             Text("Email:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("Email", text: $email)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(email)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("Email", text: $email)
+                                .disabled(!isEditing)
+                                .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
                             Text("Telephone:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("Telephone", text: $telephone)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(telephone)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("Telephone", text: $telephone)
+                                .disabled(!isEditing)
+                                .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
                             Text("Birthdate:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("Birthdate", text: $birthdate)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(birthdate)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("Birthdate", text: $birthdate)
+                                .disabled(!isEditing)
+                                .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                     }
                     Section(header: Text("Company")) {
@@ -91,13 +105,9 @@ struct ProfileView: View {
                             Text("Company Name: ")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            if isEditing {
-                                TextField("Company Name", text: $companyName)
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text(companyName)
-                                    .foregroundColor(.gray)
-                            }
+                            TextField("Company Name", text: $companyName)
+                                .disabled(true)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     Section(header: Text("Roles")) {
@@ -118,6 +128,9 @@ struct ProfileView: View {
                     Section {
                         HStack {
                             Button(isEditing ? "Save" : "Edit data") {
+                                if isEditing {
+                                    saveProfileChanges()
+                                }
                                 isEditing.toggle()
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -125,7 +138,8 @@ struct ProfileView: View {
                             .padding(.top)
                         }
                     }
-                }            }
+                }
+            }
             .onAppear {
                 firstName = employee.firstname
                 lastName = employee.lastname
@@ -143,6 +157,6 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(roleViewModel: RoleViewModel())
+    ProfileView(roleViewModel: RoleViewModel(), employeeViewModel: EmployeeViewModel())
         .environmentObject(SessionManager())
 }
