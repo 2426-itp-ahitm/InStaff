@@ -19,7 +19,7 @@ class EmployeeViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
 
         guard let url = URL(string: "http://localhost:8080/api/employees") else {
-            print("Invalid URL for employees")
+            //print("Invalid URL for employees")
             return employees
         }
 
@@ -27,10 +27,10 @@ class EmployeeViewModel: ObservableObject {
             if let fetchedEmployees = try? jsonDecoder.decode([Employee].self, from: data) {
                 employees = fetchedEmployees
             } else {
-                print("Failed to decode employees")
+                //print("Failed to decode employees")
             }
         } else {
-            print("Failed to load data from URL")
+            //print("Failed to load data from URL")
         }
 
         return employees

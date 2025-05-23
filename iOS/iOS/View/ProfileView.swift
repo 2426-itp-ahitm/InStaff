@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct ProfileView: View {
-    @ObservedObject var roleViewModel: RoleViewModel  // Verwende @ObservedObject
+    @ObservedObject var roleViewModel: RoleViewModel
     @ObservedObject var employeeViewModel: EmployeeViewModel
     @EnvironmentObject var session: SessionManager
 
@@ -21,6 +21,8 @@ struct ProfileView: View {
     @State private var companyName: String = ""
     @State private var isEditing: Bool = false
     
+    @State private var showLogoutAlert = false
+
 
     private func saveProfileChanges() {
         guard var employee = session.employee else { return }
@@ -42,14 +44,14 @@ struct ProfileView: View {
             employeeViewModel.saveEmployeeChanges(employee) { result in
                 switch result {
                 case .success:
-                    print("Employee saved successfully")
+                    //print("Employee saved successfully")
                     session.employee = employee
                 case .failure(let error):
                     print("Failed to save employee: \(error.localizedDescription)")
                 }
             }
         } else {
-            print("No changes to save.")
+            //print("No changes to save.")
         }
     }
 
@@ -125,17 +127,54 @@ struct ProfileView: View {
                             }
                         }
                     }
+                    Section(header: Text("App settings")) {
+                        HStack{
+                            Text("App settings not implemented yet!")
+                        }
+                    }
                     Section {
                         HStack {
-                            Button(isEditing ? "Save" : "Edit data") {
+                            Button(action: {
                                 if isEditing {
                                     saveProfileChanges()
                                 }
                                 isEditing.toggle()
+                            }) {
+                                Text(isEditing ? "Save" : "Edit data")
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.blue)
+                                    .cornerRadius(8)
                             }
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .buttonStyle(.borderedProminent)
-                            .padding(.top)
+                            VStack{
+                                Button(action: {
+                                    showLogoutAlert = true
+                                }) {
+                                    Text("Logout")
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color(.red))
+                                        .cornerRadius(8)
+                                }
+                                .alert(isPresented: $showLogoutAlert) {
+                                    Alert(
+                                        title: Text("Logout"),
+                                        message: Text("Do you really want to logut?"),
+                                        primaryButton: .default(
+                                            Text("cancel")
+                                        ),
+                                        secondaryButton: .destructive(
+                                            Text("logout"),
+                                            action: {
+                                                session.isLoggedIn = false
+                                            }
+                                        )
+                                    )
+                                    
+                                }
+                            }
                         }
                     }
                 }
