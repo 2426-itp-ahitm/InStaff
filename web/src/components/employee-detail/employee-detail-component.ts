@@ -1,4 +1,4 @@
-import { html, render } from "lit-html";
+import { html, render, TemplateResult } from "lit-html";
 import { Employee } from "../../interfaces/employee";
 import { model } from "../../model/model";
 import { Role } from "../../interfaces/role";
@@ -36,8 +36,6 @@ class EmployeeDetailComponent extends HTMLElement {
 
 
    checkIfEmpHasRoles(employee: Employee): Boolean[] {
-      console.log("checkIfEmpHasRoles");
-      console.log(this.roles)
       const empHasRoles: Boolean[] = [];
       this.roles.forEach((role) => {
          const hasRole = employee.roles.includes(role.id);
@@ -65,12 +63,21 @@ class EmployeeDetailComponent extends HTMLElement {
    async getEmployeeDetails(_employeeId: string) {
       console.log("Fetching employee details for ID: " + _employeeId);
       await fetch(`/api/employees/${_employeeId}`)
-          .then(response => response.json())
-          .then(data => {
-             this.selEmp = data;
-             this.renderEmployeeDetails();
-             this.empHasRoles = this.checkIfEmpHasRoles(this.selEmp);
+         .then(response => response.json())
+         .then(data => {
+            this.selEmp = data;
+            this.empHasRoles = this.checkIfEmpHasRoles(this.selEmp);
       });
+      const htmlRoles = this.roles.map((role, index) => {
+         return html`
+            <div>
+               <input type="checkbox" id="role${index}" ?checked="${this.empHasRoles[index]}">
+               <label for="role${index}">${role.roleName}</label>
+            </div>
+         `;
+      });
+      this.renderEmployeeDetails(htmlRoles);
+
    }
 
    static get observedAttributes() {
@@ -88,95 +95,62 @@ class EmployeeDetailComponent extends HTMLElement {
 
    
 
-   private async renderEmployeeDetails() {
-      render(this.template(this.selEmp), this.shadowRoot);
+   private async renderEmployeeDetails(htmlRoles: TemplateResult<1>[]) {
+      render(this.template(this.selEmp, htmlRoles), this.shadowRoot);
    }
 
    
    
    
-   template(employee: Employee) {
-      const htmlRoles = this.roles.map((role, index) => {
-         return html`
-            <div>
-               <input type="checkbox" id="role${index}" ?checked="${this.empHasRoles[index]}">
-               <label for="role${index}">${role.roleName}</label>
-            </div>
-         `;
-      });
-      console.log("########")
-      console.log(this.roles);
+   template(employee: Employee, htmlRoles: TemplateResult<1>[]) {
+      
       return html`
-            <div class="modal is-active mt-6" id="employeeModal">
-
-               <div class="modal-background"></div>
-               <div class="modal-card">
-                  <header class="modal-card-head">
-                     <h2 class="title is-3">Employee Details: ${employee.firstname} ${employee.lastname}</h2>
-                  </header>
-                  <section class="modal-card-body py-2">
-                     <div class="box">
-                        <div class="field">
-                           <label for="firstname" class="label">First Name</label>
-                           <div class="control">
-                              <input type="text" id="firstname" name="firstname" class="input" .value=${employee.firstname} placeholder="First Name" />
-                           </div>
-                        </div>
-      
-                        <div class="field">
-                           <label for="lastname" class="label">Last Name</label>
-                           <div class="control">
-                              <input type="text" id="lastname" name="lastname" class="input" .value=${employee.lastname} placeholder="Last Name" />
-                           </div>
-                        </div>
-      
-                        <div class="field">
-                           <label for="email" class="label">Email</label>
-                           <div class="control">
-                              <input type="email" id="email" name="email" class="input" .value=${employee.email} placeholder="Email" />
-                           </div>
-                        </div>
-      
-                        <div class="field">
-                           <label for="telephone" class="label">Telephone</label>
-                           <div class="control">
-                              <input type="text" id="telephone" name="telephone" class="input" .value=${employee.telephone} placeholder="Telephone" />
-                           </div>
-                        </div>
-      
-                        <div class="field">
-                           <label for="birthdate" class="label">Birthdate</label>
-                           <div class="control">
-                              <input type="date" id="birthdate" name="birthdate" class="input" .value=${employee.birthdate} />
-                           </div>
-                        </div>
-      
-                        <div class="field">
-                           <label class="label">Roles</label>
-                           <div class="control">
-                              ${this.roles.map(
-                                 (role, index) => html`
-                                    <label class="checkbox">
-                                       <input 
-                                          type="checkbox" 
-                                          name="role_id" 
-                                          value="${role.id}" 
-                                          ?checked=${this.empHasRoles[index]}>
-                                       ${role.roleName}
-                                    </label><br />
-                                 `
-                              )}
-                           </div>
-                        </div>
-                     </div>
-                  </section>
-      
-                  <footer class="modal-card-foot">
-                     <button class="button is-success" @click=${() => this.saveEmployeeDetails(employee)}>Save changes</button>
-                     <button class="button" @click=${() => this.closeModal()}>Cancel</button>
-                  </footer>
+         <div class="box">    
+            <div class="">
+               <div class="field">
+                  <label for="firstname" class="label">First Name</label>
+                  <div class="control">
+                     <input type="text" id="firstname" name="firstname" class="input" .value=${employee.firstname} placeholder="First Name" />
+                  </div>
                </div>
+
+               <div class="field">
+                  <label for="lastname" class="label">Last Name</label>
+                  <div class="control">
+                     <input type="text" id="lastname" name="lastname" class="input" .value=${employee.lastname} placeholder="Last Name" />
+                  </div>
+               </div>
+
+               <div class="field">
+                  <label for="email" class="label">Email</label>
+                  <div class="control">
+                     <input type="email" id="email" name="email" class="input" .value=${employee.email} placeholder="Email" />
+                  </div>
+               </div>
+
+               <div class="field">
+                  <label for="telephone" class="label">Telephone</label>
+                  <div class="control">
+                     <input type="text" id="telephone" name="telephone" class="input" .value=${employee.telephone} placeholder="Telephone" />
+                  </div>
+               </div>
+
+               <div class="field">
+                  <label for="birthdate" class="label">Birthdate</label>
+                  <div class="control">
+                     <input type="date" id="birthdate" name="birthdate" class="input" .value=${employee.birthdate} />
+                  </div>
+               </div>
+
+               ${htmlRoles}
+                
             </div>
+
+            <div class="">
+               <button class="button is-success" @click=${() => this.saveEmployeeDetails(employee)}>Save changes</button>
+               <button class="button" @click=${() => this.closeModal()}>Cancel</button>
+            </div>
+         </div>
          
       
       `;

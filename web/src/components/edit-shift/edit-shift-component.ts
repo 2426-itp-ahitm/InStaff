@@ -141,22 +141,7 @@ class EditShiftComponent extends HTMLElement {
                         </div>
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label" for="shift_id">Shift</label>
-                    <div class="control">
-                        <div class="select">
-                            <select id="shift_id" name="shift_id">
-                                <option value="">Select Shift</option>
-                                ${this.shifts.length > 0
-                                    ? this.shifts.map(
-                                          (shift: any) =>
-                                              html`<option value="${shift.id}">${shift.startTime} - ${shift.endTime}</option>`
-                                      )
-                                    : html`<option value="">Loading shifts...</option>`}
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="field">
                     <label class="label" for="role_id">Role</label>
                     <div class="control">

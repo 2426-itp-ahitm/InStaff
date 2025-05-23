@@ -50,41 +50,45 @@ class EmployeeListComponent extends HTMLElement {
       return html`
          <div class="container">
             <h2 class="title is-3">Employees</h2>
-            <table class="table is-fullwidth is-bordered is-hoverable my-1">
-               <thead>
-                  <tr>
-                     <th>Firstname</th>
-                     <th>Lastname</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  ${rows}
-               </tbody>
-            </table>
-            
+            <div class="columns">
+               <div class="column is-half">
+                  <table class="table is-fullwidth is-bordered is-hoverable my-1">
+                     <thead>
+                        <tr>
+                           <th>Firstname</th>
+                           <th>Lastname</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        ${rows}
+                     </tbody>
+                  </table>
+               </div>
 
+               
+
+               <div class="column is-half" >
+                  ${this.isFirstClick
+                     ? html`
+                        <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
+                     `
+                     : html`<employee-detail-component .employeeId=${1}></employee-detail-component>`
+                  }
+               </div>
+            </div>
             <div>
-               ${model.isAddingEmployee
-                  ? html`
-                     <add-employee-component></add-employee-component>
+                  ${model.isAddingEmployee
+                     ? html`
+                        <add-employee-component></add-employee-component>
+                        
+                     ` 
+                     : html``}
                      
-                  ` 
-                  : html``}
-                  
-                  <button class="button is-primary my-1" @click=${() => this.showAddEmployee()}>
-                  Add New Employee
-               </button>
-            
-            </div>
-
-            <div>
-               ${this.isFirstClick
-                  ? html`
-                     <employee-detail-component .employeeId=${activeEmployeeId}></employee-detail-component>
-                  `
-                  : html`<p class="subtitle is-6 my-1">Select an employee to view details</p>`
-               }
-            </div>
+                     <button class="button is-primary my-1" @click=${() => this.showAddEmployee()}>
+                     Add New Employee
+                  </button>
+               
+               </div>   
          </div>
       `;
    }
