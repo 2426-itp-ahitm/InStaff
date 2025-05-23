@@ -16,7 +16,7 @@ struct Shift: Identifiable, Decodable {
     var reservations: [Int]
 }
 
-struct Employee: Identifiable, Decodable {
+struct Employee: Identifiable, Decodable, Encodable {
     let id: Int
     var firstname: String
     var lastname: String
