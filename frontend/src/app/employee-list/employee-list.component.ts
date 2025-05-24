@@ -3,6 +3,7 @@ import {Employee} from '../employee';
 import {EmployeeServiceService} from '../employee-service.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
+import {AddEmployeeComponent} from '../add-employee/add-employee.component';
 
 
 @Component({
@@ -10,7 +11,8 @@ import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
   imports: [
     NgForOf,
     NgIf,
-    EmployeeEditComponent
+    EmployeeEditComponent,
+    AddEmployeeComponent
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'
@@ -18,7 +20,7 @@ import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
   selectedEmployee: Employee | null = null;
-
+  isAddMode: boolean = false;
 
   constructor(private employeeService: EmployeeServiceService) {}
 
@@ -33,5 +35,13 @@ export class EmployeeListComponent implements OnInit {
   openEmpEdit(employee: Employee) {
     this.selectedEmployee = employee;
 
+  }
+
+  openAddEmployee() {
+    this.isAddMode = true;
+  }
+
+  closeAddEmployee() {
+    this.isAddMode = false;
   }
 }

@@ -5,6 +5,7 @@ import {forkJoin, Observable, BehaviorSubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Role} from './role';
 import {EmployeeRole} from './employee-role';
+import {NewEmployee} from './new-employee';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,14 @@ export class EmployeeServiceService {
           emp.id === updatedEmployee.id ? updatedEmployee : emp
         );
         this.employeesSubject.next(updatedList);
+      });
+  }
+
+  addNewEmployee(newEmployee: NewEmployee): void {
+    this.httpClient.post<Employee>(`${this.apiUrl}/employees`, newEmployee)
+      .subscribe((createdEmployee) => {
+        const currentEmployees = this.employeesSubject.getValue();
+        this.employeesSubject.next([...currentEmployees, createdEmployee]);
       });
   }
 }
