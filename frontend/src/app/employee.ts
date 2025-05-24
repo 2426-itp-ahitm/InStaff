@@ -1,3 +1,5 @@
+import { EmployeeRole } from './employee-role';
+
 export interface Employee {
   id: number;
   firstname: string;
@@ -8,6 +10,6 @@ export interface Employee {
   birthdate: string; // ISO-Date als string (z. B. "2004-11-11")
   company_id: number;
   company_name: string;
-  roles: number[];    // Array von Role-IDs
+  roles: EmployeeRole[];
   shifts: number[];   // Array von Shift-IDs
 }
