@@ -38,7 +38,7 @@ export class AddEmployeeComponent implements OnInit {
   save(): void {
     const newEmployee: NewEmployee = {
       birthdate: '1990-01-01',
-      company_id: 1,
+      companyId: 1,
       password: '',
       firstname: this.firstNameInput.nativeElement.value,
       lastname: this.lastNameInput.nativeElement.value,
