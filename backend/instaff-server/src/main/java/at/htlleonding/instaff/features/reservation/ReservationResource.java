@@ -27,6 +27,15 @@ public class ReservationResource {
     }
 
     @GET
+    @Path("company/{companyId}")
+    public Response getByCompanyId(@PathParam("companyId") long companyId) {
+        List<Reservation> reservations = reservationRepository.getByCompanyId(companyId);
+        return Response.ok(
+                reservations.stream().map(reservationMapper::toResource).toList()
+        ).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
         return Response.ok(reservationMapper.toResource(reservationRepository.findById(id))).build();

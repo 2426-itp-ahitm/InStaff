@@ -12,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.xml.bind.DatatypeConverter;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -104,7 +105,7 @@ public class EmployeeResource {
 
     @GET
     @Path("company/{company_id}")
-    public List<EmployeeDTO> getEmployeeByCompany(@PathParam("company_id") Long companyId) {
+    public List<EmployeeDTO> getEmployeesByCompany(@PathParam("company_id") Long companyId) {
         var employees = employeeRepository.listAll();
         if (employees == null) {
             return null;
@@ -122,18 +123,17 @@ public class EmployeeResource {
     }
 
     @POST
-    @Transactional
     public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
                 hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
-        employeeRepository.persist(employee);
+        Employee createdEmployee = employeeRepository.createEmployee(employee);
 
         // Return a response with the created entity
         return Response.status(Response.Status.CREATED)
-                .entity(employeeMapper.toResource(employee))
+                .entity(employeeMapper.toResource(createdEmployee))
                 .build();
     }
 
@@ -189,6 +189,7 @@ public class EmployeeResource {
 
     public static String hashPassword(String password) {
         try {
+            password += ConfigProvider.getConfig().getValue("password.salt", String.class);
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
             return DatatypeConverter.printHexBinary(hash).toLowerCase();

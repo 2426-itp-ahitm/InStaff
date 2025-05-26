@@ -1,6 +1,9 @@
 ### Get all Assignments
 GET http://localhost:8080/api/assignments
 
+### Get all Assignments by company Id
+GET http://localhost:8080/api/assignments/company/1
+
 ### Get Assignment by id
 GET http://localhost:8080/api/assignments/1
 
