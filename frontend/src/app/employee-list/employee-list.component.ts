@@ -19,22 +19,25 @@ import {AddEmployeeComponent} from '../add-employee/add-employee.component';
 })
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
-  selectedEmployee: Employee | null = null;
+  selectedEmployee: Employee = this.employees[0];
   isAddMode: boolean = false;
+  isEditMode: boolean = false;
 
   constructor(private employeeService: EmployeeServiceService) {}
 
   ngOnInit(): void {
     this.employeeService.employees$.subscribe((data) => {
       this.employees = data;
-      this.selectedEmployee = this.employees[0];
     });
     this.employeeService.getEmployees();
   }
 
   openEmpEdit(employee: Employee) {
+    this.isEditMode = true;
     this.selectedEmployee = employee;
-
+  }
+  closeEmpEdit() {
+    this.isEditMode = false;
   }
 
   openAddEmployee() {

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
 import {Employee} from '../employee';
 import {NgForOf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service.service';
@@ -23,6 +23,9 @@ export class EmployeeEditComponent implements OnInit {
   @ViewChild('emailInput') emailInput!: ElementRef;
   @ViewChild('telephoneInput') telephoneInput!: ElementRef;
 
+  @Output() closeEmpEdit = new EventEmitter<void>();
+
+
   ngOnInit() {
 
   }
@@ -45,5 +48,10 @@ export class EmployeeEditComponent implements OnInit {
     };
     this.employeeService.updateEmployee(updatedEmployee);
     console.log('Saving employee:', updatedEmployee);
+    this.closeEmployeeEdit()
+  }
+
+  closeEmployeeEdit(): void {
+    this.closeEmpEdit.emit();
   }
 }
