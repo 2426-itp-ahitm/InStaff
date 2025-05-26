@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/employees")
+@Path("{companyId}/employees")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeResource {
@@ -37,12 +37,11 @@ public class EmployeeResource {
 
 
     @GET
-    public List<EmployeeDTO> all() {
-        var employees = employeeRepository.listAll();
-        return employees
-                .stream()
-                .map(employeeMapper::toResource)
-                .toList();
+    public Response all(@PathParam("companyId") Long companyId) {
+        var employees = employeeRepository.getByCompanyId(companyId);
+        return Response.ok(
+                employees.stream().map(employeeMapper::toResource).toList()
+        ).build();
     }
 
     @GET

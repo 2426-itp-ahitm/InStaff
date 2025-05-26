@@ -15,7 +15,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Employee.FIND_BY_COMPANY, query = "select e from Employee e WHERE e.company.id = :id")
+})
 public class Employee {
+    public static final String FIND_BY_COMPANY = "Employee.findByCompany";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
