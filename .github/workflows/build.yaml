@@ -15,7 +15,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-          cache-dependency-path: 'sub-project/pom.xml' # optional
+          cache-dependency-path: 'backend/instaff-server/pom.xml'
       - name: Build with Maven
         run: mvn -B package --file pom.xml
         working-directory: backend/instaff-server
