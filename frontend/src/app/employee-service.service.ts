@@ -20,7 +20,7 @@ export class EmployeeServiceService {
   public employees$ = this.employeesSubject.asObservable();
 
   getEmployees(): void {
-    this.httpClient.get<Employee[]>(`${this.apiUrl}/employees`).pipe(
+    this.httpClient.get<Employee[]>(`${this.apiUrl}/employees/company/`).pipe(
       switchMap((employees: Employee[]) => {
         const enrichedEmployeeObservables = employees.map(emp =>
           this.getEnrichedEmployeeById(emp.id)
