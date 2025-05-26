@@ -6,21 +6,27 @@ import {HttpClient} from '@angular/common/http';
 import {Role} from './role';
 import {EmployeeRole} from './employee-role';
 import {NewEmployee} from './new-employee';
+import {CompanyServiceService} from './company-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeServiceService {
-  constructor() {}
+  constructor(private companyService: CompanyServiceService) {}
 
-  private apiUrl = 'http://localhost:8080/api';
   httpClient: HttpClient = inject(HttpClient);
 
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
 
+  private oldApiUrl = 'http://localhost:8080/api';
+
+  private getApiUrl(): string {
+    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+  }
+
   getEmployees(): void {
-    this.httpClient.get<Employee[]>(`${this.apiUrl}/employees/company/`).pipe(
+    this.httpClient.get<Employee[]>(`${this.getApiUrl()}/employees/`).pipe(
       switchMap((employees: Employee[]) => {
         const enrichedEmployeeObservables = employees.map(emp =>
           this.getEnrichedEmployeeById(emp.id)
@@ -33,11 +39,11 @@ export class EmployeeServiceService {
   }
 
   getRoles(): Observable<Role[]> {
-    return this.httpClient.get<Role[]>(`${this.apiUrl}/roles`);
+    return this.httpClient.get<Role[]>(`${this.oldApiUrl}/roles`);
   }
 
   getEnrichedEmployeeById(id: number): Observable<Employee> {
-    return this.httpClient.get<Employee>(`${this.apiUrl}/employees/${id}`).pipe(
+    return this.httpClient.get<Employee>(`${this.getApiUrl()}/employees/${id}`).pipe(
       switchMap((employee: any) => {
         return this.getRoles().pipe(
           map((allRoles: Role[]) => {
@@ -66,7 +72,7 @@ export class EmployeeServiceService {
     };
     console.log(transformedEmployee);
 
-    this.httpClient.post<Employee>(`${this.apiUrl}/employees/${updatedEmployee.id}`, transformedEmployee)
+    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/${updatedEmployee.id}`, transformedEmployee)
       .subscribe((response) => {
         const currentEmployees = this.employeesSubject.getValue();
         const updatedList = currentEmployees.map(emp =>
@@ -77,7 +83,7 @@ export class EmployeeServiceService {
   }
 
   addNewEmployee(newEmployee: NewEmployee): void {
-    this.httpClient.post<Employee>(`${this.apiUrl}/employees`, newEmployee)
+    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees`, newEmployee)
       .subscribe((createdEmployee) => {
         const currentEmployees = this.employeesSubject.getValue();
         this.employeesSubject.next([...currentEmployees, createdEmployee]);

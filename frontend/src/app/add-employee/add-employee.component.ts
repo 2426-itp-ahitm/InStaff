@@ -52,6 +52,7 @@ export class AddEmployeeComponent implements OnInit {
     };
     this.employeeService.addNewEmployee(newEmployee);
     console.log('new employee:', newEmployee);
+    this.closeAddEmployee()
   }
 
   closeAddEmployee(): void {
