@@ -23,6 +23,10 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     @Inject
     AssignmentRepository assignmentRepository;
 
+    public List<Employee> getByCompanyId(Long companyId) {
+        return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
+    }
+
     public List<Employee> findByRoleId(Long roleId) {
         String sql = "SELECT e.* " +
                 "FROM Employee e " +
