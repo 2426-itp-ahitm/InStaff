@@ -20,9 +20,6 @@ struct ProfileView: View {
     @State private var birthdate: String = ""
     @State private var companyName: String = ""
     @State private var isEditing: Bool = false
-    
-    @State private var showLogoutAlert = false
-
 
     private func saveProfileChanges() {
         guard var employee = session.employee else { return }
@@ -132,49 +129,29 @@ struct ProfileView: View {
                             Text("App settings not implemented yet!")
                         }
                     }
-                    Section {
-                        HStack {
-                            Button(action: {
-                                if isEditing {
-                                    saveProfileChanges()
-                                }
-                                isEditing.toggle()
-                            }) {
-                                Text(isEditing ? "Save" : "Edit data")
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(8)
+                    Section(header: Text("")) {
+                        Button(action: {
+                            if isEditing {
+                                saveProfileChanges()
                             }
-                            VStack{
-                                Button(action: {
-                                    showLogoutAlert = true
-                                }) {
-                                    Text("Logout")
-                                        .foregroundColor(.white)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                        .background(Color(.red))
-                                        .cornerRadius(8)
-                                }
-                                .alert(isPresented: $showLogoutAlert) {
-                                    Alert(
-                                        title: Text("Logout"),
-                                        message: Text("Do you really want to logut?"),
-                                        primaryButton: .default(
-                                            Text("cancel")
-                                        ),
-                                        secondaryButton: .destructive(
-                                            Text("logout"),
-                                            action: {
-                                                session.isLoggedIn = false
-                                            }
-                                        )
-                                    )
-                                    
-                                }
-                            }
+                            isEditing.toggle()
+                        }) {
+                            Text(isEditing ? "Save" : "Edit data")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .cornerRadius(8)
+                        }
+                        Button(action: {
+                            session.isLoggedIn = false
+                        }) {
+                            Text("Logout")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.red))
+                                .cornerRadius(8)
                         }
                     }
                 }
