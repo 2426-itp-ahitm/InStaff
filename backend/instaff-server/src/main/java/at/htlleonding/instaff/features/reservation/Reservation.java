@@ -6,7 +6,11 @@ import jakarta.persistence.*;
 import java.time.LocalTime;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Reservation.FIND_BY_COMPANY, query = "select r from Reservation r WHERE r.shift.company.id = :id")
+})
 public class Reservation {
+    public static final String FIND_BY_COMPANY = "Reservation.findByCompany";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

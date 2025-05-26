@@ -7,7 +7,11 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "assignment")
+@NamedQueries({
+        @NamedQuery(name = Assignment.FIND_BY_COMPANY, query = "SELECT a from Assignment a WHERE a.employee.company.id = :id")
+})
 public class Assignment {
+    public static final String FIND_BY_COMPANY = "Assignment.findByCompany";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

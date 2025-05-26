@@ -29,6 +29,10 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
         return query.getResultList();
     }
 
+    public List<Assignment> findByCompanyId(Long companyId) {
+        return entityManager.createNamedQuery(Assignment.FIND_BY_COMPANY, Assignment.class).setParameter("id", companyId).getResultList();
+    }
+
     public List<Assignment> findByEmployeeId(Long employeeId) {
         String sql = "SELECT a.* " +
                 "FROM Assignment a " +

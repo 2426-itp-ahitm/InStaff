@@ -1,6 +1,9 @@
 ### Get all Reservations
 GET http://localhost:8080/api/reservations
 
+### Get all Reservations by Company Id
+GET http://localhost:8080/api/reservations/company/1
+
 ### Get Reservation by Id
 GET http://localhost:8080/api/reservations/1
 

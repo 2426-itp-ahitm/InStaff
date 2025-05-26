@@ -184,8 +184,14 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         persist(employee);
     }
 
+    @Transactional
+    public Employee createEmployee(Employee employee) {
+        persist(employee);
+        return employee;
+    }
+
     public boolean verifyPassword(Long employeeId, String password) {
         Employee employee = findById(employeeId);
-        return employee != null && Objects.equals(employee.password, password);
+        return employee != null && Objects.equals(employee.password, EmployeeResource.hashPassword(password));
     }
 }

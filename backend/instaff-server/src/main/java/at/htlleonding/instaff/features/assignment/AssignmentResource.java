@@ -30,6 +30,15 @@ public class AssignmentResource {
     }
 
     @GET
+    @Path("company/{companyId}")
+    public Response getByCompanyId(@PathParam("companyId") long companyId) {
+        List<Assignment> assignments = assignmentRepository.findByCompanyId(companyId);
+        return Response.ok(
+                assignments.stream().map(assignmentMapper::toResource).toList()
+        ).build();
+    }
+
+    @GET
     @Path("{id}")
     public Response getById(@PathParam("id") Long id) {
         return Response.ok(assignmentMapper.toResource(assignmentRepository.findById(id))).build();
