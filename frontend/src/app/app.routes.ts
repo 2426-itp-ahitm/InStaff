@@ -8,6 +8,11 @@ import {EmployeeListComponent} from './employee-list/employee-list.component';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
     component: HomeComponent,//COMPONENT CLASS NAME
     title: 'InStaff'
   },
