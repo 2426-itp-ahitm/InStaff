@@ -4,6 +4,7 @@ import {CalendarComponent} from './calendar/calendar.component';
 import {AppComponent} from './app.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {EmployeeListComponent} from './employee-list/employee-list.component';
+import {RoleListComponent} from './role-list/role-list.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'employee-list',
     component: EmployeeListComponent,//COMPONENT CLASS NAME
+    title: 'InStaff'
+  },
+  {
+    path: 'role-list',
+    component: RoleListComponent,//COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {

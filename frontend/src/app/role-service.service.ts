@@ -1,19 +1,52 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Role} from './role';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {CompanyServiceService} from './company-service.service';
+import {Employee} from './employee';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleServiceService {
-  constructor() { }
+  constructor(private companyService: CompanyServiceService) { }
 
-  private apiUrl = 'http://localhost:8080/api';
   httpClient: HttpClient = inject(HttpClient);
 
+
+  private rolesSubject = new BehaviorSubject<Role[]>([]);
+  public roles$ = this.rolesSubject.asObservable();
+
+  private oldApiUrl = 'http://localhost:8080/api';
+
+  private getApiUrl(): string {
+    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+  }
+
+  getRoles(): void {
+    this.httpClient.get<Role[]>(`${this.oldApiUrl}/roles`).subscribe((roles: Role[]) => {
+      this.rolesSubject.next(roles);
+    });
+  }
+
   addRole(newRoleName: string): void {
-    this.httpClient.post(`${this.apiUrl}/roles`, {
+    this.httpClient.post<Role>(`${this.oldApiUrl}/roles`, {
       companyId: 1,
       roleName: newRoleName
-    }).subscribe();
+    }).subscribe(createdRole => {
+      const currentRoles = this.rolesSubject.getValue();
+      this.rolesSubject.next([...currentRoles, createdRole]);
+    });
+  }
+  updateRole(updatedRole: Role): void {
+
+    this.httpClient.post<Role>(`${this.getApiUrl()}/roles/${updatedRole.id}`, updatedRole)
+      .subscribe((response) => {
+        const currentRoles = this.rolesSubject.getValue();
+        const updatedList = currentRoles.map(role =>
+          role.id === updatedRole.id ? updatedRole : role
+        );
+        this.rolesSubject.next(updatedList);
+      });
   }
 }
