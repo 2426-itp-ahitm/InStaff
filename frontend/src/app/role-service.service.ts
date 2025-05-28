@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Role} from './role';
+import {Role} from './interface/role';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CompanyServiceService} from './company-service.service';
-import {Employee} from './employee';
+import {Employee} from './interface/employee';
 
 @Injectable({
   providedIn: 'root'

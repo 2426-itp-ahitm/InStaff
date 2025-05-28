@@ -1,10 +1,10 @@
 import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
-import {Employee} from '../employee';
+import {Employee} from '../interface/employee';
 import {EmployeeServiceService} from '../employee-service.service';
-import {Role} from '../role';
-import {NewEmployee} from '../new-employee';
+import {Role} from '../interface/role';
+import {NewEmployee} from '../interface/new-employee';
 
 @Component({
   selector: 'app-add-employee',
@@ -44,7 +44,7 @@ export class AddEmployeeComponent implements OnInit {
       lastname: this.lastNameInput.nativeElement.value,
       email: this.emailInput.nativeElement.value,
       telephone: this.telephoneInput.nativeElement.value,
-
+      //TODO: the API Route doesnt allow roles at the moment
       /*roles: []this.newEmployee.roles.map(role => ({
         ...role,
         hasRole: !!(document.getElementById(`role${role.roleId}`) as HTMLInputElement)?.checked

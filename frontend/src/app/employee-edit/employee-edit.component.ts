@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
-import {Employee} from '../employee';
+import {Employee} from '../interface/employee';
 import {NgForOf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service.service';
 import {FormsModule} from '@angular/forms';
