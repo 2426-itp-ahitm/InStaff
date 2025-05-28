@@ -1,12 +1,12 @@
 import { switchMap, map } from 'rxjs/operators';
 import {inject, Injectable} from '@angular/core';
-import {Employee} from './interface/employee';
+import {Employee} from '../interface/employee';
 import {forkJoin, Observable, BehaviorSubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Role} from './interface/role';
-import {EmployeeRole} from './interface/employee-role';
-import {NewEmployee} from './interface/new-employee';
-import {CompanyServiceService} from './company-service.service';
+import {Role} from '../interface/role';
+import {EmployeeRole} from '../interface/employee-role';
+import {NewEmployee} from '../interface/new-employee';
+import {CompanyServiceService} from '../company-service/company-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,7 @@ export class EmployeeServiceService {
 
   private getApiUrl(): string {
     return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+    //return this.oldApiUrl;
   }
 
   getEmployees(): void {
@@ -39,7 +40,7 @@ export class EmployeeServiceService {
   }
 
   getRoles(): Observable<Role[]> {
-    return this.httpClient.get<Role[]>(`${this.oldApiUrl}/roles`);
+    return this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`);
   }
 
   getEnrichedEmployeeById(id: number): Observable<Employee> {

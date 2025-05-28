@@ -2,7 +2,7 @@ import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit} from '@a
 import {FormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
 import {Employee} from '../interface/employee';
-import {EmployeeServiceService} from '../employee-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {Role} from '../interface/role';
 import {NewEmployee} from '../interface/new-employee';
 

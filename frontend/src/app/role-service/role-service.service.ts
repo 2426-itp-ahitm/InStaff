@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Role} from './interface/role';
+import {Role} from '../interface/role';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {CompanyServiceService} from './company-service.service';
-import {Employee} from './interface/employee';
+import {CompanyServiceService} from '../company-service/company-service.service';
+import {Employee} from '../interface/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +21,17 @@ export class RoleServiceService {
 
   private getApiUrl(): string {
     return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+    //return this.oldApiUrl
   }
 
   getRoles(): void {
-    this.httpClient.get<Role[]>(`${this.oldApiUrl}/roles`).subscribe((roles: Role[]) => {
+    this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`).subscribe((roles: Role[]) => {
       this.rolesSubject.next(roles);
     });
   }
 
   addRole(newRoleName: string): void {
-    this.httpClient.post<Role>(`${this.oldApiUrl}/roles`, {
+    this.httpClient.post<Role>(`${this.getApiUrl()}/roles`, {
       companyId: 1,
       roleName: newRoleName
     }).subscribe(createdRole => {

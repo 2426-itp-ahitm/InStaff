@@ -2,9 +2,9 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
 import {Role} from '../interface/role';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
-import {RoleServiceService} from '../role-service.service';
+import {RoleServiceService} from '../role-service/role-service.service';
 import {Employee} from '../interface/employee';
-import {EmployeeServiceService} from '../employee-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
 
 @Component({
   selector: 'app-role-edit',

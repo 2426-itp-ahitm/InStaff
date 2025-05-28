@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AddRoleComponent} from '../add-role/add-role.component';
-import {EmployeeServiceService} from '../employee-service.service';
-import {RoleServiceService} from '../role-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
+import {RoleServiceService} from '../role-service/role-service.service';
 import {BehaviorSubject} from 'rxjs';
 import {Employee} from '../interface/employee';
 import {Role} from '../interface/role';

@@ -5,8 +5,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import {Calendar, CalendarOptions} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interaction';
-import {EmployeeServiceService} from '../employee-service.service';
-import {ShiftServiceService} from '../shift-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
+import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {Employee} from '../interface/employee';
 import { Shift } from '../interface/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';

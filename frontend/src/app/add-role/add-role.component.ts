@@ -2,8 +2,8 @@ import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/c
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {NewEmployee} from '../interface/new-employee';
-import {EmployeeServiceService} from '../employee-service.service';
-import {RoleServiceService} from '../role-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
+import {RoleServiceService} from '../role-service/role-service.service';
 
 @Component({
   selector: 'app-add-role',

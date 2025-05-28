@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
 import {DateClickArg} from '@fullcalendar/interaction';
-import {ShiftServiceService} from '../shift-service.service';
+import {ShiftServiceService} from '../shift-service/shift-service.service';
 
 @Component({
   selector: 'app-add-shift',

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Employee} from '../interface/employee';
-import {EmployeeServiceService} from '../employee-service.service';
+import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {AddEmployeeComponent} from '../add-employee/add-employee.component';
