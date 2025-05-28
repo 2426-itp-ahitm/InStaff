@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/shifts")
+@Path("{companyId}/shifts")
 @Produces(MediaType.APPLICATION_JSON)
 public class ShiftResource {
     @Inject
@@ -28,8 +28,8 @@ public class ShiftResource {
     ShiftSocket shiftSocket;
 
     @GET
-    public List<ShiftDTO> all() {
-        var shifts = shiftRepository.listAll();
+    public List<ShiftDTO> all(@PathParam("companyId") Long companyId) {
+        var shifts = shiftRepository.findByCompany(companyId);
         return shifts
                 .stream()
                 .map(shiftMapper::toResource)

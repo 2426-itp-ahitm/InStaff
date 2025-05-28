@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/reservations")
+@Path("{companyId}/reservations")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ReservationResource {
@@ -18,8 +18,8 @@ public class ReservationResource {
     ReservationMapper reservationMapper;
 
     @GET
-    public List<ReservationDTO> all() {
-        var reservations = reservationRepository.findAll();
+    public List<ReservationDTO> all(@PathParam("companyId") Long companyId) {
+        var reservations = reservationRepository.getByCompanyId(companyId);
         return reservations
                 .stream()
                 .map(reservationMapper::toResource)

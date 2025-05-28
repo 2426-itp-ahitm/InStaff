@@ -12,6 +12,10 @@ import java.util.List;
 @ApplicationScoped
 public class RoleRepository implements PanacheRepository<Role> {
 
+    public List<Role> findByCompany(Long companyId) {
+        return find("company.id", companyId).list();
+    }
+
     @Transactional
     public Role updateRole(String roleName, Long id) {
         Role role = findById(id);

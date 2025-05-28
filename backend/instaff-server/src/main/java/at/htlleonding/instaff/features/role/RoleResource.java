@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/roles")
+@Path("{companyId}/roles")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class RoleResource {
@@ -24,8 +24,8 @@ public class RoleResource {
     CompanyRepository companyRepository;
 
     @GET
-    public List<RoleDTO> all() {
-        var roles = roleRepository.listAll();
+    public List<RoleDTO> all(@PathParam("companyId") Long companyId) {
+        var roles = roleRepository.findByCompany(companyId);
         return roles
                 .stream()
                 .map(roleMapper::toResource)

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Path("/assignments")
+@Path("{companyId}/assignments")
 @Produces(MediaType.APPLICATION_JSON)
 public class AssignmentResource {
     @Inject
@@ -21,8 +21,8 @@ public class AssignmentResource {
     AssignmentMapper assignmentMapper;
 
     @GET
-    public List<AssignmentDTO> all() {
-        var assignments = assignmentRepository.listAll();
+    public List<AssignmentDTO> all(@PathParam("companyId") Long companyId) {
+        var assignments = assignmentRepository.findByCompanyId(companyId);
         return assignments
                 .stream()
                 .map(assignmentMapper::toResource)

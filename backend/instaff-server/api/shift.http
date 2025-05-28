@@ -1,20 +1,20 @@
 ### Get all Shifts
-GET http://localhost:8080/api/shifts
+GET http://localhost:8080/api/1/shifts
 
 ### Get Shift by id
-GET http://localhost:8080/api/shifts/1
+GET http://localhost:8080/api/1/shifts/1
 
 ### Get Shifts by company id
-GET http://localhost:8080/api/shifts/company/1
+GET http://localhost:8080/api/1/shifts/company/1
 
 ### Get Shifts by date
-GET http://localhost:8080/api/shifts/date/2025-03-25
+GET http://localhost:8080/api/1/shifts/date/2025-03-25
 
 ### Get Shifts between two dates
-GET http://localhost:8080/api/shifts/betweendates/2025-03-25/2025-03-27
+GET http://localhost:8080/api/1/shifts/betweendates/2025-03-25/2025-03-27
 
 ### Add a New Shift
-POST http://localhost:8080/api/shifts
+POST http://localhost:8080/api/1/shifts
 Content-Type: application/json
 
 {
