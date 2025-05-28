@@ -1,3 +1,9 @@
 <div class="m-4">
   <full-calendar [options]="calendarOptions"></full-calendar>
 </div>
+<div *ngIf="isEditMode">
+  <app-shift-edit [shift]="selectedShift" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit>
+</div>
+<div *ngIf="isAddMode">
+  <app-add-shift (close)="closeAddShift()"></app-add-shift>
+</div>

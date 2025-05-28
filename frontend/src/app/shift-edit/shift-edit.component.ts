@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Shift} from '../interface/shift';
 
 @Component({
   selector: 'app-shift-edit',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './shift-edit.component.css'
 })
 export class ShiftEditComponent {
+  @Output() closeShiftEdit = new EventEmitter<unknown>();
+  @Input() shift!: Shift;
 
 }
