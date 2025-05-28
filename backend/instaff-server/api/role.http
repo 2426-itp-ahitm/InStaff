@@ -16,5 +16,8 @@ Content-Type: application/json
   "companyId": 1
 }
 
+### Update a Role
+PUT http://localhost:8080/api/roles/update/1/Kochin
+
 ### Remove Role
 PUT http://localhost:8080/api/roles/remove/6

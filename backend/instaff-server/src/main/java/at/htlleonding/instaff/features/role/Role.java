@@ -18,7 +18,7 @@ public class Role {
     @ManyToOne
     Company company;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_role",
             joinColumns = @JoinColumn(name = "role_id"),
@@ -26,7 +26,7 @@ public class Role {
     )
     Set<Employee> employees = new HashSet<>();
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Assignment> assignments = new LinkedList<>();
 
     public Role() {
@@ -45,6 +45,26 @@ public class Role {
         return employees.stream()
                 .map(Employee::getId).toList();
 
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
     public String getRoleName() {
