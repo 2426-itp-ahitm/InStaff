@@ -26,15 +26,15 @@
       <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div class="">
-            <h1>{{ "Shift-Date still missing" }}</h1>
+            <h1>{{ selectedDate?.date }}</h1>
           </div>
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
                 <div class="sm:col-span-3">
-                  <label for="first-name" class="block text-sm/6 font-medium text-gray-900">First name</label>
+                  <label for="shift-template" class="block text-sm/6 font-medium text-gray-900">Select Shift Template</label>
                   <div class="mt-2">
-                    <input #firstNameInput value="" type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input #shiftTemplate value="" type="text" name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
                 </div>
 

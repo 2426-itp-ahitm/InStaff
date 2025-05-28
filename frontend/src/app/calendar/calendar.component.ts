@@ -100,6 +100,7 @@ export class CalendarComponent implements OnInit {
   }
 
   openAddShift(arg: DateClickArg) {
+    this.shiftService.selectedDate = arg;
     this.isAddMode = true;
   }
 

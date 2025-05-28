@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
+import {DateClickArg} from '@fullcalendar/interaction';
+import {ShiftServiceService} from '../shift-service.service';
 
 @Component({
   selector: 'app-add-shift',
@@ -12,7 +14,14 @@ import {NgForOf} from "@angular/common";
   templateUrl: './add-shift.component.html',
   styleUrl: './add-shift.component.css'
 })
-export class AddShiftComponent {
+export class AddShiftComponent implements OnInit {
+  selectedDate: DateClickArg | null = null;
+
+  constructor(private shiftService:ShiftServiceService) {
+  }
+  ngOnInit(): void {
+      this.selectedDate = this.shiftService.selectedDate
+  }
   @Output() close = new EventEmitter<void>();
 
 

@@ -5,6 +5,7 @@ import {BehaviorSubject, forkJoin} from 'rxjs';
 import {Employee} from './interface/employee';
 import {Shift} from './interface/shift';
 import {switchMap} from 'rxjs/operators';
+import {DateClickArg} from '@fullcalendar/interaction';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,8 @@ export class ShiftServiceService {
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
+  public selectedDate: DateClickArg | null = null;
+
 
   private oldApiUrl = 'http://localhost:8080/api';
 
