@@ -90,3 +90,15 @@ insert into reservation (name, infos, numberofpeople, starttime, endtime, shift_
 values ('Geburtstag Loisi', 'Die Loisi feiert ihren 60er.', 120, '13:00:00', '17:00:00', 1);
 insert into reservation (name, infos, numberofpeople, starttime, endtime, shift_id)
 values ('Reservierung Riener', '', 4, '12:00:00', '13:30:00', 1);
+
+/* Shift Templates*/
+insert into shift_template (shift_template_name, company_id)
+values ('Sonntags Schicht', 1);
+
+/* Template Roles */
+insert into template_role (role_id, shift_template_id, count)
+values (1, 1, 3);
+insert into template_role (role_id, shift_template_id, count)
+values (2, 1, 1);
+insert into template_role (role_id, shift_template_id, count)
+values (3, 1, 2);
