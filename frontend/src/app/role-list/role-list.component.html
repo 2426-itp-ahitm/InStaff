@@ -7,12 +7,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let r of this.roles" class="hover:bg-blue-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openRoleEdit(r)">
+      <tr *ngFor="let r of this.roles" class="cursor-pointer hover:bg-blue-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openRoleEdit(r)">
         <td class="border border-gray-300 p-2 w-sm ">{{ r.roleName }}</td>
       </tr>
       </tbody>
     </table>
-    <button (click)="openAddRole()" type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Role</button>
+    <button (click)="openAddRole()" type="button" class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Role</button>
 
   </div>
   <div *ngIf="isEditMode">
