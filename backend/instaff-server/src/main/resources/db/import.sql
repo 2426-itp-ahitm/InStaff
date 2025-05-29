@@ -26,9 +26,9 @@ values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn'
 
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)
-values ('2025-03-25 09:00:00', '2025-03-25 17:00:00', 1);
+values ('2025-06-20 09:00:00', '2025-06-20 17:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-03-25 17:00:00', '2025-03-25 20:00:00', 1);
+values ('2025-06-25 17:00:00', '2025-06-25 20:00:00', 1);
 
 /*ASSOCIATIVE*/
 insert into employee_role (employee_id, role_id)
