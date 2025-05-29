@@ -2,10 +2,11 @@ import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, forkJoin} from 'rxjs';
-import {Employee} from '../interface/employee';
-import {Shift} from '../interface/shift';
+import {Employee} from '../interfaces/employee';
+import {Shift} from '../interfaces/shift';
 import {switchMap} from 'rxjs/operators';
 import {DateClickArg} from '@fullcalendar/interaction';
+import {ShiftTemplate} from '../interfaces/shift-template';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class ShiftServiceService {
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
   public selectedDate: DateClickArg | null = null;
+
+  private shiftTemplatesSubject = new BehaviorSubject<ShiftTemplate[]>([]);
+  public shiftTemplates$ = this.shiftTemplatesSubject.asObservable();
 
 
   private oldApiUrl = 'http://localhost:8080/api';
@@ -32,5 +36,12 @@ export class ShiftServiceService {
       .subscribe((shifts: Shift[]) => {
       this.shiftsSubject.next(shifts);
     });
+  }
+
+  getShiftTemplates(): void {
+    this.httpClient.get<ShiftTemplate[]>(`${this.getApiUrl()}/shift-templates`)
+      .subscribe((shiftTemplates: ShiftTemplate[]) => {
+        this.shiftTemplatesSubject.next(shiftTemplates);
+      });
   }
 }

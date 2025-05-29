@@ -93,12 +93,32 @@ values ('Reservierung Riener', '', 4, '12:00:00', '13:30:00', 1);
 
 /* Shift Templates*/
 insert into shift_template (shift_template_name, company_id)
+values ('Leere Schicht', 1);
+insert into shift_template (shift_template_name, company_id)
 values ('Sonntags Schicht', 1);
+insert into shift_template (shift_template_name, company_id)
+values ('Mittags Schicht', 1);
+insert into shift_template (shift_template_name, company_id)
+values ('Abend Schicht', 1);
 
 /* Template Roles */
 insert into template_role (role_id, shift_template_id, count)
-values (1, 1, 3);
+values (1, 2, 3);
 insert into template_role (role_id, shift_template_id, count)
-values (2, 1, 1);
+values (2, 2, 1);
 insert into template_role (role_id, shift_template_id, count)
-values (3, 1, 2);
+values (3, 2, 2);
+
+insert into template_role (role_id, shift_template_id, count)
+values (1, 3, 1);
+insert into template_role (role_id, shift_template_id, count)
+values (2, 3, 2);
+insert into template_role (role_id, shift_template_id, count)
+values (3, 3, 1);
+
+insert into template_role (role_id, shift_template_id, count)
+values (1, 4, 3);
+insert into template_role (role_id, shift_template_id, count)
+values (2, 4, 3);
+insert into template_role (role_id, shift_template_id, count)
+values (3, 4, 2);

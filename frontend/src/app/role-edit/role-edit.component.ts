@@ -1,9 +1,9 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Role} from '../interface/role';
+import {Role} from '../interfaces/role';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
-import {Employee} from '../interface/employee';
+import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 
 @Component({

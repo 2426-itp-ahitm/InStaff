@@ -1,11 +1,11 @@
 import { switchMap, map } from 'rxjs/operators';
 import {inject, Injectable} from '@angular/core';
-import {Employee} from '../interface/employee';
+import {Employee} from '../interfaces/employee';
 import {forkJoin, Observable, BehaviorSubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Role} from '../interface/role';
-import {EmployeeRole} from '../interface/employee-role';
-import {NewEmployee} from '../interface/new-employee';
+import {Role} from '../interfaces/role';
+import {EmployeeRole} from '../interfaces/employee-role';
+import {NewEmployee} from '../interfaces/new-employee';
 import {CompanyServiceService} from '../company-service/company-service.service';
 
 @Injectable({

@@ -1,10 +1,10 @@
 import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf} from "@angular/common";
-import {Employee} from '../interface/employee';
+import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
-import {Role} from '../interface/role';
-import {NewEmployee} from '../interface/new-employee';
+import {Role} from '../interfaces/role';
+import {NewEmployee} from '../interfaces/new-employee';
 
 @Component({
   selector: 'app-add-employee',
