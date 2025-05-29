@@ -22,7 +22,7 @@ public class ShiftTemplateResource {
 
     @POST
     public Response create(ShiftTemplateCreateDTO dto) {
-        ShiftTemplate shiftTemplate = shiftTemplateRepository.create(dto);
-        return Response.ok(shiftTemplateMapper.toResource(shiftTemplate)).build();
+        shiftTemplateRepository.create(dto);
+        return Response.status(Response.Status.CREATED).build();
     }
 }
