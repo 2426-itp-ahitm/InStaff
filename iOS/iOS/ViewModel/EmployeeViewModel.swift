@@ -6,19 +6,24 @@
 //
 
 import Foundation
+import SwiftUICore
 
 class EmployeeViewModel: ObservableObject {
     @Published var employees: [Employee] = []
 
-    init() {
-        loadEmployeesAsync()
+    var companyId: Int
+
+    init(companyId: Int) {
+        self.companyId = companyId
+        loadEmployeesAsync() {}
     }
 
     private func load() -> [Employee] {
         var employees: [Employee] = []
         let jsonDecoder = JSONDecoder()
-
-        guard let url = URL(string: "http://localhost:8080/api/employees") else {
+        
+        
+        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/employees") else {
             //print("Invalid URL for employees")
             return employees
         }
@@ -65,12 +70,13 @@ class EmployeeViewModel: ObservableObject {
         }.resume()
     }
 
-    private func loadEmployeesAsync() {
+    private func loadEmployeesAsync(completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .background).async {
             let loadedEmployees = self.load()
             DispatchQueue.main.async {
                 self.employees = loadedEmployees
                 print(self.employees)
+                completion()
             }
         }
     }
@@ -84,5 +90,14 @@ class EmployeeViewModel: ObservableObject {
 
     func count() -> Int {
         return employees.count
+    }
+    
+    func updateCompanyId(_ id: Int, completion: @escaping () -> Void) {
+        if companyId != id {
+            companyId = id
+            loadEmployeesAsync() {
+                completion()
+            }
+        }
     }
 }

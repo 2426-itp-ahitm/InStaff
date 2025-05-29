@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var employeeViewModel = EmployeeViewModel()
-
     @EnvironmentObject var session: SessionManager
     
+    @StateObject private var companyViewModel = CompanyViewModel()
+    @StateObject private var employeeViewModel = EmployeeViewModel(companyId: -1)
+    
+    @State private var companyNameInput = ""
     @State private var employeeFirstNameInput = ""
     @State private var employeeLastNameInput = ""
     
@@ -20,11 +22,16 @@ struct LoginView: View {
 
 
     var body: some View {
+
         VStack(spacing: 20) {
             Text("Anmelden")
                 .font(.largeTitle)
                 .bold()
 
+            TextField("Company name", text: $companyNameInput)
+                .keyboardType(.numberPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal, 40)
             TextField("Firstname", text: $employeeFirstNameInput)
                 .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -36,20 +43,32 @@ struct LoginView: View {
             
 
             Button("Login") {
-                let id = employeeViewModel.employees.first {
-                    $0.firstname.lowercased() == employeeFirstNameInput.lowercased() && $0.lastname.lowercased() == employeeLastNameInput.lowercased()
-                }?.id ?? -1
-                if id != -1 {
-                    session.employeeId = id
-                    session.isLoggedIn = true
-                    
-                    if let matchedEmployee = employeeViewModel.employees.first(where: { $0.id == id }) {
-                        session.employee = matchedEmployee
+                if let matchedCompany = companyViewModel.companies.first(where: { $0.companyName.lowercased() == companyNameInput.lowercased() }) {
+                    session.companyId = matchedCompany.id
+                    employeeViewModel.updateCompanyId(matchedCompany.id) {
+                        print("company id: \(session.companyId)")
+
+                        let id = employeeViewModel.employees.first {
+                            $0.firstname.lowercased() == employeeFirstNameInput.lowercased() &&
+                            $0.lastname.lowercased() == employeeLastNameInput.lowercased()
+                        }?.id ?? -1
+
+                        if id != -1 {
+                            session.employeeId = id
+                            session.isLoggedIn = true
+
+                            if let matchedEmployee = employeeViewModel.employees.first(where: { $0.id == id }) {
+                                session.employee = matchedEmployee
+                            }
+                        } else {
+                            alertMessage = "No matching employee called \(employeeFirstNameInput) \(employeeLastNameInput) found"
+                            showAlert = true
+                        }
                     }
-                    
                 } else {
-                    alertMessage = "No matching employee called \(employeeFirstNameInput) \(employeeLastNameInput) found"
+                    alertMessage = "No matching company called \(companyNameInput) found"
                     showAlert = true
+                    return
                 }
             }
             .padding()

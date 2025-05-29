@@ -162,7 +162,7 @@ struct ProfileView: View {
                 email = employee.email
                 telephone = employee.telephone
                 birthdate = employee.birthdate
-                companyName = employee.company_name
+                companyName = employee.companyName
             }
         } else {
             VStack {
@@ -172,7 +172,14 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView(roleViewModel: RoleViewModel(), employeeViewModel: EmployeeViewModel())
-        .environmentObject(SessionManager())
+/*#Preview {
+    let session = SessionManager()
+    session.employee = Employee(id: 1, firstname: "Max", lastname: "Mustermann", email: "max@example.com", password: "password", telephone: "123456789", birthdate: "1990-01-01", companyName: "Test GmbH",companyId: 1, roles: [])
+
+    let employeeVM = EmployeeViewModel(companyID: 1)
+    let roleVM = RoleViewModel()
+
+    ProfileView(roleViewModel: roleVM, employeeViewModel: employeeVM)
+        .environmentObject(session) // ✅ Correctly attached to the View
 }
+*/

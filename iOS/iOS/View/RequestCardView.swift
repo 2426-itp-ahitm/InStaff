@@ -9,12 +9,15 @@ import SwiftUI
 
 struct RequestCardView: View {
     @State var assignment: Assignment
+    @EnvironmentObject var session: SessionManager
     
     @ObservedObject var shiftViewModel = ShiftViewModel()
-    @ObservedObject var employeeViewModel = EmployeeViewModel()
+    
     @ObservedObject var roleViewModel = RoleViewModel()
 
     var body: some View {
+        let employeeViewModel = EmployeeViewModel(companyId: session.companyId!)
+        
         VStack(alignment: .leading, spacing: 8) {
             Text(employeeViewModel.employeeName(for: assignment.employee))
                 .font(.subheadline)
@@ -63,7 +66,7 @@ struct RequestCardView: View {
         .padding(.horizontal)
     }
 
-    func formatDate(_ date: String) -> String {
+    /*func formatDate(_ date: String) -> String {
         // Convert date string to a readable format
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -74,6 +77,7 @@ struct RequestCardView: View {
         }
         return date
     }
+     */
 }
 
 #Preview {
