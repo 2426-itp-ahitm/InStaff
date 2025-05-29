@@ -11,12 +11,13 @@ struct RequestCardView: View {
     @State var assignment: Assignment
     @EnvironmentObject var session: SessionManager
     
-    @ObservedObject var shiftViewModel = ShiftViewModel()
+    
     
     @ObservedObject var roleViewModel = RoleViewModel()
 
     var body: some View {
         let employeeViewModel = EmployeeViewModel(companyId: session.companyId!)
+        let shiftViewModel = ShiftViewModel(companyId: session.companyId!)
         
         VStack(alignment: .leading, spacing: 8) {
             Text(employeeViewModel.employeeName(for: assignment.employee))

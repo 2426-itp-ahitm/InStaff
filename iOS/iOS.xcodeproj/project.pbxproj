@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A2FB29A22DE88DE7006932E6 /* RequestRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FB29A12DE88DE7006932E6 /* RequestRowView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A2D613892DBF78E300C78239 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		A2D6137B2DBF78E200C78239 /* iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2D613882DBF78E300C78239 /* iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2D613922DBF78E300C78239 /* iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2FB29A12DE88DE7006932E6 /* RequestRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RequestRowView.swift; path = iOS/View/RequestRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +80,7 @@
 		A2D613722DBF78E200C78239 = {
 			isa = PBXGroup;
 			children = (
+				A2FB29A12DE88DE7006932E6 /* RequestRowView.swift */,
 				A2D6137D2DBF78E200C78239 /* iOS */,
 				A2D6138B2DBF78E300C78239 /* iOSTests */,
 				A2D613952DBF78E300C78239 /* iOSUITests */,
@@ -236,6 +242,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2FB29A22DE88DE7006932E6 /* RequestRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

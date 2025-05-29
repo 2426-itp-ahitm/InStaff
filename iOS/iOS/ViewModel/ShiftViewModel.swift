@@ -6,11 +6,16 @@
 //
 
 import Foundation
+import SwiftUICore
 
 class ShiftViewModel: ObservableObject {
     @Published var shifts: [Shift] = []
 
-    init() {
+    
+    var companyId: Int
+
+    init(companyId: Int) {
+        self.companyId = companyId
         loadShiftsAsync()
     }
 
@@ -18,7 +23,7 @@ class ShiftViewModel: ObservableObject {
         var shifts: [Shift] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "http://localhost:8080/api/shifts") else {
+        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/shifts") else {
             print("Invalid URL")
             return shifts
         }

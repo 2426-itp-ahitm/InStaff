@@ -13,9 +13,9 @@ struct LoginView: View {
     @StateObject private var companyViewModel = CompanyViewModel()
     @StateObject private var employeeViewModel = EmployeeViewModel(companyId: -1)
     
-    @State private var companyNameInput = ""
-    @State private var employeeFirstNameInput = ""
-    @State private var employeeLastNameInput = ""
+    @State private var companyNameInput = "Stoaboch Wirt"
+    @State private var employeeFirstNameInput = "Alexander"
+    @State private var employeeLastNameInput = "Hahn"
     
     @State private var showAlert = false
     @State private var alertMessage = ""
