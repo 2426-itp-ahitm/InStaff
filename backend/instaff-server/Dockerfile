@@ -3,7 +3,8 @@ WORKDIR /app
 COPY . .
 RUN mvn package -DskipTests
 
-FROM quay.io/quarkus/quarkus-jvm:2.16.6-final
+FROM quay.io/quarkus/quarkus-distroless-image:2.0
 WORKDIR /work/
 COPY --from=build /app/target/quarkus-app .
 CMD ["java", "-jar", "quarkus-run.jar"]
+
