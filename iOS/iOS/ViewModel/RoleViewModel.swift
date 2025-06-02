@@ -9,16 +9,19 @@ import Foundation
 
 class RoleViewModel: ObservableObject {
     @Published var roles: [Role] = []
-    
-    init() {
+    var companyId: Int
+
+    init(companyId: Int) {
+        self.companyId = companyId
         loadRolesAsync()
     }
+    
     
     private func load() -> [Role] {
         var roles: [Role] = []
         let jsonDecoder = JSONDecoder()
         
-        guard let url = URL(string: "http://localhost:8080/api/roles") else {
+        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/roles") else {
             print("Invalid URL")
             return roles
         }

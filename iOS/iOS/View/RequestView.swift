@@ -9,33 +9,29 @@ import SwiftUI
 
 struct RequestView: View {
     @EnvironmentObject var session: SessionManager
+    @StateObject var assignmentViewModel: AssignmentViewModel
+    
 
-    
-    
+    init(companyId: Int) {
+        _assignmentViewModel = StateObject(wrappedValue: AssignmentViewModel(companyId: companyId))
+    }
+
     var body: some View {
-        let assignmentViewModel = AssignmentViewModel(companyId: session.companyId!)
+        let roleViewModel = RoleViewModel(companyId: session.companyId!)
         
-        if let firstAssignment = assignmentViewModel.assignments.first {
-            RequestRowView(assignment: firstAssignment)
-        } else {
-            Text("Keine Einsätze verfügbar")
-        }
+        let filteredAssignments = assignmentViewModel.assignments.filter { $0.employee == session.employeeId }
         
-        /*NavigationSplitView {
-            List(assignmentViewModel.assignments) { assignment in
-                NavigationLink {
-                    CalendarView()
-                } label: {
-                    RequestRowView(assignment: assignment)
-                }
+        List(filteredAssignments) { assignment in
+            VStack(alignment: .leading) {
+                Text("Shift ID: \(assignment.shift)")
+            RoleTag(roleName: roleViewModel.roleName(for: assignment.role));    Text("Employee ID: \(assignment.employee)")
+                Text("Confirmed: \(assignment.confirmed == true ? "Yes" : "No")")
             }
-        } detail: {
-            Text("Select a Assignment")
-        }*/
+        }
     }
 }
 
 #Preview {
-    RequestView()
+    RequestView(companyId: 1)
         .environmentObject(SessionManager())
 }

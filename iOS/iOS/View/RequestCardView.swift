@@ -10,12 +10,9 @@ import SwiftUI
 struct RequestCardView: View {
     @State var assignment: Assignment
     @EnvironmentObject var session: SessionManager
-    
-    
-    
-    @ObservedObject var roleViewModel = RoleViewModel()
 
     var body: some View {
+        let roleViewModel = RoleViewModel(companyId: session.companyId!)
         let employeeViewModel = EmployeeViewModel(companyId: session.companyId!)
         let shiftViewModel = ShiftViewModel(companyId: session.companyId!)
         

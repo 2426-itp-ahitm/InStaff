@@ -15,7 +15,7 @@ class AssignmentViewModel: ObservableObject {
 
     init(companyId: Int) {
         self.companyId = companyId
-        loadAssignmentsAsync()
+        loadAssignmentsAsync() {}
     }
 
     private func load() -> [Assignment] {
@@ -30,7 +30,7 @@ class AssignmentViewModel: ObservableObject {
         if let data = try? Data(contentsOf: url) {
             if let loadedAssignments = try? jsonDecoder.decode([Assignment].self, from: data) {
                 assignments = loadedAssignments
-                //print("Assignments loaded: \(assignments.count)")
+                print(assignments)
             } else {
                 print("Failed to decode assignments")
             }
@@ -41,11 +41,12 @@ class AssignmentViewModel: ObservableObject {
         return assignments
     }
 
-    private func loadAssignmentsAsync() {
+    private func loadAssignmentsAsync(completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .background).async {
             let loadedAssignments = self.load()
             DispatchQueue.main.async {
                 self.assignments = loadedAssignments
+                completion()
             }
         }
     }
