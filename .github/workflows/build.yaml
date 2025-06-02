@@ -1,8 +1,12 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+permissions:
+  packages: write
+  contents: read
 jobs:
-  Explore-GitHub-Actions:
+  backend:
+    permissions: write-all
     runs-on: ubuntu-24.04
     steps:
       - name: Check out repository code
@@ -20,4 +24,4 @@ jobs:
         run: | 
           docker build --file Dockerfile --tag ghcr.io/2426-itp-ahitm/instaff .
           #docker push ghcr.io/2426-itp-ahitm/instaff
-        working-directory: backend/instaff
+        working-directory: backend/instaff-server
