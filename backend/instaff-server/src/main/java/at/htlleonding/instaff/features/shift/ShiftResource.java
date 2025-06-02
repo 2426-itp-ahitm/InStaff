@@ -112,6 +112,18 @@ public class ShiftResource {
 
     @POST
     @Transactional
+    @Path("delete/{shiftId}")
+    public Response deleteShift(@PathParam("shiftId") Long shiftId) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        shiftRepository.delete(shift);
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Transactional
     public Response createShift(ShiftCreateDTO dto) {
         // Map DTO to entity
         Shift shift = new Shift(dto.startTime(), dto.endTime(), companyRepository.findById(dto.companyId()));

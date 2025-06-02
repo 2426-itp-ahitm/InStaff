@@ -27,6 +27,17 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
     }
 
+    @Transactional
+    public boolean deleteEmployee(Long employeeId) {
+        Employee employee = entityManager.find(Employee.class, employeeId);
+        if (employee != null) {
+            entityManager.remove(employee);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<Employee> findByRoleId(Long roleId) {
         String sql = "SELECT e.* " +
                 "FROM Employee e " +

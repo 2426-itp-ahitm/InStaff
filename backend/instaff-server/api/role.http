@@ -20,4 +20,4 @@ Content-Type: application/json
 PUT http://localhost:8080/api/1/roles/update/1/Kochin
 
 ### Remove Role
-PUT http://localhost:8080/api/1/roles/remove/6
+PUT http://localhost:8080/api/1/roles/remove/5

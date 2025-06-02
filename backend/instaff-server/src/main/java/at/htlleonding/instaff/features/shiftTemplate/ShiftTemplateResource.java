@@ -1,6 +1,7 @@
 package at.htlleonding.instaff.features.shiftTemplate;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -25,4 +26,17 @@ public class ShiftTemplateResource {
         shiftTemplateRepository.create(dto);
         return Response.status(Response.Status.CREATED).build();
     }
+
+    @POST
+    @Path("delete/{id}")
+    @Transactional
+    public Response delete(@PathParam("id") Long id) {
+        ShiftTemplate shiftTemplate = shiftTemplateRepository.findById(id);
+        if (shiftTemplate == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        shiftTemplateRepository.delete(shiftTemplate);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
 }

@@ -18,7 +18,7 @@ public class ShiftTemplate {
     @ManyToOne
     Company company;
 
-    @OneToMany(mappedBy = "shiftTemplate")
+    @OneToMany(mappedBy = "shiftTemplate", cascade = CascadeType.ALL)
     List<TemplateRole> templateRoles;
 
     public ShiftTemplate() {

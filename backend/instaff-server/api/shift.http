@@ -22,3 +22,6 @@ Content-Type: application/json
   "endTime": "2024-12-19T17:00:00",
   "companyId": 1
 }
+
+### Delete Shift
+POST http://localhost:8080/api/1/shifts/delete/3

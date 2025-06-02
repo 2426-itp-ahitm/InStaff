@@ -122,6 +122,16 @@ public class EmployeeResource {
     }
 
     @POST
+    @Path("delete/{employeeId}")
+    public Response deleteEmployee(@PathParam("employeeId") Long employeeId) {
+        if (employeeRepository.deleteEmployee(employeeId)) {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @POST
     public Response createEmployee(EmployeeCreateDTO dto) {
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
