@@ -22,6 +22,6 @@ jobs:
         working-directory: backend/instaff-server
       - name: build docker
         run: | 
-          docker build --file backend/instaff-server/Dockerfile --tag ghcr.io/2426-itp-ahitm/wirtshaus .
+          docker build --file Dockerfile --tag ghcr.io/2426-itp-ahitm/wirtshaus .
           #docker push ghcr.io/2426-itp-ahitm/wirtshaus
         working-directory: backend/instaff-server
