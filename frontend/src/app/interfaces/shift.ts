@@ -1,8 +1,4 @@
-import {CalendarOptions} from '@fullcalendar/core';
-import interactionPlugin from '@fullcalendar/interaction';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
+import {Assignment} from './assignment';
 
 export interface Shift {
   id: number;
@@ -11,5 +7,12 @@ export interface Shift {
   company_id: number;
   company_name: string;
   employees: number[];    // Array of employee IDs
+  assignments: Assignment[];
   reservations: number[]; // Array of reservation IDs
+}
+
+export interface NewShift {
+  company_id: number;
+  startTime: Date;
+  endTime: Date;
 }

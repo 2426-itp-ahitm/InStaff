@@ -1,25 +1,23 @@
 import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import {Calendar, CalendarOptions} from '@fullcalendar/core'; // useful for typechecking
+import {Calendar, CalendarOptions, DateSelectArg} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interaction';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {Employee} from '../interfaces/employee';
-import { Shift } from '../interfaces/shift';
+import {NewShift, Shift} from '../interfaces/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import {AddEmployeeComponent} from '../add-employee/add-employee.component';
-import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {ShiftEditComponent} from '../shift-edit/shift-edit.component';
 import {AddShiftComponent} from '../add-shift/add-shift.component';
 import {ShiftTemplate} from '../interfaces/shift-template';
+import { CompanyServiceService} from '../company-service/company-service.service';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, RouterOutlet, FullCalendarModule, AddEmployeeComponent, EmployeeEditComponent, ShiftEditComponent, AddShiftComponent],
+  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, AddShiftComponent],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
@@ -29,7 +27,7 @@ export class CalendarComponent implements OnInit {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour12: false,
+      hour: 'numeric',
       hourCycle: 'h23'
     },
     plugins: [
@@ -38,6 +36,16 @@ export class CalendarComponent implements OnInit {
       timeGridPlugin,
       listPlugin,
     ],
+    slotMinTime: "00:00:00",
+    slotMaxTime: "24:00:00",
+    firstDay: 1,
+    businessHours: {
+      daysOfWeek: [2, 3, 4, 5, 6, 7],
+      startTime: "10:00",
+      endTime: "24:00"
+    },
+
+    slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -45,6 +53,7 @@ export class CalendarComponent implements OnInit {
     },
     themeSystem: 'litera',
     dateClick: (arg) => this.handleDateClick(arg),
+    select: (arg) => this.handleDateSelected(arg),
     events: [
       { title: 'event 1', date: '2025-05-31' },
       { title: 'event 2', date: '2025-06-05' }
@@ -68,7 +77,7 @@ export class CalendarComponent implements OnInit {
   isAddMode: boolean = false;
   isEditMode: boolean = false;
 
-  constructor(private shiftService: ShiftServiceService) {}
+  constructor(private shiftService: ShiftServiceService, private companyService: CompanyServiceService) {}
 
 
   ngOnInit(): void {
@@ -91,8 +100,22 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateClick(arg:DateClickArg) {
-    this.openAddShift(arg)
+    let  newShift: NewShift = {
+      company_id: this.companyService.getCompanyId(),
+      startTime: arg.date,
+      endTime: arg.date
+    }
+    console.log(newShift);
+    this.openAddShift(newShift)
+  }
 
+  handleDateSelected(arg: DateSelectArg) {
+    let newShift: NewShift = {
+      company_id: this.companyService.getCompanyId(),
+      startTime: arg.start,
+      endTime: arg.end
+    };
+    this.openAddShift(newShift);
   }
 
   openShiftEdit(shift: Shift): void {
@@ -103,12 +126,14 @@ export class CalendarComponent implements OnInit {
     this.isEditMode = false;
   }
 
-  openAddShift(arg: DateClickArg) {
-    this.shiftService.selectedDate = arg;
+  openAddShift(newShift: NewShift): void {
+    this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
   }
 
   closeAddShift() {
     this.isAddMode = false;
   }
+
+
 }

@@ -1,6 +1,5 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
 import {NewEmployee} from '../interfaces/new-employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {RoleServiceService} from '../role-service/role-service.service';
@@ -9,7 +8,6 @@ import {RoleServiceService} from '../role-service/role-service.service';
   selector: 'app-add-role',
   imports: [
     FormsModule,
-    NgForOf
   ],
   templateUrl: './add-role.component.html',
   styleUrl: './add-role.component.css'

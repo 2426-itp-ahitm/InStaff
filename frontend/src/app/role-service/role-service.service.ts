@@ -50,4 +50,14 @@ export class RoleServiceService {
         this.rolesSubject.next(updatedList);
       });
   }
+
+  getRoleNameById(id: Number):String {
+    let roles = this.rolesSubject.getValue();
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].id == id) {
+        return roles[i].roleName
+      }
+    }
+    return "test";
+  }
 }
