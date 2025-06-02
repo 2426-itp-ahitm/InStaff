@@ -25,3 +25,25 @@ Content-Type: application/json
 
 ### Delete Shift
 POST http://localhost:8080/api/1/shifts/delete/3
+
+### Create Shift with Assignments
+POST http://localhost:8080/api/1/shifts/create_with_assignments
+Content-Type: application/json
+
+{
+  "shiftCreateDTO": {
+    "startTime": "2024-12-19T09:00:00",
+    "endTime": "2024-12-19T17:00:00",
+    "companyId": 1
+  },
+  "assignmentCreateDTOs": [
+    {
+      "employee": 1,
+      "role": 1
+    },
+    {
+      "employee": 2,
+      "role": 2
+    }
+  ]
+}

@@ -1,11 +1,15 @@
 package at.htlleonding.instaff.features.shift;
 
+import at.htlleonding.instaff.features.assignment.Assignment;
+import at.htlleonding.instaff.features.assignment.AssignmentCreateDTO;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import at.htlleonding.instaff.features.employee.EmployeeRepository;
+import at.htlleonding.instaff.features.role.Role;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -26,6 +30,8 @@ public class ShiftResource {
     CompanyRepository companyRepository;
     @Inject
     ShiftSocket shiftSocket;
+    @Inject
+    EntityManager entityManager;
 
     @GET
     public List<ShiftDTO> all(@PathParam("companyId") Long companyId) {
@@ -120,6 +126,22 @@ public class ShiftResource {
         }
         shiftRepository.delete(shift);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Transactional
+    @Path("create_with_assignments")
+    public Response createShiftWithAssignments(ShiftCreateWithAssignmentsDTO dto) {
+        Shift shift = new Shift(dto.shiftCreateDTO().startTime(), dto.shiftCreateDTO().endTime(), companyRepository.findById(dto.shiftCreateDTO().companyId()));
+        shiftRepository.persist(shift);
+        shiftSocket.broadcast("New Shift Id: " + shift.getId());
+
+        for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
+            Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+            entityManager.persist(assignment);
+        }
+
+        return Response.status(Response.Status.CREATED).entity(shift).build();
     }
 
     @POST

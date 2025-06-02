@@ -30,6 +30,15 @@ public class Assignment {
 
     private Boolean confirmed;
 
+    public Assignment() {
+    }
+
+    public Assignment(Employee employee, Shift shift, Role role) {
+        this.employee = employee;
+        this.shift = shift;
+        this.role = role;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
