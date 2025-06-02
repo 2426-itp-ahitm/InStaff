@@ -1,6 +1,6 @@
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY backend/instaff-server/ .
+COPY . .
 RUN mvn package -DskipTests
 
 FROM quay.io/quarkus/quarkus-distroless-image:2.0
