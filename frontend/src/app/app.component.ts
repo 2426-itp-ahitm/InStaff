@@ -1,16 +1,30 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import tailwindcss from '@tailwindcss/vite'
 import {MenuComponent} from './menu/menu.component';
+import {FeedbackBannerComponent} from './feedback-banner/feedback-banner.component';
+import {Feedback} from './interfaces/feedback';
+import {FeedbackServiceService} from './feedback-service/feedback-service.service';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuComponent,],
+  imports: [RouterOutlet, MenuComponent, FeedbackBannerComponent,],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
   title = 'frontend';
+
+  feedback!: Feedback;
+
+  ngOnInit(): void {
+    this.feedbackService.feedback$.subscribe(feedback => {
+      this.feedback = feedback;
+      console.log(feedback);
+    })
+
+  }
 }

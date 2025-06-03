@@ -92,7 +92,7 @@ export class EmployeeServiceService {
   }
 
   deleteEmployee(id: number): void {
-    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/delete/${id}`, id)
+    this.httpClient.delete<Employee>(`${this.getApiUrl()}/employees/delete/${id}`)
     .subscribe((response) => {
       const currentEmployees = this.employeesSubject.getValue();
       const updatedEmployees = currentEmployees.filter(emp => emp.id !== id);

@@ -1,8 +1,9 @@
-import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter, inject} from '@angular/core';
 import {Employee} from '../interfaces/employee';
 import {NgForOf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {FormsModule} from '@angular/forms';
+import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -14,7 +15,8 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './employee-edit.component.css'
 })
 export class EmployeeEditComponent implements OnInit {
-  constructor(private employeeService: EmployeeServiceService) {}
+  employeeService: EmployeeServiceService = inject(EmployeeServiceService);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
   @Input()  employee!: Employee;
 
@@ -49,6 +51,7 @@ export class EmployeeEditComponent implements OnInit {
     this.employeeService.updateEmployee(updatedEmployee);
     console.log('Saving employee:', updatedEmployee);
     this.closeEmployeeEdit()
+    this.feedbackService.newFeedback({message:"Saved Employee", type: 'success', showFeedback: true})
   }
 
   closeEmployeeEdit(): void {
@@ -60,6 +63,7 @@ export class EmployeeEditComponent implements OnInit {
     if (!confirmed) {
       return;
     }
+
     this.employeeService.deleteEmployee(emp.id);
     this.closeEmployeeEdit();
   }

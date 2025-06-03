@@ -62,7 +62,7 @@ export class RoleServiceService {
   }
 
   deleteRole(id: number): void {
-    this.httpClient.post<Role>(`${this.getApiUrl()}/roles/delete/${id}`, id)
+    this.httpClient.delete<Role>(`${this.getApiUrl()}/roles/remove/${id}`)
       .subscribe((response) => {
         const currentRoles = this.rolesSubject.getValue();
         const updatedRoles = currentRoles.filter(r => r.id !== id);
