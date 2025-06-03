@@ -51,7 +51,12 @@ export class RoleEditComponent implements OnInit {
     this.closeRoleEdit.emit();
   }
 
-  deleteRole(role: Role) {
-
+  deleteRole(roleToDelete: Role) {
+    const confirmed = confirm(`Are you sure you want to delete the role ${ roleToDelete.roleName }?`);
+    if (!confirmed) {
+      return;
+    }
+    this.roleService.deleteRole(roleToDelete.id);
+    this.close();
   }
 }

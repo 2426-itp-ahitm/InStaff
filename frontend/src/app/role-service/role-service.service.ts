@@ -60,4 +60,13 @@ export class RoleServiceService {
     }
     return "test";
   }
+
+  deleteRole(id: number): void {
+    this.httpClient.post<Role>(`${this.getApiUrl()}/roles/delete/${id}`, id)
+      .subscribe((response) => {
+        const currentRoles = this.rolesSubject.getValue();
+        const updatedRoles = currentRoles.filter(r => r.id !== id);
+        this.rolesSubject.next(updatedRoles);
+      });
+  }
 }

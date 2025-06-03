@@ -54,4 +54,13 @@ export class EmployeeEditComponent implements OnInit {
   closeEmployeeEdit(): void {
     this.closeEmpEdit.emit();
   }
+
+  deleteEmployee(emp: Employee) {
+    const confirmed = confirm(`Are you sure you want to delete ${emp.firstname} ${emp.lastname}?`);
+    if (!confirmed) {
+      return;
+    }
+    this.employeeService.deleteEmployee(emp.id);
+    this.closeEmployeeEdit();
+  }
 }

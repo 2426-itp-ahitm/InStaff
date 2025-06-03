@@ -27,7 +27,6 @@ export class CalendarComponent implements OnInit {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: 'numeric',
       hourCycle: 'h23'
     },
     plugins: [
@@ -40,7 +39,7 @@ export class CalendarComponent implements OnInit {
     slotMaxTime: "24:00:00",
     firstDay: 1,
     businessHours: {
-      daysOfWeek: [2, 3, 4, 5, 6, 7],
+      daysOfWeek: [2, 3, 4, 5, 6, 0],
       startTime: "10:00",
       endTime: "24:00"
     },

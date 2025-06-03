@@ -90,4 +90,13 @@ export class EmployeeServiceService {
         this.employeesSubject.next([...currentEmployees, createdEmployee]);
       });
   }
+
+  deleteEmployee(id: number): void {
+    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/delete/${id}`, id)
+    .subscribe((response) => {
+      const currentEmployees = this.employeesSubject.getValue();
+      const updatedEmployees = currentEmployees.filter(emp => emp.id !== id);
+      this.employeesSubject.next(updatedEmployees);
+    });
+  }
 }
