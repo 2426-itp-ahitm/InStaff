@@ -3,6 +3,8 @@ package at.htlleonding.instaff.features.templateRole;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.shiftTemplate.ShiftTemplate;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "template_role")
@@ -11,10 +13,11 @@ public class TemplateRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Role role;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shift_template_id")
     ShiftTemplate shiftTemplate;
 

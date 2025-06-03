@@ -31,7 +31,7 @@ public class Employee {
     LocalDate birthdate;
     @ManyToOne
     Company company;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
             @JoinTable(
                     name = "employee_role",
                     joinColumns = @JoinColumn(name = "employee_id"),

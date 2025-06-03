@@ -18,7 +18,7 @@ public class Role {
     @ManyToOne
     Company company;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "employee_role",
             joinColumns = @JoinColumn(name = "role_id"),
