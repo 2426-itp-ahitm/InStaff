@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.role;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
+import at.htlleonding.instaff.features.employee.EmployeeRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Path("{companyId}/roles")
 @Produces(MediaType.APPLICATION_JSON)
@@ -88,8 +90,12 @@ public class RoleResource {
     @Path("remove/{id}")
     @Transactional
     public Response removeRole(@PathParam("id") Long id) {
-        roleRepository.deleteById(id);
+        Role role = roleRepository.findById(id);
+        if (role == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
-        return Response.ok().build();
+        roleRepository.delete(role);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }
