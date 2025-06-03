@@ -121,7 +121,7 @@ public class EmployeeResource {
                 .toList();
     }
 
-    @POST
+    @DELETE
     @Path("delete/{employeeId}")
     public Response deleteEmployee(@PathParam("employeeId") Long employeeId) {
         if (employeeRepository.deleteEmployee(employeeId)) {

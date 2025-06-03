@@ -21,4 +21,4 @@ Content-Type: application/json
 }
 
 ### Delete Shift Template
-POST http://localhost:8080/api/1/shift-templates/delete/1
+DELETE http://localhost:8080/api/1/shift-templates/delete/1

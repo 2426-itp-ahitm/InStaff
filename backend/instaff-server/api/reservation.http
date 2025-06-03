@@ -21,4 +21,4 @@ Content-Type: application/json
 }
 
 ### Delete Reservation
-POST http://localhost:8080/api/1/reservations/delete/1
+DELETE http://localhost:8080/api/1/reservations/delete/1

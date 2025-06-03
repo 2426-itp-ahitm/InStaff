@@ -116,7 +116,7 @@ public class ShiftResource {
                 .toList();
     }
 
-    @POST
+    @DELETE
     @Transactional
     @Path("delete/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") Long shiftId) {

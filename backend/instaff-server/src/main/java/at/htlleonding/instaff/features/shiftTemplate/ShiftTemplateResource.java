@@ -27,7 +27,7 @@ public class ShiftTemplateResource {
         return Response.status(Response.Status.CREATED).build();
     }
 
-    @POST
+    @DELETE
     @Path("delete/{id}")
     @Transactional
     public Response delete(@PathParam("id") Long id) {

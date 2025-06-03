@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Delete Employee
-POST http://localhost:8080/api/1/employees/delete/1
+DELETE http://localhost:8080/api/1/employees/delete/1
 
 ### Edit employee
 POST http://localhost:8080/api/1/employees/1

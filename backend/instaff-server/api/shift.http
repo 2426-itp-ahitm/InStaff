@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Delete Shift
-POST http://localhost:8080/api/1/shifts/delete/3
+DELETE http://localhost:8080/api/1/shifts/delete/3
 
 ### Create Shift with Assignments
 POST http://localhost:8080/api/1/shifts/create_with_assignments

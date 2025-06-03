@@ -84,7 +84,7 @@ public class RoleResource {
                 .build();
     }
 
-    @PUT
+    @DELETE
     @Path("remove/{id}")
     @Transactional
     public Response removeRole(@PathParam("id") Long id) {

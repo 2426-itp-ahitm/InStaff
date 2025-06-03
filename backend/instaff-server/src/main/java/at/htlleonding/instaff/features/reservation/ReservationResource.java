@@ -48,7 +48,7 @@ public class ReservationResource {
         return Response.status(Response.Status.CREATED).entity(reservationMapper.toResource(reservation)).build();
     }
 
-    @POST
+    @DELETE
     @Transactional
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") Long id) {
