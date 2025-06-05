@@ -6,6 +6,7 @@ import {EmployeeServiceService} from '../employee-service/employee-service.servi
 import {Role} from '../interfaces/role';
 import {NewEmployee} from '../interfaces/new-employee';
 import {CompanyServiceService} from '../company-service/company-service.service';
+import {EmployeeRole} from '../interfaces/employee-role';
 
 @Component({
   selector: 'app-add-employee',
@@ -34,7 +35,7 @@ export class AddEmployeeComponent implements OnInit {
       birthdate: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       telephone: new FormControl(''), // optional
-      roles: new FormControl<number[]>([], Validators.required),
+      roles: new FormControl<EmployeeRole[]>([], Validators.required),
     });
 
     this.employeeService.getRoles().subscribe(r => {
