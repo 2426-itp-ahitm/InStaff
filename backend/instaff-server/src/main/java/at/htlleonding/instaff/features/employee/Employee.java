@@ -31,7 +31,7 @@ public class Employee {
     LocalDate birthdate;
     @ManyToOne
     Company company;
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
             @JoinTable(
                     name = "employee_role",
                     joinColumns = @JoinColumn(name = "employee_id"),
@@ -53,6 +53,17 @@ public class Employee {
         this.password = password;
         this.birthdate = birthdate;
         this.company = company;
+    }
+
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.telephone = telephone;
+        this.password = password;
+        this.birthdate = birthdate;
+        this.company = company;
+        this.roles.addAll(roles);
     }
 
     public boolean hasRoleWithId(Long id) {

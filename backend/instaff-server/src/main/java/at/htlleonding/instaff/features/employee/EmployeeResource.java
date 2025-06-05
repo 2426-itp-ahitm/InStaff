@@ -133,9 +133,13 @@ public class EmployeeResource {
 
     @POST
     public Response createEmployee(EmployeeCreateDTO dto) {
+        List<Role> roles = new LinkedList<>();
+        for (long roleId : dto.roles()) {
+            roles.add(roleRepository.findById(roleId));
+        }
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()));
+                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()), roles);
 
         // Persist the entity
         Employee createdEmployee = employeeRepository.createEmployee(employee);

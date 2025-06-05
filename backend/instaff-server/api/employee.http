@@ -30,6 +30,21 @@ Content-Type: application/json
   "companyId": 1
 }
 
+### Add a New Employee with Roles
+POST http://localhost:8080/api/1/employees
+Content-Type: application/json
+
+{
+  "firstname": "Ben",
+  "lastname": "Dover",
+  "email": "ben.dover@example.com",
+  "telephone": "+1234567890",
+  "password": "securePassword123",
+  "birthdate": "1990-01-01",
+  "companyId": 1,
+  "roles": [1, 2]
+}
+
 ### Delete Employee
 DELETE http://localhost:8080/api/1/employees/delete/1
 
