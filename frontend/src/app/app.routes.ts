@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {EmployeeListComponent} from './employee-list/employee-list.component';
 import {RoleListComponent} from './role-list/role-list.component';
+import {ReactiveFormComponent} from './reactive-form/reactive-form.component';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,7 @@ export const routes: Routes = [
     title: 'InStaff'
   },
   {
-    path: 'employee-list',
+    path: 'team',
     component: EmployeeListComponent,//COMPONENT CLASS NAME
     title: 'InStaff'
   },
@@ -31,6 +32,11 @@ export const routes: Routes = [
     path: 'role-list',
     component: RoleListComponent,//COMPONENT CLASS NAME
     title: 'InStaff'
+  },
+  {
+    path: 'reactive-form',
+    component: ReactiveFormComponent,//COMPONENT CLASS NAME
+    title: '#####DEMO####'
   },
   {
     path: '**',

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {Calendar, CalendarOptions, DateSelectArg} from '@fullcalendar/core'; // useful for typechecking
@@ -75,6 +75,7 @@ export class CalendarComponent implements OnInit {
   selectedShift: Shift = this.shifts[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
+  @Input() initialView!: string;
 
   constructor(private shiftService: ShiftServiceService, private companyService: CompanyServiceService) {}
 

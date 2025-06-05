@@ -1,0 +1,128 @@
+<form [formGroup]="shippingForm" (ngSubmit)="onSubmit()" class="container my-5">
+  <h3>Reactive Shipping Form</h3>
+
+  <!-- Full Name -->
+  <div class="mb-3">
+    <label for="fullName" class="form-label">Full Name</label>
+    <input type="text" id="fullName" formControlName="fullName" class="form-control">
+    <div *ngIf="shippingForm.get('fullName')?.invalid && shippingForm.get('fullName')?.touched" class="text-danger">
+      Full Name is required
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" id="email" formControlName="email" class="form-control">
+    <div *ngIf="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched" class="text-danger">
+      Valid Email is required
+    </div>
+  </div>
+
+  <!-- Phone Number -->
+  <div class="mb-3">
+    <label for="phone" class="form-label">Phone Number</label>
+    <input type="tel" id="phone" formControlName="phone" class="form-control">
+  </div>
+
+  <!-- Address -->
+  <div class="mb-3">
+    <label for="address1" class="form-label">Address Line 1</label>
+    <input type="text" id="address1" formControlName="address1" class="form-control">
+    <div *ngIf="shippingForm.get('address1')?.invalid && shippingForm.get('address1')?.touched" class="text-danger">
+      Address Line 1 is required
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="address2" class="form-label">Address Line 2</label>
+    <input type="text" id="address2" formControlName="address2" class="form-control">
+  </div>
+
+  <!-- City and Postal Code -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="city" class="form-label">City</label>
+      <input type="text" id="city" formControlName="city" class="form-control">
+      <div *ngIf="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched" class="text-danger">
+        City is required
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="postalCode" class="form-label">Postal Code</label>
+      <input type="text" id="postalCode" formControlName="postalCode" class="form-control">
+      <div *ngIf="shippingForm.get('postalCode')?.errors?.['required'] && shippingForm.get('postalCode')?.touched" class="text-danger">
+        Postal Code is required
+      </div>
+      <div *ngIf="shippingForm.get('postalCode')?.errors?.['pattern'] && shippingForm.get('postalCode')?.touched" class="text-danger">
+        Postal Code must be exactly 4 digits
+      </div>
+    </div>
+  </div>
+
+  <!-- Country -->
+  <div class="mb-3">
+    <label for="state" class="form-label">State</label>
+    <select id="state" formControlName="state" class="form-select">
+      <option value="">Select a state</option>
+      <option value="B">Burgenland</option>
+      <option value="K">Kärnten</option>
+      <option value="N">Niederösterreich</option>
+      <option value="O">Oberösterreich</option>
+      <option value="S">Salzburg</option>
+      <option value="ST">Steiermark</option>
+      <option value="T">Tirol</option>
+      <option value="V">Vorarlberg</option>
+      <option value="W">Wien</option>
+    </select>
+    <div *ngIf="shippingForm.get('state')?.invalid && shippingForm.get('state')?.touched" class="text-danger">
+      State is required
+    </div>
+  </div>
+
+  <!-- Shipping Method -->
+  <div class="mb-3">
+    <label class="form-label d-block">Shipping Method</label>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" formControlName="shippingMethod" value="standard">
+      <label class="form-check-label">Standard</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" formControlName="shippingMethod" value="express">
+      <label class="form-check-label">Express</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" formControlName="shippingMethod" value="overnight">
+      <label class="form-check-label">Overnight</label>
+    </div>
+    <div *ngIf="shippingForm.get('shippingMethod')?.invalid && shippingForm.get('shippingMethod')?.touched" class="text-danger">
+      Shipping Method is required
+    </div>
+  </div>
+
+  <!-- Tracking Code -->
+  <div class="mb-3">
+    <label for="trackingCode" class="form-label">Tracking Code</label>
+    <input type="text" id="trackingCode" formControlName="trackingCode" class="form-control">
+    <div *ngIf="shippingForm.get('trackingCode')?.errors?.['invalidTrackingCode'] && shippingForm.get('trackingCode')?.touched" class="text-danger">
+      Tracking code must be in the format TRK-1234-ABCD
+    </div>
+  </div>
+
+  <!-- Gift Wrap Checkbox -->
+  <div class="form-check mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="isGiftWrap"
+      formControlName="isGiftWrap"
+    >
+    <label class="form-check-label" for="isGiftWrap">
+      Gift wrap this order
+    </label>
+  </div>
+
+
+  <!-- Submit Button -->
+  <button class="btn btn-primary" type="submit" [disabled]="shippingForm.invalid">Submit</button>
+</form>

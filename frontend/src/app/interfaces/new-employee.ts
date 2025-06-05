@@ -6,5 +6,6 @@ export interface NewEmployee {
   password: string;
   birthdate: string; // ISO-Date als string (z. B. "2004-11-11")
   companyId: number;
+  roles: number[];
 }
 

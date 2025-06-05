@@ -51,7 +51,7 @@ export class EmployeeEditComponent implements OnInit {
     this.employeeService.updateEmployee(updatedEmployee);
     console.log('Saving employee:', updatedEmployee);
     this.closeEmployeeEdit()
-    this.feedbackService.newFeedback({message:"Saved Employee", type: 'success', showFeedback: true})
+    this.feedbackService.newFeedback({message:"SAVED EMPLOYEE", type: 'success', showFeedback: true})
   }
 
   closeEmployeeEdit(): void {
@@ -66,5 +66,7 @@ export class EmployeeEditComponent implements OnInit {
 
     this.employeeService.deleteEmployee(emp.id);
     this.closeEmployeeEdit();
+    this.feedbackService.newFeedback({message:"DELETED EMPLOYEE", type: 'error', showFeedback: true})
+
   }
 }
