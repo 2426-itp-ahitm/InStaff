@@ -20,9 +20,9 @@ values ('Abwasch', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', 'f52fbd32b2b3b86ff88ef6c490628285f482af15ddcb29541f94bcf526a3f6c7', '1233456899', 1, false);
+values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '1233456899', 1, false);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', '63de5bde9699cf34c67bb8ea2c7f5e2418fbec929f37cef84f1b8f92ca5621fb', '65626625', 1, false);
+values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '65626625', 1, false);
 
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)
@@ -45,15 +45,15 @@ values (1, 2, 1);
 
 /* Neue Manager */
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('1975-02-27 00:00:00', 'bernhard@penkner@example.com', 'Bernhard', 'Penkner', 'ec9a7feb2fee607fcaa285bb4a7ab2d1f9d7e2ee81ef799a980085f011169798', '67734144524', 1, true);
+values ('1975-02-27 00:00:00', 'bernhard@penkner@example.com', 'Bernhard', 'Penkner', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '67734144524', 1, true);
 
 /* Neue Mitarbeiter */
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('1995-03-22 00:00:00', 'michael.brown@example.com', 'Michael', 'Brown', 'ec9a7feb2fee607fcaa285bb4a7ab2d1f9d7e2ee81ef799a980085f011169798', '5551234567', 1, false);
+values ('1995-03-22 00:00:00', 'michael.brown@example.com', 'Michael', 'Brown', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '5551234567', 1, false);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('1992-08-17 00:00:00', 'sarah.jones@example.com', 'Sarah', 'Jones', '7e82e49658f51e4dbe373d3ff9772d7842e91d2d86bbe1502a039e4be3730517', '4441239876', 1, false);
+values ('1992-08-17 00:00:00', 'sarah.jones@example.com', 'Sarah', 'Jones', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '4441239876', 1, false);
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', 'd499b8162341e1b8dc66cfd06a97b642a8db17fa7b171936a3a5f83eafb2a0db', '6669876543', 1, false);
+values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '6669876543', 1, false);
 
 /* Neue Schichten */
 insert into Shift (starttime, endtime, company_id)

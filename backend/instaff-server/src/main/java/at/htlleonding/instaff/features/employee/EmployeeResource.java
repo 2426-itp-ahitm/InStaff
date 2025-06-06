@@ -190,9 +190,20 @@ public class EmployeeResource {
     }
 
     @PUT
-    @Path("/{employeeId}/verify-password/{password}")
-    public Response verifyPassword(@PathParam("employeeId") Long employeeId, @PathParam("password") String password) {
-        boolean isCorrect = employeeRepository.verifyPassword(employeeId, password);
+    @Path("/login/{mail}/{password}")
+    public Response login(@PathParam("mail") String mail, @PathParam("password") String password, @PathParam("companyId") Long companyId) {
+        boolean isCorrect = employeeRepository.verifyPassword(mail, companyId, password);
+        if (isCorrect) {
+            return Response.ok("Password verified successfully").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    @PUT
+    @Path("/login-manager/{mail}/{password}")
+    public Response loginManager(@PathParam("mail") String mail, @PathParam("password") String password, @PathParam("companyId") Long companyId) {
+        boolean isCorrect = employeeRepository.verifyManagerPassword(mail, companyId, password);
         if (isCorrect) {
             return Response.ok("Password verified successfully").build();
         } else {

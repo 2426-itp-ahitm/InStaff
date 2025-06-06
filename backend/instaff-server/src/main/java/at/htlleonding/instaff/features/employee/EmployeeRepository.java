@@ -206,8 +206,16 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         return employee;
     }
 
-    public boolean verifyPassword(Long employeeId, String password) {
-        Employee employee = findById(employeeId);
+    public boolean verifyPassword(String mail, Long companyId, String password) {
+        Employee employee = entityManager.createNamedQuery(Employee.FIND_BY_COMPANY_AND_EMAIL, Employee.class).setParameter("companyId", companyId).setParameter("email", mail).getSingleResult();
         return employee != null && Objects.equals(employee.password, EmployeeResource.hashPassword(password));
+    }
+
+    public boolean verifyManagerPassword(String mail, Long companyId, String password) {
+        Employee employee = entityManager.createNamedQuery(Employee.FIND_BY_COMPANY_AND_EMAIL, Employee.class).setParameter("companyId", companyId).setParameter("email", mail).getSingleResult();
+        if (employee == null || !employee.isManager) {
+            return false;
+        }
+        return Objects.equals(employee.password, EmployeeResource.hashPassword(password));
     }
 }
