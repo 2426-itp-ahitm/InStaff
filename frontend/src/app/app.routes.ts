@@ -6,6 +6,7 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import {EmployeeListComponent} from './employee-list/employee-list.component';
 import {RoleListComponent} from './role-list/role-list.component';
 import {ReactiveFormComponent} from './reactive-form/reactive-form.component';
+import {ShiftTemplateListComponent} from './shift-template-list/shift-template-list.component';
 
 export const routes: Routes = [
   {
@@ -15,32 +16,37 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,//COMPONENT CLASS NAME
+    component: HomeComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {
     path: 'calendar',
-    component: CalendarComponent,//COMPONENT CLASS NAME
+    component: CalendarComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {
     path: 'team',
-    component: EmployeeListComponent,//COMPONENT CLASS NAME
+    component: EmployeeListComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {
     path: 'role-list',
-    component: RoleListComponent,//COMPONENT CLASS NAME
+    component: RoleListComponent, //COMPONENT CLASS NAME
+    title: 'InStaff'
+  },
+  {
+    path: 'shift-template-list',
+    component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {
     path: 'reactive-form',
-    component: ReactiveFormComponent,//COMPONENT CLASS NAME
+    component: ReactiveFormComponent, //COMPONENT CLASS NAME
     title: '#####DEMO####'
   },
   {
     path: '**',
-    component: NotFoundComponent,//COMPONENT CLASS NAME
+    component: NotFoundComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
 ]

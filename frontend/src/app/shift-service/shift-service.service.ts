@@ -12,17 +12,12 @@ import {ShiftTemplate} from '../interfaces/shift-template';
   providedIn: 'root'
 })
 export class ShiftServiceService {
-  constructor(private companyService: CompanyServiceService) {}
-
+  companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
   public selectedDate!: NewShift;
-
-  private shiftTemplatesSubject = new BehaviorSubject<ShiftTemplate[]>([]);
-  public shiftTemplates$ = this.shiftTemplatesSubject.asObservable();
-
 
   private oldApiUrl = 'http://localhost:8080/api';
 
@@ -38,10 +33,5 @@ export class ShiftServiceService {
     });
   }
 
-  getShiftTemplates(): void {
-    this.httpClient.get<ShiftTemplate[]>(`${this.getApiUrl()}/shift-templates`)
-      .subscribe((shiftTemplates: ShiftTemplate[]) => {
-        this.shiftTemplatesSubject.next(shiftTemplates);
-      });
-  }
+
 }

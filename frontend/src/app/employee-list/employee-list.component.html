@@ -22,7 +22,7 @@
       <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>
     </div>
     <div *ngIf="isAddMode">
-      <app-add-employee (close)="closeAddEmployee()"></app-add-employee>
+      <app-employee-add (close)="closeAddEmployee()"></app-employee-add>
     </div>
   </div>
 </div>

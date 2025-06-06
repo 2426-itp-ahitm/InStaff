@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {Employee} from '../interfaces/employee';
@@ -7,22 +7,26 @@ import {Role} from '../interfaces/role';
 import {NewEmployee} from '../interfaces/new-employee';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {EmployeeRole} from '../interfaces/employee-role';
+import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Component({
-  selector: 'app-add-employee',
+  selector: 'app-employee-add',
   imports: [
     FormsModule,
     NgForOf,
     ReactiveFormsModule,
     NgIf
   ],
-  templateUrl: './add-employee.component.html',
-  styleUrl: './add-employee.component.css'
+  templateUrl: 'employee-add.component.html',
+  styleUrl: 'employee-add.component.css'
 })
-export class AddEmployeeComponent implements OnInit {
+export class EmployeeAddComponent implements OnInit {
   addEmployeeForm!: FormGroup;
 
-  constructor(private employeeService: EmployeeServiceService, private companyService:CompanyServiceService) {}
+  constructor() {}
+  companyService:CompanyServiceService = inject(CompanyServiceService);
+  employeeService: EmployeeServiceService = inject(EmployeeServiceService);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   @Output() close = new EventEmitter<void>();
 
@@ -34,7 +38,7 @@ export class AddEmployeeComponent implements OnInit {
       lastname: new FormControl('', Validators.required),
       birthdate: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      telephone: new FormControl(''), // optional
+      telephone: new FormControl('', Validators.required), // optional
       roles: new FormControl<EmployeeRole[]>([], Validators.required),
     });
 
@@ -60,25 +64,9 @@ export class AddEmployeeComponent implements OnInit {
       newEmployee.companyId = this.companyService.getCompanyId();
       this.employeeService.addNewEmployee(newEmployee);
       console.log('new employee:', newEmployee);
+      this.feedbackService.newFeedback({message:"Employee successfully added", type: 'success', showFeedback: true})
       this.closeAddEmployee()
     }
-
-    /*const newEmployee: NewEmployee = {
-      birthdate: '1990-01-01',
-      companyId: 1,
-      password: '',
-      firstname: this.firstNameInput.nativeElement.value,
-      lastname: this.lastNameInput.nativeElement.value,
-      email: this.emailInput.nativeElement.value,
-      telephone: this.telephoneInput.nativeElement.value,
-      //TODO: the API Route doesnt allow roles at the moment
-      /**roles: []this.newEmployee.roles.map(role => ({
-        ...role,
-        hasRole: !!(document.getElementById(`role${role.roleId}`) as HTMLInputElement)?.checked
-      }
-    };
-    */
-
   }
 
   closeAddEmployee(): void {

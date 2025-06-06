@@ -1,10 +1,11 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Role} from '../interfaces/role';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
+import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Component({
   selector: 'app-role-edit',
@@ -16,7 +17,9 @@ import {EmployeeServiceService} from '../employee-service/employee-service.servi
   styleUrl: './role-edit.component.css'
 })
 export class RoleEditComponent implements OnInit {
-  constructor(private roleService: RoleServiceService, private employeeService: EmployeeServiceService) { }
+  roleService: RoleServiceService = inject(RoleServiceService)
+  employeeService: EmployeeServiceService = inject(EmployeeServiceService)
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
   employeesWithRole: Employee[] = [];
 
@@ -45,6 +48,8 @@ export class RoleEditComponent implements OnInit {
     this.roleService.updateRole(updatedRole);
     console.log('Saving employee:', updatedRole);
     this.close();
+    this.feedbackService.newFeedback({message:"Role successfully saved", type: 'success', showFeedback: true})
+
   }
 
   close(): void {
@@ -57,6 +62,8 @@ export class RoleEditComponent implements OnInit {
       return;
     }
     this.roleService.deleteRole(roleToDelete.id);
+    this.feedbackService.newFeedback({message:"Role successfully deleted", type: 'error', showFeedback: true})
+
     this.close();
   }
 }

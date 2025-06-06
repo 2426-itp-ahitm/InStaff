@@ -3,7 +3,7 @@ import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
-import {AddEmployeeComponent} from '../add-employee/add-employee.component';
+import {EmployeeAddComponent} from '../employee-add/employee-add.component';
 
 
 @Component({
@@ -12,7 +12,7 @@ import {AddEmployeeComponent} from '../add-employee/add-employee.component';
     NgForOf,
     NgIf,
     EmployeeEditComponent,
-    AddEmployeeComponent
+    EmployeeAddComponent,
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'

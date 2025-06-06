@@ -11,13 +11,13 @@ import {NewShift, Shift} from '../interfaces/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import {ShiftEditComponent} from '../shift-edit/shift-edit.component';
-import {AddShiftComponent} from '../add-shift/add-shift.component';
 import {ShiftTemplate} from '../interfaces/shift-template';
 import { CompanyServiceService} from '../company-service/company-service.service';
+import {ShiftAddComponent} from '../shift-add/shift-add.component';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, AddShiftComponent],
+  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, ShiftAddComponent],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
@@ -101,7 +101,7 @@ export class CalendarComponent implements OnInit {
 
   handleDateClick(arg:DateClickArg) {
     let  newShift: NewShift = {
-      company_id: this.companyService.getCompanyId(),
+      companyId: this.companyService.getCompanyId(),
       startTime: arg.date,
       endTime: arg.date
     }
@@ -111,7 +111,7 @@ export class CalendarComponent implements OnInit {
 
   handleDateSelected(arg: DateSelectArg) {
     let newShift: NewShift = {
-      company_id: this.companyService.getCompanyId(),
+      companyId: this.companyService.getCompanyId(),
       startTime: arg.start,
       endTime: arg.end
     };

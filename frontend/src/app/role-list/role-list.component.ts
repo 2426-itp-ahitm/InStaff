@@ -1,12 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AddRoleComponent} from '../add-role/add-role.component';
-import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {RoleServiceService} from '../role-service/role-service.service';
-import {BehaviorSubject} from 'rxjs';
-import {Employee} from '../interfaces/employee';
 import {Role} from '../interfaces/role';
-import {AddEmployeeComponent} from '../add-employee/add-employee.component';
-import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {RoleEditComponent} from '../role-edit/role-edit.component';
 

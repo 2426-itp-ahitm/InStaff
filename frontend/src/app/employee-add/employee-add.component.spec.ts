@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddShiftComponent } from './add-shift.component';
+import { EmployeeAddComponent } from './employee-add.component';
 
-describe('AddShiftComponent', () => {
-  let component: AddShiftComponent;
-  let fixture: ComponentFixture<AddShiftComponent>;
+describe('EmployeeAddComponent', () => {
+  let component: EmployeeAddComponent;
+  let fixture: ComponentFixture<EmployeeAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddShiftComponent]
+      imports: [EmployeeAddComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddShiftComponent);
+    fixture = TestBed.createComponent(EmployeeAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

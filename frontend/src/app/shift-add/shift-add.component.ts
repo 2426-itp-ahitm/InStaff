@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, OnInit, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {DateClickArg} from '@fullcalendar/interaction';
@@ -10,19 +10,20 @@ import {Assignment} from '../interfaces/assignment';
 import {NewAssignment} from '../interfaces/new-assignment';
 import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
+import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 
 @Component({
-  selector: 'app-add-shift',
+  selector: 'app-shift-add',
   imports: [
     FormsModule,
     NgForOf,
     ReactiveFormsModule,
     NgIf
   ],
-  templateUrl: './add-shift.component.html',
-  styleUrl: './add-shift.component.css'
+  templateUrl: './shift-add.component.html',
+  styleUrl: './shift-add.component.css'
 })
-export class AddShiftComponent implements OnInit {
+export class ShiftAddComponent implements OnInit {
   selectedDate!: NewShift;
   shiftTemplates: ShiftTemplate[] = [];
   selectedShiftTemplate: ShiftTemplate | null = null;
@@ -30,13 +31,13 @@ export class AddShiftComponent implements OnInit {
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
   private selectedEmployees:  { [roleId: number]: number[] } = {};
 
-
-  constructor(private employeeService:EmployeeServiceService,private shiftService:ShiftServiceService, protected roleService:RoleServiceService) {}
+  employeeService:EmployeeServiceService = inject(EmployeeServiceService);
+  shiftService:ShiftServiceService = inject(ShiftServiceService);
+  roleService:RoleServiceService = inject(RoleServiceService);
+  shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
-
-
 
   ngOnInit(): void {
     this.selectedDate = this.shiftService.selectedDate
@@ -48,8 +49,8 @@ export class AddShiftComponent implements OnInit {
     })
 
     //gets all Templates
-    this.shiftService.getShiftTemplates();
-    this.shiftService.shiftTemplates$.subscribe((data) => {
+    this.shiftTemplateService.getShiftTemplates();
+    this.shiftTemplateService.shiftTemplates$.subscribe((data) => {
       this.shiftTemplates = data;
       console.log(this.shiftTemplates);
       this.selectedShiftTemplate = this.shiftTemplates[0];
