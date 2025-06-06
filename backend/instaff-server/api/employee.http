@@ -16,20 +16,6 @@ GET http://localhost:8080/api/1/employees/name/Jo
 ### Get Employees with company id
 GET http://localhost:8080/api/1/employees/company/1
 
-### Add a New Employee
-POST http://localhost:8080/api/1/employees
-Content-Type: application/json
-
-{
-  "firstname": "Ben",
-  "lastname": "Dover",
-  "email": "ben.dover@example.com",
-  "telephone": "+1234567890",
-  "password": "securePassword123",
-  "birthdate": "1990-01-01",
-  "companyId": 1
-}
-
 ### Add a New Employee with Roles
 POST http://localhost:8080/api/1/employees
 Content-Type: application/json
@@ -41,6 +27,7 @@ Content-Type: application/json
   "telephone": "+1234567890",
   "password": "securePassword123",
   "birthdate": "1990-01-01",
+  "isManager": false,
   "companyId": 1,
   "roles": [1, 2]
 }
@@ -58,6 +45,7 @@ Content-Type: application/json
   "email": "bob@baumeister.com",
   "birthdate": "1980-11-11",
   "telephone": "133",
+  "isManager": true,
   "roles": [1, 2, 3, 4, 5]
 }
 

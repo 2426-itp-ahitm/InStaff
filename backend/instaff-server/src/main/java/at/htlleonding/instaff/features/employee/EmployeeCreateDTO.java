@@ -13,6 +13,7 @@ public record EmployeeCreateDTO(
         String telephone,
         String password,
         LocalDate birthdate,
+        boolean isManager,
         Long companyId, // Reference to the company
         List<Long> roles // List of role IDs
 ) {

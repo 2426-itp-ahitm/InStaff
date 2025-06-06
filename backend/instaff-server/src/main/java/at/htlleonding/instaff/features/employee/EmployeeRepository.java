@@ -117,6 +117,7 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         employee.setEmail(dto.email());
         employee.setBirthdate(dto.birthdate());
         employee.setTelephone(dto.telephone());
+        employee.setManager(dto.isManager());
 
         if (dto.roles() != null) {
             List<Role> roles = new LinkedList<>();

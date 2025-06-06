@@ -5,7 +5,7 @@ import java.util.List;
 public record RoleDTO(
         Long id,
         String roleName,
-        Long company_id,
+        Long companyId,
         List<Long> employees
 ) {
 }
