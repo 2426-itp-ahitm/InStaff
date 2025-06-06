@@ -26,4 +26,11 @@ public class TemplateRoleRepository implements PanacheRepository<TemplateRole> {
             persist(role);
         }
     }
+
+    @Transactional
+    public void unassign(ShiftTemplate shiftTemplate) {
+        for (TemplateRole templateRole : shiftTemplate.getTemplateRoles()) {
+            delete(templateRole);
+        }
+    }
 }
