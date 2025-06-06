@@ -12,7 +12,7 @@ public class CompanyMapper {
 
     public Company fromCreateDTO(CompanyCreateDTO dto) {
         Company company = new Company();
-        company.companyName = dto.company_name();
+        company.companyName = dto.companyName();
         return company;
     }
 }

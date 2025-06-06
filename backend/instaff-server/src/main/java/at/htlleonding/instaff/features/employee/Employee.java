@@ -29,6 +29,8 @@ public class Employee {
     String telephone;
     String password;
     LocalDate birthdate;
+    @Column(name = "is_manager")
+    Boolean isManager;
     @ManyToOne
     Company company;
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
@@ -45,7 +47,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company) {
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, Boolean isManager) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -53,9 +55,10 @@ public class Employee {
         this.password = password;
         this.birthdate = birthdate;
         this.company = company;
+        this.isManager = isManager;
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles) {
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -64,6 +67,7 @@ public class Employee {
         this.birthdate = birthdate;
         this.company = company;
         this.roles.addAll(roles);
+        this.isManager = isManager;
     }
 
     public boolean hasRoleWithId(Long id) {
@@ -83,6 +87,14 @@ public class Employee {
         if (firstname != null && !firstname.isEmpty()) {
             this.firstname = firstname;
         }
+    }
+
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
     }
 
     public void setRoles(List<Role> roles) {
