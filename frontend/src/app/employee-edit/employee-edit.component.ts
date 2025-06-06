@@ -1,15 +1,20 @@
 import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter, inject} from '@angular/core';
 import {Employee} from '../interfaces/employee';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
+import {EmployeeRole} from '../interfaces/employee-role';
+import {NewEmployee} from '../interfaces/new-employee';
+import {CompanyServiceService} from '../company-service/company-service.service';
 
 @Component({
   selector: 'app-employee-edit',
   imports: [
     NgForOf,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.css'
@@ -17,6 +22,8 @@ import {FeedbackServiceService} from '../feedback-service/feedback-service.servi
 export class EmployeeEditComponent implements OnInit {
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
+  companyService: CompanyServiceService = inject(CompanyServiceService)
+
 
   @Input()  employee!: Employee;
 
@@ -27,31 +34,52 @@ export class EmployeeEditComponent implements OnInit {
 
   @Output() closeEmpEdit = new EventEmitter<void>();
 
+  editEmployeeForm!: FormGroup;
+
 
   ngOnInit() {
+    this.editEmployeeForm = new FormGroup({
+      firstname: new FormControl('', Validators.required),
+      lastname: new FormControl('', Validators.required),
+      birthdate: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      telephone: new FormControl('', Validators.required), // optional
+      roles: new FormControl<EmployeeRole[]>([], Validators.required),
+    });
+
+    this.editEmployeeForm.get('firstname')?.setValue(this.employee.firstname);
+    this.editEmployeeForm.get('lastname')?.setValue(this.employee.lastname);
+    this.editEmployeeForm.get('birthdate')?.setValue(this.employee.birthdate);
+    this.editEmployeeForm.get('email')?.setValue(this.employee.email);
+    this.editEmployeeForm.get('telephone')?.setValue(this.employee.telephone);
+
+    this.editEmployeeForm.get('roles')?.setValue(this.employee.roles);
 
   }
 
-  private getEnrichedEmployee() {
 
-  }
 
   save(): void {
-    const updatedEmployee: Employee = {
-      ...this.employee,
-      firstname: this.firstNameInput.nativeElement.value,
-      lastname: this.lastNameInput.nativeElement.value,
-      email: this.emailInput.nativeElement.value,
-      telephone: this.telephoneInput.nativeElement.value,
-      roles: this.employee.roles.map(role => ({
-        ...role,
-        hasRole: !!(document.getElementById(`role${role.roleId}`) as HTMLInputElement)?.checked
-      }))
-    };
-    this.employeeService.updateEmployee(updatedEmployee);
-    console.log('Saving employee:', updatedEmployee);
-    this.closeEmployeeEdit()
-    this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
+    if (this.editEmployeeForm.valid) {
+      const updatedEmp: Employee = this.editEmployeeForm.value;
+      updatedEmp.id = this.employee.id;
+      this.employeeService.updateEmployee(updatedEmp);
+      this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
+      this.closeEmployeeEdit()
+    }else{
+      console.log(this.editEmployeeForm.value);
+    }
+  }
+
+  onRoleChange(roleId: number, event: Event): void {
+    const rolesControl = this.editEmployeeForm.get('roles') as FormControl<number[]>;
+    const checked = (event.target as HTMLInputElement).checked;
+    const currentRoles = rolesControl.value ?? [];
+    if (checked) {
+      rolesControl.setValue([...currentRoles, roleId]);
+    } else {
+      rolesControl.setValue(currentRoles.filter(id => id !== roleId));
+    }
   }
 
   closeEmployeeEdit(): void {

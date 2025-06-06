@@ -71,9 +71,10 @@ export class EmployeeServiceService {
         .filter(role => role.hasRole)
         .map(role => role.roleId)
     };
-    console.log(transformedEmployee);
 
-    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/${updatedEmployee.id}`, transformedEmployee)
+    console.log("id: "+transformedEmployee.id)
+
+    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/${transformedEmployee.id}`, transformedEmployee)
       .subscribe((response) => {
         const currentEmployees = this.employeesSubject.getValue();
         const updatedList = currentEmployees.map(emp =>
