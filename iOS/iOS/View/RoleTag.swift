@@ -10,13 +10,17 @@ struct RoleTag: View {
     let roleName: String
 
     var borderColor: Color {
-        switch roleName.lowercased() {
-        case "manager":
+        switch roleName {
+        case "Koch":
             return .blue
-        case "assistant":
+        case "Küchenhilfe":
             return .green
-        case "intern":
+        case "Kellner":
             return .orange
+        case "Barkeeper":
+            return .red
+        case "Abwasch":
+            return .indigo
         default:
             return .gray
         }

@@ -55,11 +55,12 @@ class ShiftViewModel: ObservableObject {
         return shifts.count
     }
 
-    func shiftStartTime(index: Int) -> String? {
-        return shifts[index].startTime
+    func shiftStartTime(by id: Int) -> String {
+        return shifts.first(where: { $0.id == id })!.startTime
     }
 
-    func shiftEndTime(index: Int) -> String? {
-        return shifts[index].endTime
+    func shiftEndTime(by id: Int) -> String {
+        return shifts.first(where: { $0.id == id })!.endTime
     }
+
 }
