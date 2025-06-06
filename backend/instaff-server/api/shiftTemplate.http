@@ -20,5 +20,25 @@ Content-Type: application/json
   ]
 }
 
+### Update a Shift Template
+PUT http://localhost:8080/api/1/shift-templates
+Content-Type: application/json
+
+{
+  "id": 1,
+  "shiftTemplateName": "Taufe",
+  "companyId": 1,
+  "templateRoles": [
+    {
+      "roleId": 2,
+      "count": 2
+    },
+    {
+      "roleId": 3,
+      "count": 1
+    }
+  ]
+}
+
 ### Delete Shift Template
 DELETE http://localhost:8080/api/1/shift-templates/delete/1

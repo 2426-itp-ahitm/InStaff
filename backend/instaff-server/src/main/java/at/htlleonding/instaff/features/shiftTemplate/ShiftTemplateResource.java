@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.shiftTemplate;
 
+import at.htlleonding.instaff.features.templateRole.TemplateRoleRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -14,6 +15,8 @@ public class ShiftTemplateResource {
     ShiftTemplateRepository shiftTemplateRepository;
     @Inject
     ShiftTemplateMapper shiftTemplateMapper;
+    @Inject
+    TemplateRoleRepository templateRoleRepository;
 
     @GET
     public Response all(@PathParam("companyId") Long companyId) {
@@ -25,6 +28,23 @@ public class ShiftTemplateResource {
     public Response create(ShiftTemplateCreateDTO dto) {
         shiftTemplateRepository.create(dto);
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @PUT
+    @Transactional
+    public Response update(ShiftTemplateDTO dto) {
+        ShiftTemplate shiftTemplate = shiftTemplateRepository.findById(dto.id());
+
+        if (shiftTemplate == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        shiftTemplate.setShiftTemplateName(dto.shiftTemplateName());
+        templateRoleRepository.unassign(shiftTemplate);
+        templateRoleRepository.assign(dto.templateRoles(), shiftTemplate);
+        shiftTemplateRepository.persist(shiftTemplate);
+
+        return Response.status(Response.Status.CREATED).entity(shiftTemplate).build();
     }
 
     @DELETE
