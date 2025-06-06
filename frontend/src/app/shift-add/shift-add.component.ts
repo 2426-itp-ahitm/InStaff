@@ -81,18 +81,7 @@ export class ShiftAddComponent implements OnInit {
   save() {
     const assignments: NewAssignment[] = [];
 
-    for (const roleIdStr in this.selectedEmployees) {
-      const roleId = +roleIdStr;
-      const employeeIds = this.selectedEmployees[roleId];
-      for (const empId of employeeIds) {
-        if (empId != null) {
-          assignments.push({
-            employee: empId,
-            role: roleId,
-          });
-        }
-      }
-    }
+
 
     console.log('Generated Assignments:', assignments);
     // TODO: this.assignmentService.addAssignments(assignments); or similar

@@ -35,18 +35,20 @@
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
-                <div *ngFor="let tmpRoles of selectedShiftTemplate?.templateRoles" class="sm:col-span-3 pb-2 mb-5 border-b-gray-300 border-b-2">
-                  <p class="block mt-3 text-xl text-gray-900">{{ roleNameMap[tmpRoles.roleId] }}</p>
+                <div *ngFor="let tmpRole of selectedShiftTemplate?.templateRoles" class="sm:col-span-3 pb-2 mb-5 border-b-gray-300 border-b-2">
+                  <p class="block mt-3 text-xl text-gray-900">{{ roleNameMap[tmpRole.roleId] }}</p>
 
-                  <div *ngFor="let i of [].constructor(tmpRoles.count); let idx = index" class="mt-2 flex">
-                    <label [for]="'employee-select-' + tmpRoles.roleId + '-' + idx" class="flex-1/3">
-                      {{ roleNameMap[tmpRoles.roleId] }} {{ idx + 1 }}:
+                  <div *ngFor="let i of [].constructor(tmpRole.count); let idx = index" class="mt-2 flex">
+                    <label [for]="'employee-select-' + tmpRole.roleId + '-' + idx" class="flex-1/3">
+                      {{ roleNameMap[tmpRole.roleId] }} {{ idx + 1 }}:
                     </label>
-                    <div *ngIf="initializeSelectedEmployees(tmpRoles.roleId, tmpRoles.count)">
-                      <select [id]="'employee-select-' + tmpRoles.roleId + '-' + idx" name="employee" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                        <option *ngFor="let emp of employees" [value]="emp.id">
-                          {{ emp.firstname }} {{ emp.lastname }}
-                        </option>
+                    <div *ngIf="initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)">
+                      <select [id]="'employee-select-' + tmpRole.roleId + '-' + idx" name="employee" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                        <ng-container *ngFor="let emp of employees">
+                          <option *ngIf="emp.roles.at(tmpRole.roleId)?.hasRole" [value]="emp.id">
+                            {{ emp.firstname }} {{ emp.lastname }}
+                          </option>
+                        </ng-container>
                       </select>
                     </div>
                   </div>
