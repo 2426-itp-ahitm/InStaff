@@ -27,6 +27,7 @@ export class ShiftAddComponent implements OnInit {
   selectedDate!: NewShift;
   shiftTemplates: ShiftTemplate[] = [];
   selectedShiftTemplate: ShiftTemplate | null = null;
+  s
 
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
   private selectedEmployees:  { [roleId: number]: number[] } = {};
