@@ -11,6 +11,7 @@ import {NewAssignment} from '../interfaces/new-assignment';
 import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
+import {CompanyServiceService} from '../company-service/company-service.service';
 
 @Component({
   selector: 'app-shift-add',
@@ -32,6 +33,7 @@ export class ShiftAddComponent implements OnInit {
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
   private selectedEmployees:  { [roleId: number]: number[] } = {};
 
+  companyService:CompanyServiceService = inject(CompanyServiceService);
   employeeService:EmployeeServiceService = inject(EmployeeServiceService);
   shiftService:ShiftServiceService = inject(ShiftServiceService);
   roleService:RoleServiceService = inject(RoleServiceService);
@@ -78,13 +80,39 @@ export class ShiftAddComponent implements OnInit {
     return true;
   }
 
-  save() {
+
+
+  collectAssignments(): NewAssignment[] {
     const assignments: NewAssignment[] = [];
 
+    for (const roleIdStr in this.selectedEmployees) {
+      const roleId = +roleIdStr;
+      const employeeIds = this.selectedEmployees[roleId];
 
+      for (const empId of employeeIds) {
+        if (empId != null) {
+          assignments.push({
+            role: roleId,
+            employee: empId
+          });
+        }
+      }
+    }
 
-    console.log('Generated Assignments:', assignments);
-    // TODO: this.assignmentService.addAssignments(assignments); or similar
+    return assignments;
+  }
+
+  save() {
+    const newShift: NewShift = {
+      shiftCreateDTO: {
+        startTime: this.selectedDate.startTime.toString(),
+        endTime: this.selectedDate.endTime.toString(),
+        companyId: this.companyService.getCompanyId()
+      },
+      assignmentCreateDTOs: this.collectAssignments(),
+    };
+
+    // logic to save newShift
   }
 
   closeAddShift() {
