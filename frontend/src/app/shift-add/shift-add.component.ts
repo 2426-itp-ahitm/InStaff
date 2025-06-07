@@ -55,7 +55,6 @@ export class ShiftAddComponent implements OnInit {
     this.shiftTemplateService.getShiftTemplates();
     this.shiftTemplateService.shiftTemplates$.subscribe((data) => {
       this.shiftTemplates = data;
-      console.log(this.shiftTemplates);
       this.selectedShiftTemplate = this.shiftTemplates[0];
     })
 
@@ -67,7 +66,6 @@ export class ShiftAddComponent implements OnInit {
         return map;
       }, {} as { [id: number]: string });
     });
-    console.log(this.roleNameMap);
 
   }
 
@@ -110,7 +108,6 @@ export class ShiftAddComponent implements OnInit {
       assignmentCreateDTOs: this.collectAssignments(),
     };
 
-    console.log(newShift);
     // logic to save newShift
     this.shiftService.addShift(newShift)
     this.closeAddShift()
@@ -128,7 +125,6 @@ export class ShiftAddComponent implements OnInit {
         this.selectedShiftTemplate = this.shiftTemplates[i];
       }
     }
-    console.log(this.selectedShiftTemplate);
   }
 
   protected readonly RoleServiceService = RoleServiceService;

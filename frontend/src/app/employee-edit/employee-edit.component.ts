@@ -67,7 +67,6 @@ export class EmployeeEditComponent implements OnInit {
       this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
       this.closeEmployeeEdit()
     }else{
-      console.log(this.editEmployeeForm.value);
     }
   }
 

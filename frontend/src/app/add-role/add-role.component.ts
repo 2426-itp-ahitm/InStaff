@@ -25,7 +25,6 @@ export class AddRoleComponent {
     const newRoleName:string = this.roleNameInput.nativeElement.value;
 
     this.roleService.addRole(newRoleName);
-    console.log('new role:', newRoleName);
     this.feedbackService.newFeedback({message:"Role successfully added", type: 'success', showFeedback: true})
 
     this.closeAddRole()

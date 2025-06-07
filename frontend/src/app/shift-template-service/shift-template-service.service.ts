@@ -5,6 +5,7 @@ import {CompanyServiceService} from '../company-service/company-service.service'
 import {BehaviorSubject} from 'rxjs';
 import {Shift} from '../interfaces/shift';
 import {ShiftCreateDTO} from '../interfaces/new-shift';
+import {Role} from '../interfaces/role';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,6 @@ export class ShiftTemplateServiceService {
   private shiftTemplatesSubject = new BehaviorSubject<ShiftTemplate[]>([]);
   public shiftTemplates$ = this.shiftTemplatesSubject.asObservable();
 
-  private oldApiUrl = 'http://localhost:8080/api';
   private getApiUrl(): string {
     return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
     //return this.oldApiUrl;
@@ -29,5 +29,18 @@ export class ShiftTemplateServiceService {
       .subscribe((shiftTemplates: ShiftTemplate[]) => {
         this.shiftTemplatesSubject.next(shiftTemplates);
       });
+  }
+
+  deleteShiftTemplate(id: number) {
+    this.httpClient.delete<ShiftTemplate>(`${this.getApiUrl()}/shift-templates/delete/${id}`)
+      .subscribe((response) => {
+        const currentShifts = this.shiftTemplatesSubject.getValue();
+        const updatedShifts = currentShifts.filter(sT => sT.id !== id);
+        this.shiftTemplatesSubject.next(updatedShifts);
+      });
+  }
+
+  updateShiftTemplate(updatedShiftTemplate: ShiftTemplate) {
+
   }
 }

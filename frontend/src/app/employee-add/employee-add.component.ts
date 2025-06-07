@@ -63,7 +63,6 @@ export class EmployeeAddComponent implements OnInit {
       const newEmployee: NewEmployee = this.addEmployeeForm.value;
       newEmployee.companyId = this.companyService.getCompanyId();
       this.employeeService.addNewEmployee(newEmployee);
-      console.log('new employee:', newEmployee);
       this.feedbackService.newFeedback({message:"Employee successfully added", type: 'success', showFeedback: true})
       this.closeAddEmployee()
     }

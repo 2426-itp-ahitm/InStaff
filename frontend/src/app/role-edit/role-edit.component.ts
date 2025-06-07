@@ -46,7 +46,6 @@ export class RoleEditComponent implements OnInit {
       roleName: this.roleNameInput.nativeElement.value
     };
     this.roleService.updateRole(updatedRole);
-    console.log('Saving employee:', updatedRole);
     this.close();
     this.feedbackService.newFeedback({message:"Role successfully saved", type: 'success', showFeedback: true})
 

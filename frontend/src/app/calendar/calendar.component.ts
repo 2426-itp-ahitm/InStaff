@@ -84,7 +84,6 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.shiftService.shifts$.subscribe((data) => {
       this.shifts = data;
-      console.log(this.shifts);
       this.loadShiftsToEvents();
     });
     this.shiftService.getShifts();
@@ -112,7 +111,6 @@ export class CalendarComponent implements OnInit {
       startTime: arg.date.toString(),
       endTime: arg.date.toString(),
     }
-    console.log(newShift);
     this.openAddShift(newShift)
   }
 

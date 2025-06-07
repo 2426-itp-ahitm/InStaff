@@ -34,23 +34,24 @@ export class ShiftTemplateListComponent implements OnInit {
     this.shiftTemplateService.getShiftTemplates();
     this.shiftTemplateService.shiftTemplates$.subscribe((data) => {
       this.shiftTemplates = data;
-      console.log(this.shiftTemplates);
     })
   }
 
-  openShiftTemplate() {
+  openAddShiftTemplate() {
 
   }
 
   openShiftTemplateEdit(sT: ShiftTemplate) {
-
+    this.isEditMode = true;
+    this.selectedShiftTemplate = sT
   }
 
   closeShiftTemplateEdit() {
+    this.isEditMode = false;
 
   }
 
   closeShiftTemplateAdd() {
-
+    this.isAddMode = false;
   }
 }

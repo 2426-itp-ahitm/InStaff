@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.feedbackService.feedback$.subscribe(feedback => {
       this.feedback = feedback;
-      console.log(feedback);
     })
 
   }

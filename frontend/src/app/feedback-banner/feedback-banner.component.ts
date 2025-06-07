@@ -23,7 +23,6 @@ export class FeedbackBannerComponent implements OnInit {
     this.feedbackService.feedback$.subscribe(fd => {
       this.feedback = fd;
       this.showFeedback = this.feedback.showFeedback;
-      console.log(this.feedback);
       setTimeout(() => this.showFeedback = false, 3000);
     })
 

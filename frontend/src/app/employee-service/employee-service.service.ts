@@ -72,7 +72,6 @@ export class EmployeeServiceService {
         .map(role => role.roleId)
     };
 
-    console.log("id: "+transformedEmployee.id)
 
     this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/${transformedEmployee.id}`, transformedEmployee)
       .subscribe((response) => {
