@@ -11,8 +11,8 @@
 
 ## General
 
-* Web Application
-* Future plans: iOS and Android applications
+* Web Application & iOS App
+* Future plans: Android applications
 
 ## Initial Situation
 
