@@ -27,7 +27,7 @@ export class ShiftTemplateEditComponent implements OnInit {
   @Input() shiftTemplate!: ShiftTemplate;
   @Output() closeShiftTemplateEdit = new EventEmitter<unknown>();
 
-  @ViewChild('shift-template-name') shiftTemplateNameInput!: ElementRef;
+  @ViewChild('shiftTemplateNameInput') shiftTemplateNameInput!: ElementRef;
 
   ngOnInit(): void {
     this.roleService.getRoles();
@@ -40,7 +40,6 @@ export class ShiftTemplateEditComponent implements OnInit {
     };
     this.shiftTemplateService.updateShiftTemplate(updatedShiftTemplate);
     this.close();
-    this.feedbackService.newFeedback({message:"Shift Template successfully saved", type: 'success', showFeedback: true})
 
   }
 

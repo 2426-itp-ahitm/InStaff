@@ -2,3 +2,37 @@
 https://tailwindcss.com/
 */
 @import "tailwindcss";
+.menu-item-big{
+  @apply rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-all
+}
+
+.button-blue {
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 hover:border-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+}
+.button-cancel {
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-indigo-600 px-3 py-2 text-sm font-semibold text-black shadow-sm hover:border-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+}
+.button-delete {
+  @apply cursor-pointer rounded-md transition-all bg-red-600 border-2 border-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
+}
+
+.card-center {
+  @apply grid w-auto m-4 p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
+}
+
+
+.modal-bg{
+  @apply fixed inset-0 bg-black/50 transition
+}
+.modal-card-1{
+  @apply fixed inset-0 z-10 w-screen overflow-y-auto
+}
+.modal-card-2{
+  @apply flex min-h-full justify-center p-4 text-center items-center
+}
+.modal-card-3{
+  @apply relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg
+}
+.modal-card-4{
+  @apply bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4
+}

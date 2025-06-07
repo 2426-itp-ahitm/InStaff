@@ -44,8 +44,15 @@ export class ShiftTemplateServiceService {
   }
 
   updateShiftTemplate(updatedShiftTemplate: ShiftTemplate) {
-    this.feedbackService.newFeedback({message:"Shift Template successfully updated", type: 'success', showFeedback: true})
-
+    this.httpClient.put<ShiftTemplate>(`${this.getApiUrl()}/shift-templates/`, updatedShiftTemplate)
+      .subscribe((response) => {
+        const currentShiftTemplates = this.shiftTemplatesSubject.getValue();
+        const updatedShiftTemplatesList = currentShiftTemplates.map(sT =>
+          sT.id === updatedShiftTemplate.id ? updatedShiftTemplate : sT
+        );
+        this.shiftTemplatesSubject.next(updatedShiftTemplatesList);
+        this.feedbackService.newFeedback({message:"Shift Template successfully updated", type: 'success', showFeedback: true})
+      });
   }
 
   addShiftTemplate(newShiftTemplate: ShiftTemplate) {
