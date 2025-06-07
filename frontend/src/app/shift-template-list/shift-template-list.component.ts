@@ -38,6 +38,7 @@ export class ShiftTemplateListComponent implements OnInit {
   }
 
   openAddShiftTemplate() {
+    this.isAddMode = true;
 
   }
 

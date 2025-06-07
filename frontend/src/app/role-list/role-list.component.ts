@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {AddRoleComponent} from '../add-role/add-role.component';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../interfaces/role';
 import {NgForOf, NgIf} from '@angular/common';
 import {RoleEditComponent} from '../role-edit/role-edit.component';
+import {RoleAddComponent} from '../role-add/role-add.component';
 
 @Component({
   selector: 'app-role-list',
   imports: [
-    AddRoleComponent,
     NgForOf,
     NgIf,
-    RoleEditComponent
+    RoleEditComponent,
+    RoleAddComponent
   ],
   templateUrl: './role-list.component.html',
   styleUrl: './role-list.component.css'

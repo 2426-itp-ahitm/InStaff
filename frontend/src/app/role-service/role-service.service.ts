@@ -4,14 +4,16 @@ import {Role} from '../interfaces/role';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {Employee} from '../interfaces/employee';
+import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleServiceService {
-  constructor(private companyService: CompanyServiceService) { }
-
+  companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
+
 
 
   private rolesSubject = new BehaviorSubject<Role[]>([]);
@@ -37,6 +39,8 @@ export class RoleServiceService {
     }).subscribe(createdRole => {
       const currentRoles = this.rolesSubject.getValue();
       this.rolesSubject.next([...currentRoles, createdRole]);
+      this.feedbackService.newFeedback({message:"Role successfully added", type: 'success', showFeedback: true})
+
     });
   }
   updateRole(updatedRole: Role): void {
@@ -48,6 +52,8 @@ export class RoleServiceService {
           role.id === updatedRole.id ? updatedRole : role
         );
         this.rolesSubject.next(updatedList);
+        this.feedbackService.newFeedback({message:"Role successfully updated", type: 'success', showFeedback: true})
+
       });
   }
 
@@ -67,6 +73,8 @@ export class RoleServiceService {
         const currentRoles = this.rolesSubject.getValue();
         const updatedRoles = currentRoles.filter(r => r.id !== id);
         this.rolesSubject.next(updatedRoles);
+        this.feedbackService.newFeedback({message:"Role successfully deleted", type: 'error', showFeedback: true})
+
       });
   }
 }

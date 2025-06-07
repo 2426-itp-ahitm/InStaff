@@ -19,7 +19,7 @@
     <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
   </div>
   <div *ngIf="isAddMode">
-    <app-add-role (close)="closeAddRole()"></app-add-role>
+    <app-role-add (close)="closeAddRole()"></app-role-add>
   </div>
 </div>
 

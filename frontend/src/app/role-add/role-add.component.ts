@@ -1,21 +1,18 @@
 import {Component, ElementRef, EventEmitter, inject, Output, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NewEmployee} from '../interfaces/new-employee';
-import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Component({
-  selector: 'app-add-role',
+  selector: 'app-role-add',
   imports: [
     FormsModule,
   ],
-  templateUrl: './add-role.component.html',
-  styleUrl: './add-role.component.css'
+  templateUrl: './role-add.component.html',
+  styleUrl: './role-add.component.css'
 })
-export class AddRoleComponent {
+export class RoleAddComponent {
   roleService: RoleServiceService = inject(RoleServiceService)
-  feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
 
@@ -25,7 +22,6 @@ export class AddRoleComponent {
     const newRoleName:string = this.roleNameInput.nativeElement.value;
 
     this.roleService.addRole(newRoleName);
-    this.feedbackService.newFeedback({message:"Role successfully added", type: 'success', showFeedback: true})
 
     this.closeAddRole()
   }

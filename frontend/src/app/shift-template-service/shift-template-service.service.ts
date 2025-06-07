@@ -6,6 +6,7 @@ import {BehaviorSubject} from 'rxjs';
 import {Shift} from '../interfaces/shift';
 import {ShiftCreateDTO} from '../interfaces/new-shift';
 import {Role} from '../interfaces/role';
+import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import {Role} from '../interfaces/role';
 export class ShiftTemplateServiceService {
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
   public selectedDate!: ShiftCreateDTO;
 
@@ -37,10 +39,22 @@ export class ShiftTemplateServiceService {
         const currentShifts = this.shiftTemplatesSubject.getValue();
         const updatedShifts = currentShifts.filter(sT => sT.id !== id);
         this.shiftTemplatesSubject.next(updatedShifts);
+        this.feedbackService.newFeedback({message:"Shift Template successfully deleted", type: 'error', showFeedback: true})
       });
   }
 
   updateShiftTemplate(updatedShiftTemplate: ShiftTemplate) {
+    this.feedbackService.newFeedback({message:"Shift Template successfully updated", type: 'success', showFeedback: true})
 
+  }
+
+  addShiftTemplate(newShiftTemplate: ShiftTemplate) {
+    this.httpClient.post<ShiftTemplate>(`${this.getApiUrl()}/shift-templates`, newShiftTemplate)
+      .subscribe(createdShiftTemplate => {
+        console.log(createdShiftTemplate);
+        const currentShiftTemplates = this.shiftTemplatesSubject.getValue();
+        this.shiftTemplatesSubject.next([...currentShiftTemplates, createdShiftTemplate]);
+        this.feedbackService.newFeedback({message:"Shift Template successfully added", type: 'success', showFeedback: true})
+    });
   }
 }
