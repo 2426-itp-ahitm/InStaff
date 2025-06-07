@@ -3,7 +3,8 @@ import {ShiftTemplate} from '../interfaces/shift-template';
 import {HttpClient} from '@angular/common/http';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {BehaviorSubject} from 'rxjs';
-import {NewShift, Shift} from '../interfaces/shift';
+import {Shift} from '../interfaces/shift';
+import {ShiftCreateDTO} from '../interfaces/new-shift';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ShiftTemplateServiceService {
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
 
-  public selectedDate!: NewShift;
+  public selectedDate!: ShiftCreateDTO;
 
   private shiftTemplatesSubject = new BehaviorSubject<ShiftTemplate[]>([]);
   public shiftTemplates$ = this.shiftTemplatesSubject.asObservable();

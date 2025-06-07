@@ -3,10 +3,11 @@ import {CompanyServiceService} from '../company-service/company-service.service'
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, forkJoin} from 'rxjs';
 import {Employee} from '../interfaces/employee';
-import {NewShift, Shift} from '../interfaces/shift';
+import {Shift} from '../interfaces/shift';
 import {switchMap} from 'rxjs/operators';
 import {DateClickArg} from '@fullcalendar/interaction';
 import {ShiftTemplate} from '../interfaces/shift-template';
+import {NewShift, ShiftCreateDTO} from '../interfaces/new-shift';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class ShiftServiceService {
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
-  public selectedDate!: NewShift;
+  public selectedDate!: ShiftCreateDTO;
 
   private oldApiUrl = 'http://localhost:8080/api';
 
@@ -33,5 +34,11 @@ export class ShiftServiceService {
     });
   }
 
-
+  addShift(newShift: NewShift): void {
+    this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, newShift)
+      .subscribe((createdShift )=> {
+        const currentShift = this.shiftsSubject.getValue();
+        this.shiftsSubject.next([...currentShift, createdShift]);
+    })
+  }
 }

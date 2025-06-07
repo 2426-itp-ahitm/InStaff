@@ -11,8 +11,3 @@ export interface Shift {
   reservations: number[]; // Array of reservation IDs
 }
 
-export interface NewShift {
-  companyId: number;
-  startTime: Date;
-  endTime: Date;
-}

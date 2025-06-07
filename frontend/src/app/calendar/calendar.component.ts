@@ -7,13 +7,14 @@ import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interact
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {Employee} from '../interfaces/employee';
-import {NewShift, Shift} from '../interfaces/shift';
+import {Shift} from '../interfaces/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import {ShiftEditComponent} from '../shift-edit/shift-edit.component';
 import {ShiftTemplate} from '../interfaces/shift-template';
 import { CompanyServiceService} from '../company-service/company-service.service';
 import {ShiftAddComponent} from '../shift-add/shift-add.component';
+import {ShiftCreateDTO} from '../interfaces/new-shift';
 
 @Component({
   selector: 'app-calendar',
@@ -99,22 +100,31 @@ export class CalendarComponent implements OnInit {
     }));
   }
 
+  getStringFromArg(arg: Date) {
+    const month = arg.getMonth() + 1;
+
+    return `${arg.getFullYear()}-${month.toString().padStart(2, '0')}-${arg.getDate().toString().padStart(2, '0')}T${arg.getHours().toString().padStart(2, '0')}:${arg.getMinutes().toString().padStart(2, '0')}:${arg.getSeconds().toString().padStart(2, '0')}`;
+  }
+
   handleDateClick(arg:DateClickArg) {
-    let  newShift: NewShift = {
+    let  newShift: ShiftCreateDTO = {
       companyId: this.companyService.getCompanyId(),
-      startTime: arg.date,
-      endTime: arg.date
+      startTime: arg.date.toString(),
+      endTime: arg.date.toString(),
     }
     console.log(newShift);
     this.openAddShift(newShift)
   }
 
   handleDateSelected(arg: DateSelectArg) {
-    let newShift: NewShift = {
+    const newStartTime: string = this.getStringFromArg(arg.start);
+    const newEndTime: string = this.getStringFromArg(arg.end);
+    let  newShift: ShiftCreateDTO = {
       companyId: this.companyService.getCompanyId(),
-      startTime: arg.start,
-      endTime: arg.end
-    };
+      startTime: newStartTime,
+      endTime: newEndTime,
+    }
+    //2024-12-19T09:00:00
     this.openAddShift(newShift);
   }
 
@@ -126,7 +136,7 @@ export class CalendarComponent implements OnInit {
     this.isEditMode = false;
   }
 
-  openAddShift(newShift: NewShift): void {
+  openAddShift(newShift: ShiftCreateDTO): void {
     this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
   }
@@ -134,6 +144,7 @@ export class CalendarComponent implements OnInit {
   closeAddShift() {
     this.isAddMode = false;
   }
+
 
 
 }

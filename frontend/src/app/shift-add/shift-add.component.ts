@@ -4,7 +4,6 @@ import {NgForOf, NgIf} from "@angular/common";
 import {DateClickArg} from '@fullcalendar/interaction';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {ShiftTemplate} from '../interfaces/shift-template';
-import {NewShift} from '../interfaces/shift';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Assignment} from '../interfaces/assignment';
 import {NewAssignment} from '../interfaces/new-assignment';
@@ -12,6 +11,7 @@ import {Employee} from '../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {CompanyServiceService} from '../company-service/company-service.service';
+import {NewShift, ShiftCreateDTO} from '../interfaces/new-shift';
 
 @Component({
   selector: 'app-shift-add',
@@ -25,7 +25,7 @@ import {CompanyServiceService} from '../company-service/company-service.service'
   styleUrl: './shift-add.component.css'
 })
 export class ShiftAddComponent implements OnInit {
-  selectedDate!: NewShift;
+  selectedDate!: ShiftCreateDTO;
   shiftTemplates: ShiftTemplate[] = [];
   selectedShiftTemplate: ShiftTemplate | null = null;
 
@@ -84,35 +84,37 @@ export class ShiftAddComponent implements OnInit {
 
   collectAssignments(): NewAssignment[] {
     const assignments: NewAssignment[] = [];
-
-    for (const roleIdStr in this.selectedEmployees) {
-      const roleId = +roleIdStr;
-      const employeeIds = this.selectedEmployees[roleId];
-
-      for (const empId of employeeIds) {
-        if (empId != null) {
-          assignments.push({
-            role: roleId,
-            employee: empId
-          });
+    const tmpRoles = this.selectedShiftTemplate!.templateRoles
+    for (let i = 0; i < tmpRoles.length; i++) {
+      for (let j = 0; j < tmpRoles.at(i)!.count; j++) {
+        const dropdownId = `employee-select-${tmpRoles[i].roleId}-${j}`;
+        const dropdown = document.getElementById(dropdownId) as HTMLSelectElement | null;
+        if (dropdown) {
+          const value = Number(dropdown.value);
+          assignments.push({employee: value, role: tmpRoles.at(i)!.roleId})
         }
       }
-    }
+    } {}
 
     return assignments;
   }
 
   save() {
+
     const newShift: NewShift = {
       shiftCreateDTO: {
-        startTime: this.selectedDate.startTime.toString(),
-        endTime: this.selectedDate.endTime.toString(),
-        companyId: this.companyService.getCompanyId()
+        startTime: this.selectedDate.startTime,
+        endTime: this.selectedDate.endTime,
+        companyId: this.selectedDate.companyId,
       },
       assignmentCreateDTOs: this.collectAssignments(),
     };
 
+    console.log(newShift);
     // logic to save newShift
+    this.shiftService.addShift(newShift)
+    this.closeAddShift()
+
   }
 
   closeAddShift() {
@@ -130,4 +132,6 @@ export class ShiftAddComponent implements OnInit {
   }
 
   protected readonly RoleServiceService = RoleServiceService;
+
+
 }

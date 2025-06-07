@@ -1,10 +1,12 @@
 import {NewAssignment} from './new-assignment';
 
 export interface NewShift {
-  "shiftCreateDTO": {
-    startTime: string,
-    endTime: string,
-    companyId: number,
-  },
-  "assignmentCreateDTOs": NewAssignment[],
+  shiftCreateDTO: ShiftCreateDTO;
+  assignmentCreateDTOs: NewAssignment[],
+}
+
+export interface ShiftCreateDTO {
+  startTime: string,
+  endTime: string,
+  companyId: number,
 }
