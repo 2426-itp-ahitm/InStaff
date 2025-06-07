@@ -57,14 +57,15 @@ export class RoleServiceService {
       });
   }
 
-  getRoleNameById(id: Number):String {
+  getRoleNameById(id: number):String {
+    let returnValue = "Something is wrong in Role-Service, check if getRoles() is executed";
     let roles = this.rolesSubject.getValue();
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].id == id) {
-        return roles[i].roleName
+        returnValue = roles[i].roleName
       }
     }
-    return "test";
+    return returnValue;
   }
 
   deleteRole(id: number): void {

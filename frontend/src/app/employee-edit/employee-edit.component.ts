@@ -1,12 +1,12 @@
-import {Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter, inject} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Employee} from '../interfaces/employee';
 import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 import {EmployeeRole} from '../interfaces/employee-role';
-import {NewEmployee} from '../interfaces/new-employee';
 import {CompanyServiceService} from '../company-service/company-service.service';
+import {RoleServiceService} from '../role-service/role-service.service';
 
 @Component({
   selector: 'app-employee-edit',
@@ -21,6 +21,8 @@ import {CompanyServiceService} from '../company-service/company-service.service'
 })
 export class EmployeeEditComponent implements OnInit {
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
+  roleService: RoleServiceService = inject(RoleServiceService);
+
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
   companyService: CompanyServiceService = inject(CompanyServiceService)
 
@@ -52,8 +54,9 @@ export class EmployeeEditComponent implements OnInit {
     this.editEmployeeForm.get('birthdate')?.setValue(this.employee.birthdate);
     this.editEmployeeForm.get('email')?.setValue(this.employee.email);
     this.editEmployeeForm.get('telephone')?.setValue(this.employee.telephone);
-
     this.editEmployeeForm.get('roles')?.setValue(this.employee.roles);
+
+    this.roleService.getRoles()
 
   }
 
@@ -64,6 +67,7 @@ export class EmployeeEditComponent implements OnInit {
       const updatedEmp: Employee = this.editEmployeeForm.value;
       updatedEmp.id = this.employee.id;
       this.employeeService.updateEmployee(updatedEmp);
+      console.log(updatedEmp);
       this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
       this.closeEmployeeEdit()
     }else{
@@ -71,13 +75,16 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   onRoleChange(roleId: number, event: Event): void {
-    const rolesControl = this.editEmployeeForm.get('roles') as FormControl<number[]>;
+    const rolesControl = this.editEmployeeForm.get('roles') as FormControl<EmployeeRole[]>;
     const checked = (event.target as HTMLInputElement).checked;
     const currentRoles = rolesControl.value ?? [];
+    console.log(currentRoles);
     if (checked) {
-      rolesControl.setValue([...currentRoles, roleId]);
+      currentRoles.find(role => role.roleId == roleId)!.hasRole = true
+      rolesControl.setValue(currentRoles);
     } else {
-      rolesControl.setValue(currentRoles.filter(id => id !== roleId));
+      currentRoles.find(role => role.roleId == roleId)!.hasRole = false
+      rolesControl.setValue(currentRoles);
     }
   }
 

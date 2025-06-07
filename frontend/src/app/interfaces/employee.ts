@@ -14,3 +14,5 @@ export interface Employee {
   roles: EmployeeRole[];
   shifts: number[];   // Array von Shift-IDs
 }
+
+
