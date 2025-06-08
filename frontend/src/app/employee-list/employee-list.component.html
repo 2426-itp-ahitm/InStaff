@@ -1,6 +1,12 @@
 <div class="grid place-content-center">
   <div class="">
-    <div class="card-center">
+    <div class="card-center w-2xl max-md:w-auto">
+      <div *ngFor="let e of this.employees" class="my-2">
+        <app-card  [headline]='e.firstname +" "+ e.lastname' [details]='e.email ' [route]="'/team'" class="" (click)="openEmpEdit(e)"></app-card>
+      </div>
+
+
+<!--
       <table class="mb-3 table-auto border-collapse border border-gray-400 ">
         <thead>
           <tr>
@@ -15,6 +21,7 @@
           </tr>
         </tbody>
       </table>
+      -->
       <button (click)="openAddEmployee()" type="button" class="button-blue">Add Employee</button>
 
     </div>

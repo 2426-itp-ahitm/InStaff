@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import {Calendar, CalendarOptions, DateSelectArg} from '@fullcalendar/core'; // useful for typechecking
+import {Calendar, CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interaction';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
@@ -54,6 +54,7 @@ export class CalendarComponent implements OnInit {
     themeSystem: 'litera',
     dateClick: (arg) => this.handleDateClick(arg),
     select: (arg) => this.handleDateSelected(arg),
+    eventClick: (arg) => this.handleEventSelected(arg),
     events: [
       { title: 'event 1', date: '2025-05-31' },
       { title: 'event 2', date: '2025-06-05' }
@@ -124,6 +125,24 @@ export class CalendarComponent implements OnInit {
     }
     //2024-12-19T09:00:00
     this.openAddShift(newShift);
+  }
+
+  handleEventSelected(arg: EventClickArg) {
+    const startTime: string = this.getStringFromArg(arg.event.start!);
+    const endTime: string = this.getStringFromArg(arg.event.end!);
+    let  selectedShift: Shift = {
+      companyId: this.companyService.getCompanyId(),
+      startTime: startTime,
+      endTime: startTime,
+      companyName: "",
+      id: 1,
+      employees: [],
+      assignments: [],
+      reservations: []
+    }
+
+
+    this.openShiftEdit(selectedShift);
   }
 
   openShiftEdit(shift: Shift): void {
