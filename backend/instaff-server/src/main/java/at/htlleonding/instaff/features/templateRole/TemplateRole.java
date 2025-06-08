@@ -13,11 +13,11 @@ public class TemplateRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @OnDelete(action = OnDeleteAction.CASCADE)
     Role role;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "shift_template_id")
     ShiftTemplate shiftTemplate;
 

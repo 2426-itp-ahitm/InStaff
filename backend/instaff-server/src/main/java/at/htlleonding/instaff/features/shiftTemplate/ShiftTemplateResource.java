@@ -1,11 +1,14 @@
 package at.htlleonding.instaff.features.shiftTemplate;
 
+import at.htlleonding.instaff.features.templateRole.TemplateRole;
 import at.htlleonding.instaff.features.templateRole.TemplateRoleRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.LinkedList;
 
 @Path("{companyId}/shift-templates")
 @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +44,7 @@ public class ShiftTemplateResource {
 
         shiftTemplate.setShiftTemplateName(dto.shiftTemplateName());
         templateRoleRepository.unassign(shiftTemplate);
+        shiftTemplate.setTemplateRoles(new LinkedList<TemplateRole>());
         templateRoleRepository.assign(dto.templateRoles(), shiftTemplate);
         shiftTemplateRepository.persist(shiftTemplate);
 
