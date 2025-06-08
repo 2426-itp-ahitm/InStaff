@@ -29,7 +29,7 @@ public class ShiftTemplateResource {
 
     @POST
     public Response create(ShiftTemplateCreateDTO dto) {
-        shiftTemplateRepository.create(dto);
+        ShiftTemplate shiftTemplate = shiftTemplateRepository.create(dto);
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -48,7 +48,7 @@ public class ShiftTemplateResource {
         templateRoleRepository.assign(dto.templateRoles(), shiftTemplate);
         shiftTemplateRepository.persist(shiftTemplate);
 
-        return Response.status(Response.Status.CREATED).entity(shiftTemplate).build();
+        return Response.status(Response.Status.OK).entity(shiftTemplateMapper.toResource(shiftTemplate)).build();
     }
 
     @DELETE
