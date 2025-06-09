@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {Calendar, CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
@@ -36,6 +36,7 @@ export class CalendarComponent implements OnInit {
       timeGridPlugin,
       listPlugin,
     ],
+
     slotMinTime: "00:00:00",
     slotMaxTime: "24:00:00",
     firstDay: 1,
@@ -49,8 +50,14 @@ export class CalendarComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'dayGridMonth,timeGridDay,listWeek'
     },
+    footerToolbar: {
+      left: 'prevYear',
+      center: '',
+      right: 'nextYear'
+    },
+
     themeSystem: 'litera',
     dateClick: (arg) => this.handleDateClick(arg),
     select: (arg) => this.handleDateSelected(arg),
@@ -79,17 +86,53 @@ export class CalendarComponent implements OnInit {
   isEditMode: boolean = false;
   @Input() initialView!: string;
 
-  constructor(private shiftService: ShiftServiceService, private companyService: CompanyServiceService) {}
+  shiftService: ShiftServiceService = inject(ShiftServiceService)
+  companyService: CompanyServiceService = inject(CompanyServiceService)
 
 
   ngOnInit(): void {
+    this.setResponsiveCalendarView();
+
+    window.addEventListener('resize', () => {
+      this.setResponsiveCalendarView();
+    });
+
     this.shiftService.shifts$.subscribe((data) => {
       this.shifts = data;
       this.loadShiftsToEvents();
     });
+
     this.shiftService.getShifts();
+  }
 
+  setResponsiveCalendarView(): void {
+    if (this.isSmallScreen()) {
+      this.calendarOptions.initialView = 'listMonth'
+      this.calendarOptions.headerToolbar = {
+        start: '',
+        center: 'title',
+        end: ''
+      }
+      this.calendarOptions.footerToolbar = {
+        start: 'prev,next today',
+        end: 'dayGridMonth,timeGridDay,listMonth'
+      }
+    } else {
+      this.calendarOptions.initialView = this.initialView;
+      this.calendarOptions.headerToolbar = {
+        start: 'prev,next today',
+        center: 'title',
+        end: 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
+      }
+      this.calendarOptions.footerToolbar = {
+        start: '',
+        end: ''
+      }
+    }
+  }
 
+  isSmallScreen(): boolean {
+    return window.innerWidth < 1280; // Tailwind's `md` breakpoint
   }
 
   loadShiftsToEvents(): void {

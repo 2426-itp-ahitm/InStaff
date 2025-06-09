@@ -24,6 +24,7 @@ import {RoleServiceService} from '../role-service/role-service.service';
 })
 export class ShiftEditComponent implements OnInit {
   @Output() closeShiftEdit = new EventEmitter<unknown>();
+
   @Input() shift!: Shift;
 
   selectedDate!: ShiftCreateDTO;
@@ -70,7 +71,6 @@ export class ShiftEditComponent implements OnInit {
 
   }
 
-  @Output() close = new EventEmitter<void>();
 
   initializeSelectedEmployees(roleId: number, count: number): boolean {
     if (!this.selectedEmployees[roleId]) {
@@ -111,13 +111,11 @@ export class ShiftEditComponent implements OnInit {
 
     // logic to save newShift
     this.shiftService.addShift(newShift)
-    this.closeAddShift()
+    this.closeEditShift()
 
   }
 
-  closeAddShift() {
-    this.close.emit();
-  }
+
 
   chooseShiftTemplate() {
     let shiftTemplateId:number = this.shiftTemplateInput.nativeElement.value;
@@ -126,5 +124,10 @@ export class ShiftEditComponent implements OnInit {
         this.selectedShiftTemplate = this.shiftTemplates[i];
       }
     }
+  }
+
+  closeEditShift() {
+    this.closeShiftEdit.emit();
+
   }
 }
