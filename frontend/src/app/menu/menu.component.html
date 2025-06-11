@@ -1,4 +1,4 @@
-<div class="bg-gray-800 fixed top-0 left-0 max-md:w-auto max-md:rounded-md max-md:m-2 w-full z-50 shadow-md">
+<div class="bg-blue-950 fixed top-0 left-0 max-md:w-auto max-md:rounded-md max-md:m-2 w-full z-50 shadow-md">
   <nav class="" (mouseover)="isMenuOpen=true" (mouseleave)="isMenuOpen=false" (click)="isMenuOpen = !isMenuOpen">
     <div class="flex items-center justify-between p-1 ">
       <div class="rounded-md px-4 py-3 space-y-1 w-min text-sm font-medium text-gray-300 md:hidden cursor-pointer" >
@@ -10,11 +10,11 @@
 
     <div class="flex-col space-y-1 px-2 pb-2 md:flex md:flex-row md:space-x-4 md:space-y-0 transition-all duration-700"
          [ngClass]="{ 'hidden': !isMenuOpen, 'flex': isMenuOpen, 'md:flex': true } ">
-      <a routerLink="/home" routerLinkActive="bg-gray-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Dashboard</a>
-      <a routerLink="/calendar" routerLinkActive="bg-gray-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Calendar</a>
-      <a routerLink="/team" routerLinkActive="bg-gray-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Team</a>
-      <a routerLink="/role-list" routerLinkActive="bg-gray-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Roles</a>
-      <a routerLink="/shift-template-list" routerLinkActive="bg-gray-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Shift Templates</a>
+      <a routerLink="/home" routerLinkActive="bg-blue-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Dashboard</a>
+      <a routerLink="/calendar" routerLinkActive="bg-blue-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Calendar</a>
+      <a routerLink="/team" routerLinkActive="bg-blue-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Team</a>
+      <a routerLink="/role-list" routerLinkActive="bg-blue-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Roles</a>
+      <a routerLink="/shift-template-list" routerLinkActive="bg-blue-900 text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Shift Templates</a>
     </div>
   </nav>
 </div>

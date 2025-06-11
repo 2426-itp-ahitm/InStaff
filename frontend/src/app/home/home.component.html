@@ -1,10 +1,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<div class="min-md:flex m-4 gap-5">
+<div class="mx-8 my-2">
+  <h1 class="text-5xl ">Welcome to InStaff</h1>
+</div>
+<div class="min-md:flex mx-4 my-2 gap-5">
   <div class="flex-1/2 max-md:flex-2/5">
-    <div class="mb-3">
-      <h1 class="text-5xl ">Welcome to InStaff</h1>
-    </div>
-    <div class="grid min-xl:grid-cols-2 gap-4 max-md:grid-rows-4"  >
+    <div class="grid min-xl:grid-cols-2 gap-4 max-md:grid-rows-4 m-4" >
       <app-card [headline]="'Calender'" [details]="'Visit your Calender'" [route]="'/calendar'"></app-card>
       <app-card [headline]="'Team'" [details]="'Take a look at your team'" [route]="'/team'"></app-card>
       <app-card [headline]="'Roles'" [details]="'Edited and add your roles'" [route]="'/role-list'"></app-card>
@@ -13,7 +13,7 @@
 
   </div>
   <div class="flex-1/2 min-md:flex-3/5">
-    <app-calendar [initialView]="'dayGridMonth'"></app-calendar>
+    <app-calendar [initialView]="'dayGridMonth'" class="card-center"></app-calendar>
   </div>
 </div>
 
