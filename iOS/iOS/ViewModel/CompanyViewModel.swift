@@ -27,11 +27,12 @@ class CompanyViewModel: ObservableObject {
         if let data = try? Data(contentsOf: url) {
             if let fetchedCompanies = try? jsonDecoder.decode([Company].self, from: data) {
                 companies = fetchedCompanies
+                print(companies)
             } else {
-                //print("Failed to decode companies")
+                print("Failed to decode companies")
             }
         } else {
-            //print("Failed to load data from URL")
+            print("Failed to load data from URL")
         }
 
         return companies

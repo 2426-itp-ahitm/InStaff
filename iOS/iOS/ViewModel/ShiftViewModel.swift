@@ -10,7 +10,6 @@ import SwiftUICore
 
 class ShiftViewModel: ObservableObject {
     @Published var shifts: [Shift] = []
-
     
     var companyId: Int
 

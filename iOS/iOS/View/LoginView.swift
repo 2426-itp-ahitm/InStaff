@@ -46,7 +46,7 @@ struct LoginView: View {
                 if let matchedCompany = companyViewModel.companies.first(where: { $0.companyName.lowercased() == companyNameInput.lowercased() }) {
                     session.companyId = matchedCompany.id
                     employeeViewModel.updateCompanyId(matchedCompany.id) {
-                        print("company id: \(session.companyId)")
+                        print("company id: \(String(describing: session.companyId))")
 
                         let id = employeeViewModel.employees.first {
                             $0.firstname.lowercased() == employeeFirstNameInput.lowercased() &&
