@@ -60,7 +60,7 @@ struct Assignment: Identifiable, Decodable {
 struct Role: Identifiable, Decodable {
     let id: Int
     var roleName: String
-    var company_id: Int
+    var companyId: Int
     var employees: [Int]
 }
 

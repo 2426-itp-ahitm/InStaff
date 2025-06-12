@@ -16,7 +16,6 @@ class RoleViewModel: ObservableObject {
         loadRolesAsync()
     }
     
-    
     private func load() -> [Role] {
         var roles: [Role] = []
         let jsonDecoder = JSONDecoder()

@@ -8,35 +8,44 @@
 import SwiftUI
 
 struct RequestRowView: View {
-    var assignment: Assignment
     @EnvironmentObject var session: SessionManager
+    var assignment: Assignment
     
     var body: some View {
-        let roleViewModel = RoleViewModel(companyId: session.companyId!)
-        let employeeVM = EmployeeViewModel(companyId: session.companyId!)
-        let shiftVM = ShiftViewModel(companyId: session.companyId!)
-        
-        HStack(spacing: 12) {
-            if shiftVM.shifts.indices.contains(assignment.shift) {
-                let shift = shiftVM.shifts[assignment.shift]
-                Text("\(shift.startTime) - \(shift.endTime)")
-            } else {
-                Text("Loading shifts")
-            }
-            
-            
-        }
-    }
-}
+        VStack(alignment: .leading) {
+            let roleViewModel = RoleViewModel(companyId: session.companyId!)
+            let shiftViewModel = ShiftViewModel(companyId: session.companyId!)
 
-#Preview {
-    let session = SessionManager()
-    session.companyId = 0
-    
-    return Group {
-        RequestRowView(assignment: Assignment(id: 1, shift: 1, role: 1, employee: 1, confirmed: nil))
-            .environmentObject(session)
-        RequestRowView(assignment: Assignment(id: 2, shift: 1, role: 2, employee: 2, confirmed: nil))
-            .environmentObject(session)
+            let rawStartDate = shiftViewModel.shiftStartTime(by: assignment.shift)
+            let rawEndDate = shiftViewModel.shiftEndTime(by: assignment.shift)
+
+            let startDate = DateUtils.format(rawStartDate)
+            let endDate = DateUtils.format(rawEndDate)
+
+            let (confirmationText, confirmationColor): (String, Color) = {
+                switch assignment.confirmed {
+                case true:
+                    return ("Confirmed", .green)
+                case false:
+                    return ("Rejected", .red)
+                default:
+                    return ("Not confirmed", .blue)
+                }
+            }()
+
+            Text("\(assignment.id)").foregroundColor(.gray)
+            if startDate.prefix(10) == endDate.prefix(10) {
+                Text("\(startDate.prefix(10)):").bold() +
+                Text(" \(startDate.suffix(5)) - \(endDate.suffix(5))")
+            } else {
+                Text("\(startDate)").bold() +
+                Text(" - \(endDate)")
+            }
+
+            RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
+
+            Text(confirmationText)
+                .foregroundColor(confirmationColor)
+        }
     }
 }
