@@ -15,7 +15,7 @@ class ShiftViewModel: ObservableObject {
 
     init(companyId: Int) {
         self.companyId = companyId
-        loadShiftsAsync()
+        loadShiftsAsync() {}
     }
 
     private func load() -> [Shift] {
@@ -41,11 +41,12 @@ class ShiftViewModel: ObservableObject {
         return shifts
     }
 
-    private func loadShiftsAsync() {
+    private func loadShiftsAsync(completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .background).async {
             let loadedShifts = self.load()
             DispatchQueue.main.async {
                 self.shifts = loadedShifts
+                completion()
             }
         }
     }

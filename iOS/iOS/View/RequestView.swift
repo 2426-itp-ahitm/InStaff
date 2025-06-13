@@ -10,23 +10,38 @@ import SwiftUI
 struct RequestView: View {
     @EnvironmentObject var session: SessionManager
     @StateObject var assignmentViewModel: AssignmentViewModel
-    
+    @StateObject var roleViewModel: RoleViewModel
+    @StateObject var shiftViewModel: ShiftViewModel
 
     init(companyId: Int) {
         _assignmentViewModel = StateObject(wrappedValue: AssignmentViewModel(companyId: companyId))
+        _roleViewModel = StateObject(wrappedValue: RoleViewModel(companyId: companyId))
+        _shiftViewModel = StateObject(wrappedValue: ShiftViewModel(companyId: companyId))
     }
-    
 
     var body: some View {
         let filteredAssignments = assignmentViewModel.assignments.filter { $0.employee == session.employeeId }
-        
-        List(filteredAssignments) { assignment in
-            RequestRowView(assignment: assignment)
+        NavigationSplitView {
+            List(filteredAssignments) { assignment in
+                NavigationLink {
+                    RequestDetailView(
+                        roleViewModel: roleViewModel,
+                        shiftViewModel: shiftViewModel,
+                        assignment: assignment
+                    )
+                } label: {
+                    RequestRowView(
+                        roleViewModel: roleViewModel,
+                        shiftViewModel: shiftViewModel,
+                        assignment: assignment
+                    )
+                }
+                .navigationTitle("Requests")
+            }
+        } detail: {
+            Text("Select a request")
         }
+        
     }
 }
 
-#Preview {
-    RequestView(companyId: 1)
-        .environmentObject(SessionManager())
-}

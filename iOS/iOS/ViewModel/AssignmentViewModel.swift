@@ -30,7 +30,7 @@ class AssignmentViewModel: ObservableObject {
         if let data = try? Data(contentsOf: url) {
             if let loadedAssignments = try? jsonDecoder.decode([Assignment].self, from: data) {
                 assignments = loadedAssignments
-                print(assignments)
+                //print(assignments)
             } else {
                 print("Failed to decode assignments")
             }
@@ -54,4 +54,6 @@ class AssignmentViewModel: ObservableObject {
     func count() -> Int {
         return assignments.count
     }
+    
+    private func accept
 }
