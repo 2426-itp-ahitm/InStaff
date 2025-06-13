@@ -22,6 +22,7 @@ struct DateUtils {
         } else {
             return "Ungültiges Datum"
         }
+        
     }
     
     static func isSameDay(_ isoString1: String, _ isoString2: String) -> Bool {
