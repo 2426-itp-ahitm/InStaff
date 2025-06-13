@@ -20,7 +20,15 @@ struct RequestView: View {
     }
 
     var body: some View {
-        let filteredAssignments = assignmentViewModel.assignments.filter { $0.employee == session.employeeId }
+        let filteredAssignments = assignmentViewModel.assignments
+            .filter { $0.employee == session.employeeId }
+            .sorted { lhs, rhs in
+                guard let lhsShift = shiftViewModel.shift(for: lhs.shift),
+                      let rhsShift = shiftViewModel.shift(for: rhs.shift) else {
+                    return false
+                }
+                return lhsShift.startTime < rhsShift.startTime
+            }
         NavigationSplitView {
             List(filteredAssignments) { assignment in
                 NavigationLink {

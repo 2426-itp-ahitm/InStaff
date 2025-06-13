@@ -62,5 +62,9 @@ class ShiftViewModel: ObservableObject {
     func shiftEndTime(by id: Int) -> String {
         return shifts.first(where: { $0.id == id })?.endTime ?? "-1"
     }
+    
+    func shift(for id: Int) -> Shift? {
+        return shifts.first { $0.id == id }
+    }
 
 }

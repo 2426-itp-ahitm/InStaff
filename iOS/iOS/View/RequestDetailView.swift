@@ -16,6 +16,14 @@ struct RequestDetailView: View {
     @ObservedObject var assignmentViewModel: AssignmentViewModel
     @State private var confirmResult: Bool? = nil
     @State private var errorMessage: String? = nil
+
+    var isPastShift: Bool {
+        if let startTime = shiftViewModel.shift(for: assignment.shift)?.startTime,
+           let shiftDate = DateUtils.toDate(startTime) {
+            return shiftDate < Date()
+        }
+        return false
+    }
     
     var body: some View {
         VStack {
@@ -51,6 +59,7 @@ struct RequestDetailView: View {
                         Label("Accept", systemImage: assignment.confirmed == true ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(assignment.confirmed == true ? .green : .primary)
                     }
+                    .disabled(isPastShift)
 
                     Button(action: {
                         let success = assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
@@ -65,6 +74,7 @@ struct RequestDetailView: View {
                         Label("Reject", systemImage: assignment.confirmed == false ? "xmark.circle.fill" : "circle")
                             .foregroundColor(assignment.confirmed == false ? .red : .primary)
                     }
+                    .disabled(isPastShift)
                 }
             }
             
