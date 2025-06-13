@@ -138,7 +138,8 @@ export class CalendarComponent implements OnInit {
     this.calendarOptions.events = this.shifts.map(shift => ({
       title: `Shift ${shift.id}`,
       start: shift.startTime,
-      end: shift.endTime
+      end: shift.endTime,
+      id: String(shift.id),
     }));
   }
 
@@ -172,12 +173,13 @@ export class CalendarComponent implements OnInit {
   handleEventSelected(arg: EventClickArg) {
     const startTime: string = this.getStringFromArg(arg.event.start!);
     const endTime: string = this.getStringFromArg(arg.event.end!);
+
     let  selectedShift: Shift = {
       companyId: this.companyService.getCompanyId(),
       startTime: startTime,
-      endTime: startTime,
+      endTime: endTime,
       companyName: "",
-      id: 1,
+      id: Number(arg.event.id),
       employees: [],
       assignments: [],
       reservations: []

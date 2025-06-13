@@ -48,5 +48,6 @@ export class EmployeeListComponent implements OnInit {
 
   closeAddEmployee() {
     this.isAddMode = false;
+    this.employeeService.getEmployees()
   }
 }

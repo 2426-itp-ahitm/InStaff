@@ -27,7 +27,9 @@ export class RoleServiceService {
   }
 
   getRoles(): void {
-    this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`).subscribe((roles: Role[]) => {
+    this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`)
+      .subscribe((roles: Role[]) => {
+        console.log(roles);
       this.rolesSubject.next(roles);
     });
   }

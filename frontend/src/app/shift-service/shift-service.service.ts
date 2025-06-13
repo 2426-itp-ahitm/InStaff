@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, forkJoin} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {Employee} from '../interfaces/employee';
 import {Shift} from '../interfaces/shift';
 import {switchMap} from 'rxjs/operators';
@@ -20,11 +20,9 @@ export class ShiftServiceService {
   public shifts$ = this.shiftsSubject.asObservable();
   public selectedDate!: ShiftCreateDTO;
 
-  private oldApiUrl = 'http://localhost:8080/api';
 
   private getApiUrl(): string {
     return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
-    //return this.oldApiUrl;
   }
 
   getShifts(): void{
@@ -40,5 +38,9 @@ export class ShiftServiceService {
         const currentShift = this.shiftsSubject.getValue();
         this.shiftsSubject.next([...currentShift, createdShift]);
     })
+  }
+
+  getShiftById(shiftId: number): Observable<Shift> {
+    return this.httpClient.get<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`)
   }
 }

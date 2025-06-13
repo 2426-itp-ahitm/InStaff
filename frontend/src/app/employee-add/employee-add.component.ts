@@ -8,6 +8,7 @@ import {NewEmployee} from '../interfaces/new-employee';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {EmployeeRole} from '../interfaces/employee-role';
 import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
+import {RoleServiceService} from '../role-service/role-service.service';
 
 @Component({
   selector: 'app-employee-add',
@@ -21,30 +22,40 @@ import {FeedbackServiceService} from '../feedback-service/feedback-service.servi
   styleUrl: 'employee-add.component.css'
 })
 export class EmployeeAddComponent implements OnInit {
+  roles: Role[] = [];
   addEmployeeForm!: FormGroup;
 
-  constructor() {}
   companyService:CompanyServiceService = inject(CompanyServiceService);
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
+  roleService: RoleServiceService = inject(RoleServiceService);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   @Output() close = new EventEmitter<void>();
 
-  roles: Role[] | null = null;
 
   ngOnInit(): void {
+    //this.roleService.getRoles();
+    this.employeeService.getRoles().subscribe(r => {
+      console.log(r);
+      this.roles = r;
+    })
+
     this.addEmployeeForm = new FormGroup({
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
       birthdate: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      telephone: new FormControl('', Validators.required), // optional
+      telephone: new FormControl('', Validators.required),
+      isManager: new FormControl(false),
       roles: new FormControl<EmployeeRole[]>([], Validators.required),
     });
 
-    this.employeeService.getRoles().subscribe(r => {
-      this.roles = r
-    })
+    /*
+    this.roleService.roles$.subscribe((data) => {
+      this.roles = data;
+      console.log(this.roles);
+    });
+    */
   }
 
   onRoleChange(roleId: number, event: Event): void {
@@ -62,6 +73,7 @@ export class EmployeeAddComponent implements OnInit {
     if (this.addEmployeeForm.valid) {
       const newEmployee: NewEmployee = this.addEmployeeForm.value;
       newEmployee.companyId = this.companyService.getCompanyId();
+      console.log(newEmployee);
       this.employeeService.addNewEmployee(newEmployee);
       this.feedbackService.newFeedback({message:"Employee successfully added", type: 'success', showFeedback: true})
       this.closeAddEmployee()

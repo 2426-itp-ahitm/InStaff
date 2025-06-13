@@ -43,6 +43,21 @@ export class EmployeeServiceService {
     return this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`);
   }
 
+  getEmployeeById(id: number): Employee{
+    let emps!: Employee[];
+    this.employees$.subscribe((data) => {
+      emps = data;
+    });
+
+    if(emps.find(emp => emp.id === id) != null){
+      return emps.find(emp => emp.id === id)!;
+    }else{
+      return emps[0]
+    }
+
+
+  }
+
   getEnrichedEmployeeById(id: number): Observable<Employee> {
     return this.httpClient.get<Employee>(`${this.getApiUrl()}/employees/${id}`).pipe(
       switchMap((employee: any) => {
@@ -89,6 +104,7 @@ export class EmployeeServiceService {
         const currentEmployees = this.employeesSubject.getValue();
         this.employeesSubject.next([...currentEmployees, createdEmployee]);
       });
+    this.getEmployees();
   }
 
   deleteEmployee(id: number): void {
@@ -99,4 +115,6 @@ export class EmployeeServiceService {
       this.employeesSubject.next(updatedEmployees);
     });
   }
+
+
 }

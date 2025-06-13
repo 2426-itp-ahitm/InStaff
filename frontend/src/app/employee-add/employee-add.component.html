@@ -1,3 +1,4 @@
+<script src="../interfaces/employee.ts"></script>
 <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <!--
     Background backdrop, show/hide based on modal state.
@@ -75,18 +76,28 @@
                 </div>
 
 
+                <!-- IS MANAGER -->
+                <div class="sm:col-span-3">
+                  <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
+                  <div class="mt-2">
+                    <input formControlName="isManager" type="checkbox" id="isManager" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <label for="isManager" class="ml-2 text-sm text-gray-700">Allow the employee to manage the company</label>
+                  </div>
+                </div>
+
               </div>
 
+
               <!-- ROLES -->
-              <div class="border-b border-gray-900/10 pb-5">
+              <div class="border-b border-gray-900/10 pb-5" *ngIf="roles.length > 0">
                 <div class="mt-2 space-y-10">
                   <fieldset>
                     <legend class="text-sm/6 font-semibold text-gray-900">Roles</legend>
-                    <div class="h-3 overflow-y-scroll">
-                      <div class="mt-6 space-y-6" *ngFor="let r of roles">
+                    <div class="max-h-40 overflow-y-scroll">
+                      <div class="mt-6 space-y-6" *ngFor="let r of this.roles">
                         <div class="flex gap-3">
                           <div class="flex h-6 shrink-0 items-center">
-                            <div class="group grid size-4 grid-cols-1">
+                            <div class="group grid size-4 grid-cols-1" >
                               <input
                                 type="checkbox"
                                 [id]="'role' + r.id"

@@ -11,6 +11,8 @@ import {ShiftTemplateServiceService} from '../shift-template-service/shift-templ
 import {Employee} from '../interfaces/employee';
 import {NewAssignment} from '../interfaces/new-assignment';
 import {RoleServiceService} from '../role-service/role-service.service';
+import {AssignmentServiceService} from '../assignment-service/assignment-service.service';
+import {Assignment} from '../interfaces/assignment';
 
 @Component({
   selector: 'app-shift-edit',
@@ -25,8 +27,9 @@ import {RoleServiceService} from '../role-service/role-service.service';
 export class ShiftEditComponent implements OnInit {
   @Output() closeShiftEdit = new EventEmitter<unknown>();
 
-  @Input() shift!: Shift;
+  @Input() shiftId!: number;
 
+  shift!: Shift;
   selectedDate!: ShiftCreateDTO;
   shiftTemplates: ShiftTemplate[] = [];
   selectedShiftTemplate: ShiftTemplate | null = null;
@@ -39,13 +42,25 @@ export class ShiftEditComponent implements OnInit {
   employeeService:EmployeeServiceService = inject(EmployeeServiceService);
   shiftService:ShiftServiceService = inject(ShiftServiceService);
   roleService:RoleServiceService = inject(RoleServiceService);
+  assignmentService:AssignmentServiceService = inject(AssignmentServiceService);
   shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
+  assignments: Assignment[] = [];
 
   ngOnInit(): void {
-    this.selectedDate = this.shiftService.selectedDate
+    this.employeeService.getEmployees();
+
+    this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
+      console.log(s);
+      this.shift = s
+      console.log(this.shift);
+    })
+    
+    this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
+      this.assignments = a;
+    })
 
     //get all Employees
     this.employeeService.getEmployees()
@@ -68,6 +83,8 @@ export class ShiftEditComponent implements OnInit {
         return map;
       }, {} as { [id: number]: string });
     });
+
+
 
   }
 
