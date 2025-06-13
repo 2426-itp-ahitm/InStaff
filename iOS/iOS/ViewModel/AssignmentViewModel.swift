@@ -55,5 +55,28 @@ class AssignmentViewModel: ObservableObject {
         return assignments.count
     }
     
-    private func accept
+    // PUT /api/{companyId}/confirmation/confirm/{assignmentId}
+    // PUT /api/{companyId}/confirmation/decline/{assignmentId}
+    public func confirmAssignment(assignmentId: Int, isAccepted: Bool) -> Bool {
+        let action = isAccepted ? "confirm" : "decline"
+        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
+            return false
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        let semaphore = DispatchSemaphore(value: 0)
+        var success = false
+        URLSession.shared.dataTask(with: request) { _, response, error in
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                success = true
+            } else {
+                print("Error confirming assignment:", error?.localizedDescription ?? "Unknown error")
+            }
+            semaphore.signal()
+        }.resume()
+        semaphore.wait()
+        loadAssignmentsAsync() {}
+        print(assignments)
+        return success
+    }
 }

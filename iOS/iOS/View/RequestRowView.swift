@@ -44,6 +44,8 @@ struct RequestRowView: View {
 
             Text(confirmationText)
                 .foregroundColor(confirmationColor)
+            
+            
         }
     }
 }

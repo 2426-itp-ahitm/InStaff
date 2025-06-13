@@ -27,7 +27,7 @@ struct RequestView: View {
                     RequestDetailView(
                         roleViewModel: roleViewModel,
                         shiftViewModel: shiftViewModel,
-                        assignment: assignment
+                        assignment: assignment, assignmentViewModel: assignmentViewModel
                     )
                 } label: {
                     RequestRowView(
