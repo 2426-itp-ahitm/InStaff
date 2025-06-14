@@ -37,4 +37,11 @@ struct DateUtils {
 
         return Calendar.current.isDate(date1, inSameDayAs: date2)
     }
+    
+    static func toDate(_ isoString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.date(from: isoString)
+    }
 }

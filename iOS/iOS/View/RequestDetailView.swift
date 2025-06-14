@@ -13,6 +13,18 @@ struct RequestDetailView: View {
     @ObservedObject var shiftViewModel: ShiftViewModel
     var assignment: Assignment
     
+    @ObservedObject var assignmentViewModel: AssignmentViewModel
+    @State private var confirmResult: Bool? = nil
+    @State private var errorMessage: String? = nil
+
+    var isPastShift: Bool {
+        if let startTime = shiftViewModel.shift(for: assignment.shift)?.startTime,
+           let shiftDate = DateUtils.toDate(startTime) {
+            return shiftDate < Date()
+        }
+        return false
+    }
+    
     var body: some View {
         VStack {
             let rawStartDate = shiftViewModel.shiftStartTime(by: assignment.shift)
@@ -31,16 +43,42 @@ struct RequestDetailView: View {
             
             RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
 
-            if assignment.confirmed == nil {
+            
+            HStack {
                 HStack {
-                    Button("Accept") {
-                        // No action yet
+                    Button(action: {
+                        let success = assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+                        if success {
+                            confirmResult = true
+                            errorMessage = nil
+                        } else {
+                            confirmResult = false
+                            errorMessage = "Failed to accept assignment. Please try again later."
+                        }
+                    }) {
+                        Label("Accept", systemImage: assignment.confirmed == true ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(assignment.confirmed == true ? .green : .primary)
                     }
-                    Button("Reject") {
-                        // No action yet
+                    .disabled(isPastShift)
+
+                    Button(action: {
+                        let success = assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+                        if success {
+                            confirmResult = false
+                            errorMessage = nil
+                        } else {
+                            confirmResult = nil
+                            errorMessage = "Failed to decline assignment. Please try again later."
+                        }
+                    }) {
+                        Label("Reject", systemImage: assignment.confirmed == false ? "xmark.circle.fill" : "circle")
+                            .foregroundColor(assignment.confirmed == false ? .red : .primary)
                     }
+                    .disabled(isPastShift)
                 }
             }
+            
+            
         }
         
     }

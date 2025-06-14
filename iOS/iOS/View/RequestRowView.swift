@@ -31,7 +31,6 @@ struct RequestRowView: View {
                     return ("Not confirmed", .blue)
                 }
             }()
-            Text("\(assignment.id)").foregroundColor(.gray)
             if startDate.prefix(10) == endDate.prefix(10) {
                 Text("\(startDate.prefix(10)):").bold() +
                 Text(" \(startDate.suffix(5)) - \(endDate.suffix(5))")
@@ -44,6 +43,8 @@ struct RequestRowView: View {
 
             Text(confirmationText)
                 .foregroundColor(confirmationColor)
+            
+            
         }
     }
 }

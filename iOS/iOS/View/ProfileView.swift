@@ -54,7 +54,6 @@ struct ProfileView: View {
 
     var body: some View {
         if let employee = session.employee {
-            let roleNames = getRoleNames(for: employee, from: roleViewModel.roles)
             VStack {
                 Form {
                     Section(header: Text("Personal Information")) {

@@ -37,6 +37,12 @@ insert into employee_role (employee_id, role_id)
 values (1, 3);
 insert into employee_role (employee_id, role_id)
 values (2, 2);
+insert into employee_role (employee_id, role_id)
+values (2, 3);
+insert into employee_role (employee_id, role_id)
+values (3, 3);
+insert into employee_role (employee_id, role_id)
+values (3, 4);
 
 insert into assignment (employee_id, shift_id, role_id)
 values(1, 1, 1);
@@ -62,6 +68,16 @@ insert into Shift (starttime, endtime, company_id)
 values ('2025-03-27 14:00:00', '2025-03-27 22:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
 values ('2025-03-28 10:00:00', '2025-03-28 18:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-14 09:00:00', '2025-06-14 17:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-15 11:00:00', '2025-06-15 19:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-18 08:00:00', '2025-06-18 16:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-20 12:00:00', '2025-06-20 20:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-22 10:00:00', '2025-06-22 18:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
 insert into employee_role (employee_id, role_id)
@@ -88,6 +104,42 @@ insert into assignment (employee_id, shift_id, role_id)
 values (2, 3, 2); -- Alexander Hahn arbeitet in Schicht 3
 insert into assignment (employee_id, shift_id, role_id)
 values (2, 5, 2); -- Alexander Hahn arbeitet in Schicht 5
+
+-- Weitere Mitarbeiter für Schicht 5 (shift_id = 5)
+insert into assignment (employee_id, shift_id, role_id) values (4, 5, 3);
+insert into assignment (employee_id, shift_id, role_id) values (5, 5, 3);
+insert into assignment (employee_id, shift_id, role_id) values (6, 5, 3);
+
+insert into assignment (employee_id, shift_id, role_id) values (1, 5, 1);
+insert into assignment (employee_id, shift_id, role_id) values (2, 5, 3);
+insert into assignment (employee_id, shift_id, role_id) values (3, 5, 3);
+
+-- Weitere Mitarbeiter für Schicht 6 (shift_id = 6)
+insert into assignment (employee_id, shift_id, role_id) values (4, 6, 3);
+insert into assignment (employee_id, shift_id, role_id) values (5, 6, 3);
+insert into assignment (employee_id, shift_id, role_id) values (6, 6, 3);
+
+insert into assignment (employee_id, shift_id, role_id) values (1, 6, 1);
+insert into assignment (employee_id, shift_id, role_id) values (2, 6, 3);
+insert into assignment (employee_id, shift_id, role_id) values (3, 6, 3);
+
+-- Weitere Mitarbeiter für Schicht 7 (shift_id = 7)
+insert into assignment (employee_id, shift_id, role_id) values (4, 7, 3);
+insert into assignment (employee_id, shift_id, role_id) values (5, 7, 3);
+insert into assignment (employee_id, shift_id, role_id) values (6, 7, 3);
+
+insert into assignment (employee_id, shift_id, role_id) values (1, 7, 1);
+insert into assignment (employee_id, shift_id, role_id) values (2, 7, 3);
+insert into assignment (employee_id, shift_id, role_id) values (3, 7, 3);
+
+-- Weitere Mitarbeiter für Schicht 8 (shift_id = 8)
+insert into assignment (employee_id, shift_id, role_id) values (4, 8, 3);
+insert into assignment (employee_id, shift_id, role_id) values (5, 8, 3);
+insert into assignment (employee_id, shift_id, role_id) values (6, 8, 3);
+
+insert into assignment (employee_id, shift_id, role_id) values (1, 8, 1);
+insert into assignment (employee_id, shift_id, role_id) values (2, 8, 2);
+insert into assignment (employee_id, shift_id, role_id) values (3, 8, 3);
 
 /* Reservierungen */
 insert into reservation (name, infos, numberofpeople, starttime, endtime, shift_id)
