@@ -3,5 +3,5 @@ export interface Assignment {
   employee: number,
   shift: number,
   role: number,
-  "confirmed": null,
+  confirmed: boolean,
 }

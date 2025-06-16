@@ -57,7 +57,7 @@ export class ShiftEditComponent implements OnInit {
       this.shift = s
       console.log(this.shift);
     })
-    
+
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
       this.assignments = a;
     })
@@ -145,6 +145,19 @@ export class ShiftEditComponent implements OnInit {
 
   closeEditShift() {
     this.closeShiftEdit.emit();
+
+  }
+
+  makeStringFromBoolean(confirmed: boolean) {
+    if(confirmed!=null) {
+      if (confirmed) {
+        return "confirm";
+      }else{
+        return "denied";
+      }
+    }else{
+      return "pending";
+    }
 
   }
 }
