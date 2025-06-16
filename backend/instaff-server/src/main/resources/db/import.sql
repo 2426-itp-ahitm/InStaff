@@ -78,6 +78,8 @@ insert into Shift (starttime, endtime, company_id)
 values ('2025-06-20 12:00:00', '2025-06-20 20:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
 values ('2025-06-22 10:00:00', '2025-06-22 18:00:00', 1);
+insert into Shift (starttime, endtime, company_id)
+values ('2025-06-15 20:00:00', '2025-06-15 21:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
 insert into employee_role (employee_id, role_id)
@@ -104,6 +106,8 @@ insert into assignment (employee_id, shift_id, role_id)
 values (2, 3, 2); -- Alexander Hahn arbeitet in Schicht 3
 insert into assignment (employee_id, shift_id, role_id)
 values (2, 5, 2); -- Alexander Hahn arbeitet in Schicht 5
+insert into assignment (employee_id, shift_id, role_id)
+values (2, 9, 2); -- Alexander Hahn arbeitet in Schicht 9
 
 -- Weitere Mitarbeiter für Schicht 5 (shift_id = 5)
 insert into assignment (employee_id, shift_id, role_id) values (4, 5, 3);

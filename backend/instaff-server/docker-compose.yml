@@ -3,7 +3,7 @@ version: '3.9'
 services:
   db:
     image: postgres:16-alpine
-    container_name: instaff-db
+    container_name: my-postgres
     environment:
       POSTGRES_DB: demo
       POSTGRES_USER: demo
@@ -19,8 +19,9 @@ services:
       retries: 5
 
   app:
-    image: pfarrhoferphilip/instaff-server
-    container_name: instaff-app
+    build:
+      context: .
+    container_name: my-quarkus-app
     depends_on:
       db:
         condition: service_healthy
@@ -34,8 +35,9 @@ services:
       - backend
 
   frontend:
-    image: pfarrhoferphilip/instaff-frontend
-    container_name: instaff-frontend
+    build:
+      context: ./../../frontend
+    container_name: frontend
     ports:
       - "4200:80"  # Host port 4200 maps to nginx's port 80
     networks:

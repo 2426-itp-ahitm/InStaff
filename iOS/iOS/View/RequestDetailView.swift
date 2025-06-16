@@ -42,7 +42,6 @@ struct RequestDetailView: View {
             }
             
             RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
-
             
             HStack {
                 HStack {
@@ -78,6 +77,11 @@ struct RequestDetailView: View {
                 }
             }
             
+            if isPastShift {
+                Text("You can't accept/decline a shift that already started!").foregroundColor(.red)
+                    .padding()
+            }
+                
             
         }
         

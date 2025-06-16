@@ -31,25 +31,25 @@ struct RequestView: View {
                 }
                 return true
             }
-            .sorted { lhs, rhs in
-                guard let lhsShift = shiftViewModel.shift(for: lhs.shift),
-                      let rhsShift = shiftViewModel.shift(for: rhs.shift) else {
+            .sorted { l, r in
+                guard let lShift = shiftViewModel.shift(for: l.shift),
+                      let rShift = shiftViewModel.shift(for: r.shift) else {
                     return false
                 }
-                return lhsShift.startTime < rhsShift.startTime
+                return lShift.startTime > rShift.startTime
             }
     }
 
     var body: some View {
-        
         VStack{
-            
             NavigationSplitView {
                 Menu("Filters") {
                     Picker("Role", selection: $selectedRoleId) {
                         Text("All Roles").tag(Int?.none)
                         ForEach(roleViewModel.roles) { role in
-                            Text(roleViewModel.roleName(for: role.id)).tag(Optional(role.id))
+                            if let employee = session.employee, employee.roles.contains(role.id) {
+                                Text(roleViewModel.roleName(for: role.id)).tag(Optional(role.id))
+                            }
                         }
                     }
                 }
