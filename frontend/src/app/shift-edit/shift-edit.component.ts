@@ -149,12 +149,13 @@ export class ShiftEditComponent implements OnInit {
   }
 
   makeStringFromBoolean(confirmed: boolean) {
+
     if (confirmed) {
-      return "confirm";
-    }else if(!confirmed) {
-      return "denied";
-    } else{
+      return "confirmed";
+    }else if(confirmed==null) {
       return "pending";
+    } else{
+      return "denied";
     }
 
   }
