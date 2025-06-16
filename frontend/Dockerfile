@@ -1,15 +1,12 @@
-# Stage 1: build angular app (optional if you want to build in container)
-# FROM node:18-alpine as build
-# WORKDIR /app
-# COPY . .
-# RUN npm install && npm run build --prod
+# Stage 1: Build Angular app
+FROM node:24-alpine as build
+WORKDIR /app
+COPY . .
+RUN npm install && npm run build  # or ng build if globally installed
 
-# Stage 2: serve with nginx
+# Stage 2: Serve with nginx
 FROM nginx:alpine
-COPY ./dist/frontend/browser /usr/share/nginx/html
-
-# Optionally copy custom nginx config if you want to configure routing
-# COPY nginx.conf /etc/nginx/nginx.conf
-
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
