@@ -1,0 +1,5 @@
+### Confirm Assignment
+PUT http://localhost:8080/api/1/confirmation/confirm/1
+
+### Decline Assignment
+PUT http://localhost:8080/api/1/confirmation/decline/1

@@ -10,10 +10,20 @@ struct Shift: Identifiable, Decodable {
     let id: Int
     var startTime: String
     var endTime: String
-    var company_id: Int
-    var company_name: String
+    var companyId: Int
+    var companyName: String
     var employees: [Int]
     var reservations: [Int]
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case startTime
+        case endTime
+        case companyId = "companyId"
+        case companyName = "company_name"
+        case employees
+        case reservations
+    }
 }
 
 struct Employee: Identifiable, Decodable, Encodable {
@@ -24,8 +34,8 @@ struct Employee: Identifiable, Decodable, Encodable {
     var telephone: String
     var password: String
     var birthdate: String
-    var company_id: Int64
-    var company_name: String
+    var companyId: Int64
+    var companyName: String
     var roles: [Int]
 }
 
@@ -50,8 +60,13 @@ struct Assignment: Identifiable, Decodable {
 struct Role: Identifiable, Decodable {
     let id: Int
     var roleName: String
-    var company_id: Int
+    var companyId: Int
     var employees: [Int]
+}
+
+struct Company: Identifiable, Decodable {
+    let id: Int
+    var companyName: String
 }
 
 func formatDateComponents(_ dateString: String) -> (date: String, time: String)? {

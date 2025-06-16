@@ -7,10 +7,16 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 @ApplicationScoped
 public class ReservationRepository implements PanacheRepository<Reservation> {
     @Inject
     EntityManager entityManager;
+
+    public List<Reservation> getByCompanyId(Long companyId) {
+        return entityManager.createNamedQuery(Reservation.FIND_BY_COMPANY, Reservation.class).setParameter("id", companyId).getResultList();
+    }
 
     @Transactional
     public Reservation create(ReservationCreateDTO dto) {

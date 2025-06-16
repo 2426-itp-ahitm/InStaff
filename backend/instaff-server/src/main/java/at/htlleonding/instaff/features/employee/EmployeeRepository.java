@@ -23,6 +23,21 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     @Inject
     AssignmentRepository assignmentRepository;
 
+    public List<Employee> getByCompanyId(Long companyId) {
+        return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
+    }
+
+    @Transactional
+    public boolean deleteEmployee(Long employeeId) {
+        Employee employee = entityManager.find(Employee.class, employeeId);
+        if (employee != null) {
+            entityManager.remove(employee);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<Employee> findByRoleId(Long roleId) {
         String sql = "SELECT e.* " +
                 "FROM Employee e " +
@@ -102,6 +117,7 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         employee.setEmail(dto.email());
         employee.setBirthdate(dto.birthdate());
         employee.setTelephone(dto.telephone());
+        employee.setManager(dto.isManager());
 
         if (dto.roles() != null) {
             List<Role> roles = new LinkedList<>();
@@ -184,8 +200,22 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         persist(employee);
     }
 
-    public boolean verifyPassword(Long employeeId, String password) {
-        Employee employee = findById(employeeId);
-        return employee != null && Objects.equals(employee.password, password);
+    @Transactional
+    public Employee createEmployee(Employee employee) {
+        persist(employee);
+        return employee;
+    }
+
+    public boolean verifyPassword(String mail, Long companyId, String password) {
+        Employee employee = entityManager.createNamedQuery(Employee.FIND_BY_COMPANY_AND_EMAIL, Employee.class).setParameter("companyId", companyId).setParameter("email", mail).getSingleResult();
+        return employee != null && Objects.equals(employee.password, EmployeeResource.hashPassword(password));
+    }
+
+    public boolean verifyManagerPassword(String mail, Long companyId, String password) {
+        Employee employee = entityManager.createNamedQuery(Employee.FIND_BY_COMPANY_AND_EMAIL, Employee.class).setParameter("companyId", companyId).setParameter("email", mail).getSingleResult();
+        if (employee == null || !employee.isManager) {
+            return false;
+        }
+        return Objects.equals(employee.password, EmployeeResource.hashPassword(password));
     }
 }

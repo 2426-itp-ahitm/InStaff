@@ -1,0 +1,39 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="modal-bg" aria-hidden="true"></div>
+  <div class="modal-card-1">
+    <div class="modal-card-2">
+      <div class="modal-card-3">
+        <div class="modal-card-4">
+          <div class="">
+            <h1>Edit {{ shiftTemplate.shiftTemplateName }}</h1>
+          </div>
+          <form (ngSubmit)="save()">
+            <div class="space-y-1">
+              <div class="">
+                <div class="sm:col-span-3">
+                  <label for="shift-template-name" class="block text-sm/6 font-medium text-gray-900">Shift Template Name</label>
+                  <div class="mt-2">
+                    <input #shiftTemplateNameInput value="{{ shiftTemplate.shiftTemplateName }}" type="text" name="shift-template-name" id="shift-template-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                  </div>
+                </div>
+                <div class="h-px bg-gray-300 my-4"></div>
+                <div class="my-2 sm:col-span-3">
+                  <h1>Roles in the Shift {{ shiftTemplate.shiftTemplateName }}:</h1>
+                  <ul role="list" class="list-disc marker:text-black ...">
+                    <li  *ngFor="let t of shiftTemplate.templateRoles">{{ this.roleService.getRoleNameById(t.roleId) }}: {{ t.count }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-4">
+              <button type="button" class="button-cancel" (click)="close()">Cancel</button>
+              <button type="button" (click)="deleteShiftTemplate(shiftTemplate)" class="button-delete">Delete</button>
+              <button type="submit" class="button-blue">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

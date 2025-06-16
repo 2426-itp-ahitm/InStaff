@@ -1,13 +1,14 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
+permissions:
+  packages: write
+  contents: read
 jobs:
-  Explore-GitHub-Actions:
+  backend:
+    permissions: write-all
     runs-on: ubuntu-24.04
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -18,4 +19,9 @@ jobs:
           cache-dependency-path: 'backend/instaff-server/pom.xml'
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+        working-directory: backend/instaff-server
+      - name: build docker
+        run: | 
+          docker build --file backend/instaff-server/Dockerfile --tag ghcr.io/2426-itp-ahitm/wirtshaus backend/instaff-server
+          #docker push ghcr.io/2426-itp-ahitm/wirtshaus
         working-directory: backend/instaff-server

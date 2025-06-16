@@ -1,0 +1,44 @@
+### Get all Shift Templates
+GET http://localhost:8080/api/1/shift-templates
+
+### Create a new Shift Template
+POST http://localhost:8080/api/1/shift-templates
+Content-Type: application/json
+
+{
+  "shiftTemplateName": "Hochzeit",
+  "companyId": 1,
+  "templateRoles": [
+    {
+      "roleId": 1,
+      "count": 2
+    },
+    {
+      "roleId": 3,
+      "count": 1
+    }
+  ]
+}
+
+### Update a Shift Template
+PUT http://localhost:8080/api/1/shift-templates
+Content-Type: application/json
+
+{
+  "id": 1,
+  "shiftTemplateName": "Taufe",
+  "companyId": 1,
+  "templateRoles": [
+    {
+      "roleId": 2,
+      "count": 2
+    },
+    {
+      "roleId": 3,
+      "count": 1
+    }
+  ]
+}
+
+### Delete Shift Template
+DELETE http://localhost:8080/api/1/shift-templates/delete/1

@@ -15,7 +15,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Employee.FIND_BY_COMPANY, query = "select e from Employee e WHERE e.company.id = :id"),
+        @NamedQuery(name = Employee.FIND_BY_COMPANY_AND_EMAIL, query = "select e from Employee e where e.company.id = :companyId and e.email = :email")
+})
+@Table(name = "employee", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"company_id", "email"})
+})
 public class Employee {
+    public static final String FIND_BY_COMPANY = "Employee.findByCompany";
+    public static final String FIND_BY_COMPANY_AND_EMAIL = "Employee.findByCompanyAndEmail";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -25,9 +34,11 @@ public class Employee {
     String telephone;
     String password;
     LocalDate birthdate;
+    @Column(name = "is_manager")
+    Boolean isManager;
     @ManyToOne
     Company company;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
             @JoinTable(
                     name = "employee_role",
                     joinColumns = @JoinColumn(name = "employee_id"),
@@ -41,7 +52,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company) {
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, Boolean isManager) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -49,6 +60,19 @@ public class Employee {
         this.password = password;
         this.birthdate = birthdate;
         this.company = company;
+        this.isManager = isManager;
+    }
+
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.telephone = telephone;
+        this.password = password;
+        this.birthdate = birthdate;
+        this.company = company;
+        this.roles.addAll(roles);
+        this.isManager = isManager;
     }
 
     public boolean hasRoleWithId(Long id) {
@@ -68,6 +92,14 @@ public class Employee {
         if (firstname != null && !firstname.isEmpty()) {
             this.firstname = firstname;
         }
+    }
+
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
     }
 
     public void setRoles(List<Role> roles) {

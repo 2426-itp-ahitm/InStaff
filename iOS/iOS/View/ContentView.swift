@@ -9,6 +9,7 @@ import SwiftUI
 
 class SessionManager: ObservableObject {
     @Published var isLoggedIn = false
+    @Published var companyId: Int? = nil
     @Published var employeeId: Int? = nil
     @Published var employee: Employee? = nil
 }

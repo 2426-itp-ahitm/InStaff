@@ -20,9 +20,6 @@ struct ProfileView: View {
     @State private var birthdate: String = ""
     @State private var companyName: String = ""
     @State private var isEditing: Bool = false
-    
-    @State private var showLogoutAlert = false
-
 
     private func saveProfileChanges() {
         guard var employee = session.employee else { return }
@@ -57,7 +54,6 @@ struct ProfileView: View {
 
     var body: some View {
         if let employee = session.employee {
-            let roleNames = getRoleNames(for: employee, from: roleViewModel.roles)
             VStack {
                 Form {
                     Section(header: Text("Personal Information")) {
@@ -132,49 +128,29 @@ struct ProfileView: View {
                             Text("App settings not implemented yet!")
                         }
                     }
-                    Section {
-                        HStack {
-                            Button(action: {
-                                if isEditing {
-                                    saveProfileChanges()
-                                }
-                                isEditing.toggle()
-                            }) {
-                                Text(isEditing ? "Save" : "Edit data")
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(8)
+                    Section(header: Text("")) {
+                        Button(action: {
+                            if isEditing {
+                                saveProfileChanges()
                             }
-                            VStack{
-                                Button(action: {
-                                    showLogoutAlert = true
-                                }) {
-                                    Text("Logout")
-                                        .foregroundColor(.white)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                        .background(Color(.red))
-                                        .cornerRadius(8)
-                                }
-                                .alert(isPresented: $showLogoutAlert) {
-                                    Alert(
-                                        title: Text("Logout"),
-                                        message: Text("Do you really want to logut?"),
-                                        primaryButton: .default(
-                                            Text("cancel")
-                                        ),
-                                        secondaryButton: .destructive(
-                                            Text("logout"),
-                                            action: {
-                                                session.isLoggedIn = false
-                                            }
-                                        )
-                                    )
-                                    
-                                }
-                            }
+                            isEditing.toggle()
+                        }) {
+                            Text(isEditing ? "Save" : "Edit data")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .cornerRadius(8)
+                        }
+                        Button(action: {
+                            session.isLoggedIn = false
+                        }) {
+                            Text("Logout")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.red))
+                                .cornerRadius(8)
                         }
                     }
                 }
@@ -185,7 +161,7 @@ struct ProfileView: View {
                 email = employee.email
                 telephone = employee.telephone
                 birthdate = employee.birthdate
-                companyName = employee.company_name
+                companyName = employee.companyName
             }
         } else {
             VStack {
@@ -195,7 +171,14 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView(roleViewModel: RoleViewModel(), employeeViewModel: EmployeeViewModel())
-        .environmentObject(SessionManager())
+/*#Preview {
+    let session = SessionManager()
+    session.employee = Employee(id: 1, firstname: "Max", lastname: "Mustermann", email: "max@example.com", password: "password", telephone: "123456789", birthdate: "1990-01-01", companyName: "Test GmbH",companyId: 1, roles: [])
+
+    let employeeVM = EmployeeViewModel(companyID: 1)
+    let roleVM = RoleViewModel()
+
+    ProfileView(roleViewModel: roleVM, employeeViewModel: employeeVM)
+        .environmentObject(session) // ✅ Correctly attached to the View
 }
+*/

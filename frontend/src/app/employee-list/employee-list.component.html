@@ -1,7 +1,13 @@
-<div class="m-4">
-  <div class="flex m-4">
-    <div class="flex-1/2">
-      <table class=" mb-2 table-auto border-collapse border border-gray-400 ">
+<div class="grid place-content-center">
+  <div class="">
+    <div class="card-center w-2xl max-md:w-auto">
+      <div *ngFor="let e of this.employees" class="my-2">
+        <app-card  [headline]='e.firstname +" "+ e.lastname' [details]='e.email ' [route]="'/team'" class="" (click)="openEmpEdit(e)"></app-card>
+      </div>
+
+
+<!--
+      <table class="mb-3 table-auto border-collapse border border-gray-400 ">
         <thead>
           <tr>
             <th class="border border-gray-300 p-2 w-sm">First Name</th>
@@ -9,20 +15,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let e of this.employees" class="hover:bg-blue-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openEmpEdit(e)">
+          <tr *ngFor="let e of this.employees" class="hover:bg-blue-50 odd:bg-white even:bg-white cursor-pointer" (click)="openEmpEdit(e)">
             <td class="border border-gray-300 p-2 w-sm ">{{ e.firstname }}</td>
             <td class="border border-gray-300 p-2 w-sm">{{ e.lastname }}</td>
           </tr>
         </tbody>
       </table>
-      <button (click)="openAddEmployee()" type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Employee</button>
+      -->
+      <button (click)="openAddEmployee()" type="button" class="button-blue">Add Employee</button>
 
     </div>
-    <div *ngIf="selectedEmployee" class="flex-1/2">
-      <app-employee-edit [employee]="selectedEmployee"></app-employee-edit>
+    <div *ngIf="isEditMode">
+      <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>
     </div>
     <div *ngIf="isAddMode">
-      <app-add-employee (close)="closeAddEmployee()"></app-add-employee>
+      <app-employee-add (close)="closeAddEmployee()"></app-employee-add>
     </div>
   </div>
 </div>
