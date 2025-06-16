@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Shift} from '../interfaces/shift';
 import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {NewShift, ShiftCreateDTO} from '../interfaces/new-shift';
 import {ShiftTemplate} from '../interfaces/shift-template';
 import {CompanyServiceService} from '../company-service/company-service.service';
@@ -16,11 +16,12 @@ import {Assignment} from '../interfaces/assignment';
 
 @Component({
   selector: 'app-shift-edit',
-    imports: [
-        FormsModule,
-        NgForOf,
-        NgIf
-    ],
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf,
+    NgClass
+  ],
   templateUrl: './shift-edit.component.html',
   styleUrl: './shift-edit.component.css'
 })

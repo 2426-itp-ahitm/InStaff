@@ -19,7 +19,15 @@
               <tr *ngFor="let a of assignments" class="cursor-pointer hover:bg-blue-50 odd:bg-white even:bg-white pointer-events-auto" >
                 <td class="border border-gray-300 p-2 w-sm ">{{ employeeService.getEmployeeById(a.employee).firstname }} {{ employeeService.getEmployeeById(a.employee).lastname }}</td>
                 <td class="border border-gray-300 p-2 w-sm ">{{ roleService.getRoleNameById(a.role) }}</td>
-                <td class="border border-gray-300 p-2 w-sm ">{{ this.makeStringFromBoolean(a.confirmed) }}</td>
+                <td class="border border-gray-300 p-2 w-sm">
+                  <span [ngClass]="{
+                    'text-green-600 font-semibold': a.confirmed === true,
+                    'text-yellow-600 font-semibold': a.confirmed === null,
+                    'text-red-600 font-semibold': a.confirmed === false
+                  }">
+                    {{ makeStringFromBoolean(a.confirmed) }}
+                  </span>
+                </td>
 
               </tr>
               </tbody>
