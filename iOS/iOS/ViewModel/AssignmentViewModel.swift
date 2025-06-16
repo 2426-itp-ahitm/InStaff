@@ -23,7 +23,7 @@ class AssignmentViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
 
         guard let url = URL(string: "http://localhost:8080/api/\(companyId)/assignments") else {
-            //print("Invalid URL")
+            print("Invalid URL: assignment")
             return assignments
         }
 
@@ -76,7 +76,7 @@ class AssignmentViewModel: ObservableObject {
         }.resume()
         semaphore.wait()
         loadAssignmentsAsync() {}
-        print(assignments)
+        //print(assignments)
         return success
     }
 }

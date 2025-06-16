@@ -20,14 +20,14 @@ class CompanyViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
 
         guard let url = URL(string: "http://localhost:8080/api/companies") else {
-            //print("Invalid URL for companies")
+            print("Invalid URL: company")
             return companies
         }
 
         if let data = try? Data(contentsOf: url) {
             if let fetchedCompanies = try? jsonDecoder.decode([Company].self, from: data) {
                 companies = fetchedCompanies
-                print(companies)
+                //print(companies)
             } else {
                 print("Failed to decode companies")
             }

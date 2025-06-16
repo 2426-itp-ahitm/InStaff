@@ -23,14 +23,14 @@ class ShiftViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
 
         guard let url = URL(string: "http://localhost:8080/api/\(companyId)/shifts") else {
-            print("Invalid URL")
+            print("Invalid URL: shift")
             return shifts
         }
 
         if let data = try? Data(contentsOf: url) {
             if let loadedShifts = try? jsonDecoder.decode([Shift].self, from: data) {
                 shifts = loadedShifts
-                print("Shifts loaded: \(shifts.count)")
+                //print("Shifts loaded: \(shifts.count)")
             } else {
                 print("Failed to decode shifts")
             }

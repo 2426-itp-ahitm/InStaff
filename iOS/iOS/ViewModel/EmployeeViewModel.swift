@@ -24,7 +24,7 @@ class EmployeeViewModel: ObservableObject {
         
         
         guard let url = URL(string: "http://localhost:8080/api/\(companyId)/employees") else {
-            //print("Invalid URL for employees")
+            print("Invalid URL: employee")
             return employees
         }
 

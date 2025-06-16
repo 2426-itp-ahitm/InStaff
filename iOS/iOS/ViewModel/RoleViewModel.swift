@@ -21,14 +21,14 @@ class RoleViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
         
         guard let url = URL(string: "http://localhost:8080/api/\(companyId)/roles") else {
-            print("Invalid URL")
+            print("Invalid URL: role")
             return roles
         }
         
         if let data = try? Data(contentsOf: url) {
             if let loadedRoles = try? jsonDecoder.decode([Role].self, from: data) {
                 roles = loadedRoles
-                print("Roles loaded: \(roles.count)")
+                //print("Roles loaded: \(roles.count)")
             } else {
                 print("Failed to decode roles")
             }
