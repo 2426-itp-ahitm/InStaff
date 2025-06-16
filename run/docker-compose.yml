@@ -1,31 +1,45 @@
-version: "3.9"
+version: '3.9'
+
 services:
-  backend:
-    build:
-      context: ../backend/instaff-server
+  db:
+    image: postgres:16-alpine
+    container_name: instaff-db
+    environment:
+      POSTGRES_DB: demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    ports:
+      - "5423:5432"  # host:container
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: pfarrhoferphilip/instaff-server
+    container_name: instaff-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://db:5432/demo
+      QUARKUS_DATASOURCE_USERNAME: demo
+      QUARKUS_DATASOURCE_PASSWORD: demo
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  web:
-    build:
-      context: ./web
-    ports:
-      - "3000:80"
-    depends_on:
+    networks:
       - backend
 
-volumes:
-  db_data:
+  frontend:
+    image: pfarrhoferphilip/instaff-frontend
+    container_name: instaff-frontend
+    ports:
+      - "4200:80"  # Host port 4200 maps to nginx's port 80
+    networks:
+      - backend
+
+networks:
+  backend:
