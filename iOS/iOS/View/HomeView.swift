@@ -13,46 +13,58 @@ struct HomeView: View {
     @StateObject var shiftViewModel = ShiftViewModel(companyId: 1)
     @StateObject var roleViewModel = RoleViewModel(companyId: 1)
 
-    var currentWeekRequests: [Assignment] {
-        let calendar = Calendar.current
-        let now = Date()
-        let weekStart = calendar.startOfDay(for: calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!)
-        let weekEnd = calendar.date(byAdding: .day, value: 7, to: weekStart)!
-
-        return assignmentViewModel.assignments
+    var filteredAssignments: [Assignment] {
+        assignmentViewModel.assignments
+            .filter { $0.employee == session.employeeId }
             .filter {
+                let calendar = Calendar.current
+                let now = Date()
+                let weekday = calendar.component(.weekday, from: now)
+                let daysUntilEndOfWeek = 8 - weekday
+                let endOfWeek = calendar.date(byAdding: .day, value: daysUntilEndOfWeek, to: now)!
+                let endOfWeekAtMidnight = calendar.startOfDay(for: endOfWeek)
+                
+                
                 if let shift = shiftViewModel.shift(for: $0.shift) {
-                    let formatter = ISO8601DateFormatter()
-                    if let date = formatter.date(from: shift.startTime) {
-                        return date >= weekStart && date < weekEnd
-                    }
-                    return false
+                    return DateUtils.toDate(shift.startTime)! > Date() && DateUtils.toDate(shift.startTime)! < endOfWeekAtMidnight
                 }
                 return false
             }
-            .sorted {
-                guard let lhs = shiftViewModel.shift(for: $0.shift),
-                      let rhs = shiftViewModel.shift(for: $1.shift) else { return false }
-                return lhs.startTime < rhs.startTime
+            .sorted { l, r in
+                guard let lShift = shiftViewModel.shift(for: l.shift),
+                      let rShift = shiftViewModel.shift(for: r.shift) else {
+                    return false
+                }
+                return lShift.startTime > rShift.startTime
             }
+            
     }
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(currentWeekRequests) { assignment in
-                    NavigationLink {
-                        RequestDetailView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment, assignmentViewModel: assignmentViewModel)
-                    } label: {
-                        RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
+        VStack{
+            NavigationSplitView {
+                List {
+                    ForEach(filteredAssignments) { assignment in
+                        NavigationLink {
+                            RequestDetailView(
+                                roleViewModel: roleViewModel,
+                                shiftViewModel: shiftViewModel,
+                                assignment: assignment, assignmentViewModel: assignmentViewModel
+                            )
+                        } label: {
+                            RequestRowView(
+                                roleViewModel: roleViewModel,
+                                shiftViewModel: shiftViewModel,
+                                assignment: assignment
+                            )
+                        }
                     }
                 }
+                .navigationTitle("Requests")
+            } detail: {
+                Text("Select a request")
             }
-            .navigationTitle("Current Requests")
-        } detail: {
-            Text("Select a request")
         }
-        
     }
 }
 
