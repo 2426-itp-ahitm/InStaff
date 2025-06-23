@@ -105,6 +105,15 @@ public class EmployeeResource {
     @GET
     @Path("company/{company_id}")
     public List<EmployeeDTO> getEmployeesByCompany(@PathParam("company_id") Long companyId) {
+        /*
+        return employeeRepository
+                .listAll()
+                .stream()
+                .filter(employee -> employee.company.getId().equals(companyId))
+                .map(employeeMapper::toResource)
+                .toList();
+        */
+
         var employees = employeeRepository.listAll();
         if (employees == null) {
             return null;
@@ -119,6 +128,8 @@ public class EmployeeResource {
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
+
+
     }
 
     @DELETE
