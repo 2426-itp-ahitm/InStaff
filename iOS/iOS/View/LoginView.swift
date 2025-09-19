@@ -29,15 +29,12 @@ struct LoginView: View {
                 .bold()
 
             TextField("Company name", text: $companyNameInput)
-                .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal, 40)
             TextField("Firstname", text: $employeeFirstNameInput)
-                .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal, 40)
             TextField("Lastname", text: $employeeLastNameInput)
-                .keyboardType(.numberPad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal, 40)
             

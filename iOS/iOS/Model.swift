@@ -6,6 +6,8 @@
 //
 import Foundation
 
+let apiBaseUrl = "http://localhost:8080"
+
 struct Shift: Identifiable, Decodable {
     let id: Int
     var startTime: String
