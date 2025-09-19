@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 class AssignmentViewModel: ObservableObject {
     @Published var assignments: [Assignment] = []
@@ -22,7 +22,7 @@ class AssignmentViewModel: ObservableObject {
         var assignments: [Assignment] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/assignments") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/assignments") else {
             print("Invalid URL: assignment")
             return assignments
         }
@@ -59,7 +59,7 @@ class AssignmentViewModel: ObservableObject {
     // PUT /api/{companyId}/confirmation/decline/{assignmentId}
     public func confirmAssignment(assignmentId: Int, isAccepted: Bool) -> Bool {
         let action = isAccepted ? "confirm" : "decline"
-        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
             return false
         }
         var request = URLRequest(url: url)

@@ -19,7 +19,7 @@ class CompanyViewModel: ObservableObject {
         var companies: [Company] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "http://localhost:8080/api/companies") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/companies") else {
             print("Invalid URL: company")
             return companies
         }

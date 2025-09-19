@@ -20,7 +20,7 @@ class RoleViewModel: ObservableObject {
         var roles: [Role] = []
         let jsonDecoder = JSONDecoder()
         
-        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/roles") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/roles") else {
             print("Invalid URL: role")
             return roles
         }

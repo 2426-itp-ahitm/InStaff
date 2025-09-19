@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 class EmployeeViewModel: ObservableObject {
     @Published var employees: [Employee] = []
@@ -23,7 +23,7 @@ class EmployeeViewModel: ObservableObject {
         let jsonDecoder = JSONDecoder()
         
         
-        guard let url = URL(string: "http://localhost:8080/api/\(companyId)/employees") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees") else {
             print("Invalid URL: employee")
             return employees
         }
@@ -41,7 +41,7 @@ class EmployeeViewModel: ObservableObject {
         return employees
     }
     func saveEmployeeChanges(_ employee: Employee, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "http://localhost:8080/api/employees/\(employee.id)") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/employees/\(employee.id)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))
             return
         }
