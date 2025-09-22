@@ -38,6 +38,7 @@ struct Employee: Identifiable, Decodable, Encodable {
     var birthdate: String
     var companyId: Int64
     var companyName: String
+    var isManager: Bool
     var roles: [Int]
 }
 

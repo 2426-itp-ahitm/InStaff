@@ -41,7 +41,7 @@ struct ProfileView: View {
             employeeViewModel.saveEmployeeChanges(employee) { result in
                 switch result {
                 case .success:
-                    //print("Employee saved successfully")
+                    print("Employee saved successfully")
                     session.employee = employee
                 case .failure(let error):
                     print("Failed to save employee: \(error.localizedDescription)")
@@ -97,6 +97,19 @@ struct ProfileView: View {
                                 .disabled(!isEditing)
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
+                        Button(action: {
+                            if isEditing {
+                                saveProfileChanges()
+                            }
+                            isEditing.toggle()
+                        }) {
+                            Text(isEditing ? "Save" : "Edit data")
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .cornerRadius(8)
+                        }
                     }
                     Section(header: Text("Company")) {
                         HStack {
@@ -129,19 +142,6 @@ struct ProfileView: View {
                         }
                     }
                     Section(header: Text("")) {
-                        Button(action: {
-                            if isEditing {
-                                saveProfileChanges()
-                            }
-                            isEditing.toggle()
-                        }) {
-                            Text(isEditing ? "Save" : "Edit data")
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.blue)
-                                .cornerRadius(8)
-                        }
                         Button(action: {
                             session.isLoggedIn = false
                         }) {
