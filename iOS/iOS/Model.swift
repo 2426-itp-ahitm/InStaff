@@ -72,6 +72,14 @@ struct Company: Identifiable, Decodable {
     var companyName: String
 }
 
+struct CalendarEvent: Identifiable {
+    let id: UUID = UUID()
+    let title: String
+    let startDate: Date
+    let endDate: Date
+    let description: String
+}
+
 func formatDateComponents(_ dateString: String) -> (date: String, time: String)? {
     let parts = dateString.split(separator: "T")
     guard parts.count == 2 else { return nil }
