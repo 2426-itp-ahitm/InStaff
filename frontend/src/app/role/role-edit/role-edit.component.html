@@ -5,20 +5,20 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div class="">
-            <h1>Edit {{ role.roleName }}</h1>
+            <h3>{{ role.roleName }} bearbeiten</h3>
           </div>
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
                 <div class="sm:col-span-3">
-                  <label for="role-name" class="block text-sm/6 font-medium text-gray-900">Role Name</label>
+                  <label for="role-name" class="block text-sm/6 font-medium text-gray-900">Rollen Name</label>
                   <div class="mt-2">
                     <input #roleNameInput value="{{ role.roleName }}" type="text" name="role-name" id="role-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
                 </div>
                 <div class="h-px bg-gray-300 my-4"></div>
                 <div class="my-2 sm:col-span-3">
-                  <h1>Employees with the Role {{ role.roleName }}:</h1>
+                  <h3>Employees with the Role {{ role.roleName }}:</h3>
                   <ul role="list" class="list-disc marker:text-black ...">
                     <li  *ngFor="let e of employeesWithRole">{{ e.firstname }} {{ e.lastname }}</li>
                   </ul>
@@ -27,9 +27,9 @@
             </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-4">
-              <button type="button" class="button-cancel" (click)="close()">Cancel</button>
-              <button type="button" (click)="deleteRole(role)" class="button-delete">Delete</button>
-              <button type="submit" class="button-blue">Save</button>
+              <button type="button" class="button-cancel" (click)="close()">Abbrechen</button>
+              <button type="button" (click)="deleteRole(role)" class="button-delete">Löschen</button>
+              <button type="submit" class="button-green">Speichern</button>
             </div>
           </form>
         </div>

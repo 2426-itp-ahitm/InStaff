@@ -5,13 +5,13 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div class="">
-            <h1>Add a new Role</h1>
+            <h3>Füge eine Rolle hinzu</h3>
           </div>
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
                 <div class="sm:col-span-3">
-                  <label for="role-name" class="block text-sm/6 font-medium text-gray-900">Role Name</label>
+                  <label for="role-name" class="block text-sm/6 font-medium text-gray-900">Rollen Name</label>
                   <div class="mt-2">
                     <input #roleNameInput value="" type="text" name="role-name" id="role-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
@@ -20,8 +20,8 @@
             </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="button" class="button-cancel" (click)="closeAddRole()">Cancel</button>
-              <button type="submit" class="button-blue">Save</button>
+              <button type="button" class="button-cancel" (click)="closeAddRole()">Abbrechen</button>
+              <button type="submit" class="button-green">Speichern</button>
             </div>
           </form>
         </div>

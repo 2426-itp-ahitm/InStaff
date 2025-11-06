@@ -10,12 +10,15 @@
           </div>
 
 
-          <h3>Select Shift Template</h3>
+          <h3>Wähle eine Schichtvorlage aus</h3>
           <div class="flex gap-2">
             <form class="flex-3/4">
               <div class="sm:col-span-3">
                 <div class="my-1">
                   <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
+                    <option [value]="-1">
+                      neue Schicht
+                    </option>
                     <option *ngFor="let template of shiftTemplates" [value]="template.id">
                       {{ template.shiftTemplateName }}
                     </option>
@@ -25,7 +28,7 @@
             </form>
 
             <div class="flex-1/4 m-0">
-              <button type="button" (click)="chooseShiftTemplate()" class=" cursor-pointer rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Load</button>
+              <button type="button" (click)="chooseShiftTemplate()" class=" cursor-pointer rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Wählen</button>
             </div>
 
           </div>
@@ -60,8 +63,8 @@
             </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-4">
-              <button type="button" class="button-cancel" (click)="closeAddShift()">Cancel</button>
-              <button type="submit" class="button-blue">Save</button>
+              <button type="button" class="button-cancel" (click)="closeAddShift()" >Cancel</button>
+              <button type="submit" class="button-green" *ngIf="this.selectedShiftTemplate != null">Save</button>
             </div>
           </form>
         </div>
