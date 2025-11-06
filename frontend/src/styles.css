@@ -10,11 +10,54 @@ https://tailwindcss.com/
   font-style: normal;
 }
 
+@theme {
+  --color-beige: #DAD7CD;
+  --color-green-light: #A3B18A;
+  --color-green-base: #588157;
+  --color-green-dark: #3A5A40;
+  --color-green-darkest: #344E41;
+  }
 
-.menu-item-big{
-  @apply rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:text-white transition-all
+
+/* full calendar*/
+.fc {
+
+}
+.fc h2{
+  color: black;
+}
+.fc-button-primary {
+  border: 0 solid !important;
+  background-color: var(--color-green-dark) !important;
+
+}
+.fc-button-primary:hover {
+  transition-duration: 0.2s;
+  background-color: var(--color-green-base) !important;
 }
 
+.fc-button-active{
+  border: 0 solid !important;
+  transition-duration: 0.2s;
+  background-color: var(--color-green-base) !important;
+}
+
+
+/* headlines */
+h1{
+  @apply text-5xl text-center ;
+}
+
+h2{
+  @apply text-3xl text-center ;
+}
+
+
+.menu-item-big{
+  @apply rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-green-base hover:text-white transition-all
+}
+
+/* buttons */
 .button-blue {
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-blue-500 bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:border-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-indigo-300 disabled:border-indigo-300 focus-visible:outline-blue-500;
 }
@@ -29,7 +72,7 @@ https://tailwindcss.com/
   @apply grid  m-4 p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
 }
 
-
+/* modal */
 .modal-bg{
   @apply fixed inset-0 bg-black/50 transition
 }
@@ -44,4 +87,18 @@ https://tailwindcss.com/
 }
 .modal-card-4{
   @apply bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4
+}
+
+
+.bg-main{
+
+}
+
+.bg-glass{
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }

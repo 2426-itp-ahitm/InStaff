@@ -57,7 +57,7 @@ export class CalendarComponent implements OnInit {
       center: '',
       right: 'nextYear'
     },
-    themeSystem: 'bootstrap5',
+    themeSystem: 'Minty',
     dateClick: (arg) => this.handleDateClick(arg),
     select: (arg) => this.handleDateSelected(arg),
     eventClick: (arg) => this.handleEventSelected(arg),
