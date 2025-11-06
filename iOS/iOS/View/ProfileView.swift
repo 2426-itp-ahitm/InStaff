@@ -12,6 +12,7 @@ struct ProfileView: View {
     @ObservedObject var roleViewModel: RoleViewModel
     @ObservedObject var employeeViewModel: EmployeeViewModel
     @EnvironmentObject var session: SessionManager
+    @ObservedObject var colorManager: RoleColorManager
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -56,20 +57,20 @@ struct ProfileView: View {
         if let employee = session.employee {
             VStack {
                 Form {
-                    Section(header: Text("Personal Information")) {
+                    Section(header: Text("Persönliche Informationen")) {
                         HStack {
-                            Text("First Name:")
+                            Text("Vorname:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            TextField("First Name", text: $firstName)
+                            TextField("Vorname", text: $firstName)
                                 .disabled(!isEditing)
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
-                            Text("Last Name:")
+                            Text("Nachname:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            TextField("Last Name", text: $lastName)
+                            TextField("Nachname", text: $lastName)
                                 .disabled(!isEditing)
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
@@ -82,18 +83,18 @@ struct ProfileView: View {
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
-                            Text("Telephone:")
+                            Text("Telefon:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            TextField("Telephone", text: $telephone)
+                            TextField("Telefon", text: $telephone)
                                 .disabled(!isEditing)
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
                         HStack {
-                            Text("Birthdate:")
+                            Text("Geburtstag:")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            TextField("Birthdate", text: $birthdate)
+                            TextField("Geburtstag", text: $birthdate)
                                 .disabled(!isEditing)
                                 .foregroundStyle(isEditing ? .primary : .secondary)
                         }
@@ -103,7 +104,7 @@ struct ProfileView: View {
                             }
                             isEditing.toggle()
                         }) {
-                            Text(isEditing ? "Save" : "Edit data")
+                            Text(isEditing ? "Speichern" : "Daten bearbeiten")
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(maxWidth: .infinity)
@@ -111,17 +112,17 @@ struct ProfileView: View {
                                 .cornerRadius(8)
                         }
                     }
-                    Section(header: Text("Company")) {
+                    Section(header: Text("Firma")) {
                         HStack {
-                            Text("Company Name: ")
+                            Text("Firmen Name: ")
                                 .frame(width: 120, alignment: .leading)
                             Spacer()
-                            TextField("Company Name", text: $companyName)
+                            TextField("Firmen Name", text: $companyName)
                                 .disabled(true)
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    Section(header: Text("Roles")) {
+                    Section(header: Text("Rollen")) {
                         ForEach(roleViewModel.roles) { role in
                             HStack {
                                 Text(role.roleName)
@@ -136,9 +137,28 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    Section(header: Text("App settings")) {
-                        HStack{
-                            Text("App settings not implemented yet!")
+                    Section(header: Text("App Einstellungen")) {
+                        VStack(alignment: .leading) {
+                            ForEach(roleViewModel.roles) { role in
+                                HStack {
+                                    Text(role.roleName)
+                                    Spacer()
+                                    ColorPicker(
+                                        "",
+                                        selection: Binding<Color>(
+                                            get: {
+                                                colorManager.getColor(for: role.roleName)
+                                            },
+                                            set: { newColor in
+                                                colorManager.saveColor(for: role.roleName, color: newColor)
+                                            }
+                                        )
+                                    )
+                                    .labelsHidden()
+                                     
+                                }
+                                .padding(.vertical, 4)
+                            }
                         }
                     }
                     Section(header: Text("")) {
