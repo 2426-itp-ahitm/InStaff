@@ -7,16 +7,16 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div *ngIf="shift">
-            <h1>{{shift.startTime}} bis {{shift.endTime}}</h1>
+            <h3>{{shift.startTime}} bis {{shift.endTime}}</h3>
 
             <table>
               <thead>
                 <td class="border border-gray-300 p-2 w-sm ">Name</td>
-                <td class="border border-gray-300 p-2 w-sm ">Role</td>
-                <td class="border border-gray-300 p-2 w-sm ">Confirmed</td>
+                <td class="border border-gray-300 p-2 w-sm ">Rolle</td>
+                <td class="border border-gray-300 p-2 w-sm ">Status</td>
               </thead>
               <tbody>
-              <tr *ngFor="let a of assignments" class="cursor-pointer hover:bg-blue-50 odd:bg-white even:bg-white pointer-events-auto" >
+              <tr *ngFor="let a of assignments" class="cursor-pointer hover:bg-green-50 odd:bg-white even:bg-white pointer-events-auto" >
                 <td class="border border-gray-300 p-2 w-sm ">{{ employeeService.getEmployeeById(a.employee).firstname }} {{ employeeService.getEmployeeById(a.employee).lastname }}</td>
                 <td class="border border-gray-300 p-2 w-sm ">{{ roleService.getRoleNameById(a.role) }}</td>
                 <td class="border border-gray-300 p-2 w-sm">

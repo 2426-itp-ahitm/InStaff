@@ -152,11 +152,11 @@ export class ShiftEditComponent implements OnInit {
   makeStringFromBoolean(confirmed: boolean) {
 
     if (confirmed) {
-      return "confirmed";
+      return "Bestätigt";
     }else if(confirmed==null) {
-      return "pending";
+      return "Ausstehend";
     } else{
-      return "denied";
+      return "Abgelehnt";
     }
 
   }

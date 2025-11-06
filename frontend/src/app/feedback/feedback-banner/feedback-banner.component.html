@@ -1,8 +1,8 @@
 <div *ngIf="showFeedback" class="fixed top-5 right-5 z-50 px-4 py-2 rounded shadow-lg text-white transition-opacity duration-300"
      [ngClass]="{
-       'bg-green-500': feedback.type === 'success',
+       'bg-green-base': feedback.type === 'success',
        'bg-red-500': feedback.type === 'error',
-       'bg-blue-500': feedback.type === 'info'
+       'bg-green-dark': feedback.type === 'info'
      }">
   <p class="font-light">{{ feedback.message }}</p>
 </div>

@@ -4,24 +4,6 @@
       <div *ngFor="let e of this.employees" class="my-2">
         <app-card  [headline]='e.firstname +" "+ e.lastname' [details]='e.email ' [route]="'/team'" class="" (click)="openEmpEdit(e)"></app-card>
       </div>
-
-
-<!--
-      <table class="mb-3 table-auto border-collapse border border-gray-400 ">
-        <thead>
-          <tr>
-            <th class="border border-gray-300 p-2 w-sm">First Name</th>
-            <th class="border border-gray-300 p-2 w-sm">Last Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let e of this.employees" class="hover:bg-blue-50 odd:bg-white even:bg-white cursor-pointer" (click)="openEmpEdit(e)">
-            <td class="border border-gray-300 p-2 w-sm ">{{ e.firstname }}</td>
-            <td class="border border-gray-300 p-2 w-sm">{{ e.lastname }}</td>
-          </tr>
-        </tbody>
-      </table>
-      -->
       <button (click)="openAddEmployee()" type="button" class="button-green">Add Employee</button>
 
     </div>

@@ -58,19 +58,15 @@ h2{
 }
 
 /* buttons */
-.button-blue {
-  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-blue-500 bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:border-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-indigo-300 disabled:border-indigo-300 focus-visible:outline-blue-500;
-}
-
 .button-green {
-  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-light hover:border-green-light focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-indigo-300 disabled:border-indigo-300 focus-visible:outline-green-base;
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base;
 }
 
 .button-cancel {
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base px-3 py-2 text-sm font-semibold text-black shadow-sm hover:border-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:border-green-base;
 }
 .button-delete {
-  @apply cursor-pointer rounded-md transition-all bg-red-600 border-2 border-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500
+  @apply cursor-pointer rounded-md transition-all bg-red-600 border-2 border-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base
 }
 
 .card-center {

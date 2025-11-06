@@ -15,7 +15,7 @@
             <form class="flex-3/4">
               <div class="sm:col-span-3">
                 <div class="my-1">
-                  <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
+                  <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                     <option [value]="-1">
                       neue Schicht
                     </option>
@@ -28,7 +28,7 @@
             </form>
 
             <div class="flex-1/4 m-0">
-              <button type="button" (click)="chooseShiftTemplate()" class=" cursor-pointer rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Wählen</button>
+              <button type="button" (click)="chooseShiftTemplate()" class="button-green">Wählen</button>
             </div>
 
           </div>
@@ -44,7 +44,7 @@
                       {{ roleNameMap[tmpRole.roleId] }} {{ idx + 1 }}:
                     </label>
                     <div *ngIf="initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)">
-                      <select [id]="'employee-select-' + tmpRole.roleId + '-' + idx" name="employee" class="block w-64 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
+                      <select [id]="'employee-select-' + tmpRole.roleId + '-' + idx" name="employee" class="block w-64 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                         <ng-container *ngFor="let emp of employees">
                           <!-- TODO: the if statement looks for roles(tmpRole.roleId) instead of looking if roles includes the role-->
                           <option *ngIf="checkIfEmpHasRole(emp, tmpRole)" [value]="emp.id">
