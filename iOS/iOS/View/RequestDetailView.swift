@@ -97,7 +97,7 @@ struct RequestDetailView: View {
                         }
                     }
                     
-                    RoleTag(roleColorManager: RoleColorManager(roleViewModel: RoleViewModel(companyId: session.companyId!)), roleName: roleViewModel.roleName(for: assignment.role))
+                    RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
                         .font(.title)
                     
                     

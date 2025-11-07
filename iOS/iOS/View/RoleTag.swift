@@ -7,21 +7,20 @@
 import SwiftUI
 
 struct RoleTag: View {
-    @ObservedObject var roleColorManager: RoleColorManager
     let roleName: String
 
     var borderColor: Color {
         switch roleName {
         case "Koch":
-            return roleColorManager.getColor(for: "Koch")
+            return .green
         case "Küchenhilfe":
-            return roleColorManager.getColor(for: "Küchenhilfe")
+            return .blue
         case "Kellner":
-            return roleColorManager.getColor(for: "Kellner")
+            return .red
         case "Barkeeper":
-            return roleColorManager.getColor(for: "Barkeeper")
+            return .yellow
         case "Abwasch":
-            return roleColorManager.getColor(for: "Abwasch")
+            return .orange
         default:
             return .gray
         }

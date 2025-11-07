@@ -77,16 +77,16 @@ struct RequestRowView: View {
                 }
             }
 
-            RoleTag(roleColorManager: RoleColorManager(roleViewModel: RoleViewModel(companyId: session.companyId!)), roleName: roleViewModel.roleName(for: assignment.role))
+            RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
 
             let (confirmationText, confirmationColor): (String, Color) = {
                 switch assignment.confirmed {
                 case true:
-                    return ("Confirmed", .green)
+                    return ("Angenommen", .green)
                 case false:
-                    return ("Rejected", .red)
+                    return ("Abgelehnt", .red)
                 default:
-                    return ("Not confirmed", .blue)
+                    return ("Nicht ausgewählt", .blue)
                 }
             }()
 

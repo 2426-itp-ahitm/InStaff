@@ -5,6 +5,7 @@
 //  Created by Alexander Hahn on 05.05.25.
 //
 import Foundation
+import SwiftUI
 
 let apiBaseUrl = "http://localhost:8080"
 

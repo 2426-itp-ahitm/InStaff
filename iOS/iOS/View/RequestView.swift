@@ -43,9 +43,9 @@ struct RequestView: View {
     var body: some View {
         VStack{
             NavigationSplitView {
-                Menu("Filters") {
-                    Picker("Role", selection: $selectedRoleId) {
-                        Text("All Roles").tag(Int?.none)
+                Menu("Filter") {
+                    Picker("Rolle", selection: $selectedRoleId) {
+                        Text("Alle Rollen").tag(Int?.none)
                         ForEach(roleViewModel.roles) { role in
                             if let employee = session.employee, employee.roles.contains(role.id) {
                                 Text(roleViewModel.roleName(for: role.id)).tag(Optional(role.id))
@@ -71,9 +71,9 @@ struct RequestView: View {
                         }
                     }
                 }
-                .navigationTitle("Requests")
+                .navigationTitle("Anfragen")
             } detail: {
-                Text("Select a request")
+                Text("Anfrage auswählen")
             }
         }
     }

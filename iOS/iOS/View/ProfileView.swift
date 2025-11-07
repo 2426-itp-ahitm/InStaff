@@ -6,13 +6,11 @@
 //
 
 import SwiftUI
-import Combine
 
 struct ProfileView: View {
     @ObservedObject var roleViewModel: RoleViewModel
     @ObservedObject var employeeViewModel: EmployeeViewModel
     @EnvironmentObject var session: SessionManager
-    @ObservedObject var colorManager: RoleColorManager
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -21,7 +19,7 @@ struct ProfileView: View {
     @State private var birthdate: String = ""
     @State private var companyName: String = ""
     @State private var isEditing: Bool = false
-
+    
     private func saveProfileChanges() {
         guard var employee = session.employee else { return }
 
@@ -54,151 +52,120 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        if let employee = session.employee {
-            VStack {
-                Form {
-                    Section(header: Text("Persönliche Informationen")) {
-                        HStack {
-                            Text("Vorname:")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Vorname", text: $firstName)
-                                .disabled(!isEditing)
-                                .foregroundStyle(isEditing ? .primary : .secondary)
-                        }
-                        HStack {
-                            Text("Nachname:")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Nachname", text: $lastName)
-                                .disabled(!isEditing)
-                                .foregroundStyle(isEditing ? .primary : .secondary)
-                        }
-                        HStack {
-                            Text("Email:")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Email", text: $email)
-                                .disabled(!isEditing)
-                                .foregroundStyle(isEditing ? .primary : .secondary)
-                        }
-                        HStack {
-                            Text("Telefon:")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Telefon", text: $telephone)
-                                .disabled(!isEditing)
-                                .foregroundStyle(isEditing ? .primary : .secondary)
-                        }
-                        HStack {
-                            Text("Geburtstag:")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Geburtstag", text: $birthdate)
-                                .disabled(!isEditing)
-                                .foregroundStyle(isEditing ? .primary : .secondary)
-                        }
-                        Button(action: {
-                            if isEditing {
-                                saveProfileChanges()
-                            }
-                            isEditing.toggle()
-                        }) {
-                            Text(isEditing ? "Speichern" : "Daten bearbeiten")
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.blue)
-                                .cornerRadius(8)
-                        }
-                    }
-                    Section(header: Text("Firma")) {
-                        HStack {
-                            Text("Firmen Name: ")
-                                .frame(width: 120, alignment: .leading)
-                            Spacer()
-                            TextField("Firmen Name", text: $companyName)
-                                .disabled(true)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    Section(header: Text("Rollen")) {
-                        ForEach(roleViewModel.roles) { role in
+        NavigationStack{
+            if let employee = session.employee {
+                VStack {
+                    Form {
+                        Section(header: Text("Persönliche Informationen")) {
                             HStack {
-                                Text(role.roleName)
+                                Text("Vorname:")
+                                    .frame(width: 120, alignment: .leading)
                                 Spacer()
-                                if employee.roles.contains(role.id) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.green)
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundColor(.gray)
+                                TextField("Vorname", text: $firstName)
+                                    .disabled(!isEditing)
+                                    .foregroundStyle(isEditing ? .primary : .secondary)
+                            }
+                            HStack {
+                                Text("Nachname:")
+                                    .frame(width: 120, alignment: .leading)
+                                Spacer()
+                                TextField("Nachname", text: $lastName)
+                                    .disabled(!isEditing)
+                                    .foregroundStyle(isEditing ? .primary : .secondary)
+                            }
+                            HStack {
+                                Text("Email:")
+                                    .frame(width: 120, alignment: .leading)
+                                Spacer()
+                                TextField("Email", text: $email)
+                                    .disabled(!isEditing)
+                                    .foregroundStyle(isEditing ? .primary : .secondary)
+                            }
+                            HStack {
+                                Text("Telefon:")
+                                    .frame(width: 120, alignment: .leading)
+                                Spacer()
+                                TextField("Telefon", text: $telephone)
+                                    .disabled(!isEditing)
+                                    .foregroundStyle(isEditing ? .primary : .secondary)
+                            }
+                            HStack {
+                                Text("Geburtstag:")
+                                    .frame(width: 120, alignment: .leading)
+                                Spacer()
+                                TextField("Geburtstag", text: $birthdate)
+                                    .disabled(!isEditing)
+                                    .foregroundStyle(isEditing ? .primary : .secondary)
+                            }
+                            Button(action: {
+                                if isEditing {
+                                    saveProfileChanges()
                                 }
+                                isEditing.toggle()
+                            }) {
+                                Text(isEditing ? "Speichern" : "Daten bearbeiten")
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.appGreen)
+                                    .cornerRadius(8)
                             }
                         }
-                    }
-                    Section(header: Text("App Einstellungen")) {
-                        VStack(alignment: .leading) {
+                        Section(header: Text("Firma")) {
+                            HStack {
+                                Text("Firmenname: ")
+                                    .frame(width: 120, alignment: .leading)
+                                Spacer()
+                                TextField("Firmenname", text: $companyName)
+                                    .disabled(true)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        Section(header: Text("Rollen")) {
                             ForEach(roleViewModel.roles) { role in
                                 HStack {
                                     Text(role.roleName)
                                     Spacer()
-                                    ColorPicker(
-                                        "",
-                                        selection: Binding<Color>(
-                                            get: {
-                                                colorManager.getColor(for: role.roleName)
-                                            },
-                                            set: { newColor in
-                                                colorManager.saveColor(for: role.roleName, color: newColor)
-                                            }
-                                        )
-                                    )
-                                    .labelsHidden()
-                                     
+                                    if employee.roles.contains(role.id) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Image(systemName: "circle")
+                                            .foregroundColor(.gray)
+                                    }
                                 }
-                                .padding(.vertical, 4)
+                            }
+                        }
+                        Section(header: Text("App Einstellungen")) {
+                            Text("Folgt in Kürze :)")
+                        }
+                        Section(header: Text("")) {
+                            Button(action: {
+                                session.isLoggedIn = false
+                            }) {
+                                Text("Logout")
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color(.red))
+                                    .cornerRadius(8)
                             }
                         }
                     }
-                    Section(header: Text("")) {
-                        Button(action: {
-                            session.isLoggedIn = false
-                        }) {
-                            Text("Logout")
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color(.red))
-                                .cornerRadius(8)
-                        }
-                    }
                 }
-            }
-            .onAppear {
-                firstName = employee.firstname
-                lastName = employee.lastname
-                email = employee.email
-                telephone = employee.telephone
-                birthdate = employee.birthdate
-                companyName = employee.companyName
-            }
-        } else {
-            VStack {
-                Text("Employee not found")
+                .onAppear {
+                    firstName = employee.firstname
+                    lastName = employee.lastname
+                    email = employee.email
+                    telephone = employee.telephone
+                    birthdate = employee.birthdate
+                    companyName = employee.companyName
+                }
+            } else {
+                VStack {
+                    Text("Employee not found")
+                }
             }
         }
     }
 }
-
-/*#Preview {
-    let session = SessionManager()
-    session.employee = Employee(id: 1, firstname: "Max", lastname: "Mustermann", email: "max@example.com", password: "password", telephone: "123456789", birthdate: "1990-01-01", companyName: "Test GmbH",companyId: 1, roles: [])
-
-    let employeeVM = EmployeeViewModel(companyID: 1)
-    let roleVM = RoleViewModel()
-
-    ProfileView(roleViewModel: roleVM, employeeViewModel: employeeVM)
-        .environmentObject(session) // ✅ Correctly attached to the View
-}
-*/

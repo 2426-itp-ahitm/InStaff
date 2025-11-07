@@ -69,7 +69,7 @@ struct LoginView: View {
                 }
             }
             .padding()
-            .background(Color.blue)
+            .background(Color.appGreen)
             .foregroundColor(.white)
             .cornerRadius(8)
             .alert(isPresented: $showAlert) {
