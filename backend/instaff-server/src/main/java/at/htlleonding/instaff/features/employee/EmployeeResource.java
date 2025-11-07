@@ -150,7 +150,7 @@ public class EmployeeResource {
         }
         // Map DTO to entity
         Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()), roles, dto.isManager());
+                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()), roles, dto.isManager(), dto.hourlyWage(), dto.address());
 
         // Persist the entity
         Employee createdEmployee = employeeRepository.createEmployee(employee);

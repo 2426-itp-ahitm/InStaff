@@ -29,7 +29,9 @@ Content-Type: application/json
   "birthdate": "1990-01-01",
   "isManager": false,
   "companyId": 1,
-  "roles": [1, 2]
+  "roles": [1, 2],
+  "hourlyWage": 12.5,
+  "address": "Example Street 123"
 }
 
 ### Delete Employee
@@ -46,7 +48,9 @@ Content-Type: application/json
   "birthdate": "1980-11-11",
   "telephone": "133",
   "isManager": true,
-  "roles": [1, 2, 3, 4, 5]
+  "roles": [1, 2, 3, 4, 5],
+  "hourlyWage": 15,
+  "address": "Tobi Street 321"
 }
 
 ### Assign role to employee

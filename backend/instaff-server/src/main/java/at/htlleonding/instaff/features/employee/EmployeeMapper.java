@@ -9,6 +9,6 @@ public class EmployeeMapper {
         return new EmployeeDTO(employee.id, employee.firstname, employee.lastname,
                 employee.email, employee.telephone, employee.password, employee.birthdate, employee.isManager,
                 employee.company.getId(), employee.company.getCompanyName(),
-                employee.getRoleIds(), employee.getShiftIds());
+                employee.getRoleIds(), employee.getShiftIds(), employee.getHourlyWage(), employee.getAddress());
     }
 }

@@ -15,6 +15,8 @@ public record EmployeeCreateDTO(
         LocalDate birthdate,
         boolean isManager,
         Long companyId, // Reference to the company
-        List<Long> roles // List of role IDs
+        List<Long> roles, // List of role IDs
+        double hourlyWage,
+        String address
 ) {
 }

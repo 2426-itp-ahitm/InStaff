@@ -34,6 +34,10 @@ public class Employee {
     String telephone;
     String password;
     LocalDate birthdate;
+    @Column(name = "hourly_wage", nullable = true)
+    Double hourlyWage;
+    @Column(nullable = true)
+    String address;
     @Column(name = "is_manager")
     Boolean isManager;
     @ManyToOne
@@ -52,7 +56,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, Boolean isManager) {
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, Boolean isManager, Double hourlyWage, String address) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -61,9 +65,11 @@ public class Employee {
         this.birthdate = birthdate;
         this.company = company;
         this.isManager = isManager;
+        this.hourlyWage = hourlyWage;
+        this.address = address;
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager) {
+    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager, Double hourlyWage, String address) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -73,6 +79,8 @@ public class Employee {
         this.company = company;
         this.roles.addAll(roles);
         this.isManager = isManager;
+        this.hourlyWage = hourlyWage;
+        this.address = address;
     }
 
     public boolean hasRoleWithId(Long id) {
@@ -93,6 +101,30 @@ public class Employee {
             this.firstname = firstname;
         }
     }
+
+    public Double getHourlyWage() {
+        if (hourlyWage == null) {
+            return 0d;
+        }
+        return hourlyWage;
+    }
+
+    public void setHourlyWage(Double hourlyWage) {
+        this.hourlyWage = hourlyWage;
+    }
+
+    public String getAddress() {
+        if (address == null) {
+            return "";
+        }
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
 
     public boolean isManager() {
         return isManager;

@@ -21,5 +21,7 @@ public record EmployeeDTO(
         Long companyId,
         String companyName,
         List<Long> roles,
-        List<Long> shifts
+        List<Long> shifts,
+        double hourly_wage,
+        String address
 ) { }
