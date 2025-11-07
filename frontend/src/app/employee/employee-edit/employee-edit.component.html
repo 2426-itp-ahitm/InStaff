@@ -5,7 +5,7 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div class="">
-            <h1>Bearbeite {{ employee.firstname }} {{ employee.lastname }}</h1>
+            <h3>Bearbeite {{ employee.firstname }} {{ employee.lastname }}</h3>
           </div>
           <form [formGroup]="editEmployeeForm" (ngSubmit)="save()">
             <div class="space-y-1">
@@ -15,7 +15,7 @@
                 <div class="sm:col-span-3">
                   <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
                   <div class="mt-2">
-                    <input formControlName="firstname" value="{{ employee.firstname }}" type="text" name="firstname" id="firstname" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input formControlName="firstname" value="{{ employee.firstname }}" type="text" name="firstname" id="firstname" class="input-field">
                   </div>
                   <div *ngIf="editEmployeeForm.get('firstname')?.invalid" class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="sm:col-span-3">
                   <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
                   <div class="mt-2">
-                    <input formControlName="lastname" value="{{ employee.lastname }}" type="text" name="lastname" id="lastname" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input formControlName="lastname" value="{{ employee.lastname }}" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field">
                   </div>
                   <div *ngIf="editEmployeeForm.get('lastname')?.invalid" class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
                 </div>
@@ -32,7 +32,7 @@
                 <!-- BDAY -->
                 <div class="sm:col-span-4">
                   <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
-                  <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                  <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
                   <div *ngIf="editEmployeeForm.get('birthdate')?.invalid" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
                 </div>
 
@@ -40,7 +40,7 @@
                 <div class="sm:col-span-5">
                   <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
                   <div class="mt-2">
-                    <input formControlName="email" value="{{ employee.email }}" id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input formControlName="email" value="{{ employee.email }}" id="email" name="email" type="email" autocomplete="email" class="input-field">
                   </div>
                   <div *ngIf="editEmployeeForm.get('email')?.invalid" class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
                 </div>
@@ -49,16 +49,34 @@
                 <div class="sm:col-span-6">
                   <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
                   <div class="mt-2">
-                    <input formControlName="telephone" value="{{ employee.telephone }}" id="telephone" name="telephone" type="text" autocomplete="tel" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input formControlName="telephone" value="{{ employee.telephone }}" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field">
                   </div>
                   <div *ngIf="editEmployeeForm.get('telephone')?.invalid" class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="sm:col-span-5">
+                  <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+                  <div class="mt-2">
+                    <input formControlName="address" value="{{ employee.address }}" id="address" name="address" type="text" autocomplete="address" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('address')?.invalid" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+                </div>
+
+                <!-- HOURLY WAGE -->
+                <div class="sm:col-span-6">
+                  <label for="hourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
+                  <div class="mt-2">
+                    <input formControlName="hourlyWage" value="{{ employee.hourly_wage }}" id="hourlyWage" name="hourlyWage" type="number" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('hourlyWage')?.invalid" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
                 </div>
 
                 <!-- IS MANAGER -->
                 <div class="sm:col-span-3">
                   <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
                   <div class="mt-2">
-                    <input formControlName="isManager" type="checkbox" id="isManager" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <input formControlName="isManager" type="checkbox" id="isManager" class="text-green-base shadow-sm focus:ring-green-base rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
                     <label for="isManager" class="ml-2 text-sm text-gray-700">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
                   </div>
                 </div>

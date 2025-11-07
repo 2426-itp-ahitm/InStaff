@@ -46,6 +46,8 @@ export class EmployeeEditComponent implements OnInit {
       birthdate: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       telephone: new FormControl('', Validators.required), // optional
+      address: new FormControl('', Validators.required),
+      hourlyWage: new FormControl('', Validators.required),
       isManager: new FormControl(false),
       roles: new FormControl<EmployeeRole[]>([], Validators.required),
     });
@@ -57,6 +59,8 @@ export class EmployeeEditComponent implements OnInit {
     this.editEmployeeForm.get('telephone')?.setValue(this.employee.telephone);
     this.editEmployeeForm.get('isManager')?.setValue(this.employee.isManager);
     this.editEmployeeForm.get('roles')?.setValue(this.employee.roles);
+    this.editEmployeeForm.get('address')?.setValue(this.employee.address);
+    this.editEmployeeForm.get('hourlyWage')?.setValue(this.employee.hourly_wage);
 
     this.roleService.getRoles()
 
