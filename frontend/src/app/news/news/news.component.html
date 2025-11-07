@@ -1,0 +1,6 @@
+<div class="bg-glass card-center h-max">
+  <h2>Neuigkeiten</h2>
+  <p *ngFor="let n of this.news">
+    {{n.date_created}} - {{n.employee_name}} - {{n.confirmed.valueOf()}}
+  </p>
+</div>
