@@ -60,9 +60,9 @@ struct HomeView: View {
                         }
                     }
                 }
-                .navigationTitle("Requests")
+                .navigationTitle("Anfragen")
             } detail: {
-                Text("Select a request")
+                Text("Wählen Sie eine Anfrage")
             }
         }
     }
