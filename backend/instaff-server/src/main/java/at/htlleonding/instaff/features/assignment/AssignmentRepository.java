@@ -1,6 +1,9 @@
 package at.htlleonding.instaff.features.assignment;
 
+import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.news.News;
+import at.htlleonding.instaff.features.news.NewsRepository;
 import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -71,9 +74,12 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
     }
 
     @Transactional
-    public void setConfirmed(boolean confirmed, Long assignmentId) {
+    public void setConfirmed(boolean confirmed, Long assignmentId, Long companyId) {
         Assignment assignment = entityManager.find(Assignment.class, assignmentId);
         assignment.setConfirmed(confirmed);
         entityManager.persist(assignment);
+
+        News news = new News(assignment, entityManager.find(Company.class, companyId));
+        entityManager.persist(news);
     }
 }

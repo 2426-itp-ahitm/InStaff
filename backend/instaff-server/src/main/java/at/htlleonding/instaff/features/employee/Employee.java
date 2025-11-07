@@ -112,6 +112,38 @@ public class Employee {
         }
     }
 
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getFullName() {
+        return firstname + " " + lastname;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public Boolean getManager() {
+        return isManager;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
     public void setEmail(String email) {
         if(email != null && email.contains("@")) {
             this.email = email;

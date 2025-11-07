@@ -1,0 +1,25 @@
+package at.htlleonding.instaff.features.news;
+
+import at.htlleonding.instaff.features.employee.Employee;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
+
+@ApplicationScoped
+public class NewsRepository implements PanacheRepository<News> {
+    @Inject
+    EntityManager entityManager;
+
+    public List<News> getNews(long companyId) {
+        return entityManager.createNamedQuery(News.FIND_BY_COMPANY, News.class).setParameter("id", companyId).getResultList();
+    }
+
+    @Transactional
+    public void save(News news) {
+        persist(news);
+    }
+}

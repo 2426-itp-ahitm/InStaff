@@ -19,16 +19,16 @@ public class ConfirmationResource {
 
     @PUT
     @Path("confirm/{assignmentId}")
-    public Response confirm(@PathParam("assignmentId") Long assignmentId) {
-        assignmentRepository.setConfirmed(true, assignmentId);
+    public Response confirm(@PathParam("assignmentId") Long assignmentId, @PathParam("companyId") Long companyId) {
+        assignmentRepository.setConfirmed(true, assignmentId, companyId);
         Assignment assignment = assignmentRepository.findById(assignmentId);
         return Response.ok(assignmentMapper.toResource(assignment)).build();
     }
 
     @PUT
     @Path("decline/{assignmentId}")
-    public Response decline(@PathParam("assignmentId") Long assignmentId) {
-        assignmentRepository.setConfirmed(false, assignmentId);
+    public Response decline(@PathParam("assignmentId") Long assignmentId, @PathParam("companyId") Long companyId) {
+        assignmentRepository.setConfirmed(false, assignmentId, companyId);
         Assignment assignment = assignmentRepository.findById(assignmentId);
         return Response.ok(assignmentMapper.toResource(assignment)).build();
     }
