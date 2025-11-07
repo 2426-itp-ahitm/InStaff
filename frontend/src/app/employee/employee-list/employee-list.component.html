@@ -4,7 +4,7 @@
       <div *ngFor="let e of this.employees" class="my-2">
         <app-card  [headline]='e.firstname +" "+ e.lastname' [details]='e.email ' [route]="'/team'" class="" (click)="openEmpEdit(e)"></app-card>
       </div>
-      <button (click)="openAddEmployee()" type="button" class="button-green">Add Employee</button>
+      <button (click)="openAddEmployee()" type="button" class="button-green">Mitarbeiter hinzufügen</button>
 
     </div>
     <div *ngIf="isEditMode">

@@ -26,7 +26,7 @@
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
           <div class="">
-            <h1>Add a new employee</h1>
+            <h1>Neuen Mitarbeiter hinzufügen</h1>
           </div>
           <form [formGroup]="addEmployeeForm" (ngSubmit)="save()">
             <div class="space-y-1">
@@ -34,45 +34,45 @@
 
                 <!-- FIRSTNAME -->
                 <div class="sm:col-span-3">
-                  <label for="firstname" class="block text-sm/6 font-medium text-gray-900">First name</label>
+                  <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
                   <div class="mt-2">
                     <input formControlName="firstname" value="" type="text" name="firstname" id="firstname" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('firstname')?.invalid && addEmployeeForm.get('firstname')?.touched" class="text-red-600 text-sm">Valid first name is required!</div>
+                  <div *ngIf="addEmployeeForm.get('firstname')?.invalid && addEmployeeForm.get('firstname')?.touched" class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
                 </div>
 
                 <!-- LASTNAME -->
                 <div class="sm:col-span-3">
-                  <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Last name</label>
+                  <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
                   <div class="mt-2">
                     <input formControlName="lastname" value="" type="text" name="lastname" id="lastname" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('lastname')?.invalid && addEmployeeForm.get('lastname')?.touched" class="text-red-600 text-sm">Valid last name is required!</div>
+                  <div *ngIf="addEmployeeForm.get('lastname')?.invalid && addEmployeeForm.get('lastname')?.touched" class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
                 </div>
 
                 <!-- BDAY -->
                 <div class="sm:col-span-4">
-                  <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Birthdate</label>
+                  <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
                   <input formControlName="birthdate" value="" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                  <div *ngIf="addEmployeeForm.get('birthdate')?.invalid && addEmployeeForm.get('birthdate')?.touched" class="text-red-600 text-sm">Valid birthdate is required</div>
+                  <div *ngIf="addEmployeeForm.get('birthdate')?.invalid && addEmployeeForm.get('birthdate')?.touched" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
                 </div>
 
                 <!-- EMAIL -->
                 <div class="sm:col-span-5">
-                  <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
+                  <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
                   <div class="mt-2">
                     <input formControlName="email" value="" id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched" class="text-red-600 text-sm">Valid email is required</div>
+                  <div *ngIf="addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched" class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
                 </div>
 
                 <!-- TELEPHONE -->
                 <div class="sm:col-span-6">
-                  <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Phone Number</label>
+                  <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
                   <div class="mt-2">
                     <input formControlName="telephone" value="" id="telephone" name="telephone" type="text" autocomplete="tel" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched" class="text-red-600 text-sm">Valid telephone is required</div>
+                  <div *ngIf="addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched" class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
                 </div>
 
 
@@ -81,7 +81,7 @@
                   <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
                   <div class="mt-2">
                     <input formControlName="isManager" type="checkbox" id="isManager" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-                    <label for="isManager" class="ml-2 text-sm text-gray-700">Allow the employee to manage the company</label>
+                    <label for="isManager" class="ml-2 text-sm text-gray-700">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
                   </div>
                 </div>
 
@@ -92,7 +92,7 @@
               <div class="border-b border-gray-900/10 pb-5" *ngIf="roles.length > 0">
                 <div class="mt-2 space-y-10">
                   <fieldset>
-                    <legend class="text-sm/6 font-semibold text-gray-900">Roles</legend>
+                    <legend class="text-sm/6 font-semibold text-gray-900">Rollen</legend>
                     <div class="max-h-40 overflow-y-scroll">
                       <div class="mt-6 space-y-6" *ngFor="let r of this.roles">
                         <div class="flex gap-3">
@@ -126,8 +126,8 @@
             </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="button" class="button-cancel" (click)="closeAddEmployee()">Cancel</button>
-              <button type="submit" [disabled]="addEmployeeForm.invalid" class="button-green">Save</button>
+              <button type="button" class="button-cancel" (click)="closeAddEmployee()">Abbrechen</button>
+              <button type="submit" [disabled]="addEmployeeForm.invalid" class="button-green">Speichern</button>
             </div>
           </form>
         </div>

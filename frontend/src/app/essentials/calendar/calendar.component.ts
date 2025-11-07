@@ -15,6 +15,7 @@ import {ShiftTemplate} from '../../interfaces/shift-template';
 import { CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
+import deLocale from '@fullcalendar/core/locales/de';
 
 @Component({
   selector: 'app-calendar',
@@ -24,6 +25,7 @@ import {ShiftCreateDTO} from '../../interfaces/new-shift';
 })
 export class CalendarComponent implements OnInit {
   calendarOptions: CalendarOptions = {
+    locale: deLocale,
     titleFormat: {
       year: 'numeric',
       month: 'short',

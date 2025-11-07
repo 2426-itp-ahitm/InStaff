@@ -51,7 +51,7 @@ values (1, 2, 1);
 
 /* Neue Manager */
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)
-values ('1975-02-27 00:00:00', 'bernhard@penkner@example.com', 'Bernhard', 'Penkner', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '67734144524', 1, true);
+values ('1975-02-27 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '927e81ca9c6ded78e409bfc26d4585975b6072ce5e5fd4a3fdd9f9c637672e59', '67734144524', 1, true);
 
 /* Neue Mitarbeiter */
 insert into employee (birthdate, email, firstname, lastname, password, telephone, company_id, is_manager)

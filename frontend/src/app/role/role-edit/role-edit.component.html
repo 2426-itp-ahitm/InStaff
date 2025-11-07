@@ -18,7 +18,7 @@
                 </div>
                 <div class="h-px bg-gray-300 my-4"></div>
                 <div class="my-2 sm:col-span-3">
-                  <h3>Employees with the Role {{ role.roleName }}:</h3>
+                  <h3>Mitarbeiter mit der Rolle {{ role.roleName }}:</h3>
                   <ul role="list" class="list-disc marker:text-black ...">
                     <li  *ngFor="let e of employeesWithRole">{{ e.firstname }} {{ e.lastname }}</li>
                   </ul>
