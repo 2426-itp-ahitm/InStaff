@@ -13,13 +13,14 @@ import listPlugin from '@fullcalendar/list';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ShiftTemplate} from '../../interfaces/shift-template';
 import { CompanyServiceService} from '../../services/company-service/company-service.service';
-import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import deLocale from '@fullcalendar/core/locales/de';
+import {ShiftAddOldComponent} from '../../shift/shift-add-old/shift-add-old.component';
+import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, ShiftAddComponent],
+  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, ShiftAddOldComponent, ShiftAddComponent],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })

@@ -65,4 +65,8 @@ export class RoleEditComponent implements OnInit {
 
     this.close();
   }
+
+  removeEmployeeFromRole(id: number) {
+
+  }
 }

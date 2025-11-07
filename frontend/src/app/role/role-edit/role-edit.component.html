@@ -4,24 +4,28 @@
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-          <div class="">
-            <h3>{{ role.roleName }} bearbeiten</h3>
-          </div>
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
                 <div class="sm:col-span-3">
-                  <label for="role-name" class="block text-sm/6 font-medium text-gray-900">Rollen Name</label>
                   <div class="mt-2">
-                    <input #roleNameInput value="{{ role.roleName }}" type="text" name="role-name" id="role-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <input #roleNameInput value="{{ role.roleName }}" type="text" name="role-name" id="role-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                   </div>
                 </div>
                 <div class="h-px bg-gray-300 my-4"></div>
-                <div class="my-2 sm:col-span-3">
-                  <h3>Mitarbeiter mit der Rolle {{ role.roleName }}:</h3>
-                  <ul role="list" class="list-disc marker:text-black ...">
-                    <li  *ngFor="let e of employeesWithRole">{{ e.firstname }} {{ e.lastname }}</li>
-                  </ul>
+
+                <div class="mt-4 space-y-3">
+                  <p class="block text-sm/6 font-medium text-gray-900" >Mitarbeiter mit der Rolle: </p>
+                  <div *ngFor="let e of employeesWithRole" class="py-1 px-3 outline-1 outline-gray-300 rounded-md bg-white">
+                    <div class="flex items-center justify-between">
+                      <p class="block text-sm/6 font-medium text-gray-900">{{ e.firstname }} {{ e.lastname }}</p>
+                      <div class="flex gap-2">
+                        <button type="button" (click)="removeEmployeeFromRole(e.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
+                          <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
