@@ -22,4 +22,9 @@ public class NewsRepository implements PanacheRepository<News> {
     public void save(News news) {
         persist(news);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        deleteById(id);
+    }
 }

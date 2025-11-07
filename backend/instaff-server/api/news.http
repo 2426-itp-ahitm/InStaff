@@ -1,2 +1,5 @@
 ### Get all News
 GET http://localhost:8080/api/1/news
+
+### Delete News
+DELETE http://localhost:8080/api/1/news/1
