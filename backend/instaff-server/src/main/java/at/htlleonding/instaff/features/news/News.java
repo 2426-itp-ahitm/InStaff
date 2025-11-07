@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @NamedQueries({
-        @NamedQuery(name = News.FIND_BY_COMPANY, query = "select n from News n WHERE n.company.id = :id"),
+        @NamedQuery(name = News.FIND_BY_COMPANY, query = "select n from News n WHERE n.company.id = :id ORDER BY dateCreated DESC"),
 })
 
 @Entity
