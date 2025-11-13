@@ -99,7 +99,7 @@ h2{
 
 
 .bg-main{
-
+  @apply bg-white
 }
 
 .bg-glass{
