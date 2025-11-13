@@ -5,6 +5,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {EmployeeAddComponent} from '../employee-add/employee-add.component';
 import {CardComponent} from '../../essentials/card/card.component';
+import {EmployeeCardComponent} from '../employee-card/employee-card.component';
 
 
 @Component({
@@ -15,6 +16,7 @@ import {CardComponent} from '../../essentials/card/card.component';
     EmployeeEditComponent,
     EmployeeAddComponent,
     CardComponent,
+    EmployeeCardComponent,
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'

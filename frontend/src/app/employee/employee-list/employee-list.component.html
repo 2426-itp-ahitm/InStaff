@@ -1,12 +1,10 @@
-<div class="grid place-content-center">
+<div class="">
   <div class="">
-    <div class="card-center w-2xl max-md:w-auto">
-      <div *ngFor="let e of this.employees" class="my-2">
-        <app-card  [headline]='e.firstname +" "+ e.lastname' [details]='e.email ' [route]="'/team'" class="" (click)="openEmpEdit(e)"></app-card>
+      <div class="grid grid-cols-2 min-xl:grid-cols-3 max-md:grid-cols-1">
+        <app-employee-card *ngFor="let e of this.employees" [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
       </div>
       <button (click)="openAddEmployee()" type="button" class="button-green">Mitarbeiter hinzufügen</button>
 
-    </div>
     <div *ngIf="isEditMode">
       <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>
     </div>
