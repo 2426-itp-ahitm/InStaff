@@ -93,7 +93,7 @@ h2{
 
 /* input */
 .input-field {
- @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6
+ @apply block rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6
 }
 
 
@@ -115,25 +115,49 @@ h2{
 
 
 /* employee card */
+.card-grid {
+  @apply mx-auto mt-4 mb-6 w-full grid gap-6 grid-cols-2 min-xl:grid-cols-3 max-md:grid-cols-1
+}
+
 .card{
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  @apply transition-all p-4 bg-white  rounded-2xl
+  @apply transition-all p-6 bg-white  rounded-2xl
 }
 
 .card:hover{
-  @apply scale-101 bg-green-50;
+  @apply scale-101 ;
 }
 
+.card-header{
+  @apply flex w-full justify-between items-center
+}
+
+
+.card-headline{
+  @apply text-xl ;
+}
+
+.card-name{
+  @apply text-2xl flex-1 truncate
+}
 .card-role {
   @apply flex mt-1 items-center overflow-x-auto overflow-y-hidden
 }
 
 .card-role-item{
-  @apply flex-none text-sm text-beige bg-green-dark rounded-md py-0.5 px-2 mr-2
+  @apply flex-none text-sm text-black bg-green-light rounded-md py-0.5 px-2 mr-2
 }
 
 .card-item{
   @apply flex gap-2 mt-2
+}
+
+.card-edit-button{
+  @apply p-2 cursor-pointer rounded-3xl ml-2 bg-green-dark
+}
+
+.card-edit-button:hover{
+  @apply bg-green-base
 }
