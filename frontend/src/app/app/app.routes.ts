@@ -5,6 +5,7 @@ import {NotFoundComponent} from '../essentials/not-found/not-found.component';
 import {EmployeeListComponent} from '../employee/employee-list/employee-list.component';
 import {RoleListComponent} from '../role/role-list/role-list.component';
 import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/shift-template-list.component';
+import {AdminComponent} from '../admin/admin.component';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,11 @@ export const routes: Routes = [
   {
     path: 'shift-template-list',
     component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
+    title: 'InStaff'
+  },
+  {
+    path: 'admin',
+    component: AdminComponent, //COMPONENT CLASS NAME
     title: 'InStaff'
   },
   {
