@@ -46,8 +46,10 @@ export class EmployeeAddComponent implements OnInit {
       birthdate: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       telephone: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
+      hourlyWage: new FormControl('', Validators.required),
       isManager: new FormControl(false),
-      roles: new FormControl<EmployeeRole[]>([], Validators.required),
+      roles: new FormControl<EmployeeRole[]>([]),
     });
 
     /*
