@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 extension Color {
     static let appGreen = Color(red: 0.345, green: 0.506, blue: 0.341)
@@ -13,6 +14,10 @@ extension Color {
 
 @main
 struct iOSApp: App {
+    init() {
+        try? Tips.configure()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

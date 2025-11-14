@@ -12,6 +12,8 @@ struct HomeView: View {
     @StateObject var assignmentViewModel = AssignmentViewModel(companyId: 1)
     @StateObject var shiftViewModel = ShiftViewModel(companyId: 1)
     @StateObject var roleViewModel = RoleViewModel(companyId: 1)
+    
+    @State private var swipeTip = SwipeTip()
 
     var filteredAssignments: [Assignment] {
         assignmentViewModel.assignments
@@ -45,27 +47,42 @@ struct HomeView: View {
             NavigationSplitView {
                 List {
                     ForEach(filteredAssignments) { assignment in
-                        NavigationLink {
-                            RequestDetailView(
-                                roleViewModel: roleViewModel,
-                                shiftViewModel: shiftViewModel,
-                                assignment: assignment, assignmentViewModel: assignmentViewModel
-                            )
-                        } label: {
-                            RequestRowView(
-                                roleViewModel: roleViewModel,
-                                shiftViewModel: shiftViewModel,
-                                assignment: assignment
-                            )
+                        HStack {
+                            // Minimal placeholder content for the row; replace with your RequestRowView if desired
+                            RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
+                            /*Text("Assignment #\(assignment.id)")
+                                .font(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            */
                         }
+                        .popoverTip(swipeTip)
+                        .contentShape(Rectangle())
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+                            } label: {
+                                Label("Annehmen", systemImage: "checkmark")
+                            }
+                            .tint(.green)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+                            } label: {
+                                Label("Ablehnen", systemImage: "xmark")
+                            }
+                            .tint(.red)
+                        }
+                        
                     }
                 }
-                .navigationTitle("Anfragen")
+                .navigationTitle("Aktuelle Anfragen")
             } detail: {
                 Text("Wählen Sie eine Anfrage")
             }
         }
     }
+    
 }
 
 #Preview {
