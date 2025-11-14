@@ -66,12 +66,12 @@ struct RequestRowView: View {
                     (Text("\(weekdayStart), \(dateStart):").bold() + Text(" \(timeStart) – \(timeEnd)"))
                 } else {
                     // Example: Monday, Sep 22, 2025 20:00 – Tuesday, Sep 23, 2025 04:00
-                    (Text("\(weekdayStart), \(dateStart) \(timeStart)").bold() + Text(" – ") + Text("\(weekdayEnd), \(dateEnd) \(timeEnd)"))
+                    (Text("\(weekdayStart), \(dateStart) \(timeStart)").bold() + Text(" – \n") + Text("\(weekdayEnd), \(dateEnd) \(timeEnd)"))
                 }
             } else {
                 // Fallback: original behavior with string slicing
                 if startTextFallback.prefix(10) == endTextFallback.prefix(10) {
-                    Text("\(startTextFallback.prefix(10)):").bold() + Text(" \(startTextFallback.suffix(5)) - \(endTextFallback.suffix(5))")
+                    Text("\(startTextFallback.prefix(10)):").bold() + Text(" \(startTextFallback.suffix(5)) - \n\(endTextFallback.suffix(5))")
                 } else {
                     Text("\(startTextFallback)").bold() + Text(" - \(endTextFallback)")
                 }

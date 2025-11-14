@@ -17,7 +17,7 @@ struct MainTabView: View {
             CalendarView()
                 .tabItem { Label("Kalender", systemImage: "calendar") }
             RequestView(companyId: session.companyId!)
-                .tabItem { Label("Anfragen", systemImage: "list.bullet.clipboard") }
+                .tabItem { Label("Alle Dienste", systemImage: "list.bullet.clipboard") }
             ProfileView(roleViewModel: RoleViewModel(companyId: session.companyId!), employeeViewModel: EmployeeViewModel(companyId: session.companyId!))
                 .tabItem { Label("Profil", systemImage: "person.circle") }
         }
