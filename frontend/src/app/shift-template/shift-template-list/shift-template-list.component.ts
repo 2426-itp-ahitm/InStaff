@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {EmployeeAddComponent} from '../../employee/employee-add/employee-add.component';
 import {EmployeeEditComponent} from '../../employee/employee-edit/employee-edit.component';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {ShiftTemplate} from '../../interfaces/shift-template';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {ShiftTemplateEditComponent} from '../shift-template-edit/shift-template-edit.component';
@@ -15,7 +15,8 @@ import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-ad
     NgForOf,
     NgIf,
     ShiftTemplateEditComponent,
-    ShiftTemplateAddComponent
+    ShiftTemplateAddComponent,
+    NgOptimizedImage
   ],
   templateUrl: './shift-template-list.component.html',
   styleUrl: './shift-template-list.component.css'
@@ -25,6 +26,7 @@ export class ShiftTemplateListComponent implements OnInit {
 
 
   shiftTemplates: ShiftTemplate[] = [];
+    searchTerm: string = '';
   isEditMode: boolean = false;
   isAddMode: boolean = false;
   selectedShiftTemplate!: ShiftTemplate;
@@ -36,6 +38,19 @@ export class ShiftTemplateListComponent implements OnInit {
       this.shiftTemplates = data;
     })
   }
+
+    onSearch(term: string) {
+      this.searchTerm = term || '';
+    }
+
+    get filteredShiftTemplates(): ShiftTemplate[] {
+      const q = this.searchTerm.trim().toLowerCase();
+      if (!q) return this.shiftTemplates;
+      return this.shiftTemplates.filter(t => {
+        const name = (t.shiftTemplateName || '').toLowerCase();
+        return name.includes(q);
+      });
+    }
 
   openAddShiftTemplate() {
     this.isAddMode = true;

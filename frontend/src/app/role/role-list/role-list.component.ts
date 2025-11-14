@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../../interfaces/role';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {RoleEditComponent} from '../role-edit/role-edit.component';
 import {RoleAddComponent} from '../role-add/role-add.component';
 
@@ -11,7 +11,8 @@ import {RoleAddComponent} from '../role-add/role-add.component';
     NgForOf,
     NgIf,
     RoleEditComponent,
-    RoleAddComponent
+    RoleAddComponent,
+    NgOptimizedImage
   ],
   templateUrl: './role-list.component.html',
   styleUrl: './role-list.component.css'
@@ -20,6 +21,7 @@ export class RoleListComponent implements OnInit{
   constructor(private roleService: RoleServiceService) {}
 
   roles: Role[] = []
+  searchTerm: string = '';
   selectedRole: Role = this.roles[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
@@ -30,6 +32,16 @@ export class RoleListComponent implements OnInit{
       this.roles = data;
     });
     this.roleService.getRoles();
+  }
+
+  onSearch(term: string) {
+    this.searchTerm = term || '';
+  }
+
+  get filteredRoles(): Role[] {
+    const q = this.searchTerm.trim().toLowerCase();
+    if (!q) return this.roles;
+    return this.roles.filter(r => r.roleName.toLowerCase().includes(q));
   }
 
   openRoleEdit(role: Role) {

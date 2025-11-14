@@ -1,26 +1,22 @@
-<div class="grid place-content-center">
-  <div class="">
-    <div class="card-center">
-      <table class=" mb-2 table-auto border-collapse border border-gray-400 ">
-        <thead>
-        <tr>
-          <th class="border border-gray-300 p-2 w-sm">Schichtvorlagen</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let sT of this.shiftTemplates" class="hover:bg-green-50 odd:bg-white even:bg-white cursor-pointer" (click)="openShiftTemplateEdit(sT)">
-          <td class="border border-gray-300 p-2 w-sm ">{{ sT.shiftTemplateName }}</td>
-        </tr>
-        </tbody>
-      </table>
-      <button (click)="openAddShiftTemplate()" type="button" class="button-green">Schichtvorlage hinzufügen</button>
+<div class="mx-6">
+  <div class="flex mb-4 justify-center items-center">
+    <input type="search" placeholder="Vorlage suchen..." class="mr-2 input-field" (input)="onSearch($any($event.target).value)">
+    <button (click)="openAddShiftTemplate()" type="button" class="ml-2 button-green">Schichtvorlage hinzufügen</button>
+  </div>
+  <div class="card-grid">
+    <div class="card" *ngFor="let sT of filteredShiftTemplates">
+        <div class="card-header" >
+          <p class="card-name">{{ sT.shiftTemplateName }}</p>
+          <img class="card-edit-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
+        </div>
+    </div>
+  </div>
+  <div *ngIf="filteredShiftTemplates.length === 0" class="mt-4 text-sm text-gray-500">Keine Vorlagen gefunden.</div>
 
-    </div>
-    <div *ngIf="isEditMode">
-      <app-shift-template-edit [shiftTemplate]="selectedShiftTemplate" (closeShiftTemplateEdit)="closeShiftTemplateEdit()"></app-shift-template-edit>
-    </div>
-    <div *ngIf="isAddMode">
-      <app-shift-template-add (close)="closeShiftTemplateAdd()"></app-shift-template-add>
-    </div>
+  <div *ngIf="isEditMode">
+    <app-shift-template-edit [shiftTemplate]="selectedShiftTemplate" (closeShiftTemplateEdit)="closeShiftTemplateEdit()"></app-shift-template-edit>
+  </div>
+  <div *ngIf="isAddMode">
+    <app-shift-template-add (close)="closeShiftTemplateAdd()"></app-shift-template-add>
   </div>
 </div>

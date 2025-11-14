@@ -1,18 +1,24 @@
-<div class="grid place-content-center">
-  <div class="">
-    <div class="card" *ngFor="let r of this.roles">
-        <div class="cursor-pointer hover:bg-green-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openRoleEdit(r)">
-          <p class="border border-gray-300 p-2 w-sm ">{{ r.roleName }}</p>
+<div class="mx-6">
+  <div class="flex mb-4 justify-center items-center">
+    <input type="search" placeholder="Rolle suchen..." class="mr-2 input-field" (input)="onSearch($any($event.target).value)">
+    <button (click)="openAddRole()" type="button" class="ml-2 button-green">Rolle hinzufügen</button>
+  </div>
+  <div class="card-grid">
+    <div class="card" *ngFor="let r of filteredRoles">
+        <div class="card-header">
+          <p class="card-name">{{ r.roleName }}</p>
+          <img class="card-edit-button" (click)="openRoleEdit(r)" ngSrc="/icons/edit-white.png" alt="edit" width="36" height="36">
         </div>
     </div>
-    <button (click)="openAddRole()" type="button" class="button-green">Rolle hinzufügen</button>
+  </div>
+  <div *ngIf="filteredRoles.length === 0" class="mt-4 text-sm text-gray-500">Keine Rollen gefunden.</div>
 
-    <div *ngIf="isEditMode">
-      <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
-    </div>
-    <div *ngIf="isAddMode">
-      <app-role-add (close)="closeAddRole()"></app-role-add>
-    </div>
+
+  <div *ngIf="isEditMode">
+    <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
+  </div>
+  <div *ngIf="isAddMode">
+    <app-role-add (close)="closeAddRole()"></app-role-add>
   </div>
 </div>
 

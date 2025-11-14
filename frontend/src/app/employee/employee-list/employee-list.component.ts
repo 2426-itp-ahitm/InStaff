@@ -23,6 +23,7 @@ import {EmployeeCardComponent} from '../employee-card/employee-card.component';
 })
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
+  searchTerm: string = '';
   selectedEmployee: Employee = this.employees[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
@@ -34,6 +35,16 @@ export class EmployeeListComponent implements OnInit {
       this.employees = data;
     });
     this.employeeService.getEmployees();
+  }
+
+  onSearch(term: string) {
+    this.searchTerm = term || '';
+  }
+
+  get filteredEmployees(): Employee[] {
+    const q = this.searchTerm.trim().toLowerCase();
+    if (!q) return this.employees;
+    return this.employees.filter(e => (`${e.firstname} ${e.lastname}`).toLowerCase().includes(q));
   }
 
   openEmpEdit(employee: Employee) {
