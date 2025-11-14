@@ -1,21 +1,12 @@
 <div class="grid place-content-center">
   <div class="">
-    <div class="card-center">
-      <table class=" mb-2 table-auto border-collapse border border-gray-400 ">
-        <thead>
-        <tr>
-          <th class="border border-gray-300 p-2 w-sm">Roles</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let r of this.roles" class="cursor-pointer hover:bg-green-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openRoleEdit(r)">
-          <td class="border border-gray-300 p-2 w-sm ">{{ r.roleName }}</td>
-        </tr>
-        </tbody>
-      </table>
-      <button (click)="openAddRole()" type="button" class="button-green">Rolle hinzufügen</button>
-
+    <div class="card" *ngFor="let r of this.roles">
+        <div class="cursor-pointer hover:bg-green-50 odd:bg-white even:bg-white pointer-events-auto" (click)="openRoleEdit(r)">
+          <p class="border border-gray-300 p-2 w-sm ">{{ r.roleName }}</p>
+        </div>
     </div>
+    <button (click)="openAddRole()" type="button" class="button-green">Rolle hinzufügen</button>
+
     <div *ngIf="isEditMode">
       <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
     </div>

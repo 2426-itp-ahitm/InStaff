@@ -1,8 +1,11 @@
-<div class="m-auto w-full text-center">
-    <div class="grid grid-cols-2 min-xl:grid-cols-3 max-md:grid-cols-1">
+<div class="mx-6">
+    <div class="mx-auto mt-4 mb-6 w-full grid gap-6 grid-cols-2 min-xl:grid-cols-3 max-md:grid-cols-1">
       <app-employee-card *ngFor="let e of this.employees" [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
     </div>
-    <button (click)="openAddEmployee()" type="button" class="button-green">Mitarbeiter hinzufügen</button>
+    <div class="text-center">
+      <button (click)="openAddEmployee()" type="button" class="button-green">Mitarbeiter hinzufügen</button>
+
+    </div>
 
     <div *ngIf="isEditMode">
       <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>

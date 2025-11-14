@@ -1,24 +1,33 @@
-<div class="employee-card py-2 px-1 bg-glass card-center">
+<div class="card py-2 px-1">
   <div class="flex w-full justify-between items-center">
-    <p class="employee-card-name text-xl flex-1 truncate">{{employee.firstname}} {{employee.lastname}}</p>
+    <p class="card-name text-2xl flex-1 truncate">{{employee.firstname}} {{employee.lastname}}</p>
     <img class="p-0.5 cursor-pointer ml-2" ngSrc="/icons/edit-black.png" alt="edit" width="30" height="30" (click)="openEmpEdit()">
   </div>
-  <div class="flex items-center overflow-x-auto overflow-y-hidden">
+  <div class="card-role">
     <ng-container *ngFor="let r of employee.roles">
-      <p class="employee-card-role flex-none text-sm text-beige bg-green-dark rounded-md py-0.5 px-2 mr-2" *ngIf="r.hasRole">{{ r.name }}</p>
+      <p class="card-role-item" *ngIf="r.hasRole">{{ r.name }}</p>
     </ng-container>
     <p *ngIf="!employeeHasRoles" class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
   </div>
 
-  <div class="flex gap-1">
+  <div class="card-item">
     <img ngSrc="/icons/mail-black.png" alt="mail" width="25" height="25">
     <p>{{employee.email}}</p>
   </div>
-  <div class="flex gap-1">
+  <div class="card-item">
     <img ngSrc="/icons/phone-black.png" alt="phone" width="25" height="25">
     <p>{{employee.telephone}}</p>
   </div>
 
-  <p>{{employee.address}}</p>
+  <div class="card-item">
+    <img ngSrc="/icons/birthday-black.png" alt="birthday" width="25" height="25">
+    <p>{{employee.birthdate}}</p>
+  </div>
+
+  <div class="card-item">
+    <img ngSrc="/icons/address-black.png" alt="phone" width="25" height="25">
+    <p>{{employee.address}}</p>
+  </div>
+
 
 </div>
