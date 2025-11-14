@@ -1,7 +1,7 @@
 <div class="card py-2 px-1">
   <div class="flex w-full justify-between items-center">
-    <p class="card-name text-2xl flex-1 truncate">{{employee.firstname}} {{employee.lastname}}</p>
-    <img class="p-0.5 cursor-pointer ml-2" ngSrc="/icons/edit-black.png" alt="edit" width="30" height="30" (click)="openEmpEdit()">
+    <p class="card-name">{{employee.firstname}} {{employee.lastname}}</p>
+    <img class="card-edit-button" ngSrc="/icons/edit-white.png" alt="edit" width="36" height="36" (click)="openEmpEdit()">
   </div>
   <div class="card-role">
     <ng-container *ngFor="let r of employee.roles">
@@ -25,8 +25,13 @@
   </div>
 
   <div class="card-item">
-    <img ngSrc="/icons/address-black.png" alt="phone" width="25" height="25">
+    <img ngSrc="/icons/address-black.png" alt="address" width="25" height="25">
     <p>{{employee.address}}</p>
+  </div>
+
+  <div class="card-item">
+    <img ngSrc="/icons/money-black.png" alt="money" width="25" height="25">
+    <p>{{employee.hourly_wage}}€ pro Stunde</p>
   </div>
 
 
