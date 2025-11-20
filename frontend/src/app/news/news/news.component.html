@@ -1,9 +1,11 @@
 <div class="bg-glass card-center h-max">
   <h2>Neuigkeiten</h2>
-  <div class="text-center">
-    <p *ngFor="let n of this.news">
-      {{n.employee_name}} hat für die Schicht am {{dateToString(n.shift_date)}} {{n.confirmed? "zugesagt" : "abgesagt"}}
-    </p>
+  <div class="mt-2">
+    <div *ngFor="let n of this.news" class="news-item">
+      <p class="text-left" (click)="openShiftEditWithId(n.shift_id)">
+        {{n.employee_name}} hat für die Schicht am {{dateToString(n.shift_date)}} {{n.confirmed? "zugesagt" : "abgesagt"}}
+      </p>
+      <img class="icon-button" ngSrc="/icons/trash-white.png" alt="edit" width="36" height="36" (click)="deleteNewsItem(n)">
+    </div>
   </div>
-
 </div>
