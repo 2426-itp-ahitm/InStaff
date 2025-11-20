@@ -21,4 +21,13 @@ export class NewsComponent implements OnInit {
     })
     this.newsService.getNews()
   }
+
+  dateToString(shift_date: Date) {
+
+    return new Date(shift_date).toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
 }

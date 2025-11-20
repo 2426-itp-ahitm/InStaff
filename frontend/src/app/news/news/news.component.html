@@ -1,6 +1,9 @@
 <div class="bg-glass card-center h-max">
   <h2>Neuigkeiten</h2>
-  <p *ngFor="let n of this.news">
-    {{n.date_created}} - {{n.employee_name}} - {{n.confirmed.valueOf()}}
-  </p>
+  <div class="text-center">
+    <p *ngFor="let n of this.news">
+      {{n.employee_name}} hat für die Schicht am {{dateToString(n.shift_date)}} {{n.confirmed? "zugesagt" : "abgesagt"}}
+    </p>
+  </div>
+
 </div>
