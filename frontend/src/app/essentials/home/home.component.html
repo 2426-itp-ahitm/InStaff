@@ -4,7 +4,7 @@
 </div>
 <div class="min-md:flex mx-4 my-2 gap-1 h-min">
   <div class="flex-1/2 max-md:flex-2/5">
-    <app-news></app-news>
+    <app-news (shiftSelected)="openShiftEditWithId($event)"></app-news>
   </div>
   <div class="flex-1/2 min-md:flex-3/5">
     <app-calendar [initialView]="'dayGridMonth'" class="card-center"></app-calendar>
