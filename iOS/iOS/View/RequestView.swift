@@ -65,6 +65,8 @@ struct RequestView: View {
                             */
                         }
                         .contentShape(Rectangle())
+                        .padding(.vertical, 4)
+                        .listRowSeparator(.visible)
                         .swipeActions(edge: .leading) {
                             Button {
                                 assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
@@ -104,4 +106,3 @@ struct RequestView: View {
     )
 }*/
 //                .navigationTitle("Anfragen")
-

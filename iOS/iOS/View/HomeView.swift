@@ -73,7 +73,6 @@ struct HomeView: View {
                             }
                             .tint(.red)
                         }
-                        
                     }
                 }
                 .navigationTitle("Aktuelle Anfragen")
