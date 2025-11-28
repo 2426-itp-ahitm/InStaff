@@ -13,8 +13,6 @@ struct HomeView: View {
     @StateObject var shiftViewModel = ShiftViewModel(companyId: 1)
     @StateObject var roleViewModel = RoleViewModel(companyId: 1)
     
-    @State private var swipeTip = SwipeTip()
-
     var filteredAssignments: [Assignment] {
         assignmentViewModel.assignments
             .filter { $0.employee == session.employeeId }
@@ -34,10 +32,13 @@ struct HomeView: View {
             }
             .sorted { l, r in
                 guard let lShift = shiftViewModel.shift(for: l.shift),
-                      let rShift = shiftViewModel.shift(for: r.shift) else {
-                    return false
+                      let rShift = shiftViewModel.shift(for: r.shift),
+                      let lStart = DateUtils.toDate(lShift.startTime),
+                      let rStart = DateUtils.toDate(rShift.startTime) else {
+                    return l.id < r.id
                 }
-                return lShift.startTime > rShift.startTime
+                if lStart == rStart { return l.id < r.id }
+                return lStart > rStart
             }
             
     }
@@ -46,16 +47,10 @@ struct HomeView: View {
         VStack{
             NavigationSplitView {
                 List {
-                    ForEach(filteredAssignments) { assignment in
+                    ForEach(filteredAssignments, id: \.id) { assignment in
                         HStack {
-                            // Minimal placeholder content for the row; replace with your RequestRowView if desired
                             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
-                            /*Text("Assignment #\(assignment.id)")
-                                .font(.body)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            */
                         }
-                        .popoverTip(swipeTip)
                         .contentShape(Rectangle())
                         .swipeActions(edge: .leading) {
                             Button {
@@ -87,3 +82,4 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
+
