@@ -137,8 +137,10 @@ public class ShiftResource {
         shiftSocket.broadcast("New Shift Id: " + shift.getId());
 
         for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
-            Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
-            entityManager.persist(assignment);
+            if (assignmentCreateDTO.employee() != -1) {
+                Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+                entityManager.persist(assignment);
+            }
         }
 
         return Response.status(Response.Status.CREATED).entity(shift).build();
