@@ -1,5 +1,6 @@
 package at.htlleonding.instaff.features.news;
 
+import at.htlleonding.instaff.features.company.Company;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -24,8 +25,14 @@ public class NewsResource {
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) {
-        newsRepository.delete(id);
+    public Response delete(@PathParam("id") Long id, @PathParam("companyId") Long companyId) {
+
+        if (id == -1) {
+            newsRepository.deleteAllNews(companyId);
+        } else {
+            newsRepository.delete(id);
+        }
+
         return Response.noContent().build();
     }
 }

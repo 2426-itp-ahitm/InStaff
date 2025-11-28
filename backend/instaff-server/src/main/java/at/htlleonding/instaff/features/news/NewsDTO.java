@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record NewsDTO(
+        long id,
         String employee_name,
         boolean confirmed,
         LocalDateTime shift_date,
