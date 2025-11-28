@@ -27,4 +27,13 @@ export class NewsService {
     });
   }
 
+  deleteNewsItem(shiftId: number) {
+    this.httpClient.delete(`${this.getApiUrl()}/news/${shiftId}`).subscribe(() => {
+      const current = this.newsSubject.getValue();
+      this.newsSubject.next(current.filter(n => n.shift_id !== shiftId));
+    }, (err) => {
+      console.error('Failed to delete news item', err);
+    });
+  }
+
 }

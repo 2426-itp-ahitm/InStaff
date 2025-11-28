@@ -1,7 +1,7 @@
 <div class="card py-2 px-1">
   <div class="flex w-full justify-between items-center">
     <p class="card-name">{{employee.firstname}} {{employee.lastname}}</p>
-    <img class="card-edit-button" ngSrc="/icons/edit-white.png" alt="edit" width="36" height="36" (click)="openEmpEdit()">
+    <img class="icon-button" ngSrc="/icons/edit-white.png" alt="edit" width="36" height="36" (click)="openEmpEdit()">
   </div>
   <div class="card-role">
     <ng-container *ngFor="let r of employee.roles">

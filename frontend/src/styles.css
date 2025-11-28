@@ -42,6 +42,13 @@ https://tailwindcss.com/
   background-color: var(--color-green-base) !important;
 }
 
+.fc-list-event-dot, .fc-daygrid-event-dot{
+  border-color: var(--color-green-dark) !important;
+}
+
+.fc-day-today {
+  background-color: var(--color-green-light) !important;
+}
 
 /* headlines */
 h1{
@@ -154,10 +161,16 @@ h2{
   @apply flex gap-2 mt-2
 }
 
-.card-edit-button{
+.icon-button{
   @apply p-2 cursor-pointer rounded-3xl ml-2 bg-green-dark
 }
 
-.card-edit-button:hover{
+.icon-button:hover{
   @apply bg-green-base
+}
+
+
+/* news */
+.news-item{
+  @apply my-2 py-1 px-3 border-2 rounded-2xl border-green-dark flex w-full justify-between items-center
 }
