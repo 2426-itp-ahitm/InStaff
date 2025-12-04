@@ -33,10 +33,13 @@ struct RequestView: View {
             }
             .sorted { l, r in
                 guard let lShift = shiftViewModel.shift(for: l.shift),
-                      let rShift = shiftViewModel.shift(for: r.shift) else {
-                    return false
+                      let rShift = shiftViewModel.shift(for: r.shift),
+                      let lStart = DateUtils.toDate(lShift.startTime),
+                      let rStart = DateUtils.toDate(rShift.startTime) else {
+                    return l.id < r.id
                 }
-                return lShift.startTime > rShift.startTime
+                if lStart == rStart { return l.id < r.id }
+                return lStart > rStart
             }
     }
 
@@ -55,14 +58,9 @@ struct RequestView: View {
                 }
                 .padding()
                 List {
-                    ForEach(filteredAssignments) { assignment in
+                    ForEach(filteredAssignments, id: \.id) { assignment in
                         HStack {
-                            // Minimal placeholder content for the row; replace with your RequestRowView if desired
                             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
-                            /*Text("Assignment #\(assignment.id)")
-                                .font(.body)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            */
                         }
                         .contentShape(Rectangle())
                         .swipeActions(edge: .leading) {
@@ -71,7 +69,13 @@ struct RequestView: View {
                             } label: {
                                 Label("Annehmen", systemImage: "checkmark")
                             }
-                            .tint(.green)
+                            .disabled({
+                                if let shift = shiftViewModel.shift(for: assignment.shift),
+                                   let start = DateUtils.toDate(shift.startTime) {
+                                    return start < Date()
+                                }
+                                return true // sicherheitshalber deaktivieren, falls kein Datum
+                            }())                            .tint(.green)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -80,6 +84,13 @@ struct RequestView: View {
                                 Label("Ablehnen", systemImage: "xmark")
                             }
                             .tint(.red)
+                            .disabled({
+                                if let shift = shiftViewModel.shift(for: assignment.shift),
+                                   let start = DateUtils.toDate(shift.startTime) {
+                                    return start < Date()
+                                }
+                                return true // sicherheitshalber deaktivieren, falls kein Datum
+                            }())
                         }
                     }
                 }
@@ -104,4 +115,3 @@ struct RequestView: View {
     )
 }*/
 //                .navigationTitle("Anfragen")
-
