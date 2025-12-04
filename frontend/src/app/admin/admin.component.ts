@@ -40,7 +40,6 @@ export class AdminComponent implements OnInit {
 
   acceptAssignment(a: Assignment) {
     if (!this.selectedEmployeeId) return;
-    if (!confirm(`Zuweisung ${a.id} akzeptieren?`)) return;
     this.assignmentService.confirmAssignment(a.id).subscribe({
       next: () => {
         a.confirmed = true;
@@ -52,7 +51,6 @@ export class AdminComponent implements OnInit {
 
   declineAssignment(a: Assignment) {
     if (!this.selectedEmployeeId) return;
-    if (!confirm(`Zuweisung ${a.id} ablehnen?`)) return;
     this.assignmentService.declineAssignment(a.id).subscribe({
       next: () => {
         a.confirmed = false;
