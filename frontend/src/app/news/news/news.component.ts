@@ -1,13 +1,14 @@
 import {Component, inject, OnInit, Output, EventEmitter} from '@angular/core';
 import {News} from '../../interfaces/news';
 import {NewsService} from '../news-service/news.service';
-import {NgForOf, NgOptimizedImage} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-news',
   imports: [
     NgForOf,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgIf
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.css'
@@ -38,8 +39,12 @@ export class NewsComponent implements OnInit {
 
   @Output() shiftSelected: EventEmitter<number> = new EventEmitter<number>();
 
-  deleteNewsItem(n: News) {
-    if (!n) return;
-    this.newsService.deleteNewsItem(n.shift_id);
+  deleteNewsItem(id:number) {
+    this.newsService.deleteNewsItem(id)
   }
+
+   deleteAllNewsItems() {
+     this.newsService.deleteAllNewsItem()
+
+   }
 }

@@ -1,4 +1,5 @@
 export interface News {
+  id: number,
   employee_name: string;
   confirmed: boolean;
   shift_date: Date;

@@ -33,11 +33,29 @@ export class ShiftServiceService {
   }
 
   addShift(newShift: NewShift): void {
+    console.log(newShift);
     this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, newShift)
       .subscribe((createdShift )=> {
         const currentShift = this.shiftsSubject.getValue();
         this.shiftsSubject.next([...currentShift, createdShift]);
     })
+  }
+
+  updateShift(shiftId: number, newShift: NewShift): void {
+    this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, newShift)
+      .subscribe((updatedShift) => {
+        const current = this.shiftsSubject.getValue();
+        const idx = current.findIndex(s => s.id === updatedShift.id);
+        if (idx !== -1) {
+          current[idx] = updatedShift;
+          this.shiftsSubject.next([...current]);
+        } else {
+          // if not present, append
+          this.shiftsSubject.next([...current, updatedShift]);
+        }
+      }, (err) => {
+        console.error('Failed to update shift', err);
+      });
   }
 
   getShiftById(shiftId: number): Observable<Shift> {

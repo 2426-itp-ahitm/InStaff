@@ -3,7 +3,7 @@
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
   <div *ngIf="isEditMode">
-    <app-shift-edit [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit>
+    <app-shift-edit-old [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit-old>
   </div>
   <div *ngIf="isAddMode">
     <app-shift-add (close)="closeAddShift()"></app-shift-add>

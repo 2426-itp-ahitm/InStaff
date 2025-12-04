@@ -7,7 +7,7 @@
     <div class="card" *ngFor="let sT of filteredShiftTemplates">
         <div class="card-header" >
           <p class="card-name">{{ sT.shiftTemplateName }}</p>
-          <img class="card-edit-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
+          <img class="icon-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
         </div>
     </div>
   </div>
