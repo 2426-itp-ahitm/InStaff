@@ -1,6 +1,8 @@
 package at.htlleonding.instaff.features.security;
 
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
@@ -8,11 +10,12 @@ import jakarta.ws.rs.core.SecurityContext;
 
 @Path("/security")
 public class SecurityTestResource {
+    @Inject
+    CustomSecurityContext ctx;
 
     @GET
-    @Authenticated
-    public String hello(@Context SecurityContext ctx) {
-        String username = ctx.getUserPrincipal().getName();
+    public String hello() {
+        String username = ctx.username;
         return "Hello, " + username + "!";
     }
 }

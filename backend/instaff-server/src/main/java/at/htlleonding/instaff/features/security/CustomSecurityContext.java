@@ -1,21 +1,20 @@
 package at.htlleonding.instaff.features.security;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Produces;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.security.Principal;
 import java.util.List;
 
+@RequestScoped
 public class CustomSecurityContext implements SecurityContext {
+    @Produces
+    SecurityContext securityContext;
 
-    private final String username;
-    private final List<String> roles;
-    private final String fullName;
-
-    public CustomSecurityContext(String username, List<String> roles, String fullName) {
-        this.username = username;
-        this.roles = roles;
-        this.fullName = fullName;
-    }
+    String username;
+    List<String> roles;
+    String fullName;
 
     @Override
     public Principal getUserPrincipal() {
@@ -40,4 +39,6 @@ public class CustomSecurityContext implements SecurityContext {
     public String getAuthenticationScheme() {
         return "Bearer";
     }
+
+
 }

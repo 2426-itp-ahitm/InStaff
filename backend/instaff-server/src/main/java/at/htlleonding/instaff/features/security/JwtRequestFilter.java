@@ -5,9 +5,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.quarkus.logging.Log;
 import jakarta.annotation.Priority;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -26,8 +28,9 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 @Provider
-@Priority(Priorities.AUTHENTICATION)
 public class JwtRequestFilter implements ContainerRequestFilter {
+    @Inject
+    CustomSecurityContext customSecurityContext;
 
     @ConfigProperty(name = "keycloak.realm.public.key")
     String REALM_PUBLIC_KEY;
@@ -40,17 +43,17 @@ public class JwtRequestFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
         // Skip authentication for @PermitAll
-        if (isPermitAll()) {
+        /*if (isPermitAll()) {
             return;
-        }
+        }*/
 
-        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        var authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             abortWithUnauthorized(requestContext);
             return;
         }
 
-        String token = authHeader.substring("Bearer ".length());
+        var token = authHeader.substring("Bearer ".length());
 
         try {
             Algorithm algorithm = Algorithm.RSA256(getPublicKey(REALM_PUBLIC_KEY), null);
@@ -69,11 +72,13 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                 return;
             }
 
-            requestContext.setSecurityContext(new CustomSecurityContext(username, userRoles, fullName));
+            customSecurityContext.fullName = fullName;
+            customSecurityContext.username = username;
+            customSecurityContext.roles = userRoles;
             requestContext.setProperty("first_name", fullName);
 
         } catch (JWTVerificationException | GeneralSecurityException e) {
-            e.printStackTrace();
+            Log.error("Failed to verify Token: ", e);
             abortWithUnauthorized(requestContext);
         }
     }
