@@ -1,62 +1,33 @@
-<script src="../../interfaces/employee.ts"></script>
-<script src="../../interfaces/shift-template.ts"></script>
+
 <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="modal-bg" aria-hidden="true"></div>
   <div class="modal-card-1">
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-          <div *ngIf="shift">
-            <h3>{{shift.startTime}} bis {{shift.endTime}}</h3>
+          <h3 class="text-lg font-semibold mb-2">Mitarbeiter zu Rollen zuweisen</h3>
 
-            <table>
-              <thead>
-                <td class="border border-gray-300 p-2 w-sm ">Name</td>
-                <td class="border border-gray-300 p-2 w-sm ">Rolle</td>
-                <td class="border border-gray-300 p-2 w-sm ">Status</td>
-              </thead>
-              <tbody>
-              <tr *ngFor="let a of assignments" class="cursor-pointer hover:bg-green-50 odd:bg-white even:bg-white pointer-events-auto" >
-                <td class="border border-gray-300 p-2 w-sm ">{{ employeeService.getEmployeeById(a.employee).firstname }} {{ employeeService.getEmployeeById(a.employee).lastname }}</td>
-                <td class="border border-gray-300 p-2 w-sm ">{{ roleService.getRoleNameById(a.role) }}</td>
-                <td class="border border-gray-300 p-2 w-sm">
-                  <span [ngClass]="{
-                    'text-green-600 font-semibold': a.confirmed === true,
-                    'text-yellow-600 font-semibold': a.confirmed === null,
-                    'text-red-600 font-semibold': a.confirmed === false
-                  }">
-                    {{ makeStringFromBoolean(a.confirmed) }}
-                  </span>
-                </td>
 
-              </tr>
-              </tbody>
-            </table>
+
+          <!-- Manual roles if no template selected -->
+          <div *ngIf="!selectedShiftTemplate" class="mb-3">
+            <div class="flex gap-2 items-center">
+              <select #roleSelect class="block rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm">
+                <option [value]="-1">Wähle Rolle</option>
+                <option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</option>
+              </select>
+              <input #countInput type="number" min="1" value="1" class="block w-20 rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" />
+              <!--<button type="button" class="text-md text-beige font-bold py-1 px-3 bg-green-dark rounded-md hover:bg-green-base  transition-all" (click)="addManualRole(roleSelect.value, countInput.value)">+</button>-->
+            </div>
           </div>
 
-          <!--
-          <div *ngFor="let a of assignments">
-            <p>
-              {{ employeeService.getEmployeeById(a.employee).firstname }} {{ employeeService.getEmployeeById(a.employee).lastname }}
-              {{ roleService.getRoleNameById(a.role) }}
 
-            </p>
+          <!-- bottom navigation -->
+          <div class="mt-6 flex items-center justify-end gap-x-4">
+            <button type="button" class="button-cancel" (click)="closeEditShift()">Abbrechen</button>
+            <button type="button" class="button-green" (click)="save()">Speichern</button>
           </div>
-          -->
 
-          <!-- TODO: there is a lot todo, first of all: make this work-->
-          <form (ngSubmit)="save()">
-            <div class="space-y-1">
-              <div class="">
-
-              </div>
-            </div>
-
-            <div class="mt-6 flex items-center justify-end gap-x-4">
-              <button type="button" class="button-cancel" (click)="closeEditShift()">Cancel</button>
-              <button type="submit" class="button-green">Save</button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

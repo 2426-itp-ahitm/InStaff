@@ -1,9 +1,9 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild, AfterViewInit} from '@angular/core';
 import {Shift} from '../../interfaces/shift';
 import {FormsModule} from "@angular/forms";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
-import {ShiftTemplate} from '../../interfaces/shift-template';
+import {ShiftTemplate, TemplateRole} from '../../interfaces/shift-template';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
@@ -13,6 +13,7 @@ import {NewAssignment} from '../../interfaces/new-assignment';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {Assignment} from '../../interfaces/assignment';
+import {Role} from '../../interfaces/role';
 
 @Component({
   selector: 'app-shift-edit',
@@ -29,14 +30,13 @@ export class ShiftEditComponent implements OnInit {
   @Output() closeShiftEdit = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
-
+  roles!: Role[];
   shift!: Shift;
   selectedDate!: ShiftCreateDTO;
   shiftTemplates: ShiftTemplate[] = [];
   selectedShiftTemplate: ShiftTemplate | null = null;
 
 
-  @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
   private selectedEmployees:  { [roleId: number]: number[] } = {};
 
   companyService:CompanyServiceService = inject(CompanyServiceService);
@@ -44,14 +44,12 @@ export class ShiftEditComponent implements OnInit {
   shiftService:ShiftServiceService = inject(ShiftServiceService);
   roleService:RoleServiceService = inject(RoleServiceService);
   assignmentService:AssignmentServiceService = inject(AssignmentServiceService);
-  shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
   assignments: Assignment[] = [];
 
   ngOnInit(): void {
-    this.employeeService.getEmployees();
 
     this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
       console.log(s);
@@ -63,17 +61,11 @@ export class ShiftEditComponent implements OnInit {
       this.assignments = a;
     })
 
+
     //get all Employees
     this.employeeService.getEmployees()
     this.employeeService.employees$.subscribe((e) => {
       this.employees = e;
-    })
-
-    //gets all Templates
-    this.shiftTemplateService.getShiftTemplates();
-    this.shiftTemplateService.shiftTemplates$.subscribe((data) => {
-      this.shiftTemplates = data;
-      this.selectedShiftTemplate = this.shiftTemplates[0];
     })
 
     //gets all Roles
@@ -90,13 +82,6 @@ export class ShiftEditComponent implements OnInit {
   }
 
 
-  initializeSelectedEmployees(roleId: number, count: number): boolean {
-    if (!this.selectedEmployees[roleId]) {
-      this.selectedEmployees[roleId] = Array(count).fill(null);
-    }
-    return true;
-  }
-
 
 
   collectAssignments(): NewAssignment[] {
@@ -111,7 +96,23 @@ export class ShiftEditComponent implements OnInit {
           assignments.push({employee: value, role: tmpRoles.at(i)!.roleId})
         }
       }
-    } {}
+    }
+
+    // Prefer using selectedEmployees state if available
+    if (this.selectedShiftTemplate && Object.keys(this.selectedEmployees).length > 0) {
+      const result: NewAssignment[] = [];
+      const roles = this.selectedShiftTemplate.templateRoles;
+      for (let r of roles) {
+        const arr = this.selectedEmployees[r.roleId] || [];
+        for (let k = 0; k < r.count; k++) {
+          const emp = arr[k];
+          if (emp != null && emp !== 0) {
+            result.push({employee: emp, role: r.roleId});
+          }
+        }
+      }
+      return result;
+    }
 
     return assignments;
   }
@@ -127,21 +128,42 @@ export class ShiftEditComponent implements OnInit {
       assignmentCreateDTOs: this.collectAssignments(),
     };
 
-    // logic to save newShift
-    this.shiftService.addShift(newShift)
+    // If editing an existing shift, call update; otherwise fallback to add
+    if (this.shift && this.shift.id) {
+      this.shiftService.updateShift(this.shift.id, newShift);
+    } else {
+      this.shiftService.addShift(newShift);
+    }
     this.closeEditShift()
 
   }
 
 
 
-  chooseShiftTemplate() {
-    let shiftTemplateId:number = this.shiftTemplateInput.nativeElement.value;
-    for (let i = 0; i < this.shiftTemplates.length; i++) {
-      if(shiftTemplateId == this.shiftTemplates[i].id){
-        this.selectedShiftTemplate = this.shiftTemplates[i];
+
+
+  private mapAssignmentsToSelectedEmployees() {
+    if (!this.assignments || this.assignments.length === 0) return;
+
+    const map: { [roleId: number]: number[] } = {};
+    for (const a of this.assignments) {
+      if (!map[a.role]) map[a.role] = [];
+      map[a.role].push(a.employee);
+    }
+
+    // ensure arrays align with template counts when template exists
+    if (this.selectedShiftTemplate) {
+      for (const tr of this.selectedShiftTemplate.templateRoles) {
+        if (!map[tr.roleId]) map[tr.roleId] = Array(tr.count).fill(null);
+        if (map[tr.roleId].length < tr.count) {
+          map[tr.roleId] = [...map[tr.roleId], ...Array(tr.count - map[tr.roleId].length).fill(null)];
+        } else if (map[tr.roleId].length > tr.count) {
+          map[tr.roleId] = map[tr.roleId].slice(0, tr.count);
+        }
       }
     }
+
+    this.selectedEmployees = map;
   }
 
   closeEditShift() {
@@ -149,8 +171,19 @@ export class ShiftEditComponent implements OnInit {
 
   }
 
-  makeStringFromBoolean(confirmed: boolean) {
+  checkIfEmpHasRole(emp: Employee, tmpRole: TemplateRole): boolean {
+    return emp.roles.some(role => role.roleId === tmpRole.roleId && role.hasRole);
+  }
 
+  onEmployeeSelect(roleId: number, idx: number, value: string) {
+    const v = Number(value);
+    if (!this.selectedEmployees[roleId]) {
+      this.selectedEmployees[roleId] = [];
+    }
+    this.selectedEmployees[roleId][idx] = isNaN(v) ? null as any : v;
+  }
+
+  makeStringFromBoolean(confirmed: boolean) {
     if (confirmed) {
       return "Bestätigt";
     }else if(confirmed==null) {
