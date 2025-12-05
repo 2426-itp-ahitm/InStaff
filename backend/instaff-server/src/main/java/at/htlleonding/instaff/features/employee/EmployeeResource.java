@@ -5,6 +5,8 @@ import at.htlleonding.instaff.features.assignment.AssignmentMapper;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.role.RoleRepository;
+import at.htlleonding.instaff.features.security.CustomSecurityContext;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -34,7 +36,8 @@ public class EmployeeResource {
     RoleRepository roleRepository;
     @Inject
     AssignmentMapper assignmentMapper;
-
+    @Inject
+    CustomSecurityContext ctx;
 
     @GET
     public Response all(@PathParam("companyId") Long companyId) {
