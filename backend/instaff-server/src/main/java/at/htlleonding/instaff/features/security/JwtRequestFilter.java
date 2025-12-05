@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.logging.Log;
 import jakarta.annotation.Priority;
 import jakarta.annotation.security.PermitAll;
@@ -21,6 +23,10 @@ import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
@@ -32,12 +38,31 @@ public class JwtRequestFilter implements ContainerRequestFilter {
     @Inject
     CustomSecurityContext customSecurityContext;
 
-    @ConfigProperty(name = "keycloak.realm.public.key")
-    String REALM_PUBLIC_KEY;
+    String realmPublicKey = "";
+    /*@ConfigProperty(name = "keycloak.realm.public.key")
+    String REALM_PUBLIC_KEY;*/
     //String REALM_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA807Sg8RdQUQxLkbWNgf9UPtCIpkFexHntpg/9xEykb1rKp8pKBC0fOgqrXpPgoT4bQVznd7gx28VLqZtWm1kDyI7BPjLox8PBIyEKIHcUgJ6r8Gx7z9FGmdxT1HxcEpetjqgplIxDm/8qMTDdcP7XMaVCuev6gXq0HQrnQvl3mOf7ZkUF8vByDXCHm+knvhnK8KASSFD390bMys6jf1Y+AkCvZoBTza4Ad+zhBm23HoWSDfkdT6DrPDnk0L4OVNtdhl6PiQ5BWh1dVmDEEmRIWAZtOAzImdfj4Kqri6aMjyoKfLQnwtAbwbzc2sa6h82shfKCYEBsFtpRu+ZBZGc3wIDAQAB";
 
     @Context
     private ResourceInfo resourceInfo;
+
+    public static String getRealmPublicKey() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("http://localhost:8081/realms/demo"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(response.body());
+
+        String publicKey = root.get("public_key").asText();
+
+        return publicKey;
+    }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -46,6 +71,12 @@ public class JwtRequestFilter implements ContainerRequestFilter {
         /*if (isPermitAll()) {
             return;
         }*/
+
+        try {
+            realmPublicKey = getRealmPublicKey();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         var authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -56,7 +87,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
         var token = authHeader.substring("Bearer ".length());
 
         try {
-            Algorithm algorithm = Algorithm.RSA256(getPublicKey(REALM_PUBLIC_KEY), null);
+            Algorithm algorithm = Algorithm.RSA256(getPublicKey(realmPublicKey), null);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
 
