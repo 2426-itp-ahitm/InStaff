@@ -1,5 +1,6 @@
 ### Get all Shifts
 GET http://localhost:8080/api/1/shifts
+Authorization: Bearer {{access_token}}
 
 ### Get Shift by id
 GET http://localhost:8080/api/1/shifts/1
@@ -25,6 +26,7 @@ Content-Type: application/json
 
 ### Delete Shift
 DELETE http://localhost:8080/api/1/shifts/delete/3
+Authorization: Bearer {{access_token}}
 
 ### Create Shift with Assignments
 POST http://localhost:8080/api/1/shifts/create_with_assignments
