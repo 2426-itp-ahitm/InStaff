@@ -1,6 +1,6 @@
 <div class="">
-  <div class="m-2">
-    <full-calendar [options]="calendarOptions"></full-calendar>
+  <div class="m-2 h-screen">
+    <full-calendar class="h-11/12" [options]="calendarOptions"></full-calendar>
   </div>
   <div *ngIf="isEditMode">
     <app-shift-edit-old [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit-old>
