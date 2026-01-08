@@ -27,8 +27,8 @@
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.7",
     "postcss": "^8.5.3",
-    "keycloak-angular": "^20.0.0",
     "rxjs": "~7.8.0",
+    "keycloak-angular": "^19.0.0",
     "tailwindcss": "^4.1.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

@@ -6,46 +6,49 @@ import {EmployeeListComponent} from '../employee/employee-list/employee-list.com
 import {RoleListComponent} from '../role/role-list/role-list.component';
 import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/shift-template-list.component';
 import {AdminComponent} from '../admin/admin.component';
+import {AuthGuard} from '../guard/auth.guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
     path: 'home',
     component: HomeComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'calendar',
     component: CalendarComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'team',
     component: EmployeeListComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'role-list',
     component: RoleListComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'shift-template-list',
     component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'admin',
     component: AdminComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: '**',
     component: NotFoundComponent, //COMPONENT CLASS NAME
-    title: 'InStaff'
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
 ]

@@ -10,8 +10,6 @@ import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-ad
 @Component({
   selector: 'app-shift-template-list',
   imports: [
-    EmployeeAddComponent,
-    EmployeeEditComponent,
     NgForOf,
     NgIf,
     ShiftTemplateEditComponent,

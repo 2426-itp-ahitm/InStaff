@@ -7,8 +7,7 @@ import {NgClass, NgIf} from '@angular/common';
   imports: [
     RouterLink,
     RouterLinkActive,
-    NgClass,
-    NgIf
+    NgClass
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'

@@ -20,8 +20,7 @@ import {Role} from '../../interfaces/role';
   imports: [
     FormsModule,
     NgForOf,
-    NgIf,
-    NgClass
+    NgIf
   ],
   templateUrl: './shift-edit.component.html',
   styleUrl: './shift-edit.component.css'

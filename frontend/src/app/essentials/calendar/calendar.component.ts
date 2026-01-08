@@ -10,18 +10,20 @@ import {Employee} from '../../interfaces/employee';
 import {Shift} from '../../interfaces/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
-import {ShiftTemplate} from '../../interfaces/shift-template';
 import { CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import deLocale from '@fullcalendar/core/locales/de';
-import {ShiftAddOldComponent} from '../../shift/shift-add-old/shift-add-old.component';
 import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
 import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.component';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, FullCalendarModule, ShiftEditComponent, ShiftAddOldComponent, ShiftAddComponent, ShiftEditOldComponent],
+  imports: [
+    CommonModule,
+    FullCalendarModule,
+    ShiftAddComponent,
+    ShiftEditOldComponent
+  ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })

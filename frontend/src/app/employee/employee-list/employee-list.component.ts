@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {NgForOf, NgIf} from '@angular/common';
@@ -6,6 +6,7 @@ import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {EmployeeAddComponent} from '../employee-add/employee-add.component';
 import {CardComponent} from '../../essentials/card/card.component';
 import {EmployeeCardComponent} from '../employee-card/employee-card.component';
+import {KeycloakService} from 'keycloak-angular';
 
 
 @Component({
@@ -15,7 +16,6 @@ import {EmployeeCardComponent} from '../employee-card/employee-card.component';
     NgIf,
     EmployeeEditComponent,
     EmployeeAddComponent,
-    CardComponent,
     EmployeeCardComponent,
   ],
   templateUrl: './employee-list.component.html',
@@ -27,10 +27,12 @@ export class EmployeeListComponent implements OnInit {
   selectedEmployee: Employee = this.employees[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
+  keycloakService: KeycloakService = inject(KeycloakService);
 
   constructor(private employeeService: EmployeeServiceService) {}
 
   ngOnInit(): void {
+    console.log(this.keycloakService.getToken())
     this.employeeService.employees$.subscribe((data) => {
       this.employees = data;
     });

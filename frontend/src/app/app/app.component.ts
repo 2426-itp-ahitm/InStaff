@@ -5,6 +5,7 @@ import {MenuComponent} from '../essentials/menu/menu.component';
 import {FeedbackBannerComponent} from '../feedback/feedback-banner/feedback-banner.component';
 import {Feedback} from '../interfaces/feedback';
 import {FeedbackServiceService} from '../feedback/feedback-service/feedback-service.service';
+import {KeycloakService} from 'keycloak-angular';
 
 
 @Component({
@@ -15,6 +16,7 @@ import {FeedbackServiceService} from '../feedback/feedback-service/feedback-serv
 
 })
 export class AppComponent implements OnInit {
+  keycloakService: KeycloakService = inject(KeycloakService);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
   title = 'frontend';
 
