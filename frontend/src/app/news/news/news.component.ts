@@ -2,6 +2,7 @@ import {Component, inject, OnInit, Output, EventEmitter} from '@angular/core';
 import {News} from '../../interfaces/news';
 import {NewsService} from '../news-service/news.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {NewsWebsocketServiceService} from '../news-websocket-serivce/news-websocket-service.service';
 
 @Component({
   selector: 'app-news',
@@ -14,6 +15,12 @@ import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
   styleUrl: './news.component.css'
 })
 export class NewsComponent implements OnInit {
+  message: string = '';
+
+  constructor(private ws: NewsWebsocketServiceService) {}
+
+
+
   newsService: NewsService = inject(NewsService);
 
   news: News[] = []
@@ -22,6 +29,12 @@ export class NewsComponent implements OnInit {
       this.news = data;
     })
     this.newsService.getNews()
+
+    this.ws.connect("ws://localhost:8080/api/ws/news")
+      .subscribe(msg => {
+        console.log("Received:", msg);
+        this.message = msg;
+      });
   }
 
   dateToString(shift_date: Date) {
