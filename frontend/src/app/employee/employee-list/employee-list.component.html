@@ -8,7 +8,7 @@
       <app-employee-card *ngFor="let e of filteredEmployees" [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
     </div>
 
-    <div *ngIf="filteredEmployees.length === 0" class="mt-4 text-sm text-gray-500">Keine Mitarbeiter gefunden.</div>
+    <div *ngIf="filteredEmployees.length === 0" class="mt-4 text-sm text-center text-gray-500">Keine Mitarbeiter gefunden.</div>
 
     <div class="text-center">
 
