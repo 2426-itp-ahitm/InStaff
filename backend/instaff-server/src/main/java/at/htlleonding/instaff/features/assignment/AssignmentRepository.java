@@ -3,9 +3,12 @@ package at.htlleonding.instaff.features.assignment;
 import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.news.News;
+import at.htlleonding.instaff.features.news.NewsMapper;
 import at.htlleonding.instaff.features.news.NewsRepository;
+import at.htlleonding.instaff.features.news.NewsSocket;
 import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.vertx.core.json.Json;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -73,6 +76,11 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
         return (Assignment) query.getSingleResult();
     }
 
+    @Inject
+    NewsSocket newsSocket;
+    @Inject
+    NewsMapper newsMapper;
+
     @Transactional
     public void setConfirmed(boolean confirmed, Long assignmentId, Long companyId) {
         Assignment assignment = entityManager.find(Assignment.class, assignmentId);
@@ -81,5 +89,6 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
 
         News news = new News(assignment, entityManager.find(Company.class, companyId));
         entityManager.persist(news);
+        newsSocket.broadcast(Json.encode(newsMapper.toResource(news)));
     }
 }

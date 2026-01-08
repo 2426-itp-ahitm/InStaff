@@ -34,6 +34,7 @@ export class NewsComponent implements OnInit {
       .subscribe(msg => {
         console.log("Received:", msg);
         this.message = msg;
+        this.newsService.addNews(msg);
       });
   }
 

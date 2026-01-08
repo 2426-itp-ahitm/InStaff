@@ -22,8 +22,8 @@ export class NewsService {
   }
 
   getNews() {
-    this.httpClient.get<News[]>(`${this.getApiUrl()}/news`).subscribe((news: News[]) => {
-      this.newsSubject.next(news);
+    this.httpClient.get<News[]>(`${this.getApiUrl()}/news`).subscribe((listOfNews: News[]) => {
+      this.newsSubject.next(listOfNews);
     });
   }
 
@@ -43,4 +43,16 @@ export class NewsService {
       }
     })
   }
+
+  addNews(msg: string) {
+    const raw = JSON.parse(msg);
+    const news: News = {
+      ...raw
+    }
+    const current = this.newsSubject.getValue();
+    this.newsSubject.next([news, ...current]);
+  }
+
+
+  
 }
