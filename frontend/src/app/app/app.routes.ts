@@ -10,6 +10,11 @@ import {AuthGuard} from '../guard/auth.guard';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+  {
     path: 'home',
     component: HomeComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
