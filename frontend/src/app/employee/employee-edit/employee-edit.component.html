@@ -67,7 +67,7 @@
                 <div class="sm:col-span-6">
                   <label for="hourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
                   <div class="mt-2">
-                    <input formControlName="hourlyWage" value="{{ employee.hourly_wage }}" id="hourlyWage" name="hourlyWage" type="number" class="input-field">
+                    <input formControlName="hourlyWage"  id="hourlyWage" name="hourlyWage" type="number" class="input-field">
                   </div>
                   <div *ngIf="editEmployeeForm.get('hourlyWage')?.invalid" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
                 </div>

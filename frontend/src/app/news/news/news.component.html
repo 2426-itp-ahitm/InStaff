@@ -7,7 +7,7 @@
     <div *ngFor="let n of this.news" class="news-item" >
       <img class="rounded-full" *ngIf="n.confirmed" ngSrc="/icons/accept-black.png" alt="edit" width="36" height="36" [class.bg-green-200]="n.confirmed">
       <img class="rounded-full" *ngIf="!n.confirmed" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" [class.bg-red-200]="!n.confirmed" >
-      <p class="text-left" (click)="openShiftEditWithId(n.shift_id)">
+      <p class="ml-2 text-left" (click)="openShiftEditWithId(n.shift_id)">
         {{n.employee_name}} hat für die Schicht am {{dateToString(n.shift_date)}} {{n.confirmed? "zugesagt" : "abgesagt"}}
       </p>
       <img class="icon-button" ngSrc="/icons/trash-white.png" alt="edit" width="36" height="36" (click)="deleteNewsItem(n.id)">

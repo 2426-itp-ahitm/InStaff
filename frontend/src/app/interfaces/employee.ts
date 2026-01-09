@@ -9,7 +9,7 @@ export interface Employee {
   password: string;
   birthdate: string; // ISO-Date als string (z. B. "2004-11-11")
   address: string;
-  hourly_wage: number;
+  hourlyWage: number;
   isManager: boolean;
   companyId: number;
   companyName: string;

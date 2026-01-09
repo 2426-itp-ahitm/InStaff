@@ -33,6 +33,8 @@ export class EmployeeEditComponent implements OnInit {
   @ViewChild('lastNameInput') lastNameInput!: ElementRef;
   @ViewChild('emailInput') emailInput!: ElementRef;
   @ViewChild('telephoneInput') telephoneInput!: ElementRef;
+  @ViewChild('hourlyWageInput') hourlyWageInput!: ElementRef;
+
 
   @Output() closeEmpEdit = new EventEmitter<void>();
 
@@ -41,26 +43,18 @@ export class EmployeeEditComponent implements OnInit {
 
   ngOnInit() {
     this.editEmployeeForm = new FormGroup({
-      firstname: new FormControl('', Validators.required),
-      lastname: new FormControl('', Validators.required),
-      birthdate: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      telephone: new FormControl('', Validators.required), // optional
-      address: new FormControl('', Validators.required),
-      hourlyWage: new FormControl('', Validators.required),
-      isManager: new FormControl(false),
-      roles: new FormControl<EmployeeRole[]>([], Validators.required),
+      firstname: new FormControl(this.employee.firstname, Validators.required),
+      lastname: new FormControl(this.employee.lastname, Validators.required),
+      birthdate: new FormControl(this.employee.birthdate, Validators.required),
+      email: new FormControl(this.employee.email, [Validators.required, Validators.email]),
+      telephone: new FormControl(this.employee.telephone, Validators.required), // optional
+      address: new FormControl(this.employee.address, Validators.required),
+      hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
+      isManager: new FormControl(this.employee.isManager),
+      roles: new FormControl<EmployeeRole[]>(this.employee.roles, Validators.required),
     });
 
-    this.editEmployeeForm.get('firstname')?.setValue(this.employee.firstname);
-    this.editEmployeeForm.get('lastname')?.setValue(this.employee.lastname);
-    this.editEmployeeForm.get('birthdate')?.setValue(this.employee.birthdate);
-    this.editEmployeeForm.get('email')?.setValue(this.employee.email);
-    this.editEmployeeForm.get('telephone')?.setValue(this.employee.telephone);
-    this.editEmployeeForm.get('isManager')?.setValue(this.employee.isManager);
-    this.editEmployeeForm.get('roles')?.setValue(this.employee.roles);
-    this.editEmployeeForm.get('address')?.setValue(this.employee.address);
-    this.editEmployeeForm.get('hourlyWage')?.setValue(this.employee.hourly_wage);
+
 
     this.roleService.getRoles()
 
