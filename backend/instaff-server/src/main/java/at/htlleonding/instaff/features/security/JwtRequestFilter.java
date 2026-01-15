@@ -1,5 +1,7 @@
 package at.htlleonding.instaff.features.security;
 
+import at.htlleonding.instaff.features.employee.Employee;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -12,6 +14,7 @@ import jakarta.annotation.Priority;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -37,6 +40,8 @@ import java.util.*;
 public class JwtRequestFilter implements ContainerRequestFilter {
     @Inject
     CustomSecurityContext customSecurityContext;
+    @Inject
+    EntityManager em;
 
     String realmPublicKey = "";
 
@@ -88,8 +93,16 @@ public class JwtRequestFilter implements ContainerRequestFilter {
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
 
+            String keycloakUserId = jwt.getSubject(); // JWT "sub"
             String username = jwt.getClaim("preferred_username").asString();
             String fullName = jwt.getClaim("given_name").asString();
+
+            Employee employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class)
+                    .setParameter("kcId", keycloakUserId).getResultStream().findFirst().orElse(null);
+            if (employee == null) {
+                abortWithUnauthorized(requestContext);
+                return;
+            }
 
             List<String> userRoles = extractRoles(jwt);
 
@@ -103,7 +116,10 @@ public class JwtRequestFilter implements ContainerRequestFilter {
             customSecurityContext.fullName = fullName;
             customSecurityContext.username = username;
             customSecurityContext.roles = userRoles;
-            requestContext.setProperty("first_name", fullName);
+            customSecurityContext.employeeId = employee.getId();
+            customSecurityContext.keycloakUserId = keycloakUserId;
+
+            requestContext.setProperty("employee", employee);
 
         } catch (JWTVerificationException | GeneralSecurityException e) {
             Log.error("Failed to verify Token: ", e);

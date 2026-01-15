@@ -15,6 +15,8 @@ public class CustomSecurityContext implements SecurityContext {
     String username;
     List<String> roles;
     String fullName;
+    Long employeeId;
+    String keycloakUserId;
 
     @Override
     public Principal getUserPrincipal() {

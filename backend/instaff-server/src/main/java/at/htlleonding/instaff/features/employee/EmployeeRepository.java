@@ -11,10 +11,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 public class EmployeeRepository implements PanacheRepository<Employee> {
@@ -22,6 +20,10 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     EntityManager entityManager;
     @Inject
     AssignmentRepository assignmentRepository;
+
+    public List<Employee> getAllEmployees() {
+        return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class).getResultList();
+    }
 
     public List<Employee> getByCompanyId(Long companyId) {
         return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();

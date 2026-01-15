@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 @Entity
 @NamedQueries({
         @NamedQuery(name = Employee.FIND_BY_COMPANY, query = "select e from Employee e WHERE e.company.id = :id"),
-        @NamedQuery(name = Employee.FIND_BY_COMPANY_AND_EMAIL, query = "select e from Employee e where e.company.id = :companyId and e.email = :email")
+        @NamedQuery(name = Employee.FIND_BY_COMPANY_AND_EMAIL, query = "select e from Employee e where e.company.id = :companyId and e.email = :email"),
+        @NamedQuery(name = Employee.FIND_ALL, query = "select e from Employee e")
 })
 @Table(name = "employee", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"company_id", "email"})
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class Employee {
     public static final String FIND_BY_COMPANY = "Employee.findByCompany";
     public static final String FIND_BY_COMPANY_AND_EMAIL = "Employee.findByCompanyAndEmail";
+    public static final String FIND_ALL = "Employee.findAll";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
