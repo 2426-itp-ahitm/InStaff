@@ -28,6 +28,7 @@ public class KeycloakAdminService {
     String clientSecret;
 
     public String createUser(Employee employee) {
+
         Client client = ClientBuilder.newClient();
         String accessToken = getAdminToken(client);
 
@@ -37,30 +38,40 @@ public class KeycloakAdminService {
                 .header("Authorization", "Bearer " + accessToken)
                 .post(Entity.json(new KeycloakUserRequest(employee)));
 
+        String userId;
+
         if (createResponse.getStatus() == 201) {
-            URI location = createResponse.getLocation();
-            String keycloakUserId = extractIdFromLocation(location);
-
-            client
-                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + keycloakUserId + "/reset-password")
-                    .request()
-                    .header("Authorization", "Bearer " + accessToken)
-                    .put(Entity.json(new PasswordRequest("Start1234")));
-
+            userId = extractIdFromLocation(createResponse.getLocation());
+        } else if (createResponse.getStatus() == 409) {
+            userId = findUserIdByEmail(client, accessToken, employee.getEmail());
+        } else {
             client.close();
-            return keycloakUserId;
+            throw new IllegalStateException(
+                    "Keycloak user creation failed: " + createResponse.getStatus()
+            );
         }
 
-        if (createResponse.getStatus() == 409) {
-            String existingId = findUserIdByEmail(client, accessToken, employee.getEmail());
-            client.close();
-            return existingId;
-        }
+        // 1️⃣ Startpasswort setzen
+        client
+                .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
+                .request()
+                .header("Authorization", "Bearer " + accessToken)
+                .put(Entity.json(new PasswordRequest("Start1234")));
+
+        // 2️⃣ Required Actions setzen
+        client
+                .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId)
+                .request()
+                .header("Authorization", "Bearer " + accessToken)
+                .put(Entity.json(
+                        java.util.Map.of(
+                                "requiredActions",
+                                List.of("VERIFY_EMAIL", "UPDATE_PASSWORD")
+                        )
+                ));
 
         client.close();
-        throw new IllegalStateException(
-                "Keycloak user creation failed: " + createResponse.getStatus()
-        );
+        return userId;
     }
 
     private String getAdminToken(Client client) {
@@ -129,7 +140,7 @@ public class KeycloakAdminService {
     public static class PasswordRequest {
         public String type = "password";
         public String value;
-        public boolean temporary = true;
+        public boolean temporary = false;
 
         public PasswordRequest(String value) {
             this.value = value;

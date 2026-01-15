@@ -15,7 +15,11 @@
     <h1 class="title">Ein Fehler ist aufgetreten</h1>
 
     <p style="text-align:center; color: var(--muted); margin-bottom: 2rem;">
-      ${message.summary?no_esc}
+      <#if message?? && message.summary??>
+        ${message.summary?no_esc}
+      <#else>
+        <p>An unexpected error occurred.</p>
+      </#if>    
     </p>
 
     <a href="${url.loginUrl}" class="btn-primary" style="text-decoration:none; text-align:center; display:block;">

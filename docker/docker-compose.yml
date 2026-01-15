@@ -1,0 +1,17 @@
+services:
+  keycloak:
+    build: ./keycloak
+    container_name: instaff-keycloak
+    ports:
+      - "8081:8080"
+    #volumes:
+    #  - ./keycloak/themes:/opt/keycloak/themes
+    depends_on:
+      - mailhog
+
+  mailhog:
+    build: ./mailhog
+    container_name: instaff-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"

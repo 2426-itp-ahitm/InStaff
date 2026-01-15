@@ -22,7 +22,7 @@ values ('Abwasch', 1);
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
 values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', '1233456899', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
-values ('2001-11-09 00:00:00', 'alexander.hahn@example.com', 'Alexander', 'Hahn', '65626625', 1, false, 'Limesstraße 12, 4060 Leonding', 20);
+values ('2001-11-09 00:00:00', 'alexander.hahn1@outlook.de', 'Alexander', 'Hahn', '65626625', 1, false, 'Limesstraße 12, 4060 Leonding', 20);
 
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)

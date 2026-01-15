@@ -1,8 +1,0 @@
-services:
-  keycloak:
-    build: .
-    container_name: wirtshaus-keycloak
-    ports:
-      - "8081:8080"
-    volumes:
-      - ./themes:/opt/keycloak/themes
