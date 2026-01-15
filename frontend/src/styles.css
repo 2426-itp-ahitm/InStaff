@@ -52,7 +52,7 @@ https://tailwindcss.com/
 
 /* headlines */
 h1{
-  @apply text-5xl text-center ;
+  @apply text-5xl text-center max-md:text-3xl ;
 }
 
 h2{

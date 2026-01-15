@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+::ng-deep .fc {
+  font-size: 0.9rem;
+}
+
+::ng-deep .fc-col-header {
+  padding: 0.25rem 0 !important;
+}
+
+::ng-deep .fc-daygrid-day {
+  height: auto;
+  min-height: 80px;
+}
+
+::ng-deep .fc-event {
+  font-size: 0.85rem;
+  padding: 0.25rem;
+}

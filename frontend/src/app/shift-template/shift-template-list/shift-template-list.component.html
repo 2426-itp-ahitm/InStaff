@@ -1,7 +1,7 @@
 <div class="mx-6">
-  <div class="flex mb-4 justify-center items-center">
-    <input type="search" placeholder="Vorlage suchen..." class="mr-2 input-field" (input)="onSearch($any($event.target).value)">
-    <button (click)="openAddShiftTemplate()" type="button" class="ml-2 button-green">Schichtvorlage hinzufügen</button>
+  <div class="flex max-md:flex-col max-md:mt-2 max-md:items-center mb-4 justify-center items-center gap-2">
+    <input type="search" placeholder="Vorlage suchen..." class="input-field max-md:w-full max-md:max-w-md" (input)="onSearch($any($event.target).value)">
+    <button (click)="openAddShiftTemplate()" type="button" class="button-green max-md:w-full max-md:max-w-md">Schichtvorlage hinzufügen</button>
   </div>
   <div class="card-grid">
     <div class="card" *ngFor="let sT of filteredShiftTemplates">

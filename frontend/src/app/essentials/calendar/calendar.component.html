@@ -1,6 +1,6 @@
-<div class="">
-  <div class="m-2 h-screen">
-    <full-calendar class="h-11/12" [options]="calendarOptions"></full-calendar>
+<div class="h-full flex flex-col overflow-hidden">
+  <div class="flex-1 min-h-0 overflow-hidden">
+    <full-calendar class="h-full" [options]="calendarOptions"></full-calendar>
   </div>
   <div *ngIf="isEditMode">
     <!--
