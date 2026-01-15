@@ -4,10 +4,11 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
 import {Employee} from '../../interfaces/employee';
 import {Shift} from '../../interfaces/shift';
-import {switchMap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {DateClickArg} from '@fullcalendar/interaction';
 import {ShiftTemplate} from '../../interfaces/shift-template';
 import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
+import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
 export class ShiftServiceService {
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
@@ -41,21 +43,22 @@ export class ShiftServiceService {
     })
   }
 
-  updateShift(shiftId: number, newShift: NewShift): void {
-    this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, newShift)
-      .subscribe((updatedShift) => {
-        const current = this.shiftsSubject.getValue();
-        const idx = current.findIndex(s => s.id === updatedShift.id);
-        if (idx !== -1) {
-          current[idx] = updatedShift;
-          this.shiftsSubject.next([...current]);
-        } else {
-          // if not present, append
-          this.shiftsSubject.next([...current, updatedShift]);
-        }
-      }, (err) => {
-        console.error('Failed to update shift', err);
-      });
+  updateShift(shiftId: number, newShift: NewShift): Observable<Shift> {
+    return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, newShift)
+      .pipe(
+        // keep local cache in sync on success
+        tap((updatedShift) => {
+          const current = this.shiftsSubject.getValue();
+          const idx = current.findIndex(s => s.id === updatedShift.id);
+          if (idx !== -1) {
+            current[idx] = updatedShift;
+            this.shiftsSubject.next([...current]);
+          } else {
+            this.shiftsSubject.next([...current, updatedShift]);
+          }
+          this.feedbackService.newFeedback({ message: 'Schicht erfolgreich geändert', type: 'success', showFeedback: true })
+        })
+      );
   }
 
   getShiftById(shiftId: number): Observable<Shift> {
