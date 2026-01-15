@@ -32,8 +32,8 @@ public class Employee {
     String lastname;
     String email;
     String telephone;
-    String password;
     LocalDate birthdate;
+    public String keycloakUserId;
     @Column(name = "hourly_wage", nullable = true)
     Double hourlyWage;
     @Column(nullable = true)
@@ -56,12 +56,11 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, Boolean isManager, Double hourlyWage, String address) {
+    public Employee(String firstname, String lastname, String email, String telephone, LocalDate birthdate, Company company, Boolean isManager, Double hourlyWage, String address) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.telephone = telephone;
-        this.password = password;
         this.birthdate = birthdate;
         this.company = company;
         this.isManager = isManager;
@@ -69,12 +68,11 @@ public class Employee {
         this.address = address;
     }
 
-    public Employee(String firstname, String lastname, String email, String telephone, String password, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager, Double hourlyWage, String address) {
+    public Employee(String firstname, String lastname, String email, String telephone, LocalDate birthdate, Company company, List<Role> roles, Boolean isManager, Double hourlyWage, String address) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.telephone = telephone;
-        this.password = password;
         this.birthdate = birthdate;
         this.company = company;
         this.roles.addAll(roles);
@@ -158,10 +156,6 @@ public class Employee {
 
     public String getTelephone() {
         return telephone;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public LocalDate getBirthdate() {
