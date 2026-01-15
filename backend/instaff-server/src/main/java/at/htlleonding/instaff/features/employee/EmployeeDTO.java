@@ -15,7 +15,6 @@ public record EmployeeDTO(
         String lastname,
         String email,
         String telephone,
-        String password,
         LocalDate birthdate,
         boolean isManager,
         Long companyId,

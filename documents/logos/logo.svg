@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 679.02 348.86">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: SFCompactRounded-Regular, 'SF Compact Rounded';
+        font-size: 200px;
+      }
+
+      .cls-2 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 16px;
+      }
+
+      .cls-4 {
+        letter-spacing: .01em;
+      }
+    </style>
+  </defs>
+  <text class="cls-1" transform="translate(77.69 228.06)"><tspan x="0" y="0">In</tspan><tspan class="cls-4" x="161.33" y="0">S</tspan><tspan class="cls-2" x="276.86" y="0">t</tspan><tspan x="344.14" y="0">a</tspan><tspan class="cls-4" x="447.07" y="0">f</tspan><tspan x="516.02" y="0">f</tspan></text>
+  <path class="cls-3" d="M630.08,48.36c0-22.29-18.07-40.36-40.36-40.36H47.13c-21.61,0-39.13,17.52-39.13,39.13v127.24c0,22.1,17.92,40.02,40.02,40.02"/>
+</svg>

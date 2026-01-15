@@ -11,7 +11,6 @@ public record EmployeeCreateDTO(
         String lastname,
         String email,
         String telephone,
-        String password,
         LocalDate birthdate,
         boolean isManager,
         Long companyId, // Reference to the company

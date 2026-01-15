@@ -152,8 +152,7 @@ public class EmployeeResource {
             roles.add(roleRepository.findById(roleId));
         }
         // Map DTO to entity
-        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()), roles, dto.isManager(), dto.hourlyWage(), dto.address());
+        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthdate(), companyRepository.findById(dto.companyId()), roles, dto.isManager(), dto.hourlyWage(), dto.address());
 
         // Persist the entity
         Employee createdEmployee = employeeRepository.createEmployee(employee);
@@ -203,6 +202,7 @@ public class EmployeeResource {
         return Response.ok("Shift unassigned successfully").build();
     }
 
+    /*
     @PUT
     @Path("/login/{mail}/{password}")
     public Response login(@PathParam("mail") String mail, @PathParam("password") String password, @PathParam("companyId") Long companyId) {
@@ -235,5 +235,6 @@ public class EmployeeResource {
             throw new RuntimeException("Error hashing password", e);
         }
     }
+    */
 
 }
