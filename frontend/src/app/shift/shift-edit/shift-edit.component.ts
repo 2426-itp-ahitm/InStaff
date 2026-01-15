@@ -56,6 +56,7 @@ export class ShiftEditComponent implements OnInit {
   private updateGroupedIfReady() {
     if (this.rolesLoaded && this.assignmentsLoaded) {
       this.updateGroupedAssignments();
+      this.updateAvailableRoles();
     }
   }
 
@@ -90,7 +91,6 @@ export class ShiftEditComponent implements OnInit {
         return map;
       }, {} as { [id: number]: string });
       this.rolesLoaded = true;
-      this.updateAvailableRoles();
       this.updateGroupedIfReady();
     });
 
