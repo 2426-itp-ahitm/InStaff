@@ -65,6 +65,9 @@
               "buildTarget": "frontend:build:development"
             }
           },
+          "options": {
+            "hmr": false
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {

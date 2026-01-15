@@ -150,7 +150,6 @@ export class ShiftEditOldComponent implements OnInit {
   }
 
   makeStringFromBoolean(confirmed: boolean) {
-
     if (confirmed) {
       return "Bestätigt";
     }else if(confirmed==null) {
@@ -158,6 +157,5 @@ export class ShiftEditOldComponent implements OnInit {
     } else{
       return "Abgelehnt";
     }
-
   }
 }
