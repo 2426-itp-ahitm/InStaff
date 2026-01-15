@@ -63,23 +63,23 @@ values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', '9
 
 /* Neue Schichten */
 insert into Shift (starttime, endtime, company_id)
-values ('2025-03-26 08:00:00', '2025-03-26 16:00:00', 1);
+values ('2026-03-26 08:00:00', '2026-03-26 16:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-03-27 14:00:00', '2025-03-27 22:00:00', 1);
+values ('2026-03-27 14:00:00', '2026-03-27 22:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-03-28 10:00:00', '2025-03-28 18:00:00', 1);
+values ('2026-03-28 10:00:00', '2026-03-28 18:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-14 09:00:00', '2025-06-14 17:00:00', 1);
+values ('2026-06-14 09:00:00', '2026-06-14 17:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-15 11:00:00', '2025-06-15 19:00:00', 1);
+values ('2026-06-15 11:00:00', '2026-06-15 19:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-18 08:00:00', '2025-06-18 16:00:00', 1);
+values ('2026-06-18 08:00:00', '2026-06-18 16:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-20 12:00:00', '2025-06-20 20:00:00', 1);
+values ('2026-06-20 12:00:00', '2026-06-20 20:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-22 10:00:00', '2025-06-22 18:00:00', 1);
+values ('2026-06-22 10:00:00', '2026-06-22 18:00:00', 1);
 insert into Shift (starttime, endtime, company_id)
-values ('2025-06-15 20:00:00', '2025-06-15 21:00:00', 1);
+values ('2026-06-15 20:00:00', '2026-06-15 21:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
 insert into employee_role (employee_id, role_id)
@@ -153,8 +153,6 @@ values ('Reservierung Riener', '', 4, '12:00:00', '13:30:00', 1);
 
 /* Shift Templates*/
 insert into shift_template (shift_template_name, company_id)
-values ('Leere Schicht', 1);
-insert into shift_template (shift_template_name, company_id)
 values ('Sonntags Schicht', 1);
 insert into shift_template (shift_template_name, company_id)
 values ('Mittags Schicht', 1);
@@ -163,22 +161,22 @@ values ('Abend Schicht', 1);
 
 /* Template Roles */
 insert into template_role (role_id, shift_template_id, count)
-values (1, 2, 3);
+values (1, 1, 3);
 insert into template_role (role_id, shift_template_id, count)
-values (2, 2, 1);
+values (2, 1, 1);
 insert into template_role (role_id, shift_template_id, count)
-values (3, 2, 2);
+values (3, 1, 2);
 
 insert into template_role (role_id, shift_template_id, count)
-values (1, 3, 1);
+values (1, 2, 1);
 insert into template_role (role_id, shift_template_id, count)
-values (2, 3, 2);
+values (2, 2, 2);
 insert into template_role (role_id, shift_template_id, count)
-values (3, 3, 1);
+values (3, 2, 1);
 
 insert into template_role (role_id, shift_template_id, count)
-values (1, 4, 3);
+values (1, 3, 3);
 insert into template_role (role_id, shift_template_id, count)
-values (2, 4, 3);
+values (2, 3, 3);
 insert into template_role (role_id, shift_template_id, count)
-values (3, 4, 2);
+values (3, 3, 2);
