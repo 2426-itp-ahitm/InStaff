@@ -2,6 +2,7 @@ package at.htlleonding.instaff.features.shift;
 
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.assignment.AssignmentCreateDTO;
+import at.htlleonding.instaff.features.assignment.AssignmentDTO;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
@@ -144,6 +145,37 @@ public class ShiftResource {
         }
 
         return Response.status(Response.Status.CREATED).entity(shift).build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{shiftId}")
+    public Response updateShift(@PathParam("shiftId") Long shiftId, ShiftCreateWithAssignmentsDTO dto) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // Update shift properties
+        shift.startTime = dto.shiftCreateDTO().startTime();
+        shift.endTime = dto.shiftCreateDTO().endTime();
+        shiftRepository.persist(shift);
+
+        // Delete existing assignments
+        entityManager.createQuery("DELETE FROM Assignment a WHERE a.shift.id = :shiftId")
+                .setParameter("shiftId", shiftId)
+                .executeUpdate();
+
+        // Create new assignments
+        for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
+            if (assignmentCreateDTO.employee() != -1) {
+                Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+                entityManager.persist(assignment);
+            }
+        }
+
+        shiftSocket.broadcast("Shift Updated Id: " + shift.getId());
+        return Response.ok(shiftMapper.toResource(shift)).build();
     }
 
     @POST
