@@ -225,4 +225,12 @@ public class Employee {
     public void addRole(Role role) {
         roles.add(role);
     }
+
+    public String getKeycloakUserId() {
+        return keycloakUserId;
+    }
+
+    public void setKeycloakUserId(String keycloakUserId) {
+        this.keycloakUserId = keycloakUserId;
+    }
 }

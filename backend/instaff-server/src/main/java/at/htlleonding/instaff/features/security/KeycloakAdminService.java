@@ -9,6 +9,9 @@ import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.net.URI;
+import java.util.List;
+
 @ApplicationScoped
 public class KeycloakAdminService {
 
@@ -25,35 +28,39 @@ public class KeycloakAdminService {
     String clientSecret;
 
     public String createUser(Employee employee) {
-
         Client client = ClientBuilder.newClient();
-
-        // 1) get admin access token
         String accessToken = getAdminToken(client);
 
-        // 2) create user
         Response createResponse = client
                 .target(keycloakUrl + "/admin/realms/" + realm + "/users")
                 .request()
                 .header("Authorization", "Bearer " + accessToken)
                 .post(Entity.json(new KeycloakUserRequest(employee)));
 
-        if (createResponse.getStatus() != 201) {
-            throw new IllegalStateException("Keycloak user creation failed: " + createResponse.getStatus());
+        if (createResponse.getStatus() == 201) {
+            URI location = createResponse.getLocation();
+            String keycloakUserId = extractIdFromLocation(location);
+
+            client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + keycloakUserId + "/reset-password")
+                    .request()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .put(Entity.json(new PasswordRequest("Start1234")));
+
+            client.close();
+            return keycloakUserId;
         }
 
-        // 3) extract userId from Location header
-        String location = createResponse.getHeaderString("Location");
-        String keycloakUserId = location.substring(location.lastIndexOf("/") + 1);
+        if (createResponse.getStatus() == 409) {
+            String existingId = findUserIdByEmail(client, accessToken, employee.getEmail());
+            client.close();
+            return existingId;
+        }
 
-        // 4) set initial password
-        client
-                .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + keycloakUserId + "/reset-password")
-                .request()
-                .header("Authorization", "Bearer " + accessToken)
-                .put(Entity.json(new PasswordRequest("Start1234")));
-
-        return keycloakUserId;
+        client.close();
+        throw new IllegalStateException(
+                "Keycloak user creation failed: " + createResponse.getStatus()
+        );
     }
 
     private String getAdminToken(Client client) {
@@ -73,6 +80,35 @@ public class KeycloakAdminService {
         }
 
         return response.readEntity(TokenResponse.class).access_token;
+    }
+
+    private String findUserIdByEmail(Client client, String accessToken, String email) {
+
+        Response response = client
+                .target(keycloakUrl + "/admin/realms/" + realm + "/users")
+                .queryParam("email", email)
+                .request()
+                .header("Authorization", "Bearer " + accessToken)
+                .get();
+
+        if (response.getStatus() != 200) {
+            throw new IllegalStateException("Failed to search user in Keycloak");
+        }
+
+        List<?> users = response.readEntity(List.class);
+
+        if (users.isEmpty()) {
+            throw new IllegalStateException(
+                    "User exists but could not be found in Keycloak: " + email
+            );
+        }
+
+        return ((java.util.Map<?, ?>) users.get(0)).get("id").toString();
+    }
+
+    private String extractIdFromLocation(URI location) {
+        String path = location.getPath();
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     public static class KeycloakUserRequest {

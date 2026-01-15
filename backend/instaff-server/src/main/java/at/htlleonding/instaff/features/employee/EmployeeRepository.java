@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.employee;
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.assignment.AssignmentRepository;
 import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.security.KeycloakAdminService;
 import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,6 +21,8 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     EntityManager entityManager;
     @Inject
     AssignmentRepository assignmentRepository;
+    @Inject
+    KeycloakAdminService keycloakAdminService;
 
     public List<Employee> getAllEmployees() {
         return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class).getResultList();
@@ -210,7 +213,15 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
 
     @Transactional
     public Employee createEmployee(Employee employee) {
+
+        employee.setKeycloakUserId(null);
         persist(employee);
+        flush();
+
+        String keycloakUserId = keycloakAdminService.createUser(employee);
+
+        employee.setKeycloakUserId(keycloakUserId);
+
         return employee;
     }
 }

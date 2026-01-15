@@ -23,8 +23,7 @@ public class EmployeeKeycloakSync {
 
         for (Employee employee : employeeList) {
             if (employee.keycloakUserId == null) {
-                String kcId = keycloakAdminService.createUser(employee);
-                employee.keycloakUserId = kcId;
+                employee.keycloakUserId = keycloakAdminService.createUser(employee);
             }
         }
     }
