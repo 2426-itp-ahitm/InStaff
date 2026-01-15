@@ -5,20 +5,16 @@
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-          <h3 class="text-lg font-semibold mb-4">Mitarbeiter zu Rollen zuweisen</h3>
+          <h3 class="text-lg font-semibold mb-4">{{ shift.startTime }}</h3>
 
           <!-- Gruppierte Anzeige der Zuweisungen nach Rollen -->
-          <div class="space-y-4 mb-6">
-            <div *ngFor="let group of groupedAssignments" class="border border-gray-300 rounded-lg p-3 bg-gray-50">
+          <div class="space-y-4 mb-2 max-h-96 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300">
+            <div *ngFor="let group of groupedAssignments" class="border-b border-gray-300 p-3">
               <!-- Rollen-Header -->
               <div class="flex justify-between items-center mb-3">
                 <h4 class="font-semibold text-base">{{ group.roleName }} ({{ group.count }}x)</h4>
-                <button
-                  type="button"
-                  class="text-xs text-red-600 hover:text-red-800 font-medium"
-                  (click)="removeRole(group.roleId)"
-                  title="Rolle entfernen">
-                  Rolle entfernen
+                <button type="button" (click)="removeRole(group.roleId)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
+                  <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
                 </button>
               </div>
 
@@ -73,7 +69,7 @@
           </div>
 
           <!-- Neue Rolle hinzufügen -->
-          <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <div class="mb-4 p-1  ">
             <h4 class="text-sm font-semibold mb-2 text-gray-700">Neue Rolle hinzufügen</h4>
             <div class="flex gap-2 items-center">
               <select
