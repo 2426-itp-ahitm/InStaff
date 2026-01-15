@@ -15,6 +15,7 @@ import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import deLocale from '@fullcalendar/core/locales/de';
 import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
 import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.component';
+import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 
 @Component({
   selector: 'app-calendar',
@@ -22,7 +23,8 @@ import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.c
     CommonModule,
     FullCalendarModule,
     ShiftAddComponent,
-    ShiftEditOldComponent
+    ShiftEditOldComponent,
+    ShiftEditComponent
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
