@@ -46,6 +46,11 @@
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
   "loginTheme": "instaff-login",
+  "defaultLocale": "de",
+  "supportedLocales": [
+    "de",
+    "en"
+  ],
   "users": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
