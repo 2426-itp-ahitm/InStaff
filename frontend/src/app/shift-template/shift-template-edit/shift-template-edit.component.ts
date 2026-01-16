@@ -90,10 +90,10 @@ export class ShiftTemplateEditComponent implements OnInit {
     return this.roles.filter(r => !this.addedRoles.some(ar => ar.roleId === r.id));
   }
 
-  addRole(roleIdStr: string, countStr: string) {
+  addRole(roleIdStr: string) {
     const roleId = Number(roleIdStr);
-    const count = Math.max(1, Number(countStr) || 1);
     if (!roleId || !this.roles.find(r => r.id === roleId)) return;
+    const count = 1; // Default to 1
     const selectedEmployees = Array(count).fill(null);
     this.addedRoles.push({ roleId, count, selectedEmployees });
   }

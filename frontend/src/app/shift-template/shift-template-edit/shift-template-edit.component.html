@@ -22,24 +22,22 @@
                         <option *ngFor="let r of availableRoles()" [value]="r.id">{{ r.roleName }}</option>
                       </select>
 
-                      <input #countInput type="number" min="1" value="1" class="block w-20 rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" />
-
-                      <button type="button" class="text-xl text-beige font-bold py-1 px-3 bg-green-dark rounded-md hover:bg-green-base  transition-all" (click)="addRole(roleSelect.value, countInput.value)" [disabled]="availableRoles().length === 0">+</button>
+                      <button type="button" class="text-xl text-beige font-bold py-1 px-3 bg-green-dark rounded-md hover:bg-green-base  transition-all" (click)="addRole(roleSelect.value)" [disabled]="availableRoles().length === 0">+</button>
                     </div>
 
                     <!-- Added roles list -->
                     <div class="mt-4 space-y-3">
-                      <div *ngFor="let ar of addedRoles; let i = index" class="py-1 px-3 outline-1 outline-gray-300 rounded-md bg-white">
-                        <div class="flex items-center justify-between">
-                          <p class="block text-sm/6 font-medium text-gray-900">{{ ar.count }}x {{ getRoleName(ar.roleId) }}</p>
-                          <div class="flex gap-2">
+                      <div *ngFor="let ar of addedRoles; let i = index" class="py-3 px-3 outline-1 outline-gray-300 rounded-md bg-white">
+                        <div class="flex items-center justify-between gap-4">
+                          <p class="block text-sm/6 font-medium text-gray-900">{{ getRoleName(ar.roleId) }}</p>
+                          <div class="flex items-center gap-2">
+                            <label class="text-sm text-gray-700">Anzahl:</label>
+                            <input type="number" min="1" [(ngModel)]="ar.count" [ngModelOptions]="{standalone: true}" class="w-16 rounded-md bg-white px-2 py-1 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" />
                             <button type="button" (click)="removeAddedRole(i)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
                               <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
                             </button>
                           </div>
                         </div>
-
-
                       </div>
                     </div>
                   </div>
