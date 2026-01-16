@@ -26,6 +26,11 @@ https://tailwindcss.com/
 .fc h2{
   color: black;
 }
+
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+  box-shadow: rgba(250, 0, 255, 0) 0px 0px 0px 0rem;
+}
+
 .fc-button-primary {
   border: 0 solid !important;
   background-color: var(--color-green-dark) !important;
@@ -131,6 +136,13 @@ h2{
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   @apply transition-all p-6 bg-white  rounded-2xl
+}
+
+.background-card{
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  @apply p-6 bg-white  rounded-2xl
 }
 
 .card:hover{

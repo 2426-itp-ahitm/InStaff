@@ -7,6 +7,7 @@ import {RoleListComponent} from '../role/role-list/role-list.component';
 import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/shift-template-list.component';
 import {AdminComponent} from '../admin/admin.component';
 import {AuthGuard} from '../guard/auth.guard';
+import {ProfilComponent} from '../essentials/profil/profil.component';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,12 @@ export const routes: Routes = [
   {
     path: 'shift-template-list',
     component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
+    title: 'InStaff',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profil',
+    component: ProfilComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
     canActivate: [AuthGuard]
   },
