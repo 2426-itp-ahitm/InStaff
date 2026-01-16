@@ -1,0 +1,68 @@
+<div class=" ">
+     <div class="">
+       <h3>Bearbeite {{ employee.firstname }} {{ employee.lastname }}</h3>
+     </div>
+    <form class="w-fit m-auto background-card" [formGroup]="editEmployeeForm" (ngSubmit)="save()">
+      <div class="space-y-1 ">
+        <div class="">
+
+          <!-- FIRSTNAME -->
+          <div class="sm:col-span-3">
+            <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
+            <div class="mt-2">
+              <input formControlName="firstname" value="{{ employee.firstname }}" type="text" name="firstname" id="firstname" class="input-field">
+            </div>
+            <div *ngIf="editEmployeeForm.get('firstname')?.invalid" class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
+          </div>
+
+          <!-- LASTNAME -->
+          <div class="sm:col-span-3">
+            <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
+            <div class="mt-2">
+              <input formControlName="lastname" value="{{ employee.lastname }}" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field">
+            </div>
+            <div *ngIf="editEmployeeForm.get('lastname')?.invalid" class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
+          </div>
+
+          <!-- BDAY -->
+          <div class="sm:col-span-4">
+            <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
+            <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
+            <div *ngIf="editEmployeeForm.get('birthdate')?.invalid" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="sm:col-span-5">
+            <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
+            <div class="mt-2">
+              <input formControlName="email" value="{{ employee.email }}" id="email" name="email" type="email" autocomplete="email" class="input-field">
+            </div>
+            <div *ngIf="editEmployeeForm.get('email')?.invalid" class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
+          </div>
+
+          <!-- TELEPHONE -->
+          <div class="sm:col-span-6">
+            <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
+            <div class="mt-2">
+              <input formControlName="telephone" value="{{ employee.telephone }}" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field">
+            </div>
+            <div *ngIf="editEmployeeForm.get('telephone')?.invalid" class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+          </div>
+
+          <!-- ADDRESS -->
+          <div class="sm:col-span-5">
+            <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+            <div class="mt-2">
+              <input formControlName="address" value="{{ employee.address }}" id="address" name="address" type="text" autocomplete="address" class="input-field">
+            </div>
+            <div *ngIf="editEmployeeForm.get('address')?.invalid" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center gap-x-4">
+        <button type="button" class="button-delete mx-1" (click)="logout()">Abmelden</button>
+        <button type="submit" [disabled]="editEmployeeForm.invalid" class="button-green mx-1">Speichern</button>
+      </div>
+    </form>
+</div>
