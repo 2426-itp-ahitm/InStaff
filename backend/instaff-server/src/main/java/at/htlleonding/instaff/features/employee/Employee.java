@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 @NamedQueries({
         @NamedQuery(name = Employee.FIND_BY_COMPANY, query = "select e from Employee e WHERE e.company.id = :id"),
         @NamedQuery(name = Employee.FIND_BY_COMPANY_AND_EMAIL, query = "select e from Employee e where e.company.id = :companyId and e.email = :email"),
-        @NamedQuery(name = Employee.FIND_ALL, query = "select e from Employee e")
+        @NamedQuery(name = Employee.FIND_ALL, query = "select e from Employee e"),
+        @NamedQuery(name = Employee.FIND_BY_KCID, query = "select e from Employee e WHERE e.keycloakUserId = :kcId")
 })
 @Table(name = "employee", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"company_id", "email"})
@@ -27,6 +28,7 @@ public class Employee {
     public static final String FIND_BY_COMPANY = "Employee.findByCompany";
     public static final String FIND_BY_COMPANY_AND_EMAIL = "Employee.findByCompanyAndEmail";
     public static final String FIND_ALL = "Employee.findAll";
+    public static final String FIND_BY_KCID = "Employee.findByKcId";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

@@ -11,6 +11,7 @@ import java.util.Set;
 
 public record EmployeeDTO(
         Long id,
+        String keycloakUserId,
         String firstname,
         String lastname,
         String email,
