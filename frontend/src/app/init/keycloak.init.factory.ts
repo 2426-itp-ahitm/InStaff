@@ -4,7 +4,7 @@ export function initializeKeycloak(keycloak: KeycloakService):() => Promise<bool
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8081',
+        url: 'https://it210157.cloud.htl-leonding.ac.at/auth',
         realm: 'demo',
         clientId: 'frontend',
       },

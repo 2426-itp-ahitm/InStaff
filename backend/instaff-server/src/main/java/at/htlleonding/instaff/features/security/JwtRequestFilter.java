@@ -52,7 +52,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("http://localhost:8081/realms/demo"))
+                .uri(new URI("https://it210157.cloud.htl-leonding.ac.at/auth/realms/demo"))
                 .GET()
                 .build();
 
