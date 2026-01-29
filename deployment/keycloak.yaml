@@ -15,6 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: ghcr.io/pfarrhoferphilip/instaff-keycloak:latest
+          command: ["sleep", "3600"]
           ports:
             - containerPort: 8080
           env:
@@ -32,3 +33,6 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: admin
+            - name: KC_HTTP_RELATIVE_PATH
+              value: /auth
+
