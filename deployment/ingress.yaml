@@ -19,9 +19,16 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: backend
+            name: instaff-backend
             port:
-              number: 8081
+              number: 8080
+      - path: /mailhog
+        pathType: Prefix
+        backend:
+          service:
+            name: mailhog
+            port:
+              number: 8025
       - path: /
         pathType: Prefix
         backend:

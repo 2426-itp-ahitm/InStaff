@@ -7,7 +7,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint("/ws/news")
+@ServerEndpoint("api/ws/news")
 @ApplicationScoped
 public class NewsSocket {
 
