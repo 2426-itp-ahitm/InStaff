@@ -202,7 +202,7 @@ public class EmployeeResource {
         return Response.ok("Shift unassigned successfully").build();
     }
     @GET
-    @Path("/{employeeKeycloakId}")
+    @Path("keycloak/{employeeKeycloakId}")
     public Response getEmployeeByKeycloakId(@PathParam("employeeKeycloakId") String kcId) {
         return Response.status(Response.Status.OK).entity(employeeRepository.findByKcId(kcId)).build();
     }
