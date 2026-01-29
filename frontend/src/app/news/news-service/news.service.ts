@@ -33,7 +33,17 @@ export class NewsService {
         this.getNews();
       }
     })
+  }
 
+  recievedDeleteNewsItem(id: number) {
+    if(id == -1) {
+      this.newsSubject.next([]);
+      return;
+    }else {
+      const current = this.newsSubject.getValue();
+      const updated = current.filter(newsItem => newsItem.id !== id);
+      this.newsSubject.next(updated);
+    }
   }
 
   deleteAllNewsItem() {

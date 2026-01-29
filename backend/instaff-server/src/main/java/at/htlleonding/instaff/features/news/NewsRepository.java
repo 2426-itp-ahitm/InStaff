@@ -1,15 +1,14 @@
 package at.htlleonding.instaff.features.news;
 
+import java.util.List;
+
 import at.htlleonding.instaff.features.company.Company;
-import at.htlleonding.instaff.features.employee.Employee;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.vertx.core.json.Json;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-
-import java.util.List;
 
 @ApplicationScoped
 public class NewsRepository implements PanacheRepository<News> {
@@ -33,10 +32,13 @@ public class NewsRepository implements PanacheRepository<News> {
     @Transactional
     public void delete(Long id) {
         deleteById(id);
+        newsSocket.broadcast("d"+id);
+        
     }
 
     @Transactional
     public void deleteAllNews(Long companyId) {
         delete("company = ?1", getEntityManager().find(Company.class, companyId));
+        newsSocket.broadcast("da");
     }
 }
