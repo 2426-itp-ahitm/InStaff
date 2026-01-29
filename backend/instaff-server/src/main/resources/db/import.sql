@@ -24,6 +24,18 @@ values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
 values ('2001-11-09 00:00:00', 'alexander.hahn1@outlook.de', 'Alexander', 'Hahn', '65626625', 1, false, 'Limesstraße 12, 4060 Leonding', 20);
 
+/* Neue Manager */
+insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
+values ('1975-02-27 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '67734144524', 1, true, 'Limesstraße 12, 4060 Leonding', 10);
+
+/* Neue Mitarbeiter */
+insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
+values ('1995-03-22 00:00:00', 'michael.brown@example.com', 'Michael', 'Brown', '5551234567', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
+insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
+values ('1992-08-17 00:00:00', 'sarah.jones@example.com', 'Sarah', 'Jones', '4441239876', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
+insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
+values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', '6669876543', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
+
 /*SHIFT*/
 insert into Shift (starttime, endtime, company_id)
 values ('2025-06-20 09:00:00', '2025-06-20 17:00:00', 1);
@@ -48,18 +60,6 @@ insert into assignment (employee_id, shift_id, role_id)
 values(1, 1, 1);
 insert into assignment (employee_id, shift_id, role_id)
 values (1, 2, 1);
-
-/* Neue Manager */
-insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
-values ('1975-02-27 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '67734144524', 1, true, 'Limesstraße 12, 4060 Leonding', 10);
-
-/* Neue Mitarbeiter */
-insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
-values ('1995-03-22 00:00:00', 'michael.brown@example.com', 'Michael', 'Brown', '5551234567', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
-insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
-values ('1992-08-17 00:00:00', 'sarah.jones@example.com', 'Sarah', 'Jones', '4441239876', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
-insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
-values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', '6669876543', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
 
 /* Neue Schichten */
 insert into Shift (starttime, endtime, company_id)
