@@ -204,7 +204,8 @@ public class EmployeeResource {
     @GET
     @Path("keycloak/{employeeKeycloakId}")
     public Response getEmployeeByKeycloakId(@PathParam("employeeKeycloakId") String kcId) {
-        return Response.status(Response.Status.OK).entity(employeeRepository.findByKcId(kcId)).build();
+        EmployeeDTO employeeDTO = employeeRepository.findByKcId(kcId);
+        return Response.status(Response.Status.OK).entity(employeeDTO).build();
     }
 
     /*

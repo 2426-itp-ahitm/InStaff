@@ -25,18 +25,27 @@ Authorization: Bearer {{access_token}}
 
 ### Get Employee with id
 GET http://localhost:8080/api/1/employees/1
+Authorization: Bearer {{access_token}}
+
+### Get Employee with id
+GET http://localhost:8080/api/1/employees/keycloak/075c34a9-70ee-41d4-9a8b-19dca0cb5d80
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with role id
 GET http://localhost:8080/api/1/employees/role/1
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with role name
 GET http://localhost:8080/api/1/employees/role/name/Koch
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with name that contains
 GET http://localhost:8080/api/1/employees/name/Jo
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with company id
 GET http://localhost:8080/api/1/employees/company/1
+Authorization: Bearer {{access_token}}
 
 ### Add a New Employee with Roles
 POST http://localhost:8080/api/1/employees

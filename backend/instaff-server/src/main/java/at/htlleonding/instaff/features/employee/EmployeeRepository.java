@@ -23,6 +23,8 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     AssignmentRepository assignmentRepository;
     @Inject
     KeycloakAdminService keycloakAdminService;
+    @Inject
+    EmployeeMapper employeeMapper;
 
     public List<Employee> getAllEmployees() {
         return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class).getResultList();
@@ -32,8 +34,9 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
     }
 
-    public Employee findByKcId(String kcId) {
-        return entityManager.createNamedQuery(Employee.FIND_BY_KCID, Employee.class).setParameter("kcId", kcId).getSingleResult();
+    public EmployeeDTO findByKcId(String kcId) {
+        EmployeeDTO employeeDto = employeeMapper.toResource(entityManager.createNamedQuery(Employee.FIND_BY_KCID, Employee.class).setParameter("kcId", kcId).getSingleResult());
+        return employeeDto;
     }
 
     @Transactional
