@@ -193,4 +193,15 @@ public class ShiftResource {
                 .entity(shiftMapper.toResource(shift))
                 .build();
     }
+
+    @PUT
+    @Transactional
+    @Path("/removeRole/{shiftId}/{roleId}")
+    public Response removeRoleFromShift(@PathParam("shiftId") long shiftId, @PathParam("roleId") long roleId) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok().build();
+    }
 }

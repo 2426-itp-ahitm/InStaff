@@ -7,6 +7,7 @@ import {Role} from '../../interfaces/role';
 import {EmployeeRole} from '../../interfaces/employee-role';
 import {NewEmployee} from '../../interfaces/new-employee';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
+import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class EmployeeServiceService {
   constructor(private companyService: CompanyServiceService) {}
 
   httpClient: HttpClient = inject(HttpClient);
+  apiUrl: ApiUrlService = inject(ApiUrlService);
 
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
@@ -22,8 +24,9 @@ export class EmployeeServiceService {
   private oldApiUrl = 'http://localhost:8080/api';
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
-    //return this.oldApiUrl;
+    return this.apiUrl.getApiUrl();
+    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+
   }
 
   getEmployees(): void {
@@ -54,8 +57,10 @@ export class EmployeeServiceService {
     }else{
       return emps[0]
     }
+  }
 
-
+  getEmployeeByKeycloakId(keycloakId: string): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.getApiUrl()}/employees/keycloak/${keycloakId}`);
   }
 
   getEnrichedEmployeeById(id: number): Observable<Employee> {

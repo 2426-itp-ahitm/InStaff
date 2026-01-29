@@ -38,25 +38,30 @@ export class ProfilComponent implements OnInit{
   @ViewChild('hourlyWageInput') hourlyWageInput!: ElementRef;
 
 
-  @Output() closeEmpEdit = new EventEmitter<void>();
 
   editEmployeeForm!: FormGroup;
+  employeeData!: Employee;
 
 
   ngOnInit() {
-    console.log(this.keycloackService.loadUserProfile())
-
-    this.editEmployeeForm = new FormGroup({
-      firstname: new FormControl(this.employee.firstname, Validators.required),
-      lastname: new FormControl(this.employee.lastname, Validators.required),
-      birthdate: new FormControl(this.employee.birthdate, Validators.required),
-      email: new FormControl(this.employee.email, [Validators.required, Validators.email]),
-      telephone: new FormControl(this.employee.telephone, Validators.required), // optional
-      address: new FormControl(this.employee.address, Validators.required),
-      hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
-      isManager: new FormControl(this.employee.isManager),
-      roles: new FormControl<EmployeeRole[]>(this.employee.roles, Validators.required),
+    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+      this.employee = emp;
+      console.log(this.employee);
+      this.editEmployeeForm = new FormGroup({
+        firstname: new FormControl(this.employee.firstname, Validators.required),
+        lastname: new FormControl(this.employee.lastname, Validators.required),
+        birthdate: new FormControl(this.employee.birthdate, Validators.required),
+        email: new FormControl(this.employee.email, [Validators.required, Validators.email]),
+        telephone: new FormControl(this.employee.telephone, Validators.required), // optional
+        address: new FormControl(this.employee.address, Validators.required),
+        hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
+        isManager: new FormControl(this.employee.isManager),
+        roles: new FormControl<EmployeeRole[]>(this.employee.roles, Validators.required),
+      });
     });
+    
+
+    
 
 
 
@@ -73,7 +78,6 @@ export class ProfilComponent implements OnInit{
       this.employeeService.updateEmployee(updatedEmp);
       console.log(updatedEmp);
       this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
-      this.closeEmployeeEdit()
     }else{
     }
   }
@@ -84,9 +88,7 @@ export class ProfilComponent implements OnInit{
     }
   }
 
-  closeEmployeeEdit(): void {
-    this.closeEmpEdit.emit();
-  }
+
 
 
 }
