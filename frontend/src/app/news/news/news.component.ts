@@ -34,14 +34,11 @@ export class NewsComponent implements OnInit {
       .subscribe(msg => {
         console.log("Received:", msg);
         if(msg.charAt(0) == 'd' && msg.charAt(1) == 'a'){
-          console.log("Deleting all news items");
           this.newsService.recievedDeleteNewsItem(-1);
         } else if(msg.charAt(0) == 'd') {
           const id = parseInt(msg.substring(1));
-          console.log("Deleting news item with id:", id);
           this.newsService.recievedDeleteNewsItem(id);
         } else {
-          console.log("Adding news item:", msg);
           this.message = msg;
           this.newsService.addNews(msg);
         }
