@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs';
 import {Employee} from '../../interfaces/employee';
 import {News} from '../../interfaces/news';
+import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,14 @@ export class NewsService {
   constructor(private companyService: CompanyServiceService) {}
 
   httpClient: HttpClient = inject(HttpClient);
+  apiUrl: ApiUrlService = new ApiUrlService();
 
   private newsSubject = new BehaviorSubject<News[]>([]);
   public news$ = this.newsSubject.asObservable();
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
-    //return this.oldApiUrl;
+    return this.apiUrl.getApiUrl();
+    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
   }
 
   getNews() {
@@ -64,5 +66,5 @@ export class NewsService {
   }
 
 
-  
+
 }

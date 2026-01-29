@@ -5,6 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {Employee} from '../../interfaces/employee';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
+import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class RoleServiceService {
   httpClient: HttpClient = inject(HttpClient);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
+  apiUrl: ApiUrlService = inject(ApiUrlService);
+
+
 
 
   private rolesSubject = new BehaviorSubject<Role[]>([]);
@@ -22,7 +26,8 @@ export class RoleServiceService {
   private oldApiUrl = 'http://localhost:8080/api';
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
+    return this.apiUrl.getApiUrl();
+    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
     //return this.oldApiUrl
   }
 

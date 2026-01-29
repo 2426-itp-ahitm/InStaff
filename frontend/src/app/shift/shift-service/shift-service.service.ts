@@ -9,6 +9,7 @@ import {DateClickArg} from '@fullcalendar/interaction';
 import {ShiftTemplate} from '../../interfaces/shift-template';
 import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
+import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class ShiftServiceService {
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
+  apiUrl: ApiUrlService = inject(ApiUrlService);
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
@@ -24,7 +26,8 @@ export class ShiftServiceService {
 
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
+    return this.apiUrl.getApiUrl();
+    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
   }
 
   getShifts(): void{

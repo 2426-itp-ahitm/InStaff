@@ -7,6 +7,7 @@ import {Shift} from '../../interfaces/shift';
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import {Role} from '../../interfaces/role';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
+import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ShiftTemplateServiceService {
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
+  apiUrl: ApiUrlService = inject(ApiUrlService);
 
   public selectedDate!: ShiftCreateDTO;
 
@@ -22,8 +24,8 @@ export class ShiftTemplateServiceService {
   public shiftTemplates$ = this.shiftTemplatesSubject.asObservable();
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
-    //return this.oldApiUrl;
+    return this.apiUrl.getApiUrl();
+    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
   }
 
   getShiftTemplates(): void {
