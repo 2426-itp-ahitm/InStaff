@@ -1,0 +1,37 @@
+# backend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instaff-backend
+  labels:
+    app: instaff-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: instaff-backend
+  template:
+    metadata:
+      labels:
+        app: instaff-backend
+    spec:
+      containers:
+        - name: instaff-backend
+          image: ghcr.io/pfarrhoferphilip/instaff-server:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: QUARKUS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: QUARKUS_DATASOURCE_JDBC_URL
+              value: jdbc:postgresql://postgres:5432/demo
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: demo
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: demo
+            - name: QUARKUS_OIDC_AUTH_SERVER_URL
+              value: http://keycloak:8081/realms/demo
+            - name: QUARKUS_OIDC_CLIENT_ID
+              value: backend
