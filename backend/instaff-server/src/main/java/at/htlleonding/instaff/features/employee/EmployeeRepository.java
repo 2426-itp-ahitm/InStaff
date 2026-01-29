@@ -32,6 +32,10 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
     }
 
+    public Employee findByKcId(String kcId) {
+        return entityManager.createNamedQuery(Employee.FIND_BY_KCID, Employee.class).setParameter("kcId", kcId).getSingleResult();
+    }
+
     @Transactional
     public boolean deleteEmployee(Long employeeId) {
         Employee employee = entityManager.find(Employee.class, employeeId);
