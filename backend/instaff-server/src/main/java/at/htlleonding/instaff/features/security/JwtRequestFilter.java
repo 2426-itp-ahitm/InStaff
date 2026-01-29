@@ -100,7 +100,12 @@ public class JwtRequestFilter implements ContainerRequestFilter {
             Employee employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class)
                     .setParameter("kcId", keycloakUserId).getResultStream().findFirst().orElse(null);
             if (employee == null) {
-                abortWithUnauthorized(requestContext);
+                // Activate this for the .http-files to work
+                //employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
+
+                // Deactivate this for the .http-files to work
+                contextAbort(requestContext, Response.Status.FORBIDDEN, "User not in Database");
+
                 return;
             }
 
@@ -109,7 +114,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
             // Check @RolesAllowed
             Set<String> requiredRoles = getRolesAllowed();
             if (!requiredRoles.isEmpty() && Collections.disjoint(userRoles, requiredRoles)) {
-                abortWithUnauthorized(requestContext);
+                contextAbort(requestContext, Response.Status.FORBIDDEN, "Missing requred role");
                 return;
             }
 
@@ -154,6 +159,17 @@ public class JwtRequestFilter implements ContainerRequestFilter {
         context.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("Access Denied").build());
     }
 
+    private void contextAbort(
+            ContainerRequestContext context,
+            Response.Status status,
+            String message
+    ) {
+        context.abortWith(
+                Response.status(status)
+                        .entity(message)
+                        .build()
+        );
+    }
     private RSAPublicKey getPublicKey(String base64PublicKey) throws GeneralSecurityException {
         byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
