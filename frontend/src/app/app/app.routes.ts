@@ -8,6 +8,7 @@ import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/
 import {AdminComponent} from '../admin/admin.component';
 import {AuthGuard} from '../guard/auth.guard';
 import {ProfilComponent} from '../essentials/profil/profil.component';
+import {ManagerDashboardComponent} from '../essentials/manager-dashboard/manager-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -17,9 +18,9 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent, //COMPONENT CLASS NAME
+    component: ManagerDashboardComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'calendar',
