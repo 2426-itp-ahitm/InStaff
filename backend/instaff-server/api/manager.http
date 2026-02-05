@@ -1,2 +1,2 @@
 ### Get all Managers
-GET http://localhost:8080/api/managers
+GET http://localhost:8080/api/1/managers

@@ -11,6 +11,9 @@ public record EmployeeEditDTO(
         String email,
         LocalDate birthdate,
         String telephone,
-        List<Long> roles
+        List<Long> roles,
+        boolean isManager,
+        Double hourlyWage,
+        String address
 ) {
 }

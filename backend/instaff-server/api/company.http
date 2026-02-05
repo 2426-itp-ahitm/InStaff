@@ -9,5 +9,5 @@ POST http://localhost:8080/api/companies
 Content-Type: application/json
 
 {
-  "company_name": "Ben's Pizza"
+  "companyName": "Ben's Pizza"
 }

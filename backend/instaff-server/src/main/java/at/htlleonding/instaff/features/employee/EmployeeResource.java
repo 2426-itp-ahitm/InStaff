@@ -5,6 +5,8 @@ import at.htlleonding.instaff.features.assignment.AssignmentMapper;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.role.RoleRepository;
+import at.htlleonding.instaff.features.security.CustomSecurityContext;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -12,6 +14,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.xml.bind.DatatypeConverter;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,7 +22,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/employees")
+@Path("{companyId}/employees")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeResource {
@@ -33,15 +36,15 @@ public class EmployeeResource {
     RoleRepository roleRepository;
     @Inject
     AssignmentMapper assignmentMapper;
-
+    @Inject
+    CustomSecurityContext ctx;
 
     @GET
-    public List<EmployeeDTO> all() {
-        var employees = employeeRepository.listAll();
-        return employees
-                .stream()
-                .map(employeeMapper::toResource)
-                .toList();
+    public Response all(@PathParam("companyId") Long companyId) {
+        var employees = employeeRepository.getByCompanyId(companyId);
+        return Response.ok(
+                employees.stream().map(employeeMapper::toResource).toList()
+        ).build();
     }
 
     @GET
@@ -104,7 +107,16 @@ public class EmployeeResource {
 
     @GET
     @Path("company/{company_id}")
-    public List<EmployeeDTO> getEmployeeByCompany(@PathParam("company_id") Long companyId) {
+    public List<EmployeeDTO> getEmployeesByCompany(@PathParam("company_id") Long companyId) {
+        /*
+        return employeeRepository
+                .listAll()
+                .stream()
+                .filter(employee -> employee.company.getId().equals(companyId))
+                .map(employeeMapper::toResource)
+                .toList();
+        */
+
         var employees = employeeRepository.listAll();
         if (employees == null) {
             return null;
@@ -119,21 +131,35 @@ public class EmployeeResource {
                 .stream()
                 .map(employeeMapper::toResource)
                 .toList();
+
+
+    }
+
+    @DELETE
+    @Path("delete/{employeeId}")
+    public Response deleteEmployee(@PathParam("employeeId") Long employeeId) {
+        if (employeeRepository.deleteEmployee(employeeId)) {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @POST
-    @Transactional
     public Response createEmployee(EmployeeCreateDTO dto) {
+        List<Role> roles = new LinkedList<>();
+        for (long roleId : dto.roles()) {
+            roles.add(roleRepository.findById(roleId));
+        }
         // Map DTO to entity
-        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(),
-                hashPassword(dto.password()), dto.birthdate(), companyRepository.findById(dto.companyId()));
+        Employee employee = new Employee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthdate(), companyRepository.findById(dto.companyId()), roles, dto.isManager(), dto.hourlyWage(), dto.address());
 
         // Persist the entity
-        employeeRepository.persist(employee);
+        Employee createdEmployee = employeeRepository.createEmployee(employee);
 
         // Return a response with the created entity
         return Response.status(Response.Status.CREATED)
-                .entity(employeeMapper.toResource(employee))
+                .entity(employeeMapper.toResource(createdEmployee))
                 .build();
     }
 
@@ -175,11 +201,29 @@ public class EmployeeResource {
 
         return Response.ok("Shift unassigned successfully").build();
     }
+    @GET
+    @Path("keycloak/{employeeKeycloakId}")
+    public Response getEmployeeByKeycloakId(@PathParam("employeeKeycloakId") String kcId) {
+        EmployeeDTO employeeDTO = employeeRepository.findByKcId(kcId);
+        return Response.status(Response.Status.OK).entity(employeeDTO).build();
+    }
+
+    /*
+    @PUT
+    @Path("/login/{mail}/{password}")
+    public Response login(@PathParam("mail") String mail, @PathParam("password") String password, @PathParam("companyId") Long companyId) {
+        boolean isCorrect = employeeRepository.verifyPassword(mail, companyId, password);
+        if (isCorrect) {
+            return Response.ok("Password verified successfully").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
 
     @PUT
-    @Path("/{employeeId}/verify-password/{password}")
-    public Response verifyPassword(@PathParam("employeeId") Long employeeId, @PathParam("password") String password) {
-        boolean isCorrect = employeeRepository.verifyPassword(employeeId, password);
+    @Path("/login-manager/{mail}/{password}")
+    public Response loginManager(@PathParam("mail") String mail, @PathParam("password") String password, @PathParam("companyId") Long companyId) {
+        boolean isCorrect = employeeRepository.verifyManagerPassword(mail, companyId, password);
         if (isCorrect) {
             return Response.ok("Password verified successfully").build();
         } else {
@@ -189,6 +233,7 @@ public class EmployeeResource {
 
     public static String hashPassword(String password) {
         try {
+            password += ConfigProvider.getConfig().getValue("password.salt", String.class);
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
             return DatatypeConverter.printHexBinary(hash).toLowerCase();
@@ -196,5 +241,6 @@ public class EmployeeResource {
             throw new RuntimeException("Error hashing password", e);
         }
     }
+    */
 
 }

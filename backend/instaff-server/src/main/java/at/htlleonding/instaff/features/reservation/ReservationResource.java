@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/reservations")
+@Path("{companyId}/reservations")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ReservationResource {
@@ -18,12 +18,21 @@ public class ReservationResource {
     ReservationMapper reservationMapper;
 
     @GET
-    public List<ReservationDTO> all() {
-        var reservations = reservationRepository.findAll();
+    public List<ReservationDTO> all(@PathParam("companyId") Long companyId) {
+        var reservations = reservationRepository.getByCompanyId(companyId);
         return reservations
                 .stream()
                 .map(reservationMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("company/{companyId}")
+    public Response getByCompanyId(@PathParam("companyId") long companyId) {
+        List<Reservation> reservations = reservationRepository.getByCompanyId(companyId);
+        return Response.ok(
+                reservations.stream().map(reservationMapper::toResource).toList()
+        ).build();
     }
 
     @GET
@@ -37,6 +46,18 @@ public class ReservationResource {
     public Response create(ReservationCreateDTO dto) {
         Reservation reservation = reservationRepository.create(dto);
         return Response.status(Response.Status.CREATED).entity(reservationMapper.toResource(reservation)).build();
+    }
+
+    @DELETE
+    @Transactional
+    @Path("/delete/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        if (reservation == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        reservationRepository.delete(reservation);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }

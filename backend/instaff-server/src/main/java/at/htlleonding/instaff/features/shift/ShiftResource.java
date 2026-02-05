@@ -1,11 +1,16 @@
 package at.htlleonding.instaff.features.shift;
 
+import at.htlleonding.instaff.features.assignment.Assignment;
+import at.htlleonding.instaff.features.assignment.AssignmentCreateDTO;
+import at.htlleonding.instaff.features.assignment.AssignmentDTO;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeCreateDTO;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
 import at.htlleonding.instaff.features.employee.EmployeeRepository;
+import at.htlleonding.instaff.features.role.Role;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -15,7 +20,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/shifts")
+@Path("{companyId}/shifts")
 @Produces(MediaType.APPLICATION_JSON)
 public class ShiftResource {
     @Inject
@@ -26,10 +31,12 @@ public class ShiftResource {
     CompanyRepository companyRepository;
     @Inject
     ShiftSocket shiftSocket;
+    @Inject
+    EntityManager entityManager;
 
     @GET
-    public List<ShiftDTO> all() {
-        var shifts = shiftRepository.listAll();
+    public List<ShiftDTO> all(@PathParam("companyId") Long companyId) {
+        var shifts = shiftRepository.findByCompany(companyId);
         return shifts
                 .stream()
                 .map(shiftMapper::toResource)
@@ -110,6 +117,67 @@ public class ShiftResource {
                 .toList();
     }
 
+    @DELETE
+    @Transactional
+    @Path("delete/{shiftId}")
+    public Response deleteShift(@PathParam("shiftId") Long shiftId) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        shiftRepository.delete(shift);
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Transactional
+    @Path("create_with_assignments")
+    public Response createShiftWithAssignments(ShiftCreateWithAssignmentsDTO dto) {
+        Shift shift = new Shift(dto.shiftCreateDTO().startTime(), dto.shiftCreateDTO().endTime(), companyRepository.findById(dto.shiftCreateDTO().companyId()));
+        shiftRepository.persist(shift);
+        shiftSocket.broadcast("New Shift Id: " + shift.getId());
+
+        for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
+            if (assignmentCreateDTO.employee() != -1) {
+                Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+                entityManager.persist(assignment);
+            }
+        }
+
+        return Response.status(Response.Status.CREATED).entity(shift).build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{shiftId}")
+    public Response updateShift(@PathParam("shiftId") Long shiftId, ShiftCreateWithAssignmentsDTO dto) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // Update shift properties
+        shift.startTime = dto.shiftCreateDTO().startTime();
+        shift.endTime = dto.shiftCreateDTO().endTime();
+        shiftRepository.persist(shift);
+
+        // Delete existing assignments
+        entityManager.createQuery("DELETE FROM Assignment a WHERE a.shift.id = :shiftId")
+                .setParameter("shiftId", shiftId)
+                .executeUpdate();
+
+        // Create new assignments
+        for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
+            if (assignmentCreateDTO.employee() != -1) {
+                Assignment assignment = new Assignment(entityManager.find(Employee.class, assignmentCreateDTO.employee()), shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+                entityManager.persist(assignment);
+            }
+        }
+
+        shiftSocket.broadcast("Shift Updated Id: " + shift.getId());
+        return Response.ok(shiftMapper.toResource(shift)).build();
+    }
+
     @POST
     @Transactional
     public Response createShift(ShiftCreateDTO dto) {
@@ -124,5 +192,16 @@ public class ShiftResource {
         return Response.status(Response.Status.CREATED)
                 .entity(shiftMapper.toResource(shift))
                 .build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/removeRole/{shiftId}/{roleId}")
+    public Response removeRoleFromShift(@PathParam("shiftId") long shiftId, @PathParam("roleId") long roleId) {
+        Shift shift = shiftRepository.findById(shiftId);
+        if (shift == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok().build();
     }
 }

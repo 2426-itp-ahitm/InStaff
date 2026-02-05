@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.employee;
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.assignment.AssignmentRepository;
 import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.security.KeycloakAdminService;
 import at.htlleonding.instaff.features.shift.Shift;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,10 +12,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 public class EmployeeRepository implements PanacheRepository<Employee> {
@@ -22,6 +21,34 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     EntityManager entityManager;
     @Inject
     AssignmentRepository assignmentRepository;
+    @Inject
+    KeycloakAdminService keycloakAdminService;
+    @Inject
+    EmployeeMapper employeeMapper;
+
+    public List<Employee> getAllEmployees() {
+        return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class).getResultList();
+    }
+
+    public List<Employee> getByCompanyId(Long companyId) {
+        return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
+    }
+
+    public EmployeeDTO findByKcId(String kcId) {
+        EmployeeDTO employeeDto = employeeMapper.toResource(entityManager.createNamedQuery(Employee.FIND_BY_KCID, Employee.class).setParameter("kcId", kcId).getSingleResult());
+        return employeeDto;
+    }
+
+    @Transactional
+    public boolean deleteEmployee(Long employeeId) {
+        Employee employee = entityManager.find(Employee.class, employeeId);
+        if (employee != null) {
+            entityManager.remove(employee);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public List<Employee> findByRoleId(Long roleId) {
         String sql = "SELECT e.* " +
@@ -102,6 +129,13 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         employee.setEmail(dto.email());
         employee.setBirthdate(dto.birthdate());
         employee.setTelephone(dto.telephone());
+        employee.setManager(dto.isManager());
+        if (dto.hourlyWage() != null) {
+            employee.setHourlyWage(dto.hourlyWage());
+        }
+        if (dto.address() != null) {
+            employee.setAddress(dto.address());
+        }
 
         if (dto.roles() != null) {
             List<Role> roles = new LinkedList<>();
@@ -184,8 +218,17 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
         persist(employee);
     }
 
-    public boolean verifyPassword(Long employeeId, String password) {
-        Employee employee = findById(employeeId);
-        return employee != null && Objects.equals(employee.password, password);
+    @Transactional
+    public Employee createEmployee(Employee employee) {
+
+        employee.setKeycloakUserId(null);
+        persist(employee);
+        flush();
+
+        String keycloakUserId = keycloakAdminService.createUser(employee);
+
+        employee.setKeycloakUserId(keycloakUserId);
+
+        return employee;
     }
 }

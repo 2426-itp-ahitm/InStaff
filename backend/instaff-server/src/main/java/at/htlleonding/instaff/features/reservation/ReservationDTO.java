@@ -6,9 +6,9 @@ public record ReservationDTO(
         Long id,
         String name,
         String infos,
-        int number_of_people,
-        LocalTime start_time,
-        LocalTime end_time,
+        int numberOfPeople,
+        LocalTime startTime,
+        LocalTime endTime,
         Long shift
 ) {
 }

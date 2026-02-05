@@ -1,3 +1,4 @@
+/*
 package at.htlleonding.instaff.features.mail;
 
 import at.htlleonding.instaff.features.assignment.Assignment;
@@ -73,3 +74,4 @@ public class MailResource {
         );
     }
 }
+*/

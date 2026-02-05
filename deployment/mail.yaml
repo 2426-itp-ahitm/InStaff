@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailhog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailhog
+  template:
+    metadata:
+      labels:
+        app: mailhog
+    spec:
+      containers:
+        - name: mailhog
+          image: ghcr.io/pfarrhoferphilip/instaff-mail:latest
+          ports:
+            - containerPort: 1025   # SMTP
+            - containerPort: 8025   # Web UI

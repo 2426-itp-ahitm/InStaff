@@ -1,0 +1,133 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="modal-bg" aria-hidden="true"></div>
+  <div class="modal-card-1">
+    <div class="modal-card-2">
+      <div class="modal-card-3">
+        <div class="modal-card-4">
+          <div class="">
+            <h3>Bearbeite {{ employee.firstname }} {{ employee.lastname }}</h3>
+          </div>
+          <form [formGroup]="editEmployeeForm" (ngSubmit)="save()">
+            <div class="space-y-1">
+              <div class="">
+
+                <!-- FIRSTNAME -->
+                <div class="sm:col-span-3">
+                  <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
+                  <div class="mt-2">
+                    <input formControlName="firstname" value="{{ employee.firstname }}" type="text" name="firstname" id="firstname" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('firstname')?.invalid" class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
+                </div>
+
+                <!-- LASTNAME -->
+                <div class="sm:col-span-3">
+                  <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
+                  <div class="mt-2">
+                    <input formControlName="lastname" value="{{ employee.lastname }}" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('lastname')?.invalid" class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
+                </div>
+
+                <!-- BDAY -->
+                <div class="sm:col-span-4">
+                  <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
+                  <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
+                  <div *ngIf="editEmployeeForm.get('birthdate')?.invalid" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="sm:col-span-5">
+                  <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
+                  <div class="mt-2">
+                    <input formControlName="email" value="{{ employee.email }}" id="email" name="email" type="email" autocomplete="email" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('email')?.invalid" class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
+                </div>
+
+                <!-- TELEPHONE -->
+                <div class="sm:col-span-6">
+                  <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
+                  <div class="mt-2">
+                    <input formControlName="telephone" value="{{ employee.telephone }}" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('telephone')?.invalid" class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="sm:col-span-5">
+                  <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+                  <div class="mt-2">
+                    <input formControlName="address" value="{{ employee.address }}" id="address" name="address" type="text" autocomplete="address" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('address')?.invalid" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+                </div>
+
+                <!-- HOURLY WAGE -->
+                <div class="sm:col-span-6">
+                  <label for="hourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
+                  <div class="mt-2">
+                    <input formControlName="hourlyWage"  id="hourlyWage" name="hourlyWage" type="number" class="input-field">
+                  </div>
+                  <div *ngIf="editEmployeeForm.get('hourlyWage')?.invalid" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
+                </div>
+
+                <!-- IS MANAGER -->
+                <div class="sm:col-span-3">
+                  <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
+                  <div class="mt-2">
+                    <input formControlName="isManager" type="checkbox" id="isManager" class="text-green-base shadow-sm focus:ring-green-base rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto">
+                    <label for="isManager" class="ml-2 text-sm text-gray-700">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <!-- ROLES -->
+              <div class="border-b border-gray-900/10 pb-5">
+                <div class="mt-2 space-y-10">
+                  <fieldset>
+                    <legend class="text-sm/6 font-semibold text-gray-900">Rollen</legend>
+                    <div class="max-h-40 overflow-y-scroll">
+                      <div class="mt-6 space-y-6" *ngFor="let r of employee.roles">
+                        <div class="flex gap-3">
+                          <div class="flex h-6 shrink-0 items-center">
+                            <div class="group grid size-4 grid-cols-1">
+                              <input
+                                type="checkbox"
+                                [id]="r.roleId"
+                                [checked]="r.hasRole"
+                                (change)="onRoleChange(r.roleId, $event)"
+                                class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              >
+                              <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="text-sm/6">
+                            <label for="role{{ r.roleId }}" class="font-medium text-gray-900">{{ r.name }}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-4">
+              <button type="button" class="button-cancel" (click)="closeEmployeeEdit()">Abbrechen</button>
+              <button type="button" (click)="deleteEmployee(employee)" class="button-delete">Löschen</button>
+              <button type="submit" [disabled]="editEmployeeForm.invalid" class="button-green">Speichern</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

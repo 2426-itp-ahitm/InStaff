@@ -6,20 +6,25 @@
 //
 
 import Foundation
+import SwiftUI
 
 class EmployeeViewModel: ObservableObject {
     @Published var employees: [Employee] = []
 
-    init() {
-        loadEmployeesAsync()
+    var companyId: Int
+
+    init(companyId: Int) {
+        self.companyId = companyId
+        loadEmployeesAsync() {}
     }
 
     private func load() -> [Employee] {
         var employees: [Employee] = []
         let jsonDecoder = JSONDecoder()
-
-        guard let url = URL(string: "http://localhost:8080/api/employees") else {
-            //print("Invalid URL for employees")
+        
+        
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees") else {
+            print("Invalid URL: employee")
             return employees
         }
 
@@ -36,7 +41,7 @@ class EmployeeViewModel: ObservableObject {
         return employees
     }
     func saveEmployeeChanges(_ employee: Employee, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "http://localhost:8080/api/employees/\(employee.id)") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees/\(employee.id)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))
             return
         }
@@ -59,18 +64,20 @@ class EmployeeViewModel: ObservableObject {
                 if let error = error {
                     completion(.failure(error))
                 } else {
+                    print(employee)
                     completion(.success(()))
                 }
             }
         }.resume()
     }
 
-    private func loadEmployeesAsync() {
+    private func loadEmployeesAsync(completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .background).async {
             let loadedEmployees = self.load()
             DispatchQueue.main.async {
                 self.employees = loadedEmployees
-                print(self.employees)
+                //print(self.employees)
+                completion()
             }
         }
     }
@@ -84,5 +91,14 @@ class EmployeeViewModel: ObservableObject {
 
     func count() -> Int {
         return employees.count
+    }
+    
+    func updateCompanyId(_ id: Int, completion: @escaping () -> Void) {
+        if companyId != id {
+            companyId = id
+            loadEmployeesAsync() {
+                completion()
+            }
+        }
     }
 }

@@ -1,10 +1,13 @@
-FROM maven:3.9.4-eclipse-temurin-17 AS build
+# Stage 1: Build the JAR
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
-RUN mvn package -DskipTests
+RUN mvn clean package -DskipTests
 
-FROM quay.io/quarkus/quarkus-distroless-image:latest
-WORKDIR /work/
-COPY --from=build /app/target/quarkus-app .
-CMD ["java", "-jar", "quarkus-run.jar"]
+# Stage 2: Run the JAR
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*-runner.jar /app/app.jar
 
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

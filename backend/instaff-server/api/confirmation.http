@@ -1,0 +1,7 @@
+### Confirm Assignment
+PUT http://localhost:8080/api/1/confirmation/confirm/1
+Authorization: Bearer {{access_token}}
+
+### Decline Assignment
+PUT http://localhost:8080/api/1/confirmation/decline/1
+Authorization: Bearer {{access_token}}

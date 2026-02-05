@@ -1,23 +1,53 @@
+### Get access Token for creating and updating
+POST https://it210157.cloud.htl-leonding.ac.at/auth/realms/demo/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=backend&
+client_secret=Gin4wX5yUnZEnqtwrpfMBvIbVSgOgqKE
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+### Get access token (client credentials)
+POST http://localhost:8081/realms/demo/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=backend&
+client_secret=backend-secret-instaff
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
 ### Get all Employees
-GET http://localhost:8080/api/employees
+GET https://it210157.cloud.htl-leonding.ac.at/api/1/employees
+Authorization: Bearer {{access_token}}
 
 ### Get Employee with id
-GET http://localhost:8080/api/employees/1
+GET http://localhost:8080/api/1/employees/1
+Authorization: Bearer {{access_token}}
+
+### Get Employee with id
+GET http://localhost:8080/api/1/employees/keycloak/075c34a9-70ee-41d4-9a8b-19dca0cb5d80
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with role id
-GET http://localhost:8080/api/employees/role/1
+GET http://localhost:8080/api/1/employees/role/1
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with role name
-GET http://localhost:8080/api/employees/role/name/Koch
+GET http://localhost:8080/api/1/employees/role/name/Koch
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with name that contains
-GET http://localhost:8080/api/employees/name/Jo
+GET http://localhost:8080/api/1/employees/name/Jo
+Authorization: Bearer {{access_token}}
 
 ### Get Employees with company id
-GET http://localhost:8080/api/employees/company/1
+GET http://localhost:8080/api/1/employees/company/1
+Authorization: Bearer {{access_token}}
 
-### Add a New Employee
-POST http://localhost:8080/api/employees
+### Add a New Employee with Roles
+POST http://localhost:8080/api/1/employees
 Content-Type: application/json
 
 {
@@ -27,11 +57,18 @@ Content-Type: application/json
   "telephone": "+1234567890",
   "password": "securePassword123",
   "birthdate": "1990-01-01",
-  "companyId": 1
+  "isManager": false,
+  "companyId": 1,
+  "roles": [1, 2],
+  "hourlyWage": 12.5,
+  "address": "Example Street 123"
 }
 
+### Delete Employee
+DELETE http://localhost:8080/api/1/employees/delete/1
+
 ### Edit employee
-POST http://localhost:8080/api/employees/1
+POST http://localhost:8080/api/1/employees/1
 Content-Type: application/json
 
 {
@@ -40,22 +77,28 @@ Content-Type: application/json
   "email": "bob@baumeister.com",
   "birthdate": "1980-11-11",
   "telephone": "133",
-  "roles": [1,2,3,4,5]
+  "isManager": true,
+  "roles": [1, 2, 3, 4, 5],
+  "hourlyWage": 15,
+  "address": "Tobi Street 321"
 }
 
 ### Assign role to employee
-PUT http://localhost:8080/api/employees/3/assignrole/2
+PUT http://localhost:8080/api/1/employees/3/assignrole/2
 Content-Type: application/json
 
 ### Remove role from employee
-PUT http://localhost:8080/api/employees/3/removerole/2
+PUT http://localhost:8080/api/1/employees/3/removerole/2
 Content-Type: application/json
 
 ### Assign a Shift to Employee (employeeId, shiftId, roleId)
-PUT http://localhost:8080/api/employees/1/assignshift/3/1
+PUT http://localhost:8080/api/1/employees/1/assignshift/3/1
 
 ### Unassign a Shift from Employee (employeeId, shiftId)
-PUT http://localhost:8080/api/employees/1/unassignshift/3
+PUT http://localhost:8080/api/1/employees/1/unassignshift/3
 
-### Verify Employee Password
-PUT http://localhost:8080/api/employees/1/verify-password/hunter2
+### Login Employee
+PUT http://localhost:8080/api/1/employees/login/p.pfarrhofer@students.htl-leonding.ac.at/hunter2
+
+### Login Manager
+PUT http://localhost:8080/api/1/employees/login-manager/bernhard@penkner@example.com/hunter2

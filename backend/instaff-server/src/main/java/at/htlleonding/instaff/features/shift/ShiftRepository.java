@@ -14,6 +14,10 @@ public class ShiftRepository implements PanacheRepository<Shift> {
     @Inject
     EntityManager entityManager;
 
+    public List<Shift> findByCompany(Long companyId) {
+        return find("company.id", companyId).list();
+    }
+
     public List<Shift> getByDate(LocalDate date) {
         String sql = "SELECT * FROM Shift s WHERE s.starttime = ?1";
         Query query = entityManager.createNativeQuery(sql, Shift.class);

@@ -1,0 +1,44 @@
+<div class="mx-6">
+  <h2 class="text-2xl mb-4">Admin: Zuweisungen verwalten</h2>
+
+  <div class="flex gap-2 items-center mb-4">
+    <label for="employeeSelect" class="w-40">Mitarbeiter:</label>
+    <select id="employeeSelect" class="flex-1 px-2 py-1 border rounded" (change)="selectEmployee($any($event.target).value)">
+      <option value="">-- Bitte wählen --</option>
+      <option *ngFor="let e of employees" [value]="e.id">{{ e.firstname }} {{ e.lastname }}</option>
+    </select>
+  </div>
+
+
+  <div *ngIf="statusMessage" class="mt-2">
+    <p class="text-sm text-gray-700">{{ statusMessage }}</p>
+    <button class="text-xs text-blue-500" (click)="clearMessage()">Schließen</button>
+  </div>
+
+  <div *ngIf="assignments.length > 0" class="mt-4">
+    <h3 class="font-semibold mb-2">Zugewiesene Aufgaben</h3>
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="text-sm text-gray-600 border-b">
+          <th class="py-1">ID</th>
+          <th class="py-1">Shift ID</th>
+          <th class="py-1">Role ID</th>
+          <th class="py-1">Confirmed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of assignments" class="odd:bg-white even:bg-gray-50">
+          <td class="py-1">{{ a.id }}</td>
+          <td class="py-1">{{ a.shift }}</td>
+          <td class="py-1">{{ a.role }}</td>
+            <td class="py-1">{{ a.confirmed }}</td>
+            <td class="py-1">
+              <button class="text-xs px-2 py-1 mr-2 border rounded bg-green-100" (click)="acceptAssignment(a)" [disabled]="a.confirmed">Akzeptieren</button>
+              <button class="text-xs px-2 py-1 border rounded bg-red-100" (click)="declineAssignment(a)" [disabled]="!a.confirmed">Ablehnen</button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

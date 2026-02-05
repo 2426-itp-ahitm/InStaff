@@ -1,0 +1,65 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="modal-bg" aria-hidden="true"></div>
+  <div class="modal-card-1">
+    <div class="modal-card-2">
+      <div class="modal-card-3">
+        <div class="modal-card-4">
+          <div class="">
+            <h3>Füge ein Schichtvorlage hinzu</h3>
+          </div>
+          <form (ngSubmit)="save()">
+            <div class="space-y-1">
+              <div class="">
+                <div class="sm:col-span-3">
+                  <label for="shift-template-name" class="block text-sm/6 font-medium text-gray-900">Name der Schichtvorlagen</label>
+                  <div class="mt-2">
+                    <input #shiftTemplateNameInput value="" type="text" name="shift-template-name" id="shift-template-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="h-px bg-gray-300 my-4"></div>
+
+
+            <!-- Role adder UI -->
+            <div class="">
+              <h3 class="my-1">Rollen hinzufügen</h3>
+              <div class="flex gap-2 items-center">
+                <select #roleSelect class="block rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" [disabled]="availableRoles().length === 0">
+                  <option [value]="-1">Wähle Rolle</option>
+                  <option *ngFor="let r of availableRoles()" [value]="r.id">{{ r.roleName }}</option>
+                </select>
+
+                <input #countInput type="number" min="1" value="1" class="block w-20 rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" />
+
+                <button type="button" class="text-md text-beige font-bold py-1 px-3 bg-green-dark rounded-md hover:bg-green-base  transition-all" (click)="addRole(roleSelect.value, countInput.value)" [disabled]="availableRoles().length === 0">+</button>
+              </div>
+
+              <!-- Added roles list -->
+              <div class="mt-4 space-y-3">
+                <div *ngFor="let ar of addedRoles; let i = index" class="px-5 outline-gray-300 rounded-md bg-white">
+                  <div class="flex items-center justify-between">
+                    <div class="block text-sm/6 font-medium text-gray-900">{{ ar.count }}x {{ getRoleName(ar.roleId) }} </div>
+                    <div class="flex gap-2">
+                      <button type="button" (click)="removeAddedRole(i)" aria-label="Entfernen" class="p-1 my-1 rounded hover:bg-gray-100">
+                        <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-2">
+              <button type="button" class="button-cancel" (click)="closeAddRole()">Abbrechen</button>
+              <button type="submit" class="button-green">Speichern</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

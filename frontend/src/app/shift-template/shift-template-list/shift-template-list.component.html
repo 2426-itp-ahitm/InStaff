@@ -1,0 +1,22 @@
+<div class="mx-6">
+  <div class="flex max-md:flex-col max-md:mt-2 max-md:items-center mb-4 justify-center items-center gap-2">
+    <input type="search" placeholder="Vorlage suchen..." class="input-field max-md:w-full max-md:max-w-md" (input)="onSearch($any($event.target).value)">
+    <button (click)="openAddShiftTemplate()" type="button" class="button-green max-md:w-full max-md:max-w-md">Schichtvorlage hinzufügen</button>
+  </div>
+  <div class="card-grid">
+    <div class="card" *ngFor="let sT of filteredShiftTemplates">
+        <div class="card-header" >
+          <p class="card-name">{{ sT.shiftTemplateName }}</p>
+          <img class="icon-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
+        </div>
+    </div>
+  </div>
+  <div *ngIf="filteredShiftTemplates.length === 0" class="mt-4 text-sm text-center text-gray-500">Keine Vorlagen gefunden.</div>
+
+  <div *ngIf="isEditMode">
+    <app-shift-template-edit [shiftTemplate]="selectedShiftTemplate" (closeShiftTemplateEdit)="closeShiftTemplateEdit()"></app-shift-template-edit>
+  </div>
+  <div *ngIf="isAddMode">
+    <app-shift-template-add (close)="closeShiftTemplateAdd()"></app-shift-template-add>
+  </div>
+</div>

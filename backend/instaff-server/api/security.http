@@ -1,0 +1,37 @@
+### Test Security
+GET http://localhost:8080/api/security
+Authorization: Bearer {{access_token}}
+
+### Get access token (client credentials)
+POST http://localhost:8081/realms/demo/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=backend&
+client_secret=backend-secret-instaff
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+### Create user (Admin API)
+POST http://localhost:8081/admin/realms/demo/users
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "enabled": true
+}
+
+###
+
+POST http://localhost:8081/admin/realms/demo/users
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "username": "max.mustermann",
+  "email": "max@firma.at",
+  "firstName": "Max",
+  "lastName": "Mustermann",
+  "enabled": true
+}

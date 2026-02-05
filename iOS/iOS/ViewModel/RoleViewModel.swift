@@ -9,8 +9,10 @@ import Foundation
 
 class RoleViewModel: ObservableObject {
     @Published var roles: [Role] = []
-    
-    init() {
+    var companyId: Int
+
+    init(companyId: Int) {
+        self.companyId = companyId
         loadRolesAsync()
     }
     
@@ -18,15 +20,15 @@ class RoleViewModel: ObservableObject {
         var roles: [Role] = []
         let jsonDecoder = JSONDecoder()
         
-        guard let url = URL(string: "http://localhost:8080/api/roles") else {
-            print("Invalid URL")
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/roles") else {
+            print("Invalid URL: role")
             return roles
         }
         
         if let data = try? Data(contentsOf: url) {
             if let loadedRoles = try? jsonDecoder.decode([Role].self, from: data) {
                 roles = loadedRoles
-                print("Roles loaded: \(roles.count)")
+                //print("Roles loaded: \(roles.count)")
             } else {
                 print("Failed to decode roles")
             }

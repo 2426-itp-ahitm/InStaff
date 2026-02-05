@@ -11,14 +11,17 @@ import java.util.Set;
 
 public record EmployeeDTO(
         Long id,
+        String keycloakUserId,
         String firstname,
         String lastname,
         String email,
         String telephone,
-        String password,
         LocalDate birthdate,
-        Long company_id,
-        String company_name,
+        boolean isManager,
+        Long companyId,
+        String companyName,
         List<Long> roles,
-        List<Long> shifts
+        List<Long> shifts,
+        double hourlyWage,
+        String address
 ) { }

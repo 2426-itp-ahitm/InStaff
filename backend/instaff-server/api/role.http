@@ -1,14 +1,14 @@
 ### Get all Roles
-GET http://localhost:8080/api/roles
+GET http://localhost:8080/api/1/roles
 
 ### Get Role by id
-GET http://localhost:8080/api/roles/1
+GET http://localhost:8080/api/1/roles/1
 
 ### Get Roles by company id
-GET http://localhost:8080/api/roles/company/1
+GET http://localhost:8080/api/1/roles/company/1
 
 ### Add a New Role
-POST http://localhost:8080/api/roles
+POST http://localhost:8080/api/1/roles
 Content-Type: application/json
 
 {
@@ -16,5 +16,8 @@ Content-Type: application/json
   "companyId": 1
 }
 
+### Update a Role
+PUT http://localhost:8080/api/1/roles/update/1/Kochin
+
 ### Remove Role
-PUT http://localhost:8080/api/roles/remove/6
+DELETE http://localhost:8080/api/1/roles/remove/1

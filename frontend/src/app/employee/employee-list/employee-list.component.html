@@ -1,0 +1,23 @@
+<div class="mx-6">
+  <div class="flex max-md:flex-col max-md:mt-2 max-md:items-center mb-4 justify-center items-center gap-2">
+    <input type="search" placeholder="Mitarbeiter suchen..." class="input-field max-md:w-full max-md:max-w-md" (input)="onSearch($any($event.target).value)">
+    <button (click)="openAddEmployee()" type="button" class="button-green max-md:w-full max-md:max-w-md">Mitarbeiter hinzufügen</button>
+  </div>
+
+    <div class="card-grid">
+      <app-employee-card *ngFor="let e of filteredEmployees" [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
+    </div>
+
+    <div *ngIf="filteredEmployees.length === 0" class="mt-4 text-sm text-center text-gray-500">Keine Mitarbeiter gefunden.</div>
+
+    <div class="text-center">
+
+    </div>
+
+    <div *ngIf="isEditMode">
+      <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>
+    </div>
+    <div *ngIf="isAddMode">
+      <app-employee-add (close)="closeAddEmployee()"></app-employee-add>
+    </div>
+</div>

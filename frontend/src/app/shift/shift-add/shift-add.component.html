@@ -1,0 +1,81 @@
+<script src="../../interfaces/shift-template.ts"></script>
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="modal-bg" aria-hidden="true"></div>
+  <div class="modal-card-1">
+    <div class="modal-card-2">
+      <div class="modal-card-3">
+        <div class="modal-card-4">
+
+          <!-- Step 1: Date/Time -->
+          <div *ngIf="step === 0">
+            <h3 class="text-lg font-semibold mb-2">Start / Ende wählen</h3>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Startzeit</label>
+                <input type="datetime-local" [(ngModel)]="startTime" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Endzeit</label>
+                <input type="datetime-local" [(ngModel)]="endTime" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Template choose or skip -->
+          <div *ngIf="step === 1">
+            <h3 class="text-lg font-semibold mb-2">Schichtvorlage wählen oder überspringen</h3>
+            <div class="flex gap-2 items-center">
+              <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2">
+                <option [value]="-1">Keine Vorlage</option>
+                <option *ngFor="let template of shiftTemplates" [value]="template.id">{{ template.shiftTemplateName }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Step 3: Assign employees -->
+          <div *ngIf="step === 2">
+            <h3 class="text-lg font-semibold mb-2">Mitarbeiter zu Rollen zuweisen</h3>
+
+            <!-- Manual roles if no template selected -->
+            <div *ngIf="!selectedShiftTemplate" class="mb-3">
+              <div class="flex gap-2 items-center">
+                <select #roleSelect class="block rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm">
+                  <option [value]="-1">Wähle Rolle</option>
+                  <option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</option>
+                </select>
+                <input #countInput type="number" min="1" value="1" class="block w-20 rounded-md bg-white px-3 py-1 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2 sm:text-sm" />
+                <button type="button" class="text-md text-beige font-bold py-1 px-3 bg-green-dark rounded-md hover:bg-green-base  transition-all" (click)="addManualRole(roleSelect.value, countInput.value)">+</button>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div *ngFor="let tmpRole of (selectedShiftTemplate ? selectedShiftTemplate.templateRoles : manualRoles)" class="p-3 border rounded-md">
+                <p class="text-base font-medium">{{ roleNameMap[tmpRole.roleId] }} ({{ tmpRole.count }})</p>
+                <div *ngFor="let i of [].constructor(tmpRole.count); let idx = index" class="mt-2 flex items-center gap-3">
+                  <label class="w-40">{{ roleNameMap[tmpRole.roleId] }} {{ idx + 1 }}:</label>
+                  <div *ngIf="initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)">
+                    <select [id]="'employee-select-' + tmpRole.roleId + '-' + idx" (change)="onEmployeeSelect(tmpRole.roleId, idx, $any($event.target).value)" class="block w-64 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2">
+                      <option [value]="-1">-- kein Mitarbeiter --</option>
+                      <ng-container *ngFor="let emp of employees">
+                        <option *ngIf="checkIfEmpHasRole(emp, tmpRole)" [value]="emp.id">{{ emp.firstname }} {{ emp.lastname }}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- bottom navigation -->
+          <div class="mt-6 flex items-center justify-end gap-x-4">
+            <button type="button" class="button-cancel" (click)="closeAddShift()">Abbrechen</button>
+            <button type="button" class="button-cancel" (click)="back()" *ngIf="step !== 0">Zurück</button>
+            <button *ngIf="step < 2" type="button" class="button-green" (click)="next()">Weiter</button>
+            <button *ngIf="step === 2" type="button" class="button-green" (click)="save()">Speichern</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

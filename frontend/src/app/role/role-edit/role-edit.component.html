@@ -1,0 +1,43 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="modal-bg" aria-hidden="true"></div>
+  <div class="modal-card-1">
+    <div class="modal-card-2">
+      <div class="modal-card-3">
+        <div class="modal-card-4">
+          <form (ngSubmit)="save()">
+            <div class="space-y-1">
+              <div class="">
+                <div class="sm:col-span-3">
+                  <div class="mt-2">
+                    <input #roleNameInput value="{{ role.roleName }}" type="text" name="role-name" id="role-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                  </div>
+                </div>
+                <div class="h-px bg-gray-300 my-4"></div>
+
+                <div class="mt-4 space-y-3">
+                  <p class="block text-sm/6 font-medium text-gray-900" >Mitarbeiter mit der Rolle: </p>
+                  <div *ngFor="let e of employeesWithRole" class="py-1 px-3 outline-1 outline-gray-300 rounded-md bg-white">
+                    <div class="flex items-center justify-between">
+                      <p class="block text-sm/6 font-medium text-gray-900">{{ e.firstname }} {{ e.lastname }}</p>
+                      <div class="flex gap-2">
+                        <button type="button" (click)="removeEmployeeFromRole(e.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
+                          <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-4">
+              <button type="button" class="button-cancel" (click)="close()">Abbrechen</button>
+              <button type="button" (click)="deleteRole(role)" class="button-delete">Löschen</button>
+              <button type="submit" class="button-green">Speichern</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

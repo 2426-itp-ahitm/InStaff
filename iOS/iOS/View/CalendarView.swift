@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
+    //@State private var selectedColor: Color = .blue
     var body: some View {
         VStack {
             DatePicker(
@@ -17,6 +18,9 @@ struct CalendarView: View {
             )
             .datePickerStyle(.graphical)
             .padding()
+             
+            //ColorPicker("Select color", selection: $selectedColor)
+
         }
     }
 }

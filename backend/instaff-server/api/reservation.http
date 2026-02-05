@@ -1,11 +1,14 @@
 ### Get all Reservations
-GET http://localhost:8080/api/reservations
+GET http://localhost:8080/api/1/reservations
+
+### Get all Reservations by Company Id
+GET http://localhost:8080/api/1/reservations/company/1
 
 ### Get Reservation by Id
-GET http://localhost:8080/api/reservations/1
+GET http://localhost:8080/api/1/reservations/1
 
 ### Add a New Reservation
-POST http://localhost:8080/api/reservations
+POST http://localhost:8080/api/1/reservations
 Content-Type: application/json
 
 {
@@ -16,3 +19,6 @@ Content-Type: application/json
   "endTime": "13:00:00",
   "shiftId": 3
 }
+
+### Delete Reservation
+DELETE http://localhost:8080/api/1/reservations/delete/1

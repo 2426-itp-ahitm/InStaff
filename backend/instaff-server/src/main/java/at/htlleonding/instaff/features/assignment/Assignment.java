@@ -7,7 +7,11 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "assignment")
+@NamedQueries({
+        @NamedQuery(name = Assignment.FIND_BY_COMPANY, query = "SELECT a from Assignment a WHERE a.employee.company.id = :id")
+})
 public class Assignment {
+    public static final String FIND_BY_COMPANY = "Assignment.findByCompany";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +29,15 @@ public class Assignment {
     private Role role;
 
     private Boolean confirmed;
+
+    public Assignment() {
+    }
+
+    public Assignment(Employee employee, Shift shift, Role role) {
+        this.employee = employee;
+        this.shift = shift;
+        this.role = role;
+    }
 
     // Getters and Setters
     public Long getId() {

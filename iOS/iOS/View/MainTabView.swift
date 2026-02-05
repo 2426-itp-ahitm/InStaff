@@ -15,11 +15,11 @@ struct MainTabView: View {
             HomeView()
                 .tabItem { Label("Home", systemImage: "house") }
             CalendarView()
-                .tabItem { Label("Calendar", systemImage: "calendar") }
-            RequestView()
-                .tabItem { Label("RequestView", systemImage: "list.bullet.clipboard") }
-            ProfileView(roleViewModel: RoleViewModel(), employeeViewModel: EmployeeViewModel())
-                .tabItem { Label("Profile", systemImage: "person.circle") }
+                .tabItem { Label("Kalender", systemImage: "calendar") }
+            RequestView(companyId: session.companyId!)
+                .tabItem { Label("Alle Dienste", systemImage: "list.bullet.clipboard") }
+            ProfileView(roleViewModel: RoleViewModel(companyId: session.companyId!), employeeViewModel: EmployeeViewModel(companyId: session.companyId!))
+                .tabItem { Label("Profil", systemImage: "person.circle") }
         }
     }
 }

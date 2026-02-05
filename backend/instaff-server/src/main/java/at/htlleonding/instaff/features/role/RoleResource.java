@@ -3,6 +3,7 @@ package at.htlleonding.instaff.features.role;
 import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.employee.Employee;
 import at.htlleonding.instaff.features.employee.EmployeeDTO;
+import at.htlleonding.instaff.features.employee.EmployeeRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -11,8 +12,9 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-@Path("/roles")
+@Path("{companyId}/roles")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class RoleResource {
@@ -24,8 +26,8 @@ public class RoleResource {
     CompanyRepository companyRepository;
 
     @GET
-    public List<RoleDTO> all() {
-        var roles = roleRepository.listAll();
+    public List<RoleDTO> all(@PathParam("companyId") Long companyId) {
+        var roles = roleRepository.findByCompany(companyId);
         return roles
                 .stream()
                 .map(roleMapper::toResource)
@@ -62,6 +64,13 @@ public class RoleResource {
                 .toList();
     }
 
+    @PUT
+    @Path("update/{id}/{roleName}")
+    public Response updateRole(@PathParam("roleName") String roleName, @PathParam("id") Long id) {
+        Role role = roleRepository.updateRole(roleName, id);
+        return Response.ok(roleMapper.toResource(role)).build();
+    }
+
     @POST
     @Transactional
     public Response createRole(RoleCreateDTO dto) {
@@ -77,12 +86,16 @@ public class RoleResource {
                 .build();
     }
 
-    @PUT
+    @DELETE
     @Path("remove/{id}")
     @Transactional
     public Response removeRole(@PathParam("id") Long id) {
-        roleRepository.deleteById(id);
+        Role role = roleRepository.findById(id);
+        if (role == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
-        return Response.ok().build();
+        roleRepository.delete(role);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

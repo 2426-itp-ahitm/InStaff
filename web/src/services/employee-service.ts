@@ -1,7 +1,7 @@
 import { model } from "../model/model"
 import { Employee } from "../interfaces/employee"
 
-const BASE_URL = "/api"
+const BASE_URL = "/api/1"
 
 // Load all employees and update the model
 export async function loadAllEmployees() {

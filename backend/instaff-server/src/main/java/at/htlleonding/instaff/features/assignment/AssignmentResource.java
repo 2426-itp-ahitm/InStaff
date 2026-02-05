@@ -1,32 +1,44 @@
 package at.htlleonding.instaff.features.assignment;
 
+import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.role.Role;
+import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-@Path("/assignments")
+@Path("{companyId}/assignments")
 @Produces(MediaType.APPLICATION_JSON)
 public class AssignmentResource {
     @Inject
     AssignmentRepository assignmentRepository;
     @Inject
     AssignmentMapper assignmentMapper;
+    @Inject
+    EntityManager entityManager;
 
     @GET
-    public List<AssignmentDTO> all() {
-        var assignments = assignmentRepository.listAll();
+    public List<AssignmentDTO> all(@PathParam("companyId") Long companyId) {
+        var assignments = assignmentRepository.findByCompanyId(companyId);
         return assignments
                 .stream()
                 .map(assignmentMapper::toResource)
                 .toList();
+    }
+
+    @GET
+    @Path("company/{companyId}")
+    public Response getByCompanyId(@PathParam("companyId") long companyId) {
+        List<Assignment> assignments = assignmentRepository.findByCompanyId(companyId);
+        return Response.ok(
+                assignments.stream().map(assignmentMapper::toResource).toList()
+        ).build();
     }
 
     @GET
@@ -43,6 +55,15 @@ public class AssignmentResource {
                 .stream()
                 .map(assignmentMapper::toResource)
                 .toList();
+    }
+
+    @POST
+    @Transactional
+    @Path("shift/")
+    public Response addAssignmentByShift(AssignmentDTO dto) {
+        Assignment assignment = new Assignment(entityManager.find(Employee.class, dto.employee()), entityManager.find(Shift.class, dto.shift()), entityManager.find(Role.class, dto.role()));
+        entityManager.persist(assignment);
+        return Response.status(Response.Status.CREATED).entity(assignment).build();
     }
 
     @GET
