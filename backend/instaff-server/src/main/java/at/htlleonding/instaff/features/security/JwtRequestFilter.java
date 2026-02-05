@@ -42,8 +42,8 @@ public class JwtRequestFilter implements ContainerRequestFilter {
     CustomSecurityContext customSecurityContext;
     @Inject
     EntityManager em;
-    @ConfigProperty
-    String realmUrl;
+    @ConfigProperty(name = "keycloak.url")
+    String keycloakUrl;
 
     String realmPublicKey = "";
 
@@ -52,7 +52,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
 
     public String getRealmPublicKey() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-
+        Log.info("Using keycloakUrl = " + keycloakUrl);
         /* old version for production
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI("https://it210157.cloud.htl-leonding.ac.at/auth/realms/demo"))
@@ -60,7 +60,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                 .build();
          */
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(this.realmUrl + "/realms/demo"))
+                .uri(new URI(this.keycloakUrl + "/realms/demo"))
                 .GET()
                 .build();
 
