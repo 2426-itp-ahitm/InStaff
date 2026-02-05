@@ -3,6 +3,7 @@ import {News} from '../../interfaces/news';
 import {NewsService} from '../news-service/news.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {NewsWebsocketServiceService} from '../news-websocket-serivce/news-websocket-service.service';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-news',
@@ -29,8 +30,7 @@ export class NewsComponent implements OnInit {
       this.news = data;
     })
     this.newsService.getNews()
-
-    this.ws.connect("ws://localhost:8080/api/ws/news")
+    this.ws.connect(`${environment.wsUrl}/news`)
       .subscribe(msg => {
         console.log("Received:", msg);
         if(msg.charAt(0) == 'd' && msg.charAt(1) == 'a'){
@@ -45,8 +45,8 @@ export class NewsComponent implements OnInit {
           this.message = msg;
           this.newsService.addNews(msg);
         }
-      
-        
+
+
       });
   }
 

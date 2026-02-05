@@ -42,17 +42,25 @@ public class JwtRequestFilter implements ContainerRequestFilter {
     CustomSecurityContext customSecurityContext;
     @Inject
     EntityManager em;
+    @ConfigProperty
+    String realmUrl;
 
     String realmPublicKey = "";
 
     @Context
     private ResourceInfo resourceInfo;
 
-    public static String getRealmPublicKey() throws Exception {
+    public String getRealmPublicKey() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
+        /* old version for production
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI("https://it210157.cloud.htl-leonding.ac.at/auth/realms/demo"))
+                .GET()
+                .build();
+         */
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(this.realmUrl + "/realms/demo"))
                 .GET()
                 .build();
 
@@ -101,10 +109,10 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                     .setParameter("kcId", keycloakUserId).getResultStream().findFirst().orElse(null);
             if (employee == null) {
                 // Activate this for the .http-files to work
-                employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
+                //employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
 
                 // Deactivate this for the .http-files to work
-                //contextAbort(requestContext, Response.Status.FORBIDDEN, "User not in Database");
+                contextAbort(requestContext, Response.Status.FORBIDDEN, "User not in Database");
 
                 return;
             }

@@ -4,17 +4,18 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Shift} from '../../interfaces/shift';
 import {Assignment} from '../../interfaces/assignment';
+import {ApiUrlService} from '../api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssignmentServiceService {
-
+  apiUrl: ApiUrlService = inject(ApiUrlService);
   companyService: CompanyServiceService = inject(CompanyServiceService);
   httpClient: HttpClient = inject(HttpClient);
 
   private getApiUrl(): string {
-    return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
+    return this.apiUrl.getApiUrl();
   }
 
 

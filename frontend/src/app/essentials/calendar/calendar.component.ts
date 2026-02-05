@@ -23,7 +23,6 @@ import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
     CommonModule,
     FullCalendarModule,
     ShiftAddComponent,
-    ShiftEditOldComponent,
     ShiftEditComponent
   ],
   templateUrl: './calendar.component.html',

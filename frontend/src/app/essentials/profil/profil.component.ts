@@ -13,7 +13,6 @@ import {KeycloakService} from 'keycloak-angular';
   selector: 'app-profil',
   imports: [
     FormsModule,
-    NgForOf,
     NgIf,
     ReactiveFormsModule
   ],
@@ -59,9 +58,9 @@ export class ProfilComponent implements OnInit{
         roles: new FormControl<EmployeeRole[]>(this.employee.roles, Validators.required),
       });
     });
-    
 
-    
+
+
 
 
 

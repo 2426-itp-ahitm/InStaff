@@ -8,6 +8,16 @@ client_secret=Gin4wX5yUnZEnqtwrpfMBvIbVSgOgqKE
 
 > {% client.global.set("access_token", response.body.access_token); %}
 
+### Get access token (client credentials)
+POST http://localhost:8081/realms/demo/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&
+client_id=backend&
+client_secret=backend-secret-instaff
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
 ### Get all Employees
 GET https://it210157.cloud.htl-leonding.ac.at/api/1/employees
 Authorization: Bearer {{access_token}}

@@ -25,7 +25,6 @@ export class ShiftTemplateServiceService {
 
   private getApiUrl(): string {
     return this.apiUrl.getApiUrl();
-    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`
   }
 
   getShiftTemplates(): void {

@@ -17,18 +17,11 @@ export class RoleServiceService {
 
   apiUrl: ApiUrlService = inject(ApiUrlService);
 
-
-
-
   private rolesSubject = new BehaviorSubject<Role[]>([]);
   public roles$ = this.rolesSubject.asObservable();
 
-  private oldApiUrl = 'http://localhost:8080/api';
-
   private getApiUrl(): string {
     return this.apiUrl.getApiUrl();
-    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
-    //return this.oldApiUrl
   }
 
   getRoles(): void {

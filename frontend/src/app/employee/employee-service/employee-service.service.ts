@@ -21,12 +21,8 @@ export class EmployeeServiceService {
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
 
-  private oldApiUrl = 'http://localhost:8080/api';
-
   private getApiUrl(): string {
     return this.apiUrl.getApiUrl();
-    //return `http://localhost:8080/api/${this.companyService.getCompanyId()}`;
-
   }
 
   getEmployees(): void {
