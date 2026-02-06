@@ -43,19 +43,33 @@ export class ProfilComponent implements OnInit{
 
 
   ngOnInit() {
+    // Initialize empty FormGroup first to avoid NG01052 error
+    this.editEmployeeForm = new FormGroup({
+      firstname: new FormControl('', Validators.required),
+      lastname: new FormControl('', Validators.required),
+      birthdate: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      telephone: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
+      hourlyWage: new FormControl('', Validators.required),
+      isManager: new FormControl(false),
+      roles: new FormControl<EmployeeRole[]>([], Validators.required),
+    });
+
     this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
       console.log(this.employee);
-      this.editEmployeeForm = new FormGroup({
-        firstname: new FormControl(this.employee.firstname, Validators.required),
-        lastname: new FormControl(this.employee.lastname, Validators.required),
-        birthdate: new FormControl(this.employee.birthdate, Validators.required),
-        email: new FormControl(this.employee.email, [Validators.required, Validators.email]),
-        telephone: new FormControl(this.employee.telephone, Validators.required), // optional
-        address: new FormControl(this.employee.address, Validators.required),
-        hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
-        isManager: new FormControl(this.employee.isManager),
-        roles: new FormControl<EmployeeRole[]>(this.employee.roles, Validators.required),
+      // Update form with loaded employee data
+      this.editEmployeeForm.patchValue({
+        firstname: this.employee.firstname,
+        lastname: this.employee.lastname,
+        birthdate: this.employee.birthdate,
+        email: this.employee.email,
+        telephone: this.employee.telephone,
+        address: this.employee.address,
+        hourlyWage: this.employee.hourlyWage,
+        isManager: this.employee.isManager,
+        roles: this.employee.roles,
       });
     });
 
@@ -75,7 +89,6 @@ export class ProfilComponent implements OnInit{
       const updatedEmp: Employee = this.editEmployeeForm.value;
       updatedEmp.id = this.employee.id;
       this.employeeService.updateEmployee(updatedEmp);
-      console.log(updatedEmp);
       this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
     }else{
     }

@@ -12,9 +12,9 @@
       [ngClass]="{ 'hidden': !isMenuOpen, 'flex': isMenuOpen, 'md:flex': true } ">
       <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Dashboard</a>
       <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Kalender</a>
-      <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Team</a>
-      <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Rollen</a>
-      <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Schichtvorlagen</a>
+      <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Team</a>
+      <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Rollen</a>
+      <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Schichtvorlagen</a>
       <a routerLink="/profil" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Profil</a>
     </div>
   </nav>
