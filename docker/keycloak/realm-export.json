@@ -68,7 +68,8 @@
         }
       ],
       "realmRoles": [
-        "default-roles-demo"
+        "default-roles-demo",
+        "user-is-manager"
       ],
       "clientRoles": {
         "realm-management": [
@@ -124,6 +125,15 @@
         "id": "e1b8ff98-b90f-4ded-a0ef-f6964ca1abdd",
         "name": "offline_access",
         "description": "${role_offline-access}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "b24676ef-9f68-4390-ae74-3766c931d9a1",
+        "attributes": {}
+      },
+      {
+        "id": "f2c9b8e1-4b8a-4c9d-9d1a-111111111111",
+        "name": "user-is-manager",
+        "description": "Marks users with manager privileges",
         "composite": false,
         "clientRole": false,
         "containerId": "b24676ef-9f68-4390-ae74-3766c931d9a1",
@@ -458,7 +468,20 @@
       "frontend": []
     }
   },
-  "groups": [],
+  "groups": [
+    {
+      "id": "9a9e8b73-3bc3-45db-b512-85f8566f45e3",
+      "name": "manager",
+      "description": "Group of users that are managers",
+      "path": "/manager",
+      "subGroups": [],
+      "attributes": {},
+      "realmRoles": [
+        "user-is-manager"
+      ],
+      "clientRoles": {}
+    }
+  ],
   "defaultRole": {
     "id": "a11e6dc3-cbc2-42e0-825d-efa7edc8a495",
     "name": "default-roles-demo",

@@ -4,8 +4,8 @@ services:
     container_name: instaff-keycloak
     ports:
       - "8081:8080"
-    volumes:
-      - ./keycloak/themes:/opt/keycloak/themes
+    #volumes:
+     # - ./keycloak/themes:/opt/keycloak/themes
     depends_on:
       - mailhog
 
