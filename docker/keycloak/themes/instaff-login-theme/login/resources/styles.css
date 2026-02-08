@@ -1,0 +1,270 @@
+/* =========================================================
+   Global reset & variables
+   ========================================================= */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #344E41;
+  --primary-hover: #2a3f35;
+
+  --bg: #f8faf9;
+  --card-bg: rgba(255, 255, 255, 0.92);
+
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+}
+
+/* =========================================================
+   Base elements
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =========================================================
+   Page layout & background
+   ========================================================= */
+
+.page {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background-image: url("office-bg.jpg");
+  background-size: cover;
+  background-position: center 60%;
+  background-repeat: no-repeat;
+}
+
+/* Blur overlay */
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(150, 150, 150, 0.15);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  z-index: 0;
+}
+
+/* =========================================================
+   Card
+   ========================================================= */
+
+.card {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 420px;
+
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+
+  background: var(--card-bg);
+  backdrop-filter: saturate(120%);
+
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================
+   Logo & title
+   ========================================================= */
+
+.logo {
+  display: block;
+  width: 120px;
+  margin: 0 auto 1rem auto;
+  height: auto;
+}
+
+.title {
+  margin: 0 0 2rem 0;
+  text-align: center;
+
+  font-size: 1.875rem;
+  font-weight: 600;
+
+  color: var(--primary);
+}
+
+/* =========================================================
+   Form elements
+   ========================================================= */
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.375rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+input {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+
+  font-size: 0.95rem;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(52, 78, 65, 0.2);
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.btn-primary {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.05s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Allow button styling on links */
+a.btn-primary {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* =========================================================
+   Text, links & messages
+   ========================================================= */
+
+p {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.notice {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+
+  background: #ffffff;
+  color: var(--text);
+
+  font-size: 0.9rem;
+}
+
+/* =========================================================
+   Actions row (forgot password, register)
+   ========================================================= */
+
+.actions {
+  margin-top: 0.75rem;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  font-size: 0.9rem;
+}
+
+.actions a {
+  color: var(--primary);
+}
+
+/* =========================================================
+   Remove Keycloak default wrappers
+   ========================================================= */
+
+#kc-header,
+#kc-header-wrapper,
+.kc-header,
+.kc-header-wrapper,
+.kc-login,
+.kc-page {
+  display: none !important;
+}
+
+/* =========================================================
+   Responsive tweaks
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .page::before {
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .card {
+    padding: 2rem 1.5rem;
+  }
+}

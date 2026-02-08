@@ -45,12 +45,10 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
-  "loginTheme": "instaff-login",
+  "loginTheme": "instaff-login-theme",
+  "internationalizationEnabled": true,
   "defaultLocale": "de",
-  "supportedLocales": [
-    "de",
-    "en"
-  ],
+  "supportedLocales": ["de"],
   "users": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -1854,7 +1852,6 @@
       }
     ]
   },
-  "internationalizationEnabled": false,
   "authenticationFlows": [
     {
       "id": "17ae073a-d2db-42db-adb6-6a55b7a2d6ce",
