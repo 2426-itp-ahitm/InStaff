@@ -50,24 +50,34 @@ public class KeycloakAdminService {
             );
         }
 
-        // Startpasswort setzen
-        client
-                .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
-                .request()
-                .header("Authorization", "Bearer " + accessToken)
-                .put(Entity.json(new PasswordRequest("Start1234")));
+        if(employee.isManager()) {
+            client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
+                    .request()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .put(Entity.json(new PasswordRequest("admin")));
+        } else {
+            // Startpasswort setzen
+            client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
+                    .request()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .put(Entity.json(new PasswordRequest("Start1234")));
 
-        // Required Actions setzen
-        client
-                .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId)
-                .request()
-                .header("Authorization", "Bearer " + accessToken)
-                .put(Entity.json(
-                        java.util.Map.of(
-                                "requiredActions",
-                                List.of("VERIFY_EMAIL", "UPDATE_PASSWORD")
-                        )
-                ));
+            // Required Actions setzen
+            client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId)
+                    .request()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .put(Entity.json(
+                            java.util.Map.of(
+                                    "requiredActions",
+                                    List.of("VERIFY_EMAIL", "UPDATE_PASSWORD")
+                            )
+                    ));
+        }
+
+
 
         // Manager-Gruppe setzen (Gruppe hat die Realmrolle "user-is-manager")
         setManagerGroupMembership(client, accessToken, userId, employee.isManager());

@@ -15,6 +15,7 @@ export interface Employee {
   companyName: string;
   roles: EmployeeRole[];
   shifts: number[];   // Array von Shift-IDs
+  keycloakUserId: string;
 }
 
 

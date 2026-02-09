@@ -103,6 +103,7 @@ export class EmployeeServiceService {
     this.httpClient.post<Employee>(`${this.getApiUrl()}/employees`, newEmployee)
       .subscribe((createdEmployee) => {
         const currentEmployees = this.employeesSubject.getValue();
+        console.log(createdEmployee);
         this.employeesSubject.next([...currentEmployees, createdEmployee]);
       });
     this.getEmployees();

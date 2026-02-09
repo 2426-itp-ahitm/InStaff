@@ -224,7 +224,27 @@ a:hover {
 }
 
 /* =========================================================
-   Actions row (forgot password, register)
+      Error messages
+   ========================================================= */
+
+.error {
+  margin: 1rem 0 0.5rem 0;
+  padding: 0.75rem 0.9rem;
+
+  border-radius: 0.5rem;
+  border: 1px solid #fca5a5;
+
+  background: #fef2f2;
+  color: #991b1b;
+
+  font-size: 0.9rem;
+  line-height: 1.4;
+
+  white-space: pre-line;
+}
+
+/* =========================================================
+      Actions row (forgot password, register)
    ========================================================= */
 
 .actions {

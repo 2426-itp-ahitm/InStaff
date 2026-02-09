@@ -6,6 +6,7 @@ import at.htlleonding.instaff.features.company.CompanyRepository;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.role.RoleRepository;
 import at.htlleonding.instaff.features.security.CustomSecurityContext;
+import at.htlleonding.instaff.features.security.KeycloakAdminService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -38,6 +39,8 @@ public class EmployeeResource {
     AssignmentMapper assignmentMapper;
     @Inject
     CustomSecurityContext ctx;
+    @Inject
+    KeycloakAdminService keycloakAdminService;
 
     @GET
     public Response all(@PathParam("companyId") Long companyId) {
@@ -156,6 +159,7 @@ public class EmployeeResource {
 
         // Persist the entity
         Employee createdEmployee = employeeRepository.createEmployee(employee);
+        keycloakAdminService.createUser(employee);
 
         // Return a response with the created entity
         return Response.status(Response.Status.CREATED)
