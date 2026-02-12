@@ -29,30 +29,36 @@ export const routes: Routes = [
     component: EmployeeDashboardComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
     canActivate: [AuthGuard],
+
   },
   {
     path: 'calendar',
     component: CalendarComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
     canActivate: [AuthGuard]
+
   },
   {
     path: 'team',
     component: EmployeeListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
+
   },
   {
     path: 'role-list',
     component: RoleListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: 'shift-template-list',
     component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: 'profil',
@@ -64,7 +70,8 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: '**',

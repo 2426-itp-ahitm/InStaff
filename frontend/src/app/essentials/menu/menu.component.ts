@@ -43,8 +43,8 @@ export class MenuComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    return true;
-    //return this.isManager || this.keycloakOperationService.getUserRoles().includes('manager');
+    //return true;
+    return this.keycloakOperationService.getUserRoles().includes('user-is-manager');
   }
 
   isEmployee(): boolean {

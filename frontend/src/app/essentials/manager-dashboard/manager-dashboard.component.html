@@ -3,12 +3,12 @@
   <div class="mx-8 my-4 max-md:mt-0 shrink-0">
     <h1 >Willkommen bei InStaff - Manager Dashboard</h1>
   </div>
-  <div class="md:flex mx-4 my-2 gap-1 h-min">
+  <div class="md:flex mx-4 my-2 gap-5 h-min">
     <div class="flex-1/2 max-md:flex-2/5">
       <app-news (shiftSelected)="openShiftEditWithId($event)"></app-news>
     </div>
     <div class="flex-1/2 md:flex-3/5 card-center bg-glass">
-      <app-calendar [initialView]="'dayGridMonth'" class="flex-1 min-h-0"></app-calendar>
+      <app-calendar [initialView]="'dayGridMonth'" [isAllowedToEdit]="true" class="flex-1 min-h-0"></app-calendar>
     </div>
   </div>
 </div>
