@@ -1,8 +1,14 @@
 <div class="h-full flex flex-col overflow-hidden">
-  <div class="flex-1 min-h-0 overflow-hidden">
-    <full-calendar class="h-full" [options]="calendarOptions"></full-calendar>
+  <div class="flex-1 min-h-0 overflow-hidden m-4">
+    <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
-  <div *ngIf="isEditMode">
+  <div *ngIf="isEditMode && !isAllowedToEdit">
+    <!--
+    <app-shift-edit-old [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit-old>
+    -->
+    <app-shift-view [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-view>
+  </div>
+  <div *ngIf="isEditMode && isAllowedToEdit">
     <!--
     <app-shift-edit-old [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit-old>
     -->

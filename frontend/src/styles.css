@@ -82,7 +82,7 @@ h2{
 }
 
 .card-center {
-  @apply grid m-4 p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
+  @apply grid p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
 }
 
 /* modal */
