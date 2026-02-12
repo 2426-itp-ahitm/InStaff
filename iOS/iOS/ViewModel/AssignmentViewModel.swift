@@ -11,9 +11,9 @@ import SwiftUI
 class AssignmentViewModel: ObservableObject {
     @Published var assignments: [Assignment] = []
     
-    var companyId: Int
+    var companyId: Int64
 
-    init(companyId: Int) {
+    init(companyId: Int64) {
         self.companyId = companyId
         loadAssignmentsAsync() {}
     }
@@ -27,17 +27,24 @@ class AssignmentViewModel: ObservableObject {
             return assignments
         }
 
-        if let data = try? Data(contentsOf: url) {
-            if let loadedAssignments = try? jsonDecoder.decode([Assignment].self, from: data) {
-                assignments = loadedAssignments
-                //print(assignments)
-            } else {
-                print("Failed to decode assignments")
+        let semaphore = DispatchSemaphore(value: 0)
+
+        Task {
+            do {
+                let data = try await APIClient.shared.request(url: url)
+                if let loadedAssignments = try? jsonDecoder.decode([Assignment].self, from: data) {
+                    assignments = loadedAssignments
+                    print(assignments)
+                } else {
+                    print("Failed to decode assignments")
+                }
+            } catch {
+                print("Failed to load assignments:", error)
             }
-        } else {
-            print("Failed to load data from URL")
+            semaphore.signal()
         }
 
+        semaphore.wait()
         return assignments
     }
 
@@ -62,18 +69,23 @@ class AssignmentViewModel: ObservableObject {
         guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
             return false
         }
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
         let semaphore = DispatchSemaphore(value: 0)
         var success = false
-        URLSession.shared.dataTask(with: request) { _, response, error in
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+
+        Task {
+            do {
+                _ = try await APIClient.shared.request(
+                    url: url,
+                    method: "PUT",
+                    body: nil
+                )
                 success = true
-            } else {
-                print("Error confirming assignment:", error?.localizedDescription ?? "Unknown error")
+            } catch {
+                print("Error confirming assignment:", error.localizedDescription)
             }
             semaphore.signal()
-        }.resume()
+        }
+
         semaphore.wait()
         loadAssignmentsAsync() {}
         //print(assignments)

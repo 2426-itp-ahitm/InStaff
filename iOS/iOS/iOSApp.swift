@@ -14,6 +14,9 @@ extension Color {
 
 @main
 struct iOSApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    var appDelegate
+    
     init() {
         try? Tips.configure()
     }

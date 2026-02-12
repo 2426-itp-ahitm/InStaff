@@ -9,13 +9,13 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var session: SessionManager
-    @StateObject var assignmentViewModel = AssignmentViewModel(companyId: 1)
-    @StateObject var shiftViewModel = ShiftViewModel(companyId: 1)
-    @StateObject var roleViewModel = RoleViewModel(companyId: 1)
+    @ObservedObject var assignmentViewModel: AssignmentViewModel
+    @ObservedObject var roleViewModel: RoleViewModel
+    @ObservedObject var shiftViewModel: ShiftViewModel
     
     var filteredAssignments: [Assignment] {
         assignmentViewModel.assignments
-            .filter { $0.employee == session.employeeId }
+            .filter { $0.employee == session.employeeId ?? -1 }
             .filter {
                 let calendar = Calendar.current
                 let now = Date()
@@ -79,7 +79,4 @@ struct HomeView: View {
     
 }
 
-#Preview {
-    HomeView()
-}
 

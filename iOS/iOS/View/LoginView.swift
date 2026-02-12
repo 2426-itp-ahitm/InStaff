@@ -6,80 +6,62 @@
 //
 
 import SwiftUI
+import AppAuth
 
 struct LoginView: View {
     @EnvironmentObject var session: SessionManager
-    
-    @StateObject private var companyViewModel = CompanyViewModel()
-    @StateObject private var employeeViewModel = EmployeeViewModel(companyId: -1)
-    
-    @State private var companyNameInput = "Stoaboch Wirt"
-    @State private var employeeFirstNameInput = "Alexander"
-    @State private var employeeLastNameInput = "Hahn"
-    
-    @State private var showAlert = false
-    @State private var alertMessage = ""
-
 
     var body: some View {
-
-        VStack(spacing: 20) {
-            Text("Anmelden")
+        VStack(spacing: 30) {
+            Text("Instaff Login")
                 .font(.largeTitle)
                 .bold()
 
-            TextField("Company name", text: $companyNameInput)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal, 40)
-            TextField("Firstname", text: $employeeFirstNameInput)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal, 40)
-            TextField("Lastname", text: $employeeLastNameInput)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal, 40)
-            
-
-            Button("Login") {
-                if let matchedCompany = companyViewModel.companies.first(where: { $0.companyName.lowercased() == companyNameInput.lowercased() }) {
-                    session.companyId = matchedCompany.id
-                    employeeViewModel.updateCompanyId(matchedCompany.id) {
-                        print("company id: \(String(describing: session.companyId))")
-
-                        let id = employeeViewModel.employees.first {
-                            $0.firstname.lowercased() == employeeFirstNameInput.lowercased() &&
-                            $0.lastname.lowercased() == employeeLastNameInput.lowercased()
-                        }?.id ?? -1
-
-                        if id != -1 {
-                            session.employeeId = id
-                            session.isLoggedIn = true
-
-                            if let matchedEmployee = employeeViewModel.employees.first(where: { $0.id == id }) {
-                                session.employee = matchedEmployee
-                            }
-                        } else {
-                            alertMessage = "No matching employee called \(employeeFirstNameInput) \(employeeLastNameInput) found"
-                            showAlert = true
-                        }
-                    }
-                } else {
-                    alertMessage = "No matching company called \(companyNameInput) found"
-                    showAlert = true
-                    return
-                }
+            Button("Login with Keycloak") {
+                login()
             }
             .padding()
             .background(Color.appGreen)
             .foregroundColor(.white)
             .cornerRadius(8)
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Login failed"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+    }
+
+    func login() {
+        let issuer = URL(string: "http://localhost:8081/realms/demo")!
+
+        OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
+
+            guard let config = configuration else { return }
+
+            let request = OIDAuthorizationRequest(
+                configuration: config,
+                clientId: "instaff-ios",
+                scopes: [OIDScopeOpenID, OIDScopeProfile, OIDScopeEmail],
+                redirectURL: URL(string: "com.instaff.app://oauth/callback")!,
+                responseType: OIDResponseTypeCode,
+                additionalParameters: nil
+            )
+
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let root = scene.windows.first?.rootViewController else { return }
+
+            AuthManager.shared.currentAuthorizationFlow =
+                OIDAuthState.authState(byPresenting: request, presenting: root) { authState, error in
+                    if let authState = authState,
+                       let token = authState.lastTokenResponse?.accessToken {
+
+                        Task {
+                            await MainActor.run {
+                                session.accessToken = token
+                                print(token)
+                            }
+                            await session.loadCurrentUser()
+                        }
+                    }
             }
+            
         }
     }
 }
 
-#Preview {
-    LoginView()
-        .environmentObject(SessionManager())
-}

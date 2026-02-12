@@ -11,9 +11,9 @@ import SwiftUI
 class EmployeeViewModel: ObservableObject {
     @Published var employees: [Employee] = []
 
-    var companyId: Int
+    var companyId: Int64
 
-    init(companyId: Int) {
+    init(companyId: Int64) {
         self.companyId = companyId
         loadEmployeesAsync() {}
     }
@@ -21,21 +21,28 @@ class EmployeeViewModel: ObservableObject {
     private func load() -> [Employee] {
         var employees: [Employee] = []
         let jsonDecoder = JSONDecoder()
-        
-        
+
         guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees") else {
             print("Invalid URL: employee")
             return employees
         }
 
-        if let data = try? Data(contentsOf: url) {
-            if let fetchedEmployees = try? jsonDecoder.decode([Employee].self, from: data) {
-                employees = fetchedEmployees
-            } else {
-                //print("Failed to decode employees")
+        do {
+            let semaphore = DispatchSemaphore(value: 0)
+
+            Task {
+                do {
+                    let data = try await APIClient.shared.request(url: url)
+                    if let fetchedEmployees = try? jsonDecoder.decode([Employee].self, from: data) {
+                        employees = fetchedEmployees
+                    }
+                } catch {
+                    print("Failed to load employees:", error)
+                }
+                semaphore.signal()
             }
-        } else {
-            //print("Failed to load data from URL")
+
+            semaphore.wait()
         }
 
         return employees
@@ -59,16 +66,22 @@ class EmployeeViewModel: ObservableObject {
             return
         }
 
-        URLSession.shared.dataTask(with: request) { _, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    print(employee)
+        Task {
+            do {
+                _ = try await APIClient.shared.request(
+                    url: url,
+                    method: "POST",
+                    body: request.httpBody
+                )
+                DispatchQueue.main.async {
                     completion(.success(()))
                 }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
-        }.resume()
+        }
     }
 
     private func loadEmployeesAsync(completion: @escaping () -> Void) {
@@ -93,7 +106,7 @@ class EmployeeViewModel: ObservableObject {
         return employees.count
     }
     
-    func updateCompanyId(_ id: Int, completion: @escaping () -> Void) {
+    func updateCompanyId(_ id: Int64, completion: @escaping () -> Void) {
         if companyId != id {
             companyId = id
             loadEmployeesAsync() {

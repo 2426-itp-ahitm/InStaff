@@ -9,25 +9,30 @@ import SwiftUI
 
 struct RequestView: View {
     @EnvironmentObject var session: SessionManager
-    @StateObject var assignmentViewModel: AssignmentViewModel
-    @StateObject var roleViewModel: RoleViewModel
-    @StateObject var shiftViewModel: ShiftViewModel
+    @ObservedObject var assignmentViewModel: AssignmentViewModel
+    @ObservedObject var roleViewModel: RoleViewModel
+    @ObservedObject var shiftViewModel: ShiftViewModel
+    
     
     @State private var selectedRoleId: Int? = nil
     @State private var filterByUpcomingOnly = false
-
-    init(companyId: Int) {
-        _assignmentViewModel = StateObject(wrappedValue: AssignmentViewModel(companyId: companyId))
-        _roleViewModel = StateObject(wrappedValue: RoleViewModel(companyId: companyId))
-        _shiftViewModel = StateObject(wrappedValue: ShiftViewModel(companyId: companyId))
-    }
     
     var filteredAssignments: [Assignment] {
-        assignmentViewModel.assignments
-            .filter { $0.employee == session.employeeId }
+        // Debug: print current session employee id once per evaluation
+        print("[RequestView] session.employeeId = \(String(describing: session.employeeId))")
+
+        return assignmentViewModel.assignments
+            .filter { assignment in
+                // Debug: print each assignment.employee and comparison result
+                let matchesEmployee = assignment.employee == session.employeeId ?? -1
+                print("[RequestView] assignment.id=\(assignment.id) assignment.employee=\(assignment.employee) == session.employeeId? \(matchesEmployee)")
+                return matchesEmployee
+            }
             .filter { assignment in
                 if let selectedRoleId = selectedRoleId {
-                    return assignment.role == selectedRoleId
+                    let matchesRole = assignment.role == selectedRoleId
+                    print("[RequestView] assignment.id=\(assignment.id) role=\(assignment.role) matches selectedRoleId=\(selectedRoleId)? \(matchesRole)")
+                    return matchesRole
                 }
                 return true
             }
@@ -41,6 +46,7 @@ struct RequestView: View {
                 if lStart == rStart { return l.id < r.id }
                 return lStart > rStart
             }
+        
     }
 
     var body: some View {
@@ -58,7 +64,9 @@ struct RequestView: View {
                 }
                 .padding()
                 List {
+                    Text("Count: \(filteredAssignments.count)")
                     ForEach(filteredAssignments, id: \.id) { assignment in
+                        
                         HStack {
                             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
                         }
@@ -115,3 +123,4 @@ struct RequestView: View {
     )
 }*/
 //                .navigationTitle("Anfragen")
+
