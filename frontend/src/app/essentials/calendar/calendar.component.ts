@@ -16,6 +16,8 @@ import deLocale from '@fullcalendar/core/locales/de';
 import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
 import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
+import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
+import {KeycloakOperationService} from '../../services/keycloak-service/keycloak.service';
 
 @Component({
   selector: 'app-calendar',
@@ -23,7 +25,8 @@ import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
     CommonModule,
     FullCalendarModule,
     ShiftAddComponent,
-    ShiftEditComponent
+    ShiftEditComponent,
+    ShiftViewComponent
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
@@ -90,10 +93,13 @@ export class CalendarComponent implements OnInit {
   selectedShift: Shift = this.shifts[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
+  @Input() isAllowedToEdit: boolean = false;
   @Input() initialView!: string;
 
   shiftService: ShiftServiceService = inject(ShiftServiceService)
   companyService: CompanyServiceService = inject(CompanyServiceService)
+  keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
+
 
 
   ngOnInit(): void {
@@ -102,6 +108,11 @@ export class CalendarComponent implements OnInit {
     window.addEventListener('resize', () => {
       this.setResponsiveCalendarView();
     });
+
+    if(!this.isAllowedToEdit){
+      this.isAllowedToEdit = this.keycloakOperationService.getUserRoles().includes('user-is-manager');
+      console.log(this.isAllowedToEdit);
+    }
 
     this.shiftService.shifts$.subscribe((data) => {
       this.shifts = data;

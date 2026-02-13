@@ -11,9 +11,9 @@ import SwiftUI
 class ShiftViewModel: ObservableObject {
     @Published var shifts: [Shift] = []
     
-    var companyId: Int
+    var companyId: Int64
 
-    init(companyId: Int) {
+    init(companyId: Int64) {
         self.companyId = companyId
         loadShiftsAsync() {}
     }
@@ -27,17 +27,23 @@ class ShiftViewModel: ObservableObject {
             return shifts
         }
 
-        if let data = try? Data(contentsOf: url) {
-            if let loadedShifts = try? jsonDecoder.decode([Shift].self, from: data) {
-                shifts = loadedShifts
-                //print("Shifts loaded: \(shifts.count)")
-            } else {
-                print("Failed to decode shifts")
+        let semaphore = DispatchSemaphore(value: 0)
+
+        Task {
+            do {
+                let data = try await APIClient.shared.request(url: url)
+                if let loadedShifts = try? jsonDecoder.decode([Shift].self, from: data) {
+                    shifts = loadedShifts
+                } else {
+                    print("Failed to decode shifts")
+                }
+            } catch {
+                print("Failed to load shifts:", error)
             }
-        } else {
-            print("Failed to load data from URL")
+            semaphore.signal()
         }
 
+        semaphore.wait()
         return shifts
     }
 

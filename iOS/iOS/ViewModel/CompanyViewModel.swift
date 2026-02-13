@@ -24,17 +24,23 @@ class CompanyViewModel: ObservableObject {
             return companies
         }
 
-        if let data = try? Data(contentsOf: url) {
-            if let fetchedCompanies = try? jsonDecoder.decode([Company].self, from: data) {
-                companies = fetchedCompanies
-                //print(companies)
-            } else {
-                print("Failed to decode companies")
+        let semaphore = DispatchSemaphore(value: 0)
+
+        Task {
+            do {
+                let data = try await APIClient.shared.request(url: url)
+                if let fetchedCompanies = try? jsonDecoder.decode([Company].self, from: data) {
+                    companies = fetchedCompanies
+                } else {
+                    print("Failed to decode companies")
+                }
+            } catch {
+                print("Failed to load companies:", error)
             }
-        } else {
-            print("Failed to load data from URL")
+            semaphore.signal()
         }
 
+        semaphore.wait()
         return companies
     }
     

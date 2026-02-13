@@ -32,17 +32,17 @@ struct Shift: Identifiable, Decodable {
 }
 
 struct Employee: Identifiable, Decodable, Encodable {
-    let id: Int
+    let id: Int64
     var firstname: String
     var lastname: String
     var email: String
     var telephone: String
-    var password: String
     var birthdate: String
     var companyId: Int64
     var companyName: String
     var isManager: Bool
     var roles: [Int]
+    var keycloakUserId: String
 }
 
 struct Reservation: Identifiable, Decodable {
@@ -59,7 +59,7 @@ struct Assignment: Identifiable, Decodable {
     let id: Int
     var shift: Int
     var role: Int
-    var employee: Int
+    var employee: Int64
     var confirmed: Bool?
 }
 

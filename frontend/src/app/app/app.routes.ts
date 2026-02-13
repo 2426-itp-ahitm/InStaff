@@ -9,6 +9,7 @@ import {AdminComponent} from '../admin/admin.component';
 import {AuthGuard} from '../guard/auth.guard';
 import {ProfilComponent} from '../essentials/profil/profil.component';
 import {ManagerDashboardComponent} from '../essentials/manager-dashboard/manager-dashboard.component';
+import {EmployeeDashboardComponent} from '../essentials/employee-dashboard/employee-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -20,31 +21,44 @@ export const routes: Routes = [
     path: 'home',
     component: ManagerDashboardComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
+  },
+  {
+    path: 'emp-home',
+    component: EmployeeDashboardComponent, //COMPONENT CLASS NAME
+    title: 'InStaff',
+    canActivate: [AuthGuard],
+
   },
   {
     path: 'calendar',
     component: CalendarComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
     canActivate: [AuthGuard]
+
   },
   {
     path: 'team',
     component: EmployeeListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
+
   },
   {
     path: 'role-list',
     component: RoleListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: 'shift-template-list',
     component: ShiftTemplateListComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: 'profil',
@@ -56,7 +70,8 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
   },
   {
     path: '**',
