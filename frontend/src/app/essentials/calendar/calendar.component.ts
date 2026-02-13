@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import {Calendar, CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
@@ -32,6 +32,20 @@ import {KeycloakOperationService} from '../../services/keycloak-service/keycloak
   styleUrl: './calendar.component.css'
 })
 export class CalendarComponent implements OnInit {
+  shifts: Shift[] = [];
+  selectedShift: Shift = this.shifts[0];
+  isAddMode: boolean = false;
+  isEditMode: boolean = false;
+  @Input() isAllowedToEdit: boolean = false;
+  @Input() initialView!: string;
+  @Output() openShiftView = new EventEmitter<string>();
+
+
+  shiftService: ShiftServiceService = inject(ShiftServiceService)
+  companyService: CompanyServiceService = inject(CompanyServiceService)
+  keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
+
+
   calendarOptions: CalendarOptions = {
     locale: deLocale,
     titleFormat: {
@@ -89,16 +103,6 @@ export class CalendarComponent implements OnInit {
     */
   };
 
-  shifts: Shift[] = [];
-  selectedShift: Shift = this.shifts[0];
-  isAddMode: boolean = false;
-  isEditMode: boolean = false;
-  @Input() isAllowedToEdit: boolean = false;
-  @Input() initialView!: string;
-
-  shiftService: ShiftServiceService = inject(ShiftServiceService)
-  companyService: CompanyServiceService = inject(CompanyServiceService)
-  keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
 
 
 
