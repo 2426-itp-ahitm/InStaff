@@ -41,5 +41,5 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: |
-            ghcr.io/pfarrhoferphilip/${{ matrix.name }}:latest
-            ghcr.io/pfarrhoferphilip/${{ matrix.name }}:${{ github.sha }}
+            ghcr.io/2426-itp-ahitm/${{ matrix.name }}:latest
+            ghcr.io/2426-itp-ahitm/${{ matrix.name }}:${{ github.sha }}
