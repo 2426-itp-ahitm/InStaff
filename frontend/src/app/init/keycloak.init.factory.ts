@@ -11,6 +11,7 @@ export function initializeKeycloak(keycloak: KeycloakService):() => Promise<bool
       },
       initOptions: {
         onLoad: 'login-required',
+        redirectUri: window.location.origin+'/home',
         checkLoginIframe: false,
       },
       enableBearerInterceptor: true,
