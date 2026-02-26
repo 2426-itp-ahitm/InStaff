@@ -22,7 +22,7 @@
               <!-- Zuweisungen für diese Rolle -->
               <div class="space-y-2">
                 <div *ngFor="let assignment of group.assignments; let i = index" class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
-                  <span class="text-sm font-medium text-gray-600 min-w-[80px]">{{ group.roleName }} {{ i + 1 }}:</span>
+                  <span class="text-sm font-medium text-gray-600 min-w-20">{{ group.roleName }} {{ i + 1 }}:</span>
 
                   <!-- Mitarbeiter-Auswahl -->
                   <select

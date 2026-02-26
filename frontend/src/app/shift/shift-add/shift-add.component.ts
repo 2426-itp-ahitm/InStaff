@@ -43,6 +43,7 @@ export class ShiftAddComponent implements OnInit {
   private selectedEmployees:  { [roleId: number]: number[] } = {};
   // for manual roles when skipping template
   manualRoles: { roleId: number; count: number }[] = [];
+  selectedNewRoleId: number = -1;
 
   companyService:CompanyServiceService = inject(CompanyServiceService);
   employeeService:EmployeeServiceService = inject(EmployeeServiceService);
@@ -112,6 +113,67 @@ export class ShiftAddComponent implements OnInit {
     const count = Math.max(1, Number(countStr) || 1);
     if (!roleId || !this.roles.find(r => r.id === roleId)) return;
     this.manualRoles.push({ roleId, count });
+  }
+
+  private getCurrentRoles(): { roleId: number; count: number }[] {
+    if (this.selectedShiftTemplate) {
+      return this.selectedShiftTemplate.templateRoles;
+    }
+    return this.manualRoles;
+  }
+
+  addNewRole() {
+    if (this.selectedNewRoleId === -1) return;
+
+    const roleId = Number(this.selectedNewRoleId);
+    const roleList = this.getCurrentRoles();
+    const existingRole = roleList.find(r => r.roleId === roleId);
+
+    if (existingRole) {
+      existingRole.count += 1;
+    } else {
+      roleList.push({ roleId, count: 1 });
+    }
+
+    this.initializeSelectedEmployees(roleId, (roleList.find(r => r.roleId === roleId)?.count ?? 1));
+    this.selectedNewRoleId = -1;
+  }
+
+  removeRole(roleId: number) {
+    const roleList = this.getCurrentRoles();
+    const index = roleList.findIndex(r => r.roleId === roleId);
+    if (index === -1) return;
+
+    roleList.splice(index, 1);
+    delete this.selectedEmployees[roleId];
+  }
+
+  addAssignmentToRole(roleId: number) {
+    const roleList = this.getCurrentRoles();
+    const roleEntry = roleList.find(r => r.roleId === roleId);
+    if (!roleEntry) return;
+
+    roleEntry.count += 1;
+    const current = this.selectedEmployees[roleId] ?? [];
+    current.push(null as any);
+    this.selectedEmployees[roleId] = current;
+  }
+
+  removeAssignment(roleId: number, assignmentIndex: number) {
+    const roleList = this.getCurrentRoles();
+    const roleEntry = roleList.find(r => r.roleId === roleId);
+    if (!roleEntry) return;
+
+    const current = this.selectedEmployees[roleId] ?? [];
+    if (assignmentIndex >= 0 && assignmentIndex < current.length) {
+      current.splice(assignmentIndex, 1);
+      this.selectedEmployees[roleId] = current;
+    }
+
+    roleEntry.count -= 1;
+    if (roleEntry.count <= 0) {
+      this.removeRole(roleId);
+    }
   }
 
   // wizard navigation
@@ -192,7 +254,13 @@ export class ShiftAddComponent implements OnInit {
 
   chooseShiftTemplate() {
     let shiftTemplateId:number = Number(this.shiftTemplateInput.nativeElement.value);
-    this.selectedShiftTemplate = this.shiftTemplates.find(t => t.id === shiftTemplateId) ?? null;
+    const selectedTemplate = this.shiftTemplates.find(t => t.id === shiftTemplateId) ?? null;
+    this.selectedShiftTemplate = selectedTemplate
+      ? {
+          ...selectedTemplate,
+          templateRoles: selectedTemplate.templateRoles.map(r => ({ ...r }))
+        }
+      : null;
     // reset selectedEmployees when template changes
     this.selectedEmployees = {};
   }
