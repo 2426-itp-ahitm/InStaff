@@ -8,6 +8,8 @@ import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {ManagerCalendarComponent} from '../manager-calendar/manager-calendar.component';
+import {ShiftCreateDTO} from '../../interfaces/new-shift';
+
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -39,12 +41,10 @@ export class ManagerDashboardComponent {
     });
   }
 
-  openShiftAddWithId(shiftId: number) {
-    console.log(shiftId);
-    this.shiftService.getShiftById(shiftId).subscribe((shift: Shift) => {
-      this.selectedShift = shift;
-      this.isAddMode = true;
-    });
+  openShiftAdd(shift: ShiftCreateDTO) {
+    console.log(shift);
+    this.selectedShift = shift as unknown as Shift;
+    this.isAddMode = true;
   }
 
   closeShiftEdit(){

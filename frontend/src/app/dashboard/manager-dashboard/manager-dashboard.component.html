@@ -5,10 +5,11 @@
   </div>
   <div class="md:flex mx-4 my-2 gap-5 h-min">
     <div class="flex-1/2 max-md:flex-2/5">
+      
       <app-news (shiftSelected)="openShiftEditWithId($event)"></app-news>
     </div>
     <div class="flex-1/2 md:flex-3/5 card-center bg-glass">
-      <app-manager-calendar (openShiftAdd)="openShiftAddWithId($event.id)" (openShiftEdit)="openShiftEditWithId($event.id)" [initialView]="'dayGridMonth'" [isAllowedToEdit]="true" class="flex-1 min-h-0"></app-manager-calendar>
+      <app-manager-calendar (openShiftAdd)="openShiftAdd($event)" (openShiftEdit)="openShiftEditWithId($event.id)" [initialView]="'dayGridMonth'" [isAllowedToEdit]="true" class="flex-1 min-h-0"></app-manager-calendar>
     </div>
   </div>
 

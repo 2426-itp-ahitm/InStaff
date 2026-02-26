@@ -36,7 +36,7 @@ export class ManagerCalendarComponent implements OnInit {
   @Input() isAllowedToEdit: boolean = false;
   @Input() initialView!: string;
   @Output() openShiftEdit = new EventEmitter<Shift>();
-  @Output() openShiftAdd = new EventEmitter<Shift>();
+  @Output() openShiftAdd = new EventEmitter<ShiftCreateDTO>();
 
 
 
@@ -217,6 +217,8 @@ export class ManagerCalendarComponent implements OnInit {
   openAddShift(newShift: ShiftCreateDTO): void {
     this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
+    this.openShiftAdd.emit(newShift);
+
   }
 
   closeAddShift() {
