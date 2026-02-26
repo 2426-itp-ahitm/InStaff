@@ -133,7 +133,7 @@ public class ShiftResource {
     @Transactional
     @Path("create_with_assignments")
     public Response createShiftWithAssignments(ShiftCreateWithAssignmentsDTO dto) {
-        Shift shift = new Shift(dto.shiftCreateDTO().startTime(), dto.shiftCreateDTO().endTime(), companyRepository.findById(dto.shiftCreateDTO().companyId()));
+        Shift shift = new Shift(dto.shiftCreateDTO().shiftName(), dto.shiftCreateDTO().startTime(), dto.shiftCreateDTO().endTime(), companyRepository.findById(dto.shiftCreateDTO().companyId()));
         shiftRepository.persist(shift);
         shiftSocket.broadcast("New Shift Id: " + shift.getId());
 
@@ -182,7 +182,7 @@ public class ShiftResource {
     @Transactional
     public Response createShift(ShiftCreateDTO dto) {
         // Map DTO to entity
-        Shift shift = new Shift(dto.startTime(), dto.endTime(), companyRepository.findById(dto.companyId()));
+        Shift shift = new Shift(dto.shiftName(), dto.startTime(), dto.endTime(), companyRepository.findById(dto.companyId()));
 
         // Persist the entity
         shiftRepository.persist(shift);
