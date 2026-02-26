@@ -8,6 +8,7 @@ import java.util.List;
 
 public record ShiftDTO(
         Long id,
+        String shiftName,
         LocalDateTime startTime,
         LocalDateTime endTime,
         Long companyId,

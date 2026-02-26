@@ -109,10 +109,10 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                     .setParameter("kcId", keycloakUserId).getResultStream().findFirst().orElse(null);
             if (employee == null) {
                 // Activate this for the .http-files to work
-                //employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
+                employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
 
                 // Deactivate this for the .http-files to work
-                contextAbort(requestContext, Response.Status.FORBIDDEN, "User not in Database");
+                //contextAbort(requestContext, Response.Status.FORBIDDEN, "User not in Database");
 
                 return;
             }

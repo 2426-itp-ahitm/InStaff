@@ -21,6 +21,8 @@ public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(name = "shift_name")
+    String shiftName;
     LocalDateTime startTime;
     LocalDateTime endTime;
     @ManyToOne
@@ -35,10 +37,11 @@ public class Shift {
     public Shift() {
     }
 
-    public Shift(LocalDateTime startTime, LocalDateTime endTime, Company company) {
+    public Shift(String shiftName, LocalDateTime startTime, LocalDateTime endTime, Company company) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.company = company;
+        this.shiftName = shiftName;
     }
 
     public List<Long> getReservationIds() {
@@ -64,5 +67,49 @@ public class Shift {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getShiftName() {
+        return shiftName;
+    }
+
+    public void setShiftName(String shiftName) {
+        this.shiftName = shiftName;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

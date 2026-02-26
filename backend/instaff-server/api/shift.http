@@ -16,9 +16,11 @@ GET http://localhost:8080/api/1/shifts/betweendates/2025-03-25/2025-03-27
 
 ### Add a New Shift
 POST http://localhost:8080/api/1/shifts
+Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
+  "shiftName": "Test Shift",
   "startTime": "2024-12-19T09:00:00",
   "endTime": "2024-12-19T17:00:00",
   "companyId": 1
