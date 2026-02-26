@@ -5,13 +5,14 @@
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-          <h3 class="text-lg font-semibold mb-4">Schicht bearbeiten</h3>
+        
 
           <!-- Gruppierte Anzeige der Zuweisungen nach Rollen -->
-          <div class="space-y-4 mb-2 max-h-96 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300">
-            <div *ngFor="let group of groupedAssignments" class="border-b border-gray-300 p-3">
+          <div class="space-y-0 max-h-96 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300">
+            <!--<h3 class="text-lg font-semibold">Schicht bearbeiten</h3>-->
+            <div *ngFor="let group of groupedAssignments" class="pb-5">
               <!-- Rollen-Header -->
-              <div class="flex justify-between items-center mb-3">
+              <div class="flex justify-between items-center mb-1">
                 <h4 class="font-semibold text-base">{{ group.roleName }} ({{ group.count }}x)</h4>
                 <button type="button" (click)="removeRole(group.roleId)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
                   <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
@@ -20,7 +21,7 @@
 
               <!-- Zuweisungen für diese Rolle -->
               <div class="space-y-2">
-                <div *ngFor="let assignment of group.assignments; let i = index" class="flex items-center gap-2 bg-white p-2 rounded border border-gray-200">
+                <div *ngFor="let assignment of group.assignments; let i = index" class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
                   <span class="text-sm font-medium text-gray-600 min-w-[80px]">{{ group.roleName }} {{ i + 1 }}:</span>
 
                   <!-- Mitarbeiter-Auswahl -->
@@ -63,7 +64,7 @@
                 type="button"
                 class="mt-2 text-sm text-green-700 hover:text-green-900 font-medium"
                 (click)="addAssignmentToRole(group.roleId)">
-                + Position hinzufügen
+                + {{ group.roleName }} hinzufügen
               </button>
             </div>
           </div>
