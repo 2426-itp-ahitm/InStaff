@@ -22,6 +22,7 @@ public class News {
     LocalDateTime dateCreated;
 
     @ManyToOne
+    @JoinColumn(name = "assignment_id", nullable = false)
     Assignment assignment;
 
     @Column(name = "assignment_status")

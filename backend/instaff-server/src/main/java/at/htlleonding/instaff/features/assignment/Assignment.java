@@ -1,9 +1,12 @@
 package at.htlleonding.instaff.features.assignment;
 
 import at.htlleonding.instaff.features.employee.Employee;
+import at.htlleonding.instaff.features.news.News;
 import at.htlleonding.instaff.features.role.Role;
 import at.htlleonding.instaff.features.shift.Shift;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "assignment")
@@ -27,6 +30,9 @@ public class Assignment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<News> news;
 
     private Boolean confirmed;
 
