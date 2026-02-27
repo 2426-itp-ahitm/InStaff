@@ -3,6 +3,8 @@ package at.htlleonding.instaff.features.news;
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.company.Company;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +24,7 @@ public class News {
     LocalDateTime dateCreated;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "assignment_id", nullable = false)
     Assignment assignment;
 

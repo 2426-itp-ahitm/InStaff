@@ -32,7 +32,7 @@ public class Assignment {
     private Role role;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<News> news;
+    private List<News> news;
 
     private Boolean confirmed;
 
