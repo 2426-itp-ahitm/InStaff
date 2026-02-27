@@ -96,7 +96,8 @@ export class ProfilComponent implements OnInit{
 
   logout(): void {
     if (confirm('Sicher, dass du dich ausloggen willst?\nWir werden dich vermissen ):')) {
-      this.keycloackService.logout()
+      const home = `${window.location.origin}/home`
+      this.keycloackService.logout(home)
     }
   }
 
