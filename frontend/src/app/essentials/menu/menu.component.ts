@@ -38,7 +38,7 @@ export class MenuComponent implements OnInit {
 
     this.employeeService.getEmployeeByKeycloakId(keycloakId).subscribe((emp) => {
       this.employee = emp;
-      this.isManager = !!emp.isManager;
+      this.isManager = emp.isManager;
     });
   }
 
@@ -49,7 +49,7 @@ export class MenuComponent implements OnInit {
 
   isEmployee(): boolean {
     const roles = this.keycloakOperationService.getUserRoles();
-    return roles.includes('employee') || roles.includes('manager');
+    return !roles.includes('user-is-manager');
   }
 
   logout() {
