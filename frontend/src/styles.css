@@ -40,6 +40,15 @@ https://tailwindcss.com/
   transition-duration: 0.2s;
   background-color: var(--color-green-base) !important;
 }
+.fc-button-secondary {
+  border: 0 solid !important;
+  background-color: var(--color-red-500) !important;
+
+}
+.fc-button-secondary:hover {
+  transition-duration: 0.2s;
+  background-color: var(--color-red-400) !important;
+}
 
 .fc-button-active{
   border: 0 solid !important;
@@ -193,4 +202,25 @@ h2{
 
 .news-item:hover{
   @apply scale-101
+}
+
+
+/* employee shift overview */
+.btnNullAccepted {
+  background-color: var(--color-gray-500);
+}
+.btnNullAccepted:hover {
+  background-color: var(--color-green-dark);
+}
+.btnNullDeclined {
+  background-color: var(--color-gray-500);
+}
+.btnNullDeclined:hover {
+  background-color: var(--color-red-500);
+}
+.btnAccepted {
+  background-color: var(--color-green-dark);
+}
+.btnDeclined {
+  background-color: var(--color-red-500);
 }
