@@ -15,7 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: ghcr.io/pfarrhoferphilip/instaff-keycloak:latest
-          command: ["sleep", "3600"]
+          #command: ["sleep", "3600"]
           ports:
             - containerPort: 8080
           env:

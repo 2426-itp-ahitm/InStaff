@@ -58,7 +58,7 @@ export class ProfilComponent implements OnInit{
 
     this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
-      console.log(this.employee);
+      console.log("61", this.employee);
       // Update form with loaded employee data
       this.editEmployeeForm.patchValue({
         firstname: this.employee.firstname,

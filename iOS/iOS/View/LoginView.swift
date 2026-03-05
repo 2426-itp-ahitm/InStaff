@@ -57,6 +57,8 @@ struct LoginView: View {
                                 print(token)
                             }
                             await session.loadCurrentUser()
+                            
+                            
                         }
                     }
             }

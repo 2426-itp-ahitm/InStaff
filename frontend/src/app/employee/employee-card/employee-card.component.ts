@@ -20,7 +20,7 @@ export class EmployeeCardComponent implements OnInit {
   employeeHasRoles: Boolean = false;
 
   ngOnInit() {
-
+    console.log(this.employee);
     this.checkIfEmployeeHasRoles()
   }
 

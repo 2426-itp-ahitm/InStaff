@@ -78,4 +78,15 @@ export class RoleServiceService {
 
       });
   }
+
+  getRoleById(id: number): Role {
+    const roles = this.rolesSubject.getValue()
+    const role = roles.find(r => r.id === id)
+
+    if (!role) {
+      throw new Error('Role not found. Make sure getRoles() was executed.')
+    }
+
+    return role
+  }
 }

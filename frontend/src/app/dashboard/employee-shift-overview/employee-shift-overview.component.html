@@ -1,0 +1,89 @@
+<div class="max-h-screen  p-6">
+  <div class="max-w-3xl mx-auto space-y-6 p-t-10">
+    <!-- Role Filter -->
+    <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
+      <h3 class="text-md font-semibold text-gray-800 mb-3">
+        Rollen Filter
+      </h3>
+
+      <div class="flex flex-wrap gap-4">
+        <label
+          *ngFor="let role of (filteredRoles$ | async)"
+          class="flex items-center gap-2 text-sm text-gray-700"
+        >
+          <input
+            type="checkbox"
+            class="accent-blue-600"
+            [checked]="isRoleSelected(role.id)"
+            (change)="toggleRole(role.id)"
+          />
+          {{ role.roleName }}
+        </label>
+      </div>
+    </div>
+
+
+    <div
+      *ngFor="let assignment of fullAssignments"
+      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition"
+    >
+
+      <!-- Shift Info -->
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">
+          {{ assignment.role.roleName }}
+        </h2>
+
+        <p class="text-gray-600 mt-1">
+          {{ assignment.shift.startTime | date:'dd.MM.yyyy HH:mm' }}
+          -
+          {{ assignment.shift.endTime | date:'HH:mm' }}
+        </p>
+
+        <!-- Shift Status Info -->
+        <div
+          *ngIf="isShiftPastDate(assignment.shift)"
+          class="mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"
+        >
+          Diese Schicht hat bereits begonnen oder ist vorbei.
+        </div>
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4 mt-4">
+
+        <button
+          [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
+          (click)="confirmAssignment(assignment)"
+          class="flex-1 text-white font-medium py-2 px-4 rounded-lg transition"
+          [ngClass]="assignment.confirmed
+            ? 'btnAccepted'
+            : 'btnNullAccepted'"        >
+          Annehmen
+        </button>
+
+        <button
+          [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed"
+          (click)="declineAssignment(assignment)"
+          class="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition"
+          [ngClass]="assignment.confirmed == false
+            ? 'btnDeclined'
+            : 'btnNullDeclined'"        >
+          Ablehnen
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div
+      *ngIf="fullAssignments.length === 0"
+      class="text-center text-gray-500 mt-10"
+    >
+      Keine offenen Schichten vorhanden.
+    </div>
+
+  </div>
+</div>
