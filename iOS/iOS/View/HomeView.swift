@@ -14,21 +14,21 @@ struct HomeView: View {
     @ObservedObject var shiftViewModel: ShiftViewModel
     
     var filteredAssignments: [Assignment] {
-        assignmentViewModel.assignments
-            .filter { $0.employee == session.employeeId ?? -1 }
-            .filter {
+        guard let employeeId = session.employeeId else { return [] }
+
+        return assignmentViewModel.assignments
+            .filter { $0.employee == employeeId }
+            .filter { assignment in
+                guard let shift = shiftViewModel.shift(for: assignment.shift),
+                      let start = DateUtils.toDate(shift.startTime) else { return false }
+
                 let calendar = Calendar.current
                 let now = Date()
-                let weekday = calendar.component(.weekday, from: now)
-                let daysUntilEndOfWeek = 8 - weekday
-                let endOfWeek = calendar.date(byAdding: .day, value: daysUntilEndOfWeek, to: now)!
-                let endOfWeekAtMidnight = calendar.startOfDay(for: endOfWeek)
-                
-                
-                if let shift = shiftViewModel.shift(for: $0.shift) {
-                    return DateUtils.toDate(shift.startTime)! > Date() && DateUtils.toDate(shift.startTime)! < endOfWeekAtMidnight
-                }
-                return false
+
+                let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? now
+                let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
+
+                return start >= startOfWeek && start < endOfWeek
             }
             .sorted { l, r in
                 guard let lShift = shiftViewModel.shift(for: l.shift),
@@ -37,16 +37,18 @@ struct HomeView: View {
                       let rStart = DateUtils.toDate(rShift.startTime) else {
                     return l.id < r.id
                 }
-                if lStart == rStart { return l.id < r.id }
-                return lStart > rStart
+                return lStart < rStart
             }
-            
     }
 
     var body: some View {
         VStack{
-            NavigationSplitView {
+            NavigationStack {
                 List {
+                    if filteredAssignments.isEmpty {
+                        Text("Diese Woche sind keine Schichten geplant.")
+                            .foregroundColor(.gray)
+                    }
                     ForEach(filteredAssignments, id: \.id) { assignment in
                         HStack {
                             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
@@ -71,12 +73,8 @@ struct HomeView: View {
                     }
                 }
                 .navigationTitle("Aktuelle Anfragen")
-            } detail: {
-                Text("Wählen Sie eine Anfrage")
             }
         }
     }
     
 }
-
-

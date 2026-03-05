@@ -15,10 +15,14 @@ class AssignmentViewModel: ObservableObject {
 
     init(companyId: Int64) {
         self.companyId = companyId
-        loadAssignmentsAsync() {}
+        Task {
+            await loadAssignmentsAsync()
+        }
     }
 
     private func load() -> [Assignment] {
+        guard companyId > 0 else { return []}
+        
         var assignments: [Assignment] = []
         let jsonDecoder = JSONDecoder()
 
@@ -34,7 +38,7 @@ class AssignmentViewModel: ObservableObject {
                 let data = try await APIClient.shared.request(url: url)
                 if let loadedAssignments = try? jsonDecoder.decode([Assignment].self, from: data) {
                     assignments = loadedAssignments
-                    print(assignments)
+                    print("Loaded assignments: ", assignments.count)
                 } else {
                     print("Failed to decode assignments")
                 }
@@ -48,13 +52,23 @@ class AssignmentViewModel: ObservableObject {
         return assignments
     }
 
-    private func loadAssignmentsAsync(completion: @escaping () -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            let loadedAssignments = self.load()
-            DispatchQueue.main.async {
-                self.assignments = loadedAssignments
-                completion()
+    private func loadAssignmentsAsync() async {
+        guard companyId > 0 else { return }
+
+        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/assignments") else {
+            return
+        }
+
+        do {
+            let data = try await APIClient.shared.request(url: url)
+            let decoded = try JSONDecoder().decode([Assignment].self, from: data)
+
+            await MainActor.run {
+                self.assignments = decoded
             }
+
+        } catch {
+            print("Failed to load assignments:", error)
         }
     }
 
@@ -64,13 +78,12 @@ class AssignmentViewModel: ObservableObject {
     
     // PUT /api/{companyId}/confirmation/confirm/{assignmentId}
     // PUT /api/{companyId}/confirmation/decline/{assignmentId}
-    public func confirmAssignment(assignmentId: Int, isAccepted: Bool) -> Bool {
+    public func confirmAssignment(assignmentId: Int, isAccepted: Bool) {
         let action = isAccepted ? "confirm" : "decline"
+
         guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
-            return false
+            return
         }
-        let semaphore = DispatchSemaphore(value: 0)
-        var success = false
 
         Task {
             do {
@@ -79,16 +92,15 @@ class AssignmentViewModel: ObservableObject {
                     method: "PUT",
                     body: nil
                 )
-                success = true
+
+                await MainActor.run {
+                    Task {
+                        await self.loadAssignmentsAsync()
+                    }
+                }
             } catch {
                 print("Error confirming assignment:", error.localizedDescription)
             }
-            semaphore.signal()
         }
-
-        semaphore.wait()
-        loadAssignmentsAsync() {}
-        //print(assignments)
-        return success
     }
 }

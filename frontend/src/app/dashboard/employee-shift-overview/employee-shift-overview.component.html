@@ -8,7 +8,7 @@
 
       <div class="flex flex-wrap gap-4">
         <label
-          *ngFor="let role of (roleService.roles$ | async)"
+          *ngFor="let role of (filteredRoles$ | async)"
           class="flex items-center gap-2 text-sm text-gray-700"
         >
           <input

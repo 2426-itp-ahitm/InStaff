@@ -13,6 +13,7 @@ struct MainTabView: View {
     @StateObject private var assignmentViewModelHolder = ViewModelHolder<AssignmentViewModel>()
     @StateObject private var roleViewModelHolder = ViewModelHolder<RoleViewModel>()
     @StateObject private var shiftViewModelHolder = ViewModelHolder<ShiftViewModel>()
+    @StateObject private var employeeViewModelHolder = ViewModelHolder<EmployeeViewModel>()
     
     private final class ViewModelHolder<VM: ObservableObject>: ObservableObject {
         @Published var instance: VM?
@@ -51,6 +52,7 @@ struct MainTabView: View {
                     assignmentViewModelHolder.setIfNeeded { AssignmentViewModel(companyId: companyId) }
                     roleViewModelHolder.setIfNeeded { RoleViewModel(companyId: companyId) }
                     shiftViewModelHolder.setIfNeeded { ShiftViewModel(companyId: companyId) }
+                    employeeViewModelHolder.setIfNeeded { EmployeeViewModel(companyId: companyId) }
                 }
             }
             .tabItem { Label("Home", systemImage: "house") }
@@ -96,10 +98,16 @@ struct MainTabView: View {
             NavigationStack {
                 Group {
                     if let companyId = session.companyId {
-                        ProfileView(
-                            roleViewModel: RoleViewModel(companyId: companyId),
-                            employeeViewModel: EmployeeViewModel(companyId: companyId)
-                        )
+                        if let rVM = roleViewModelHolder.instance,
+                           let eVM = employeeViewModelHolder.instance {
+                            ProfileView(
+                                roleViewModel: rVM,
+                                employeeViewModel: eVM
+                            )
+                        } else {
+                            ProgressView("Loading...")
+                        }
+                        
                     } else {
                         VStack(spacing: 12) {
                             ProgressView("Loading…")
