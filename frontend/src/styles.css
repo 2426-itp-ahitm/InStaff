@@ -47,6 +47,10 @@ https://tailwindcss.com/
   background-color: var(--color-green-base) !important;
 }
 
+.fc-v-event{
+  background-color: var(--color-green-dark) !important;
+}
+
 .fc-list-event-dot, .fc-daygrid-event-dot{
   border-color: var(--color-green-dark) !important;
 }
