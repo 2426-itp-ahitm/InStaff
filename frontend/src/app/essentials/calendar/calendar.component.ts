@@ -72,7 +72,7 @@ export class CalendarComponent implements OnInit {
 
     slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,today,next',
       center: 'title',
       right: 'dayGridMonth,timeGridDay,listWeek'
     },
@@ -128,6 +128,7 @@ export class CalendarComponent implements OnInit {
 
   setResponsiveCalendarView(): void {
     if (this.isSmallScreen()) {
+      console.log("SMALL")
       this.calendarOptions.initialView = 'listMonth'
       this.calendarOptions.headerToolbar = {
         start: '',
@@ -135,13 +136,13 @@ export class CalendarComponent implements OnInit {
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,next today',
-        end: 'dayGridMonth,timeGridDay,listMonth'
+        start: 'prev,today,next',
+        end: 'timeGridDay,listMonth'
       }
     } else {
       this.calendarOptions.initialView = this.initialView;
       this.calendarOptions.headerToolbar = {
-        start: 'prev,next today',
+        start: 'prev,today,next',
         center: 'title',
         end: 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
       }
