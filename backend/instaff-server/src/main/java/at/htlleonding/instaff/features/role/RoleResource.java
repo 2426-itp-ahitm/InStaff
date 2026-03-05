@@ -65,9 +65,8 @@ public class RoleResource {
     }
 
     @PUT
-    @Path("update/{id}/{roleName}/{description}")
-    public Response updateRole(@PathParam("roleName") String roleName, @PathParam("description") String description, @PathParam("id") Long id) {
-        Role role = roleRepository.updateRole(roleName, description, id);
+    public Response updateRole(RoleUpdateDTO dto) {
+        Role role = roleRepository.updateRole(dto.roleName(), dto.description(), dto.id());
         return Response.ok(roleMapper.toResource(role)).build();
     }
 
