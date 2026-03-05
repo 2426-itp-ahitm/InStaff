@@ -186,14 +186,17 @@ export class ShiftEditComponent implements OnInit {
     this.somethingChanged = true;
     this.assignments = this.assignments.filter(a => a.id !== assignmentId);
     this.updateGroupedAssignments();
+    this.updateAvailableRoles();
   }
 
   // Entferne alle Zuweisungen einer Rolle
   removeRole(roleId: number) {
+    console.log("removeRole", roleId);
     this.somethingChanged = true;
-    this.assignments = this.assignments.filter(a => a.role !== roleId);
-    this.updateAvailableRoles();
+    const normalizedRoleId = Number(roleId);
+    this.assignments = this.assignments.filter(a => Number(a.role) !== normalizedRoleId);
     this.updateGroupedAssignments();
+    this.updateAvailableRoles();
   }
 
   // Füge eine leere Zuweisung für eine Rolle hinzu
@@ -208,13 +211,14 @@ export class ShiftEditComponent implements OnInit {
     };
     this.assignments.push(newAssignment);
     this.updateGroupedAssignments();
+    this.updateAvailableRoles();
   }
 
   // Ändere den Mitarbeiter für eine Zuweisung
   // Aktualisiere die Liste der verfügbaren Rollen (die noch nicht zugewiesen sind)
   updateAvailableRoles() {
-    const usedRoleIds = new Set(this.assignments.map(a => a.role));
-    this.availableRoles = this.roles.filter(r => !usedRoleIds.has(r.id));
+    const displayedRoleIds = new Set(this.groupedAssignments.map(group => group.roleId));
+    this.availableRoles = this.roles.filter(role => !displayedRoleIds.has(role.id));
   }
 
   // Füge eine neue Rolle zur Schicht hinzu
