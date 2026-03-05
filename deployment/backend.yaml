@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: instaff-backend
-          image: ghcr.io/pfarrhoferphilip/instaff-server:latest
+          image: ghcr.io/2426-itp-ahitm/instaff-backend:latest
           imagePullPolicy: Always
           ports:
             - name: http
