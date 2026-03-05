@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/pfarrhoferphilip/instaff-frontend:latest
+          image: ghcr.io/2426-itp-ahitm/instaff-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

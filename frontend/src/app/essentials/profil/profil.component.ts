@@ -58,7 +58,7 @@ export class ProfilComponent implements OnInit{
 
     this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
-      console.log(this.employee);
+      console.log("61", this.employee);
       // Update form with loaded employee data
       this.editEmployeeForm.patchValue({
         firstname: this.employee.firstname,
@@ -96,7 +96,8 @@ export class ProfilComponent implements OnInit{
 
   logout(): void {
     if (confirm('Sicher, dass du dich ausloggen willst?\nWir werden dich vermissen ):')) {
-      this.keycloackService.logout()
+      const home = `${window.location.origin}/home`
+      this.keycloackService.logout(home)
     }
   }
 

@@ -4,6 +4,9 @@
     <h1 >Willkommen bei InStaff - Employee Dashboard</h1>
   </div>
   <div class="h-1/2 w-1/2 mx-auto my-2 card-center bg-glass">
-    <app-calendar [initialView]="'listMonth'" [isAllowedToEdit]="false" class="flex-1 min-h-0"></app-calendar>
+    <app-employee-calendar (openShiftView)="openShiftViewWithId($event.id)" [initialView]="'listMonth'" [isAllowedToEdit]="false"  class="flex-1 min-h-0"></app-employee-calendar>
   </div>
+</div>
+<div *ngIf="isViewMode">
+  <app-shift-view [shiftId]="selectedShift.id" (closeShiftView)="closeShiftView()"></app-shift-view>
 </div>

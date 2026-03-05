@@ -7,6 +7,7 @@ import {EmployeeAddComponent} from '../employee-add/employee-add.component';
 import {CardComponent} from '../../essentials/card/card.component';
 import {EmployeeCardComponent} from '../employee-card/employee-card.component';
 import {KeycloakService} from 'keycloak-angular';
+import {RoleServiceService} from '../../role/role-service/role-service.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class EmployeeListComponent implements OnInit {
   isAddMode: boolean = false;
   isEditMode: boolean = false;
   keycloakService: KeycloakService = inject(KeycloakService);
+  roleService: RoleServiceService = inject(RoleServiceService)
 
   constructor(private employeeService: EmployeeServiceService) {}
 
@@ -63,6 +65,7 @@ export class EmployeeListComponent implements OnInit {
 
   closeAddEmployee() {
     this.isAddMode = false;
+    this.roleService.getRoles()
     this.employeeService.getEmployees()
   }
 }

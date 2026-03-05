@@ -1,44 +1,43 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import {Calendar, CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interaction';
-import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
-import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
-import {Employee} from '../../interfaces/employee';
-import {Shift} from '../../interfaces/shift';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
-import { CompanyServiceService} from '../../services/company-service/company-service.service';
-import {ShiftCreateDTO} from '../../interfaces/new-shift';
-import deLocale from '@fullcalendar/core/locales/de';
-import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
-import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.component';
+import {FullCalendarModule} from '@fullcalendar/angular';
+import {NgIf} from '@angular/common';
+import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
+import {Shift} from '../../interfaces/shift';
+import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
+import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {KeycloakOperationService} from '../../services/keycloak-service/keycloak.service';
+import {CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core';
+import deLocale from '@fullcalendar/core/locales/de';
+import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import {ShiftCreateDTO} from '../../interfaces/new-shift';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-manager-calendar',
   imports: [
-    CommonModule,
     FullCalendarModule,
+    NgIf,
     ShiftAddComponent,
     ShiftEditComponent,
     ShiftViewComponent
   ],
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css'
+  templateUrl: './manager-calendar.component.html',
+  styleUrl: './manager-calendar.component.css'
 })
-export class CalendarComponent implements OnInit {
+export class ManagerCalendarComponent implements OnInit {
   shifts: Shift[] = [];
   selectedShift: Shift = this.shifts[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
   @Input() isAllowedToEdit: boolean = false;
   @Input() initialView!: string;
-  @Output() openShiftView = new EventEmitter<string>();
+  @Output() openShiftEdit = new EventEmitter<Shift>();
+  @Output() openShiftAdd = new EventEmitter<ShiftCreateDTO>();
+
 
 
   shiftService: ShiftServiceService = inject(ShiftServiceService)
@@ -72,7 +71,7 @@ export class CalendarComponent implements OnInit {
 
     slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
     headerToolbar: {
-      left: 'prev,today,next',
+      left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridDay,listWeek'
     },
@@ -128,7 +127,6 @@ export class CalendarComponent implements OnInit {
 
   setResponsiveCalendarView(): void {
     if (this.isSmallScreen()) {
-      console.log("SMALL")
       this.calendarOptions.initialView = 'listMonth'
       this.calendarOptions.headerToolbar = {
         start: '',
@@ -136,7 +134,7 @@ export class CalendarComponent implements OnInit {
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,today,next',
+        start: 'prev,next',
         end: 'timeGridDay,listMonth'
       }
     } else {
@@ -144,7 +142,7 @@ export class CalendarComponent implements OnInit {
       this.calendarOptions.headerToolbar = {
         start: 'prev,today,next',
         center: 'title',
-        end: 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
+        end: 'dayGridMonth,timeGridDay,listMonth'
       }
       this.calendarOptions.footerToolbar = {
         start: '',
@@ -154,7 +152,7 @@ export class CalendarComponent implements OnInit {
   }
 
   isSmallScreen(): boolean {
-    return window.innerWidth < 1280; // Tailwind's `md` breakpoint
+    return window.innerWidth < 1300; // Tailwind's `md` breakpoint
   }
 
   loadShiftsToEvents(): void {
@@ -209,13 +207,9 @@ export class CalendarComponent implements OnInit {
     }
 
 
-    this.openShiftEdit(selectedShift);
+    this.openShiftEdit.emit(selectedShift);
   }
 
-  openShiftEdit(shift: Shift): void {
-    this.isEditMode = true;
-    this.selectedShift = shift;
-  }
   closeShiftEdit() {
     this.isEditMode = false;
   }
@@ -223,6 +217,8 @@ export class CalendarComponent implements OnInit {
   openAddShift(newShift: ShiftCreateDTO): void {
     this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
+    this.openShiftAdd.emit(newShift);
+
   }
 
   closeAddShift() {

@@ -18,40 +18,39 @@ struct RequestView: View {
     @State private var filterByUpcomingOnly = false
     
     var filteredAssignments: [Assignment] {
-        // Debug: print current session employee id once per evaluation
-        print("[RequestView] session.employeeId = \(String(describing: session.employeeId))")
-
+        guard let employeeId = session.employeeId else { return [] }
+        
         return assignmentViewModel.assignments
-            .filter { assignment in
-                // Debug: print each assignment.employee and comparison result
-                let matchesEmployee = assignment.employee == session.employeeId ?? -1
-                print("[RequestView] assignment.id=\(assignment.id) assignment.employee=\(assignment.employee) == session.employeeId? \(matchesEmployee)")
-                return matchesEmployee
-            }
+            .filter { $0.employee == employeeId }
             .filter { assignment in
                 if let selectedRoleId = selectedRoleId {
-                    let matchesRole = assignment.role == selectedRoleId
-                    print("[RequestView] assignment.id=\(assignment.id) role=\(assignment.role) matches selectedRoleId=\(selectedRoleId)? \(matchesRole)")
-                    return matchesRole
+                    return assignment.role == selectedRoleId
                 }
                 return true
             }
             .sorted { l, r in
-                guard let lShift = shiftViewModel.shift(for: l.shift),
-                      let rShift = shiftViewModel.shift(for: r.shift),
-                      let lStart = DateUtils.toDate(lShift.startTime),
-                      let rStart = DateUtils.toDate(rShift.startTime) else {
-                    return l.id < r.id
-                }
-                if lStart == rStart { return l.id < r.id }
-                return lStart > rStart
+                let lShift = shiftViewModel.shift(for: l.shift)
+                let rShift = shiftViewModel.shift(for: r.shift)
+
+                let lDate = lShift.flatMap { DateUtils.toDate($0.startTime) } ?? .distantPast
+                let rDate = rShift.flatMap { DateUtils.toDate($0.startTime) } ?? .distantPast
+
+                return lDate < rDate
             }
-        
+    }
+    
+    func isPast(_ assignment: Assignment) -> Bool {
+        if let shift = shiftViewModel.shift(for: assignment.shift),
+           let start = DateUtils.toDate(shift.startTime) {
+            return start < Date()
+        }
+        return true
     }
 
     var body: some View {
+        //Text("employeeId: \(session.employeeId.map(String.init) ?? "nix")")
         VStack{
-            NavigationSplitView {
+            NavigationStack {
                 Menu("Filter") {
                     Picker("Rolle", selection: $selectedRoleId) {
                         Text("Alle Rollen").tag(Int?.none)
@@ -64,7 +63,7 @@ struct RequestView: View {
                 }
                 .padding()
                 List {
-                    Text("Count: \(filteredAssignments.count)")
+                    //Text("Count: \(filteredAssignments.count)")
                     ForEach(filteredAssignments, id: \.id) { assignment in
                         
                         HStack {
@@ -77,13 +76,8 @@ struct RequestView: View {
                             } label: {
                                 Label("Annehmen", systemImage: "checkmark")
                             }
-                            .disabled({
-                                if let shift = shiftViewModel.shift(for: assignment.shift),
-                                   let start = DateUtils.toDate(shift.startTime) {
-                                    return start < Date()
-                                }
-                                return true // sicherheitshalber deaktivieren, falls kein Datum
-                            }())                            .tint(.green)
+                            .disabled(isPast(assignment))
+                            .tint(.green)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -92,18 +86,10 @@ struct RequestView: View {
                                 Label("Ablehnen", systemImage: "xmark")
                             }
                             .tint(.red)
-                            .disabled({
-                                if let shift = shiftViewModel.shift(for: assignment.shift),
-                                   let start = DateUtils.toDate(shift.startTime) {
-                                    return start < Date()
-                                }
-                                return true // sicherheitshalber deaktivieren, falls kein Datum
-                            }())
+                            .disabled(isPast(assignment))
                         }
                     }
                 }
-            } detail: {
-                Text("Anfrage auswählen")
             }
         }
     }
@@ -123,4 +109,3 @@ struct RequestView: View {
     )
 }*/
 //                .navigationTitle("Anfragen")
-
