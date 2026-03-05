@@ -7,15 +7,15 @@ insert into manager (birthdate, email, firstname, lastname, telephone, company_i
 values ('2000-11-20 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '+43677238384878', 1);
 
 /*ROLE*/
-insert into role (roleName, company_id)
+insert into role (role_name, company_id)
 values ('Koch', 1);
-insert into role (roleName, company_id)
+insert into role (role_name, company_id)
 values ('Küchenhilfe', 1);
-insert into role (roleName, company_id)
+insert into role (role_name, company_id)
 values ('Kellner', 1);
-insert into role (roleName, company_id)
+insert into role (role_name, company_id)
 values ('Barkeeper', 1);
-insert into role (roleName, company_id)
+insert into role (role_name, company_id)
 values ('Abwasch', 1);
 
 /*EMPLOYEE*/
