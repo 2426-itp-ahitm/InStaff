@@ -37,10 +37,10 @@ insert into employee (birthdate, email, firstname, lastname, telephone, company_
 values ('1988-12-01 00:00:00', 'daniel.white@example.com', 'Daniel', 'White', '6669876543', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
 
 /*SHIFT*/
-insert into Shift (starttime, endtime, company_id)
-values ('2025-06-20 09:00:00', '2025-06-20 17:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2025-06-25 17:00:00', '2025-06-25 20:00:00', 1);
+insert into Shift (shift_name,starttime, endtime, company_id)
+values ('Mittagsschicht', '2026-03-13 09:00:00', '2026-03-13 17:00:00', 1);
+insert into Shift (shift_name,starttime, endtime, company_id)
+values ('Abendschicht','2026-03-13 18:00:00', '2026-03-13 20:00:00', 1);
 
 /*ASSOCIATIVE*/
 insert into employee_role (employee_id, role_id)
@@ -62,24 +62,24 @@ insert into assignment (employee_id, shift_id, role_id)
 values (1, 2, 1);
 
 /* Neue Schichten */
-insert into Shift (starttime, endtime, company_id)
-values ('2026-03-26 08:00:00', '2026-03-26 16:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-03-27 14:00:00', '2026-03-27 22:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-03-28 10:00:00', '2026-03-28 18:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-14 09:00:00', '2026-06-14 17:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-15 11:00:00', '2026-06-15 19:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-18 08:00:00', '2026-06-18 16:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-20 12:00:00', '2026-06-20 20:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-22 10:00:00', '2026-06-22 18:00:00', 1);
-insert into Shift (starttime, endtime, company_id)
-values ('2026-06-15 20:00:00', '2026-06-15 21:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Mittags Schicht', '2026-03-26 08:00:00', '2026-03-26 16:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Abend Schicht', '2026-03-27 14:00:00', '2026-03-27 22:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Mittags Schicht', '2026-03-28 10:00:00', '2026-03-28 18:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Abend Schicht', '2026-03-14 09:00:00', '2026-03-14 17:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Mittags Schicht', '2026-03-15 11:00:00', '2026-03-15 19:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Abend Schicht', '2026-03-17 08:00:00', '2026-03-17 16:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Nachmittags Schicht', '2026-03-18 12:00:00', '2026-03-18 20:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Nachmittags Schicht', '2026-03-19 12:00:00', '2026-03-19 20:00:00', 1);
+insert into Shift (shift_name, starttime, endtime, company_id)
+values ('Abend Schicht', '2026-03-20 20:00:00', '2026-03-20 23:00:00', 1);
 
 /* Rollen für die neuen Mitarbeiter */
 insert into employee_role (employee_id, role_id)
