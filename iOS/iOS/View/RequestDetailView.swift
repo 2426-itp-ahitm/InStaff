@@ -115,9 +115,7 @@ struct RequestDetailView: View {
                                     .imageScale(.medium)
                                     .foregroundColor(acceptColor)
                                 Button("Annehmen") {
-                                    let success = assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
-                                    confirmResult = success ? true : false
-                                    errorMessage = success ? nil : "Failed to accept assignment. Please try again later."
+                                    assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
                                 }
                                 .disabled(isPastShift)
                             }
@@ -137,9 +135,7 @@ struct RequestDetailView: View {
                                     .imageScale(.medium)
                                     .foregroundColor(declineColor)
                                 Button("Ablehnen") {
-                                    let success = assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
-                                    confirmResult = success ? true : false
-                                    errorMessage = success ? nil : "Failed to accept assignment. Please try again later."
+                                    assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
                                 }
                                 .disabled(isPastShift)
                             }

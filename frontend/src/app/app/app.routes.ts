@@ -8,8 +8,9 @@ import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/
 import {AdminComponent} from '../admin/admin.component';
 import {AuthGuard} from '../guard/auth.guard';
 import {ProfilComponent} from '../essentials/profil/profil.component';
-import {ManagerDashboardComponent} from '../essentials/manager-dashboard/manager-dashboard.component';
-import {EmployeeDashboardComponent} from '../essentials/employee-dashboard/employee-dashboard.component';
+import {ManagerDashboardComponent} from '../dashboard/manager-dashboard/manager-dashboard.component';
+import {EmployeeDashboardComponent} from '../dashboard/employee-dashboard/employee-dashboard.component';
+import {EmployeeShiftOverviewComponent} from '../dashboard/employee-shift-overview/employee-shift-overview.component';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,12 @@ export const routes: Routes = [
     title: 'InStaff',
     canActivate: [AuthGuard]
 
+  },
+  {
+    path: 'emp-shift-overview',
+    component: EmployeeShiftOverviewComponent,
+    title: 'InStaff',
+    canActivate: [AuthGuard]
   },
   {
     path: 'team',

@@ -27,7 +27,7 @@ import {NewAssignment} from '../../interfaces/new-assignment';
   styleUrl: './shift-view.component.css'
 })
 export class ShiftViewComponent {
-  @Output() closeShiftEdit = new EventEmitter<unknown>();
+  @Output() closeShiftView = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
 
@@ -130,7 +130,7 @@ export class ShiftViewComponent {
 
     // logic to save newShift
     this.shiftService.addShift(newShift)
-    this.closeEditShift()
+    this.closeViewShift()
 
   }
 
@@ -144,8 +144,8 @@ export class ShiftViewComponent {
     }
   }
 
-  closeEditShift() {
-    this.closeShiftEdit.emit();
+  closeViewShift() {
+    this.closeShiftView.emit();
 
   }
 

@@ -43,7 +43,7 @@ export class EmployeeServiceService {
   }
 
   getEmployeeById(id: number): Employee{
-    let emps!: Employee[];
+    let emps: Employee[] = [];
     this.employees$.subscribe((data) => {
       emps = data;
     });

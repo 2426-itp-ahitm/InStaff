@@ -2,7 +2,7 @@
 FROM node:24-alpine as build
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build  # or ng build if globally installed
+RUN npm install && npm run build -- --configuration production  # or ng build if globally installed
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
