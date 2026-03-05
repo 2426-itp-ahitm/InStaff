@@ -1,6 +1,7 @@
 import {NewAssignment} from './new-assignment';
 
 export interface NewShift {
+  shiftName: string;
   shiftCreateDTO: ShiftCreateDTO;
   assignmentCreateDTOs: NewAssignment[],
 }
