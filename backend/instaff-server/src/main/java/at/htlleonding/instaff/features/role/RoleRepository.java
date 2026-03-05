@@ -1,13 +1,10 @@
 package at.htlleonding.instaff.features.role;
 
-import at.htlleonding.instaff.features.company.Company;
+import java.util.List;
+
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-
-import java.util.List;
 
 @ApplicationScoped
 public class RoleRepository implements PanacheRepository<Role> {
@@ -20,7 +17,7 @@ public class RoleRepository implements PanacheRepository<Role> {
     public Role updateRole(String roleName, String description, Long id) {
         Role role = findById(id);
         role.setRoleName(roleName);
-        role.setDecription(description);
+        role.setDescription(description);
         persist(role);
         return role;
     }

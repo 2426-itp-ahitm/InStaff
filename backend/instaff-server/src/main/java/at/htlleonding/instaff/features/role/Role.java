@@ -1,12 +1,25 @@
 package at.htlleonding.instaff.features.role;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import at.htlleonding.instaff.features.assignment.Assignment;
 import at.htlleonding.instaff.features.company.Company;
 import at.htlleonding.instaff.features.employee.Employee;
-import at.htlleonding.instaff.features.shift.Shift;
-import jakarta.persistence.*;
-
-import java.util.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Role {
@@ -15,7 +28,7 @@ public class Role {
     Long id;
     @Column(name = "role_name")
     String roleName;
-    String decription;
+    String description;
 
     @ManyToOne
     Company company;
@@ -37,7 +50,7 @@ public class Role {
     public Role(String roleName, Company company, String description) {
         this.roleName = roleName;
         this.company = company;
-        this.decription = description;
+        this.description = description;
     }
 
     public Long getId() {
@@ -50,12 +63,12 @@ public class Role {
 
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String decription) {
+        this.description = decription;
     }
 
     public void setId(Long id) {
