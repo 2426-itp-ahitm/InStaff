@@ -7,6 +7,7 @@ public record NewsDTO(
         long id,
         String employee_name,
         boolean confirmed,
+        String shift_name,
         LocalDateTime shift_date,
         long shift_id,
         LocalDateTime date_created
