@@ -17,9 +17,10 @@ public class RoleRepository implements PanacheRepository<Role> {
     }
 
     @Transactional
-    public Role updateRole(String roleName, Long id) {
+    public Role updateRole(String roleName, String description, Long id) {
         Role role = findById(id);
         role.setRoleName(roleName);
+        role.setDecription(description);
         persist(role);
         return role;
     }
