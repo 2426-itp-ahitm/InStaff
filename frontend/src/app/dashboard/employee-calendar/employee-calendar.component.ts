@@ -119,8 +119,9 @@ export class EmployeeCalendarComponent implements OnInit {
     const startTime: string = this.getStringFromArg(arg.event.start!);
     const endTime: string = this.getStringFromArg(arg.event.end!);
 
-    let  selectedShift: Shift = {
+    let selectedShift: Shift = {
       companyId: this.companyService.getCompanyId(),
+      shiftName: "",
       startTime: startTime,
       endTime: endTime,
       companyName: "",
@@ -169,7 +170,7 @@ export class EmployeeCalendarComponent implements OnInit {
 
   loadShiftsToEvents(): void {
     this.calendarOptions.events = this.shifts.map(shift => ({
-      title: `Shift ${shift.id}`,
+      title: shift.shiftName,
       start: shift.startTime,
       end: shift.endTime,
       id: String(shift.id),
