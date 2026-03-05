@@ -40,6 +40,9 @@ export class ShiftAddComponent implements OnInit {
 
 
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
+  @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
+
+
   private selectedEmployees:  { [roleId: number]: number[] } = {};
   // for manual roles when skipping template
   manualRoles: { roleId: number; count: number }[] = [];
@@ -54,7 +57,7 @@ export class ShiftAddComponent implements OnInit {
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   roleNameMap: { [id: number]: string } = {};
-  employees: Employee[] = []; 
+  employees: Employee[] = [];
   roles: Role[] = [];
 
   ngOnInit(): void {
@@ -235,6 +238,7 @@ export class ShiftAddComponent implements OnInit {
   save() {
     let assignments: NewAssignment[] = this.collectAssignments();
     const newShift: NewShift = {
+      shiftName: this.shiftNameInput.nativeElement.value,
       shiftCreateDTO: {
         startTime: this.selectedDate.startTime,
         endTime: this.selectedDate.endTime,

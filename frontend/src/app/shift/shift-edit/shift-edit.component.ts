@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Shift} from '../../interfaces/shift';
 import {FormsModule} from "@angular/forms";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
@@ -28,6 +28,8 @@ export class ShiftEditComponent implements OnInit {
   @Output() closeShiftEdit = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
+  @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
+
   roles!: Role[];
   shift!: Shift;
 
@@ -45,14 +47,14 @@ export class ShiftEditComponent implements OnInit {
   groupedAssignments: { roleId: number, roleName: string, assignments: Assignment[], count: number }[] = [];
   employeesByRole: { [roleId: number]: Employee[] } = {};
   somethingChanged: boolean = false;
-  
+
   private rolesLoaded = false;
   private assignmentsLoaded = false;
 
   somethingChangedSetTrue(){
     this.somethingChanged = true
   }
-  
+
   private updateGroupedIfReady() {
     if (this.rolesLoaded && this.assignmentsLoaded) {
       this.updateGroupedAssignments();
@@ -111,6 +113,7 @@ export class ShiftEditComponent implements OnInit {
       }));
 
     const newShift: NewShift = {
+      shiftName: this.shiftNameInput.nativeElement.value,
       shiftCreateDTO: {
         startTime: this.shift.startTime,
         endTime: this.shift.endTime,
@@ -118,26 +121,21 @@ export class ShiftEditComponent implements OnInit {
       },
       assignmentCreateDTOs: validAssignments,
     };
-    console.log("updating1");
+
 
     // If editing an existing shift, call update; otherwise fallback to add
     if (this.shift && this.shift.id) {
       this.shiftService.updateShift(this.shift.id, newShift).subscribe({
         next: () => {
           this.closeEditShift();
-          console.log("updating2");
         },
         error: (err) => {
           console.error("Failed to update shift", err);
         }
       });
-
     } else {
-      console.log("updating3");
-
       this.shiftService.addShift(newShift);
     }
-    console.log("updating4");
   }
 
 

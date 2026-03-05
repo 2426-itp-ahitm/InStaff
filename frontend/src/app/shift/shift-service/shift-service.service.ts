@@ -47,10 +47,24 @@ export class ShiftServiceService {
   }
 
   updateShift(shiftId: number, newShift: NewShift): Observable<Shift> {
-    return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, newShift)
+    console.log("*****0***")
+    console.log(newShift);
+    const updateShift = {
+      shiftCreateDTO: {
+        shiftName: newShift.shiftName,
+        startTime: newShift.shiftCreateDTO.startTime,
+        endTime: newShift.shiftCreateDTO.endTime,
+        companyId: newShift.shiftCreateDTO.companyId,
+      },
+      assignmentCreateDTOs: newShift.assignmentCreateDTOs
+    }
+
+    return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, updateShift)
       .pipe(
         // keep local cache in sync on success
         tap((updatedShift) => {
+          console.log("******1*****")
+          console.log(updatedShift)
           const current = this.shiftsSubject.getValue();
           const idx = current.findIndex(s => s.id === updatedShift.id);
           if (idx !== -1) {

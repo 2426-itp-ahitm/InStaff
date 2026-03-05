@@ -2,6 +2,7 @@ import {Assignment} from './assignment';
 
 export interface Shift {
   id: number;
+  shiftName: string;
   startTime: string;     // ISO timestamp string
   endTime: string;       // ISO timestamp string
   companyId: number;
