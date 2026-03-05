@@ -31,8 +31,12 @@ class SessionManager: ObservableObject {
         guard let data = Data(base64Encoded: padded),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let sub = json["sub"] as? String else { return }
+        
+        print("sub: ", sub)
+        
+        
 
-        guard let url = URL(string: "http://localhost:8080/api/\($companyId)/employees/keycloak/\(sub)") else { return }
+        guard let url = URL(string: "http://localhost:8080/api/employees/keycloak/\(sub)") else { return }
 
         do {
             let data = try await APIClient.shared.request(url: url)
@@ -44,7 +48,12 @@ class SessionManager: ObservableObject {
                 self.employeeId = decoded.id
                 self.isLoggedIn = true
             }
-
+            
+            print("Loaded employee:")
+            print("employeeId =", decoded.id)
+            print("companyId =", decoded.companyId)
+            print("keycloakId =", decoded.keycloakUserId)
+            
         } catch {
             print("Failed to load current user:", error)
         }
