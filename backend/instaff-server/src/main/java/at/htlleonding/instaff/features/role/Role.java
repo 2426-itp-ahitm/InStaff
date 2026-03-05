@@ -13,7 +13,9 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(name = "role_name")
     String roleName;
+    String decription;
 
     @ManyToOne
     Company company;
@@ -32,9 +34,10 @@ public class Role {
     public Role() {
     }
 
-    public Role(String roleName, Company company) {
+    public Role(String roleName, Company company, String description) {
         this.roleName = roleName;
         this.company = company;
+        this.decription = description;
     }
 
     public Long getId() {
@@ -45,6 +48,14 @@ public class Role {
         return employees.stream()
                 .map(Employee::getId).toList();
 
+    }
+
+    public String getDecription() {
+        return decription;
+    }
+
+    public void setDecription(String decription) {
+        this.decription = decription;
     }
 
     public void setId(Long id) {

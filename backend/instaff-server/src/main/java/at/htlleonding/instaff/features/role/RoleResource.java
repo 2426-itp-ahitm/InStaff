@@ -75,7 +75,7 @@ public class RoleResource {
     @Transactional
     public Response createRole(RoleCreateDTO dto) {
         // Map DTO to entity
-        Role role = new Role(dto.roleName(), companyRepository.findById(dto.companyId()));
+        Role role = new Role(dto.roleName(), companyRepository.findById(dto.companyId()), dto.description());
 
         // Persist the entity
         roleRepository.persist(role);
