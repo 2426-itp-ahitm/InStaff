@@ -37,13 +37,16 @@ export class RoleEditComponent implements OnInit {
   @Input() role!: Role;
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
+  @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
+
 
   @Output() closeRoleEdit = new EventEmitter<unknown>();
 
   save(): void {
     const updatedRole: Role = {
       ...this.role,
-      roleName: this.roleNameInput.nativeElement.value
+      roleName: this.roleNameInput.nativeElement.value,
+      description: this.roleDescriptionInput.nativeElement.value,
     };
     this.roleService.updateRole(updatedRole);
     this.close();
