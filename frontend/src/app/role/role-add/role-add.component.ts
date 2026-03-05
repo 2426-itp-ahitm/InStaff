@@ -15,13 +15,17 @@ export class RoleAddComponent {
   roleService: RoleServiceService = inject(RoleServiceService)
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
+  @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
+
 
   @Output() close = new EventEmitter<void>();
 
   save(): void {
     const newRoleName:string = this.roleNameInput.nativeElement.value;
+    const newRoleDescription:string = this.roleDescriptionInput.nativeElement.value;
 
-    this.roleService.addRole(newRoleName);
+
+    this.roleService.addRole(newRoleName, newRoleDescription);
 
     this.closeAddRole()
   }
