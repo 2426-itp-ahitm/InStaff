@@ -18,6 +18,7 @@
       <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Rollen</a>
       <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Schichtvorlagen</a>
       <a routerLink="/profil" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Profil</a>
+      <a routerLink="/admin" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Admin</a>
     </div>
   </nav>
 </div>
