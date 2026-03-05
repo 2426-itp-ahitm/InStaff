@@ -7,16 +7,16 @@ insert into manager (birthdate, email, firstname, lastname, telephone, company_i
 values ('2000-11-20 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '+43677238384878', 1);
 
 /*ROLE*/
-insert into role (role_name, company_id)
-values ('Koch', 1);
-insert into role (role_name, company_id)
-values ('Küchenhilfe', 1);
-insert into role (role_name, company_id)
-values ('Kellner', 1);
-insert into role (role_name, company_id)
-values ('Barkeeper', 1);
-insert into role (role_name, company_id)
-values ('Abwasch', 1);
+insert into role (role_name, description, company_id)
+values ('Koch', 'Ist verantwortlich für die Küche und kocht das Essen', 1);
+insert into role (role_name, description, company_id)
+values ('Küchenhilfe', 'Unterstützt den Koch in der Küche', 1);
+insert into role (role_name, description, company_id)
+values ('Kellner', 'Ist für den Service der Gäste verantwortlich', 1);
+insert into role (role_name, description, company_id)
+values ('Barkeeper', 'Serviert (anti-)akoholische Getränke an der Bar', 1);
+insert into role (role_name, description, company_id)
+values ('Abwasch', 'Reinigt und sortiert das Geschirr', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
