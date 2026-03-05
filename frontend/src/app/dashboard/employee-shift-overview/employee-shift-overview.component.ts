@@ -6,7 +6,7 @@ import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {AssignmentFull} from '../../interfaces/assignment-full';
 import {Shift} from '../../interfaces/shift';
-import {filter, forkJoin} from 'rxjs';
+import {BehaviorSubject, combineLatest, filter, forkJoin} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
@@ -36,6 +36,22 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   availableRoleIds = new Set<number>();
   selectedRoleIds = new Set<number>();
 
+  private employeeSubject$ = new BehaviorSubject<Employee | null>(null);
+
+  filteredRoles$ = combineLatest([
+    this.roleService.roles$, // Stream 1: Alle Rollen
+    this.employeeSubject$    // Stream 2: Der aktuelle Employee
+  ]).pipe(
+    map(([roles, emp]) => {
+      if (!emp || !emp.roles) return [];
+
+      // Dein "Holzhammer"-Filter
+      return roles.filter(role =>
+        emp.roles.some(empRole => role.id === (empRole as unknown as number))
+      );
+    })
+  );
+
   ngOnInit() {
     this.roleService.getRoles()
     this.employeeService.getEmployees()
@@ -45,6 +61,8 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   loadAssignments(){
     this.employeeService.getEmployeeByKeycloakId(this.keycloakService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
+
+      this.employeeSubject$.next(emp);
 
       this.availableRoleIds = new Set(this.employee.roles.map(r => typeof r === 'number' ? r : r.roleId))
       this.selectedRoleIds = new Set(this.availableRoleIds)
