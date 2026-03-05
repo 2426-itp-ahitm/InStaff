@@ -11,6 +11,7 @@ import {ProfilComponent} from '../essentials/profil/profil.component';
 import {ManagerDashboardComponent} from '../dashboard/manager-dashboard/manager-dashboard.component';
 import {EmployeeDashboardComponent} from '../dashboard/employee-dashboard/employee-dashboard.component';
 import {EmployeeShiftOverviewComponent} from '../dashboard/employee-shift-overview/employee-shift-overview.component';
+import {RoleWikiComponent} from '../role/role-wiki/role-wiki.component';
 
 export const routes: Routes = [
   {
@@ -79,6 +80,12 @@ export const routes: Routes = [
     title: 'InStaff',
     canActivate: [AuthGuard],
     data: {'rolesAllowed': ['user-is-manager']}
+  },
+  {
+    path: 'wiki',
+    component: RoleWikiComponent, //COMPONENT CLASS NAME
+    title: 'InStaff',
+    canActivate: [AuthGuard],
   },
   {
     path: '**',
