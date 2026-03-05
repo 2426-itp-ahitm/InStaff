@@ -115,7 +115,7 @@ export class ShiftEditOldComponent implements OnInit {
 
     return assignments;
   }
-
+/*
   save() {
 
     const newShift: NewShift = {
@@ -143,6 +143,8 @@ export class ShiftEditOldComponent implements OnInit {
       }
     }
   }
+
+ */
 
   closeEditShift() {
     this.closeShiftEdit.emit();
