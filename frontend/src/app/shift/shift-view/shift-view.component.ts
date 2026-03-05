@@ -116,11 +116,12 @@ export class ShiftViewComponent {
 
     return assignments;
   }
-
+/*
   save() {
 
     const newShift: NewShift = {
       shiftCreateDTO: {
+        shiftName:
         startTime: this.selectedDate.startTime,
         endTime: this.selectedDate.endTime,
         companyId: this.selectedDate.companyId,
@@ -135,6 +136,8 @@ export class ShiftViewComponent {
   }
 
 
+
+
   chooseShiftTemplate() {
     let shiftTemplateId: number = this.shiftTemplateInput.nativeElement.value;
     for (let i = 0; i < this.shiftTemplates.length; i++) {
@@ -143,6 +146,8 @@ export class ShiftViewComponent {
       }
     }
   }
+
+ */
 
   closeViewShift() {
     this.closeShiftView.emit();
