@@ -32,10 +32,11 @@ export class RoleServiceService {
     });
   }
 
-  addRole(newRoleName: string): void {
+  addRole(newRoleName: string, newDescription: string): void {
     this.httpClient.post<Role>(`${this.getApiUrl()}/roles`, {
       companyId: 1,
-      roleName: newRoleName
+      roleName: newRoleName,
+      description: newDescription
     }).subscribe(createdRole => {
       const currentRoles = this.rolesSubject.getValue();
       this.rolesSubject.next([...currentRoles, createdRole]);
