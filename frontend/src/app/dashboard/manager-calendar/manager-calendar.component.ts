@@ -157,7 +157,7 @@ export class ManagerCalendarComponent implements OnInit {
 
   loadShiftsToEvents(): void {
     this.calendarOptions.events = this.shifts.map(shift => ({
-      title: `Shift ${shift.id}`,
+      title: shift.shiftName,
       start: shift.startTime,
       end: shift.endTime,
       id: String(shift.id),
@@ -197,6 +197,7 @@ export class ManagerCalendarComponent implements OnInit {
 
     let  selectedShift: Shift = {
       companyId: this.companyService.getCompanyId(),
+      shiftName: "",
       startTime: startTime,
       endTime: endTime,
       companyName: "",
