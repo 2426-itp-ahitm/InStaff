@@ -23,6 +23,12 @@ export class RoleEditComponent implements OnInit {
 
   employeesWithRole: Employee[] = [];
 
+
+  @Input() role!: Role;
+
+  @ViewChild('roleNameInput') roleNameInput!: ElementRef;
+  @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
+
   ngOnInit(): void {
     if (this.role.employees.length > 0) {
       for (let i = 0; i < this.role.employees.length; i++) {
@@ -34,10 +40,7 @@ export class RoleEditComponent implements OnInit {
 
   }
 
-  @Input() role!: Role;
 
-  @ViewChild('roleNameInput') roleNameInput!: ElementRef;
-  @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
 
 
   @Output() closeRoleEdit = new EventEmitter<unknown>();

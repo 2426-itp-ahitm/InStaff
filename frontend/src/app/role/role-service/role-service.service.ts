@@ -45,9 +45,11 @@ export class RoleServiceService {
     });
   }
   updateRole(updatedRole: Role): void {
-
-    this.httpClient.post<Role>(`${this.getApiUrl()}/roles/${updatedRole.id}`, updatedRole)
-      .subscribe((response) => {
+    this.httpClient.put<Role>(`${this.getApiUrl()}/roles`, {
+      id: updatedRole.id,
+      roleName: updatedRole.roleName,
+      description: updatedRole.description
+    }).subscribe((response) => {
         const currentRoles = this.rolesSubject.getValue();
         const updatedList = currentRoles.map(role =>
           role.id === updatedRole.id ? updatedRole : role
