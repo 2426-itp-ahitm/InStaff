@@ -157,9 +157,11 @@ public class ShiftResource {
         }
 
         // Update shift properties
+        shift.shiftName = dto.shiftCreateDTO().shiftName();
         shift.startTime = dto.shiftCreateDTO().startTime();
         shift.endTime = dto.shiftCreateDTO().endTime();
         shiftRepository.persist(shift);
+        
 
         // Delete existing assignments
         entityManager.createQuery("DELETE FROM Assignment a WHERE a.shift.id = :shiftId")
