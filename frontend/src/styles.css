@@ -87,6 +87,10 @@ h2{
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base;
 }
 
+.button-green-add {
+  @apply place-self-center cursor-pointer transition-all rounded-md border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base;
+}
+
 .button-cancel {
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base px-3 py-2 text-sm font-semibold text-black shadow-sm hover:border-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:border-green-base;
 }

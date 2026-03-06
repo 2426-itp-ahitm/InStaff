@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, inject, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {DateClickArg} from '@fullcalendar/interaction';
@@ -41,6 +41,15 @@ export class ShiftAddComponent implements OnInit {
 
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
   @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeAddShift()
+    }
+  }
 
 
   private selectedEmployees:  { [roleId: number]: number[] } = {};

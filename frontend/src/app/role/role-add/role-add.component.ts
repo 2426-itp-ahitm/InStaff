@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, inject, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, inject, Output, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
@@ -19,6 +19,15 @@ export class RoleAddComponent {
 
 
   @Output() close = new EventEmitter<void>();
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeAddRole()
+    }
+  }
 
   save(): void {
     const newRoleName:string = this.roleNameInput.nativeElement.value;

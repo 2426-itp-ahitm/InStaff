@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit, inject} from '@angular/core';
+import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit, inject, HostListener} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {Employee} from '../../interfaces/employee';
@@ -31,6 +31,15 @@ export class EmployeeAddComponent implements OnInit {
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   @Output() close = new EventEmitter<void>();
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeAddEmployee()
+    }
+  }
 
 
   ngOnInit(): void {
