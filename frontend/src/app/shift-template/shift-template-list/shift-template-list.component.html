@@ -1,14 +1,20 @@
 <div class="mx-6">
   <div class="flex max-md:flex-col max-md:mt-2 max-md:items-center mb-4 justify-center items-center gap-2">
     <input type="search" placeholder="Vorlage suchen..." class="input-field max-md:w-full max-md:max-w-md" (input)="onSearch($any($event.target).value)">
-    <button (click)="openAddShiftTemplate()" type="button" class="button-green max-md:w-full max-md:max-w-md">Schichtvorlage hinzufügen</button>
+    <button (click)="openAddShiftTemplate()" type="button" class="button-green-add max-md:w-full max-md:max-w-md">Schichtvorlage hinzufügen</button>
   </div>
   <div class="card-grid">
     <div class="card" *ngFor="let sT of filteredShiftTemplates">
-        <div class="card-header" >
-          <p class="card-name">{{ sT.shiftTemplateName }}</p>
-          <img class="icon-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
-        </div>
+      <div class="card-header" >
+        <p class="card-name">{{ sT.shiftTemplateName }}</p>
+        <img class="icon-button" (click)="openShiftTemplateEdit(sT)" ngSrc="/icons/edit-white.png" alt="edit" width="37" height="37">
+      </div>
+      <div class="card-role">
+        <ng-container *ngFor="let r of sT.templateRoles">
+          <p class="card-role-item" >{{ r.count}}x {{ getRoleNameById(r.roleId) }}</p>
+        </ng-container>
+        <p *ngIf="sT.templateRoles.length == 0" class="flex-none">Hinweis: Schicht-Vorlage hat noch keine Rollen</p>
+      </div>
     </div>
   </div>
   <div *ngIf="filteredShiftTemplates.length === 0" class="mt-4 text-sm text-center text-gray-500">Keine Vorlagen gefunden.</div>

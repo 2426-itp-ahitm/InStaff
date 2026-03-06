@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Shift} from '../../interfaces/shift';
 import {FormsModule} from "@angular/forms";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
@@ -29,6 +39,15 @@ export class ShiftEditComponent implements OnInit {
 
   @Input() shiftId!: number;
   @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeEditShift()
+    }
+  }
 
   roles!: Role[];
   shift!: Shift;

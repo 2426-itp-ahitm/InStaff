@@ -77,11 +77,11 @@ export class ShiftTemplateAddComponent implements OnInit {
   }
 
   // UI methods
-  addRole(roleIdStr: string, countStr: string) {
+  addRole(roleIdStr: string) {
     const roleId = Number(roleIdStr);
-    const count = Math.max(1, Number(countStr) || 1);
     if (!roleId || !this.roles.find(r => r.id === roleId)) return;
 
+    const count = 1;
     // initialize selectedEmployees with nulls
     const selectedEmployees = Array(count).fill(null);
     this.addedRoles.push({ roleId, count, selectedEmployees });
