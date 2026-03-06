@@ -58,10 +58,9 @@ export class ShiftTemplateServiceService {
 
   addShiftTemplate(newShiftTemplate: ShiftTemplate) {
     this.httpClient.post<ShiftTemplate>(`${this.getApiUrl()}/shift-templates`, newShiftTemplate)
-      .subscribe(createdShiftTemplate => {
-        console.log(createdShiftTemplate);
-        const currentShiftTemplates = this.shiftTemplatesSubject.getValue();
-        this.shiftTemplatesSubject.next([...currentShiftTemplates, createdShiftTemplate]);
+      .subscribe(() => {
+        // Reload from backend so the newly created template is emitted with complete fields.
+        this.getShiftTemplates();
         this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich hinzugefügt", type: 'success', showFeedback: true})
     });
   }

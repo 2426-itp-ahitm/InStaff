@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
 import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
@@ -37,6 +47,15 @@ export class EmployeeEditComponent implements OnInit {
 
 
   @Output() closeEmpEdit = new EventEmitter<void>();
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeEmployeeEdit()
+    }
+  }
 
   editEmployeeForm!: FormGroup;
 

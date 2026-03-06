@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Role} from '../../interfaces/role';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
@@ -28,6 +38,15 @@ export class RoleEditComponent implements OnInit {
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
   @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.close()
+    }
+  }
 
   ngOnInit(): void {
     if (this.role.employees.length > 0) {

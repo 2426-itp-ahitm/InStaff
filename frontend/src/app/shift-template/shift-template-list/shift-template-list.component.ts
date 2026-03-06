@@ -6,6 +6,8 @@ import {ShiftTemplate} from '../../interfaces/shift-template';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {ShiftTemplateEditComponent} from '../shift-template-edit/shift-template-edit.component';
 import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-add.component';
+import {RoleServiceService} from '../../role/role-service/role-service.service';
+import {Role} from '../../interfaces/role';
 
 @Component({
   selector: 'app-shift-template-list',
@@ -21,10 +23,12 @@ import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-ad
 })
 export class ShiftTemplateListComponent implements OnInit {
   private shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
+  private roleService: RoleServiceService = inject(RoleServiceService);
 
 
   shiftTemplates: ShiftTemplate[] = [];
-    searchTerm: string = '';
+  roles: Role[] = [];
+  searchTerm: string = '';
   isEditMode: boolean = false;
   isAddMode: boolean = false;
   selectedShiftTemplate!: ShiftTemplate;
@@ -35,6 +39,14 @@ export class ShiftTemplateListComponent implements OnInit {
     this.shiftTemplateService.shiftTemplates$.subscribe((data) => {
       this.shiftTemplates = data;
     })
+    this.roleService.getRoles()
+    this.roleService.roles$.subscribe((data) => {
+      this.roles = data;
+    })
+  }
+
+  getRoleNameById(id: number) {
+    return this.roles.find((r) => r.id === id)?.roleName || "";
   }
 
     onSearch(term: string) {

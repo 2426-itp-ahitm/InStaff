@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Shift} from '../../interfaces/shift';
@@ -30,6 +30,15 @@ export class ShiftViewComponent {
   @Output() closeShiftView = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+
+    }else if (event.key === 'Escape') {
+      this.closeViewShift()
+    }
+  }
 
   shift!: Shift;
   selectedDate!: ShiftCreateDTO;
