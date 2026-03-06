@@ -101,12 +101,10 @@ export class EmployeeServiceService {
 
   addNewEmployee(newEmployee: NewEmployee): void {
     this.httpClient.post<Employee>(`${this.getApiUrl()}/employees`, newEmployee)
-      .subscribe((createdEmployee) => {
-        const currentEmployees = this.employeesSubject.getValue();
-        console.log(createdEmployee);
-        this.employeesSubject.next([...currentEmployees, createdEmployee]);
+      .subscribe(() => {
+        // Reload enriched data so roles are available immediately in the list.
+        this.getEmployees();
       });
-    this.getEmployees();
   }
 
   deleteEmployee(id: number): void {

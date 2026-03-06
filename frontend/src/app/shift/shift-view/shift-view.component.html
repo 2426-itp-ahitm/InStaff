@@ -7,7 +7,7 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div *ngIf="shift">
-            <h3>{{shift.startTime}} bis {{shift.endTime}}</h3>
+            <h3>{{shift.shiftName}} am {{shift.startTime.substring(0, 10)}} bis {{shift.endTime.substring(0, 10)}}</h3>
 
             <table>
               <thead>

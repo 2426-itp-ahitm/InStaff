@@ -81,7 +81,7 @@
                   <div class="mt-2">
                     <input formControlName="address" value="" id="address" name="address" type="text" autocomplete="address" class="input-field">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('address')?.invalid" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+                  <div *ngIf="addEmployeeForm.get('address')?.invalid && addEmployeeForm.get('address')?.touched" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
                 </div>
 
                 <!-- HOURLY WAGE -->
@@ -90,7 +90,7 @@
                   <div class="mt-2">
                     <input formControlName="hourlyWage" value="" id="hourlyWage" name="hourlyWage" type="number" class="input-field">
                   </div>
-                  <div *ngIf="addEmployeeForm.get('hourlyWage')?.invalid" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
+                  <div *ngIf="addEmployeeForm.get('hourlyWage')?.invalid && addEmployeeForm.get('hourlyWage')?.touched" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
                 </div>
 
                 <!-- IS MANAGER -->
