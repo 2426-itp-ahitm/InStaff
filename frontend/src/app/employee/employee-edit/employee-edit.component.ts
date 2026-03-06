@@ -68,7 +68,7 @@ export class EmployeeEditComponent implements OnInit {
       updatedEmp.id = this.employee.id;
       this.employeeService.updateEmployee(updatedEmp);
       console.log(updatedEmp);
-      this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
+      this.feedbackService.newFeedback({message:"Mitarbeiter erfolgreich bearbeitet", type: 'success', showFeedback: true})
       this.closeEmployeeEdit()
     }else{
     }
@@ -93,14 +93,14 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   deleteEmployee(emp: Employee) {
-    const confirmed = confirm(`Are you sure you want to delete ${emp.firstname} ${emp.lastname}?`);
+    const confirmed = confirm(`Bist du dir sicher dass du ${emp.firstname} ${emp.lastname} löschen willst?`);
     if (!confirmed) {
       return;
     }
 
     this.employeeService.deleteEmployee(emp.id);
     this.closeEmployeeEdit();
-    this.feedbackService.newFeedback({message:"Employee successfully deleted", type: 'success', showFeedback: true})
+    this.feedbackService.newFeedback({message:"Mitarbeiter erfolgreich gelöscht", type: 'success', showFeedback: true})
 
   }
 }

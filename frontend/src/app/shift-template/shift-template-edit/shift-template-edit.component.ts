@@ -71,13 +71,11 @@ export class ShiftTemplateEditComponent implements OnInit {
 
 
   deleteShiftTemplate(shiftTemplateToDelte: ShiftTemplate) {
-    const confirmed = confirm(`Are you sure you want to delete the role ${ shiftTemplateToDelte.shiftTemplateName }?`);
+    const confirmed = confirm(`Bist du dir sicher, dass du die Schichtvorlage "${ shiftTemplateToDelte.shiftTemplateName }" löschen willst?`);
     if (!confirmed) {
       return;
     }
     this.shiftTemplateService.deleteShiftTemplate(shiftTemplateToDelte.id);
-    this.feedbackService.newFeedback({message:"Shift Template successfully deleted", type: 'error', showFeedback: true})
-
     this.close();
   }
 

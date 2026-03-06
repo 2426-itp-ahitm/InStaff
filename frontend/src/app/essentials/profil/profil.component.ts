@@ -89,7 +89,7 @@ export class ProfilComponent implements OnInit{
       const updatedEmp: Employee = this.editEmployeeForm.value;
       updatedEmp.id = this.employee.id;
       this.employeeService.updateEmployee(updatedEmp);
-      this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
+      this.feedbackService.newFeedback({message:"Erfolgreich bearbeitet", type: 'success', showFeedback: true})
     }else{
     }
   }

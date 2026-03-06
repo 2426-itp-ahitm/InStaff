@@ -53,7 +53,7 @@ export class RoleEditComponent implements OnInit {
     };
     this.roleService.updateRole(updatedRole);
     this.close();
-    this.feedbackService.newFeedback({message:"Role successfully saved", type: 'success', showFeedback: true})
+    this.feedbackService.newFeedback({message:"Rolle erfolgreich gespeichert", type: 'success', showFeedback: true})
 
   }
 
@@ -62,12 +62,12 @@ export class RoleEditComponent implements OnInit {
   }
 
   deleteRole(roleToDelete: Role) {
-    const confirmed = confirm(`Are you sure you want to delete the role ${ roleToDelete.roleName }?`);
+    const confirmed = confirm(`Bist du dir sicher, dass du die Rolle "${ roleToDelete.roleName }" löschen willst?`);
     if (!confirmed) {
       return;
     }
     this.roleService.deleteRole(roleToDelete.id);
-    this.feedbackService.newFeedback({message:"Role successfully deleted", type: 'error', showFeedback: true})
+    this.feedbackService.newFeedback({message:"Rolle erfolgreich gelöscht", type: 'error', showFeedback: true})
 
     this.close();
   }
