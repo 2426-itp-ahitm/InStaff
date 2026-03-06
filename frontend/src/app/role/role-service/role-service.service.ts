@@ -40,7 +40,7 @@ export class RoleServiceService {
     }).subscribe(createdRole => {
       const currentRoles = this.rolesSubject.getValue();
       this.rolesSubject.next([...currentRoles, createdRole]);
-      this.feedbackService.newFeedback({message:"Role successfully added", type: 'success', showFeedback: true})
+      this.feedbackService.newFeedback({message:"Rolle erfolgreich hinzugefügt", type: 'success', showFeedback: true})
 
     });
   }
@@ -55,7 +55,7 @@ export class RoleServiceService {
           role.id === updatedRole.id ? updatedRole : role
         );
         this.rolesSubject.next(updatedList);
-        this.feedbackService.newFeedback({message:"Role successfully updated", type: 'success', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Rolle erfolgreich bearbeitet", type: 'success', showFeedback: true})
 
       });
   }
@@ -77,7 +77,7 @@ export class RoleServiceService {
         const currentRoles = this.rolesSubject.getValue();
         const updatedRoles = currentRoles.filter(r => r.id !== id);
         this.rolesSubject.next(updatedRoles);
-        this.feedbackService.newFeedback({message:"Role successfully deleted", type: 'error', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Rolle erfolgreich gelöscht", type: 'error', showFeedback: true})
 
       });
   }

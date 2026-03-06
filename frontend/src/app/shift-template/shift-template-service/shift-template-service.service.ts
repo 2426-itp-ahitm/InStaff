@@ -40,7 +40,7 @@ export class ShiftTemplateServiceService {
         const currentShifts = this.shiftTemplatesSubject.getValue();
         const updatedShifts = currentShifts.filter(sT => sT.id !== id);
         this.shiftTemplatesSubject.next(updatedShifts);
-        this.feedbackService.newFeedback({message:"Shift Template successfully deleted", type: 'error', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich gelöscht", type: 'success', showFeedback: true})
       });
   }
 
@@ -52,7 +52,7 @@ export class ShiftTemplateServiceService {
           sT.id === updatedShiftTemplate.id ? updatedShiftTemplate : sT
         );
         this.shiftTemplatesSubject.next(updatedShiftTemplatesList);
-        this.feedbackService.newFeedback({message:"Shift Template successfully updated", type: 'success', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich bearbeitet", type: 'success', showFeedback: true})
       });
   }
 
@@ -62,7 +62,7 @@ export class ShiftTemplateServiceService {
         console.log(createdShiftTemplate);
         const currentShiftTemplates = this.shiftTemplatesSubject.getValue();
         this.shiftTemplatesSubject.next([...currentShiftTemplates, createdShiftTemplate]);
-        this.feedbackService.newFeedback({message:"Shift Template successfully added", type: 'success', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich hinzugefügt", type: 'success', showFeedback: true})
     });
   }
 }
