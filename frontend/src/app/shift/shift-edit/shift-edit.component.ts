@@ -70,6 +70,9 @@ export class ShiftEditComponent implements OnInit {
   employeesByRole: { [roleId: number]: Employee[] } = {};
   somethingChanged: boolean = false;
 
+  shiftStartTime!: string;
+  shiftEndTime!: string;
+
   private rolesLoaded = false;
   private assignmentsLoaded = false;
 
@@ -87,9 +90,13 @@ export class ShiftEditComponent implements OnInit {
   ngOnInit(): void {
 
     this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
-      console.log(s);
       this.shift = s
-      console.log(this.shift);
+      console.log(s)
+      this.shiftStartTime = this.toDateTimeLocalValue(s.startTime)
+      this.shiftEndTime = this.toDateTimeLocalValue(s.endTime)
+
+      console.log(this.shiftStartTime);
+      console.log(this.shiftEndTime);
     })
 
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
@@ -117,9 +124,6 @@ export class ShiftEditComponent implements OnInit {
       this.rolesLoaded = true;
       this.updateGroupedIfReady();
     });
-
-
-
   }
 
 
@@ -137,13 +141,14 @@ export class ShiftEditComponent implements OnInit {
     const newShift: NewShift = {
       shiftName: this.shiftNameInput.nativeElement.value,
       shiftCreateDTO: {
-        startTime: this.shift.startTime,
-        endTime: this.shift.endTime,
+        startTime: this.toBackendDateTimeString(this.shiftStartTime),
+        endTime: this.toBackendDateTimeString(this.shiftEndTime),
         companyId: this.shift.companyId,
       },
       assignmentCreateDTOs: validAssignments,
     };
 
+    console.log(newShift);
 
     // If editing an existing shift, call update; otherwise fallback to add
     if (this.shift && this.shift.id) {
@@ -278,6 +283,25 @@ export class ShiftEditComponent implements OnInit {
         }
       })
     }
+  }
+
+  private toDateTimeLocalValue(dateString: string): string {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+  }
+
+  private toBackendDateTimeString(dateTimeLocal: string): string {
+    return dateTimeLocal.length === 16 ? `${dateTimeLocal}:00` : dateTimeLocal;
   }
 
 

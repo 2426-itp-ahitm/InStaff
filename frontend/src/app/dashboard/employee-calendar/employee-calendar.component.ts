@@ -39,7 +39,6 @@ export class EmployeeCalendarComponent implements OnInit {
   companyService: CompanyServiceService = inject(CompanyServiceService)
   keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
 
-
   calendarOptions: CalendarOptions = {
     locale: deLocale,
     titleFormat: {
@@ -66,7 +65,7 @@ export class EmployeeCalendarComponent implements OnInit {
 
     slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev, today, next',
       center: 'title',
       right: 'dayGridMonth,timeGridDay,listWeek'
     },

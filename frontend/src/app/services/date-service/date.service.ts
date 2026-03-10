@@ -6,6 +6,12 @@ import { Injectable } from '@angular/core';
 export class DateService {
   constructor() { }
 
+  public stringToDate(dateString: string) {
+    const date = new Date(dateString);
+    console.log(date.toString());
+    return date;
+  }
+
   public dateToString(date: Date) {
     return new Date(date).toLocaleDateString('de-DE', {
       day: '2-digit',

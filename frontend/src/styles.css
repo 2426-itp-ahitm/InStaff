@@ -99,11 +99,13 @@ h2{
 }
 
 .button-accept {
-  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base;
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base disabled:cursor-auto;
 }
 
+
+
 .button-decline {
-  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-900 hover:border-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-red-300 disabled:border-red-300 ;
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 hover:border-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-red-300 disabled:border-red-300 disabled:cursor-auto;
 
 }
 
