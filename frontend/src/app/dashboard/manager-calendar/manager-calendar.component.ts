@@ -119,7 +119,7 @@ export class ManagerCalendarComponent implements OnInit {
 
     this.shiftService.shifts$.subscribe((data) => {
       this.shifts = data;
-      this.loadShiftsToEvents();
+      this.loadShiftsToEvents(data);
     });
 
     this.shiftService.getShifts();
@@ -155,8 +155,8 @@ export class ManagerCalendarComponent implements OnInit {
     return window.innerWidth < 1300; // Tailwind's `md` breakpoint
   }
 
-  loadShiftsToEvents(): void {
-    this.calendarOptions.events = this.shifts.map(shift => ({
+  loadShiftsToEvents(data:Shift[]): void {
+    this.calendarOptions.events = data.map(shift => ({
       title: shift.shiftName,
       start: shift.startTime,
       end: shift.endTime,

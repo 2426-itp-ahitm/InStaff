@@ -4,6 +4,7 @@ import {NewsService} from '../news-service/news.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {NewsWebsocketServiceService} from '../news-websocket-serivce/news-websocket-service.service';
 import {environment} from '../../../environments/environment';
+import {DateService} from '../../services/date-service/date.service';
 
 @Component({
   selector: 'app-news',
@@ -22,7 +23,9 @@ export class NewsComponent implements OnInit {
 
 
 
+
   newsService: NewsService = inject(NewsService);
+  dateService: DateService = inject(DateService);
 
   news: News[] = []
   ngOnInit() {
@@ -48,13 +51,9 @@ export class NewsComponent implements OnInit {
   }
 
   dateToString(shift_date: Date) {
-
-    return new Date(shift_date).toLocaleDateString('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+    return this.dateService.dateToString(shift_date);
   }
+
 
   openShiftEditWithId(shift_id: number) {
     this.shiftSelected.emit(shift_id);

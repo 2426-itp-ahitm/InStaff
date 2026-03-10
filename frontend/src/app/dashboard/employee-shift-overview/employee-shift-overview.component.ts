@@ -6,11 +6,10 @@ import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {AssignmentFull} from '../../interfaces/assignment-full';
 import {Shift} from '../../interfaces/shift';
-import {BehaviorSubject, combineLatest, filter, forkJoin} from 'rxjs';
+import {BehaviorSubject, combineLatest, forkJoin} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
-import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 @Component({
   selector: 'app-employee-shift-overview',
@@ -112,6 +111,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   }
 
   confirmAssignment(assignment: AssignmentFull) {
+    assignment.confirmed = true;
     this.assignmentService.confirmAssignment(assignment.id).subscribe(() => {
       console.log("confirmed")
       this.loadAssignments()
@@ -119,6 +119,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   }
 
   declineAssignment(assignment: AssignmentFull) {
+    assignment.confirmed = false;
     this.assignmentService.declineAssignment(assignment.id).subscribe(() => {
       console.log("declined")
       this.loadAssignments()
@@ -163,5 +164,23 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       const roleId = typeof a.role === 'number' ? a.role : a.role?.id;
       return roleId !== undefined && this.selectedRoleIds.has(roleId);
     });
+  }
+
+  getStatusLabel(confirmed: boolean | null) {
+    if (confirmed === true) {
+      return 'Bestätigt';
+    }
+    if (confirmed === false) {
+      return 'Abgelehnt';
+    }
+    return 'Ausstehend';
+  }
+
+  getStatusClass(confirmed: boolean | null) {
+    return {
+      'bg-green-100 text-green-800': confirmed === true,
+      'bg-yellow-100 text-yellow-800': confirmed === null,
+      'bg-red-100 text-red-800': confirmed === false
+    };
   }
 }

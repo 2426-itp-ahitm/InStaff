@@ -98,6 +98,16 @@ h2{
   @apply cursor-pointer rounded-md transition-all bg-red-600 border-2 border-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:text-black hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base
 }
 
+.button-accept {
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-green-base px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-dark hover:border-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-green-light disabled:border-green-light focus-visible:outline-green-base;
+}
+
+.button-decline {
+  @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-900 hover:border-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:bg-red-300 disabled:border-red-300 ;
+
+}
+
+
 .card-center {
   @apply grid p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
 }
@@ -138,7 +148,7 @@ h2{
 .bg-glass{
   background: rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
