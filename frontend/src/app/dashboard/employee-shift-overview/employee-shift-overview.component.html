@@ -13,14 +13,50 @@
         >
           <input
             type="checkbox"
-            class="accent-blue-600"
+            class="accent-green-dark"
             [checked]="isRoleSelected(role.id)"
             (change)="toggleRole(role.id)"
           />
           {{ role.roleName }}
         </label>
       </div>
+
+      <h3 class="text-md font-semibold text-gray-800 my-3">
+        Status Filter
+      </h3>
+
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+          [ngClass]="isStatusFilterSelected('all') ? 'bg-green-base text-white border-green-base' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          (click)="setStatusFilter('all')">
+          Alle
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+          [ngClass]="isStatusFilterSelected('open') ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          (click)="setStatusFilter('open')">
+          Offen
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+          [ngClass]="isStatusFilterSelected('accepted') ? 'bg-green-dark text-white border-green-dark' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          (click)="setStatusFilter('accepted')">
+          Angenommen
+        </button>
+        <button
+          type="button"
+          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+          [ngClass]="isStatusFilterSelected('declined') ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          (click)="setStatusFilter('declined')">
+          Abgelehnt
+        </button>
+      </div>
     </div>
+
 
 
     <div

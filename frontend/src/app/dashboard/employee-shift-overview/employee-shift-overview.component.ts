@@ -11,6 +11,8 @@ import {map} from 'rxjs/operators';
 import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
 
+type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
+
 @Component({
   selector: 'app-employee-shift-overview',
   imports: [
@@ -34,6 +36,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   employee!: Employee;
   availableRoleIds = new Set<number>();
   selectedRoleIds = new Set<number>();
+  selectedStatusFilter: AssignmentStatusFilter = 'all';
 
   private employeeSubject$ = new BehaviorSubject<Employee | null>(null);
 
@@ -55,6 +58,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
     this.roleService.getRoles()
     this.employeeService.getEmployees()
     this.loadAssignments()
+    this.setStatusFilter('open')
   }
 
   loadAssignments(){
@@ -96,14 +100,9 @@ export class EmployeeShiftOverviewComponent implements OnInit{
               .filter(a => {
                 const end = a.shift?.endTime ? new Date(a.shift.endTime).getTime() : null
                 return end !== null && end > now
-              })
-              .sort((a, b) => {
-                const aTime = new Date(a.shift.startTime).getTime()
-                const bTime = new Date(b.shift.startTime).getTime()
-                return aTime - bTime
               });
 
-            this.applyRoleFilter();
+            this.applyFilters();
           })
         }
       )
@@ -112,6 +111,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
 
   confirmAssignment(assignment: AssignmentFull) {
     assignment.confirmed = true;
+    this.applyFilters();
     this.assignmentService.confirmAssignment(assignment.id).subscribe(() => {
       console.log("confirmed")
       this.loadAssignments()
@@ -120,6 +120,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
 
   declineAssignment(assignment: AssignmentFull) {
     assignment.confirmed = false;
+    this.applyFilters();
     this.assignmentService.declineAssignment(assignment.id).subscribe(() => {
       console.log("declined")
       this.loadAssignments()
@@ -151,18 +152,64 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       this.selectedRoleIds.add(id)
     }
     console.log(this.selectedRoleIds)
-    this.applyRoleFilter();
+    this.applyFilters();
   }
 
-  applyRoleFilter() {
+  setStatusFilter(filter: AssignmentStatusFilter) {
+    this.selectedStatusFilter = filter;
+    this.applyFilters();
+  }
+
+  isStatusFilterSelected(filter: AssignmentStatusFilter) {
+    return this.selectedStatusFilter === filter;
+  }
+
+  applyFilters() {
     if (this.selectedRoleIds.size === 0) {
       this.fullAssignments = [];
       return;
     }
 
-    this.fullAssignments = this.allAssignments.filter(a => {
+    const roleFiltered = this.allAssignments.filter(a => {
       const roleId = typeof a.role === 'number' ? a.role : a.role?.id;
       return roleId !== undefined && this.selectedRoleIds.has(roleId);
+    });
+
+    const statusFiltered = roleFiltered.filter(a => {
+      if (this.selectedStatusFilter === 'all') {
+        return true;
+      }
+      if (this.selectedStatusFilter === 'open') {
+        return a.confirmed === null;
+      }
+      if (this.selectedStatusFilter === 'accepted') {
+        return a.confirmed === true;
+      }
+      return a.confirmed === false;
+    });
+
+    this.fullAssignments = [...statusFiltered].sort((a, b) => {
+      const aTime = new Date(a.shift.startTime).getTime();
+      const bTime = new Date(b.shift.startTime).getTime();
+
+      if (this.selectedStatusFilter === 'all') {
+        const getStatusRank = (confirmed: boolean | null) => {
+          if (confirmed === null) {
+            return 0;
+          }
+          if (confirmed === true) {
+            return 1;
+          }
+          return 2;
+        };
+
+        const statusDiff = getStatusRank(a.confirmed) - getStatusRank(b.confirmed);
+        if (statusDiff !== 0) {
+          return statusDiff;
+        }
+      }
+
+      return aTime - bTime;
     });
   }
 
