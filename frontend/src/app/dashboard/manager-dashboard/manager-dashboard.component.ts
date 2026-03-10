@@ -11,6 +11,9 @@ import {ManagerCalendarComponent} from '../manager-calendar/manager-calendar.com
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
+import {RoleServiceService} from '../../role/role-service/role-service.service';
+import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
+import {CompanyServiceService} from '../../services/company-service/company-service.service';
 
 
 @Component({
@@ -31,6 +34,11 @@ export class ManagerDashboardComponent implements OnInit {
   @ViewChild(CalendarComponent) calendar!: CalendarComponent;
   shiftService: ShiftServiceService = inject(ShiftServiceService);
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
+  roleService: RoleServiceService = inject(RoleServiceService);
+  shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
+  companyService: CompanyServiceService = inject(CompanyServiceService);
+
+
   keycloackService: KeycloakService = inject(KeycloakService);
 
   selectedShift!: Shift;
@@ -39,10 +47,24 @@ export class ManagerDashboardComponent implements OnInit {
 
   userName: string = "";
 
+
   ngOnInit(): void {
+
+    if(!this.companyService.isDataLoaded) {
+      console.log("data loaded")
+      this.employeeService.getEmployees();
+      this.roleService.getRoles()
+      this.shiftTemplateService.getShiftTemplates()
+
+
+      this.companyService.isDataLoaded = true;
+    }
+
     this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.userName = emp.firstname + ' ' + emp.lastname;
     });
+    this.employeeService.getEmployees();
+
   }
   openShiftEditWithId(shiftId: number) {
     console.log(shiftId);
