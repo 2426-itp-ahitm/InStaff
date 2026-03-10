@@ -30,9 +30,19 @@
 
       <!-- Shift Info -->
       <div class="mb-4">
-        <h2 class="text-lg font-semibold text-gray-800">
-          {{ assignment.role.roleName }}
-        </h2>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-gray-800">
+            {{ assignment.role.roleName }}
+          </h2>
+
+          <span
+            class="text-xs px-2 py-1 rounded min-w-24 text-center"
+            [ngClass]="getStatusClass(assignment.confirmed)">
+            {{ getStatusLabel(assignment.confirmed) }}
+          </span>
+        </div>
+
+
 
         <p class="text-gray-600 mt-1">
           {{ assignment.shift.startTime | date:'dd.MM.yyyy HH:mm' }}
@@ -56,20 +66,16 @@
         <button
           [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
           (click)="confirmAssignment(assignment)"
-          class="flex-1 text-white font-medium py-2 px-4 rounded-lg transition"
-          [ngClass]="assignment.confirmed
-            ? 'btnAccepted'
-            : 'btnNullAccepted'"        >
+          class="button-accept"
+        >
           Annehmen
         </button>
 
         <button
-          [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed"
+          [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
           (click)="declineAssignment(assignment)"
-          class="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition"
-          [ngClass]="assignment.confirmed == false
-            ? 'btnDeclined'
-            : 'btnNullDeclined'"        >
+          class="button-decline"
+        >
           Ablehnen
         </button>
 

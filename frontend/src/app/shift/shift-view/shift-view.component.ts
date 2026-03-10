@@ -59,6 +59,7 @@ export class ShiftViewComponent {
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
   assignments: Assignment[] = [];
+  groupedAssignments: { roleId: number; roleName: string; assignments: Assignment[] }[] = [];
 
   ngOnInit(): void {
     this.employeeService.getEmployees();
@@ -71,12 +72,14 @@ export class ShiftViewComponent {
 
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
       this.assignments = a;
+      this.buildGroupedAssignments();
     })
 
     //get all Employees
     this.employeeService.getEmployees()
     this.employeeService.employees$.subscribe((e) => {
       this.employees = e;
+      this.buildGroupedAssignments();
     })
 
     //gets all Templates
@@ -93,6 +96,7 @@ export class ShiftViewComponent {
         map[role.id] = role.roleName;
         return map;
       }, {} as { [id: number]: string });
+      this.buildGroupedAssignments();
     });
 
 
@@ -161,6 +165,31 @@ export class ShiftViewComponent {
   closeViewShift() {
     this.closeShiftView.emit();
 
+  }
+
+  private buildGroupedAssignments(): void {
+    const groups = new Map<number, Assignment[]>();
+
+    for (const assignment of this.assignments) {
+      if (!groups.has(assignment.role)) {
+        groups.set(assignment.role, []);
+      }
+      groups.get(assignment.role)!.push(assignment);
+    }
+
+    this.groupedAssignments = Array.from(groups.entries())
+      .map(([roleId, roleAssignments]) => ({
+        roleId,
+        roleName: this.roleNameMap[roleId] ?? `Rolle ${roleId}`,
+        assignments: [...roleAssignments].sort((a, b) => {
+          const aEmployee = this.employeeService.getEmployeeById(a.employee);
+          const bEmployee = this.employeeService.getEmployeeById(b.employee);
+          const aName = `${aEmployee.firstname} ${aEmployee.lastname}`.trim();
+          const bName = `${bEmployee.firstname} ${bEmployee.lastname}`.trim();
+          return aName.localeCompare(bName, 'de');
+        })
+      }))
+      .sort((a, b) => a.roleName.localeCompare(b.roleName, 'de'));
   }
 
   makeStringFromBoolean(confirmed: boolean) {
