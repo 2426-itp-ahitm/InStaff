@@ -81,4 +81,8 @@ export class ShiftServiceService {
   getShiftById(shiftId: number): Observable<Shift> {
     return this.httpClient.get<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`)
   }
+
+  deleteShift(shiftId: number) {
+    return this.httpClient.delete<Shift>(`${this.getApiUrl()}/shifts/delete/${shiftId}`)
+  }
 }

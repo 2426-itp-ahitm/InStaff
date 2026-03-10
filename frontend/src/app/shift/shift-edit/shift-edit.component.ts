@@ -22,6 +22,7 @@ import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {Assignment} from '../../interfaces/assignment';
 import {Role} from '../../interfaces/role';
+import {DateService} from '../../services/date-service/date.service';
 
 @Component({
   selector: 'app-shift-edit',
@@ -57,6 +58,8 @@ export class ShiftEditComponent implements OnInit {
   shiftService:ShiftServiceService = inject(ShiftServiceService);
   roleService:RoleServiceService = inject(RoleServiceService);
   assignmentService:AssignmentServiceService = inject(AssignmentServiceService);
+  dateService: DateService = inject(DateService);
+
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
@@ -264,4 +267,18 @@ export class ShiftEditComponent implements OnInit {
   getEmployeesForRole(roleId: number): Employee[] {
     return this.employeesByRole[roleId] || [];
   }
+
+
+  deleteShift(){
+    if (confirm(`Sicher, dass du die ${this.shift.shiftName} am ${this.dateService.dateStringToString(this.shift.startTime, true, true, "von")} bis ${this.dateService.dateStringToString(this.shift.endTime, true, false, "")} löschen willst?`)) {
+      this.shiftService.deleteShift(this.shiftId).subscribe({
+        next: () => {
+          this.shiftService.getShifts()
+          this.closeEditShift();
+        }
+      })
+    }
+  }
+
+
 }

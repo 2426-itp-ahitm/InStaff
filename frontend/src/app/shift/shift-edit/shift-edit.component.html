@@ -5,7 +5,7 @@
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-          <label for="shift-name" class="block text-sm/6 font-medium text-gray-900">Schicht Name</label>
+          <label for="shift-name" class="block font-semibold text-base text-gray-900">Schicht Name</label>
           <div class="mb-2">
             <input #shiftNameInput value="{{shift.shiftName}}" (click)="somethingChangedSetTrue()" type="text" name="shift-name" id="shift-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
           </div>
@@ -95,6 +95,7 @@
 
           <!-- bottom navigation -->
           <div class="mt-6 flex items-center justify-end gap-x-4">
+            <button type="button" class="button-delete" (click)="deleteShift()">Löschen</button>
             <button type="button" class="button-cancel" (click)="closeEditShift()">Abbrechen</button>
             <button type="button" class="button-green" [disabled]="!somethingChanged" (click)="save()">Speichern</button>
           </div>
