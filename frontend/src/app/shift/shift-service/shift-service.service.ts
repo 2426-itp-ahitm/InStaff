@@ -38,9 +38,18 @@ export class ShiftServiceService {
   }
 
   addShift(newShift: NewShift): void {
-    console.log(newShift);
-    this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, newShift)
+    const addShift = {
+      shiftCreateDTO: {
+        shiftName: newShift.shiftName,
+        startTime: newShift.shiftCreateDTO.startTime,
+        endTime: newShift.shiftCreateDTO.endTime,
+        companyId: newShift.shiftCreateDTO.companyId,
+      },
+      assignmentCreateDTOs: newShift.assignmentCreateDTOs
+    }
+    this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, addShift)
       .subscribe((createdShift )=> {
+        console.log(createdShift);
         const currentShift = this.shiftsSubject.getValue();
         this.shiftsSubject.next([...currentShift, createdShift]);
     })
@@ -58,7 +67,6 @@ export class ShiftServiceService {
       },
       assignmentCreateDTOs: newShift.assignmentCreateDTOs
     }
-
     return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, updateShift)
       .pipe(
         // keep local cache in sync on success

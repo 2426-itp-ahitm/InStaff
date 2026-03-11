@@ -14,7 +14,6 @@ import {ShiftTemplateServiceService} from '../../shift-template/shift-template-s
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
-import { Feedback } from '../../interfaces/feedback';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Component({
@@ -36,11 +35,11 @@ export class ShiftAddComponent implements OnInit {
   step: number = 0; // 0: date/time, 1: template choose, 2: assign employees
   startTime!: string;
   endTime!: string;
+  shiftName: string = '';
   dateError: string | null = null;
 
 
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
-  @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -210,6 +209,9 @@ export class ShiftAddComponent implements OnInit {
     }
     // when entering assignment step, initialize selects
     if (this.step === 2) {
+      if (!this.shiftName?.trim()) {
+        this.shiftName = this.selectedShiftTemplate?.shiftTemplateName ?? '';
+      }
       const roles = this.selectedShiftTemplate ? this.selectedShiftTemplate.templateRoles : this.manualRoles;
       roles.forEach(r => this.initializeSelectedEmployees(r.roleId, r.count));
     }
@@ -245,9 +247,12 @@ export class ShiftAddComponent implements OnInit {
   }
 
   save() {
+    const normalizedShiftName = (this.shiftName ?? '').trim();
     let assignments: NewAssignment[] = this.collectAssignments();
     const newShift: NewShift = {
-      shiftName: this.shiftNameInput.nativeElement.value,
+      shiftName: normalizedShiftName.length > 0
+        ? normalizedShiftName
+        : (this.selectedShiftTemplate?.shiftTemplateName ?? 'Schicht'),
       shiftCreateDTO: {
         startTime: this.selectedDate.startTime,
         endTime: this.selectedDate.endTime,
@@ -274,6 +279,9 @@ export class ShiftAddComponent implements OnInit {
           templateRoles: selectedTemplate.templateRoles.map(r => ({ ...r }))
         }
       : null;
+    if (!this.shiftName?.trim()) {
+      this.shiftName = this.selectedShiftTemplate?.shiftTemplateName ?? '';
+    }
     // reset selectedEmployees when template changes
     this.selectedEmployees = {};
   }
