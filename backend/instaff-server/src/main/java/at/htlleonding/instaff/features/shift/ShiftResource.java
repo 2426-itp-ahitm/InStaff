@@ -171,16 +171,14 @@ public class ShiftResource {
         // Create new assignments
         if (!dto.assignmentCreateDTOs().isEmpty()) {
             for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOs()) {
-                if (assignmentCreateDTO.employee() != -1) {
-                    Employee employee;
-                    if (assignmentCreateDTO.employee() != null) {
-                        employee = entityManager.find(Employee.class, assignmentCreateDTO.employee());
-                    } else {
-                        employee = null;
-                    }
-                    Assignment assignment = new Assignment(employee, shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
-                    entityManager.persist(assignment);
+                Employee employee;
+                if (assignmentCreateDTO.employee() != null) {
+                    employee = entityManager.find(Employee.class, assignmentCreateDTO.employee());
+                } else {
+                    employee = null;
                 }
+                Assignment assignment = new Assignment(employee, shift, entityManager.find(Role.class, assignmentCreateDTO.role()));
+                entityManager.persist(assignment);
             }
         }
 
