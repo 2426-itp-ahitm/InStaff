@@ -12,6 +12,7 @@ import {ManagerDashboardComponent} from '../dashboard/manager-dashboard/manager-
 import {EmployeeDashboardComponent} from '../dashboard/employee-dashboard/employee-dashboard.component';
 import {EmployeeShiftOverviewComponent} from '../dashboard/employee-shift-overview/employee-shift-overview.component';
 import {RoleWikiComponent} from '../role/role-wiki/role-wiki.component';
+import {EmployeeCalendarComponent} from '../dashboard/employee-calendar/employee-calendar.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,13 @@ export const routes: Routes = [
   {
     path: 'calendar',
     component: CalendarComponent, //COMPONENT CLASS NAME
+    title: 'InStaff',
+    canActivate: [AuthGuard],
+    data: {'rolesAllowed': ['user-is-manager']}
+  },
+  {
+    path: 'emp-calendar',
+    component: EmployeeCalendarComponent, //COMPONENT CLASS NAME
     title: 'InStaff',
     canActivate: [AuthGuard]
 

@@ -119,11 +119,14 @@ public class ShiftResource {
 
     @GET
     @Path("employee/{employeeId}")
-    public Response getShiftsByEmployeeId(@PathParam("employeeId") long employeeId) {
+    public List<ShiftDTO> getShiftsByEmployeeId(@PathParam("employeeId") long employeeId) {
         List<Shift> shifts = shiftRepository
-                .find("employee.id = ?1", employeeId)
+                .find("SELECT DISTINCT s FROM Shift s JOIN s.assignments a WHERE a.employee.id = ?1", employeeId)
                 .list();
-        return Response.ok(shifts).build();
+        return shifts
+                .stream()
+                .map(shiftMapper::toResource)
+                .toList();
     }
 
     @DELETE

@@ -15,6 +15,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import {ShiftCreateDTO} from '../../interfaces/new-shift';
+import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
+import {KeycloakService} from 'keycloak-angular';
 
 @Component({
   selector: 'app-employee-calendar',
@@ -38,6 +40,8 @@ export class EmployeeCalendarComponent implements OnInit {
   shiftService: ShiftServiceService = inject(ShiftServiceService)
   companyService: CompanyServiceService = inject(CompanyServiceService)
   keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
+  keycloackService: KeycloakService = inject(KeycloakService);
+  employeeService: EmployeeServiceService = inject(EmployeeServiceService);
 
   calendarOptions: CalendarOptions = {
     locale: deLocale,
@@ -106,12 +110,15 @@ export class EmployeeCalendarComponent implements OnInit {
       console.log(this.isAllowedToEdit);
     }
 
-    this.shiftService.shifts$.subscribe((data) => {
+    this.shiftService.employeeShifts$.subscribe((data) => {
       this.shifts = data;
       this.loadShiftsToEvents();
     });
 
-    this.shiftService.getShifts();
+    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+      this.shiftService.getShiftByEmployeeId(emp.id);
+    });
+
   }
 
   handleEventSelected(arg: EventClickArg) {
@@ -144,15 +151,15 @@ export class EmployeeCalendarComponent implements OnInit {
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,next today',
+        start: 'prev,today,next',
         end: 'dayGridMonth,timeGridDay,listMonth'
       }
     } else {
       this.calendarOptions.initialView = this.initialView;
       this.calendarOptions.headerToolbar = {
-        start: 'prev,next today',
+        start: 'prev,today,next',
         center: 'title',
-        end: 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
+        end: 'dayGridMonth,timeGridDay,listMonth'
       }
       this.calendarOptions.footerToolbar = {
         start: '',

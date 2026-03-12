@@ -25,6 +25,12 @@
            routerLinkActive="bg-green-base text-white" class="menu-item-big"
            *ngIf="isAdmin()">Dashboard</a>
         <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/calendar"
+           *ngIf="isAdmin()"
+           routerLinkActive="bg-green-base text-white"
+           class="menu-item-big"
+        >Kalender</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/emp-calendar"
+           *ngIf="isEmployee()"
            routerLinkActive="bg-green-base text-white"
            class="menu-item-big"
         >Kalender</a>
@@ -58,7 +64,10 @@
          (click)="closeMenu()">Dashboard</a>
       <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
          (click)="closeMenu()">Dashboard</a>
-      <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
+      <a routerLink="/emp-calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isEmployee()"
+         (click)="closeMenu()">Kalender</a>
+      <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
+         (click)="closeMenu()">Kalender</a>
       <a routerLink="/emp-shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big"
          (click)="closeMenu()">Schichtübersicht</a>
       <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"

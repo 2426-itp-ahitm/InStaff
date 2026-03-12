@@ -22,6 +22,10 @@ export class ShiftServiceService {
 
   private shiftsSubject = new BehaviorSubject<Shift[]>([]);
   public shifts$ = this.shiftsSubject.asObservable();
+
+  private employeeShiftsSubject = new BehaviorSubject<Shift[]>([]);
+  public employeeShifts$ = this.employeeShiftsSubject.asObservable();
+
   public selectedDate!: ShiftCreateDTO;
 
 
@@ -34,6 +38,13 @@ export class ShiftServiceService {
     this.httpClient.get<Shift[]>(`${this.getApiUrl()}/shifts/`)
       .subscribe((shifts: Shift[]) => {
       this.shiftsSubject.next(shifts);
+    });
+  }
+
+  getShiftByEmployeeId(empId: number): void {
+    this.httpClient.get<Shift[]>(`${this.getApiUrl()}/shifts/employee/${empId}`).
+    subscribe((shifts: Shift[]) => {
+      this.employeeShiftsSubject.next(shifts);
     });
   }
 
@@ -89,6 +100,7 @@ export class ShiftServiceService {
   getShiftById(shiftId: number): Observable<Shift> {
     return this.httpClient.get<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`)
   }
+
 
   deleteShift(shiftId: number) {
     return this.httpClient.delete<Shift>(`${this.getApiUrl()}/shifts/delete/${shiftId}`)
