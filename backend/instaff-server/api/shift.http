@@ -51,3 +51,6 @@ Content-Type: application/json
     }
   ]
 }
+
+### GET Shifts by Employee
+GET http://localhost:8080/api/shifts/employee/1

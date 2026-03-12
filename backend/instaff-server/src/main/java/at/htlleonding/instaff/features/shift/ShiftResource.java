@@ -117,6 +117,13 @@ public class ShiftResource {
                 .toList();
     }
 
+    @GET
+    @Path("employee/{employeeId}")
+    public Response getShiftsByEmployeeId(@PathParam("employeeId") long employeeId) {
+        List<Shift> shifts = shiftRepository.find("employee.id", employeeId).stream().toList();
+        return Response.ok(shifts).build();
+    }
+
     @DELETE
     @Transactional
     @Path("delete/{shiftId}")
