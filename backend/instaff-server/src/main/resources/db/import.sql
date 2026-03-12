@@ -24,6 +24,9 @@ values ('2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
 values ('2001-11-09 00:00:00', 'alexander.hahn1@outlook.de', 'Alexander', 'Hahn', '65626625', 1, false, 'Limesstraße 12, 4060 Leonding', 20);
 
+insert into employee (id, birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
+values (0, '2006-11-11 00:00:00', 'o.ffen@students.htl-leonding.ac.at', 'offen', '', '1233456899', 1, false, 'Limesstraße 12, 4060 Leonding', 10);
+
 /* Neue Manager */
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)
 values ('1975-02-27 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '67734144524', 1, true, 'Limesstraße 12, 4060 Leonding', 10);
