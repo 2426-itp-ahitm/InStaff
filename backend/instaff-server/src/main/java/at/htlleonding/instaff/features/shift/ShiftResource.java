@@ -120,7 +120,9 @@ public class ShiftResource {
     @GET
     @Path("employee/{employeeId}")
     public Response getShiftsByEmployeeId(@PathParam("employeeId") long employeeId) {
-        List<Shift> shifts = shiftRepository.find("employee.id", employeeId).stream().toList();
+        List<Shift> shifts = shiftRepository
+                .find("employee.id = ?1", employeeId)
+                .list();
         return Response.ok(shifts).build();
     }
 
