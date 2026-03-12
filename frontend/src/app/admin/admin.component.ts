@@ -24,7 +24,7 @@ export class AdminComponent implements OnInit {
     this.employeeService.employees$.subscribe((data) => this.employees = data);
     this.employeeService.getEmployees();
   }
-
+/*
   selectEmployee(id: string) {
     const parsed = Number(id);
     this.selectedEmployeeId = isNaN(parsed) ? null : parsed;
@@ -37,7 +37,7 @@ export class AdminComponent implements OnInit {
       this.assignments = [];
     }
   }
-
+*/
   acceptAssignment(a: Assignment) {
     if (!this.selectedEmployeeId) return;
     this.assignmentService.confirmAssignment(a.id).subscribe({

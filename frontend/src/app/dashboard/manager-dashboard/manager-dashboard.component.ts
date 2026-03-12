@@ -14,6 +14,7 @@ import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
+import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class ManagerDashboardComponent implements OnInit {
   roleService: RoleServiceService = inject(RoleServiceService);
   shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
   companyService: CompanyServiceService = inject(CompanyServiceService);
-
+  assignmentService: AssignmentServiceService = inject(AssignmentServiceService);
 
   keycloackService: KeycloakService = inject(KeycloakService);
 
@@ -62,6 +63,8 @@ export class ManagerDashboardComponent implements OnInit {
 
     this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.userName = emp.firstname + ' ' + emp.lastname;
+      this.assignmentService.getAssignmentsForEmployee(emp.id)
+
     });
     this.employeeService.getEmployees();
 

@@ -1,10 +1,11 @@
 import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Shift} from '../../interfaces/shift';
 import {Assignment} from '../../interfaces/assignment';
 import {ApiUrlService} from '../api-url/api-url.service';
+import {Role} from '../../interfaces/role';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,19 @@ export class AssignmentServiceService {
     return this.apiUrl.getApiUrl();
   }
 
+  private assignmentSubject = new BehaviorSubject<Assignment[]>([]);
+  public assignments$ = this.assignmentSubject.asObservable();
+
 
   getAssignmentByShiftId(shiftId: number): Observable<Assignment[]> {
     return this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/shift/${shiftId}`)
   }
 
-  getAssignmentsForEmployee(employeeId: number): Observable<Assignment[]> {
-    return this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/employee/${employeeId}`);
+  getAssignmentsForEmployee(employeeId: number): void {
+    this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/employee/${employeeId}`)
+      .subscribe((ass: Assignment[]) => {
+        this.assignmentSubject.next(ass)
+      })
   }
 
 

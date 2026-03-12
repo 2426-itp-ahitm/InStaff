@@ -10,6 +10,7 @@ import {BehaviorSubject, combineLatest, forkJoin} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
+import {Assignment} from '../../interfaces/assignment';
 
 type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 
@@ -57,6 +58,9 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   ngOnInit() {
     this.roleService.getRoles()
     this.employeeService.getEmployees()
+    this.assignmentService.assignments$.subscribe(assignments => {
+      this.buildAssignmentsFromSubject(assignments);
+    });
     this.loadAssignments()
     this.setStatusFilter('open')
   }
@@ -75,37 +79,38 @@ export class EmployeeShiftOverviewComponent implements OnInit{
         return;
       }
 
-      this.assignmentService.getAssignmentsForEmployee(emp.id).subscribe(
-        assignments => {
-          if (!assignments || assignments.length === 0) {
-            this.fullAssignments = []
-            return
-          }
-          const requests = assignments.map(a =>
-            this.shiftService.getShiftById(a.shift).pipe(
-              map(shift => ({
-                id: a.id,
-                shift: shift,
-                employee: a.employee,
-                role: this.roleService.getRoleById(a.role),
-                confirmed: a.confirmed
-              } as AssignmentFull))
-            )
-          )
+      this.assignmentService.getAssignmentsForEmployee(emp.id)
+    });
+  }
 
-          forkJoin(requests).subscribe(result => {
-            const now = new Date().getTime()
+  buildAssignmentsFromSubject(assignments: Assignment[]) {
+    if (!assignments || assignments.length === 0) {
+      this.allAssignments = [];
+      this.fullAssignments = [];
+      return;
+    }
 
-            this.allAssignments = result
-              .filter(a => {
-                const end = a.shift?.endTime ? new Date(a.shift.endTime).getTime() : null
-                return end !== null && end > now
-              });
-
-            this.applyFilters();
-          })
-        }
+    const requests = assignments.map(assignment =>
+      this.shiftService.getShiftById(assignment.shift).pipe(
+        map(shift => ({
+          id: assignment.id,
+          shift,
+          employee: assignment.employee,
+          role: this.roleService.getRoleById(assignment.role),
+          confirmed: assignment.confirmed
+        } as AssignmentFull))
       )
+    );
+
+    forkJoin(requests).subscribe(result => {
+      const now = new Date().getTime();
+
+      this.allAssignments = result.filter(assignment => {
+        const end = assignment.shift?.endTime ? new Date(assignment.shift.endTime).getTime() : null;
+        return end !== null && end > now;
+      });
+
+      this.applyFilters();
     });
   }
 
