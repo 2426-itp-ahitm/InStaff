@@ -106,6 +106,7 @@ export class ShiftAddOldComponent implements OnInit {
     let assignments: NewAssignment[] = this.collectAssignments();
     console.log(assignments);
     const newShift: NewShift = {
+      shiftName: "test",
       shiftCreateDTO: {
         startTime: this.selectedDate.startTime,
         endTime: this.selectedDate.endTime,
