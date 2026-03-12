@@ -147,7 +147,7 @@ export class ShiftEditComponent implements OnInit {
       },
       assignmentCreateDTOs: validAssignments,
     };
-
+    console.log("***********+")
     console.log(newShift);
 
     // If editing an existing shift, call update; otherwise fallback to add

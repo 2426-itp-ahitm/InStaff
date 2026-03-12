@@ -1,7 +1,6 @@
 import {Component, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
-import {DateClickArg} from '@fullcalendar/interaction';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {ShiftTemplate, TemplateRole} from '../../interfaces/shift-template';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
@@ -74,6 +73,7 @@ export class ShiftAddComponent implements OnInit {
     // initialize editable times with selectedDate values
     this.startTime = this.selectedDate.startTime;
     this.endTime = this.selectedDate.endTime;
+    this.applyDefaultShiftHoursIfCalendarPassedAllDaySlot();
 
 
 
@@ -222,6 +222,41 @@ export class ShiftAddComponent implements OnInit {
     const s = new Date(this.startTime);
     const e = new Date(this.endTime);
     return e.getTime() > s.getTime();
+  }
+
+  private applyDefaultShiftHoursIfCalendarPassedAllDaySlot(): void {
+    const start = new Date(this.startTime);
+    const end = new Date(this.endTime);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return;
+    }
+
+    const isStartMidnight = start.getHours() === 0 && start.getMinutes() === 0;
+    const isEndMidnight = end.getHours() === 0 && end.getMinutes() === 0;
+    const isExactlyOneDay = end.getTime() - start.getTime() === 24 * 60 * 60 * 1000;
+
+    if (!isStartMidnight || !isEndMidnight || !isExactlyOneDay) {
+      return;
+    }
+
+    const defaultStart = new Date(start);
+    defaultStart.setHours(12, 0, 0, 0);
+
+    const defaultEnd = new Date(start);
+    defaultEnd.setHours(21, 0, 0, 0);
+
+    this.startTime = this.toDateTimeLocalValue(defaultStart);
+    this.endTime = this.toDateTimeLocalValue(defaultEnd);
+  }
+
+  private toDateTimeLocalValue(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
   back() {
