@@ -61,7 +61,8 @@
 
     <div
       *ngFor="let assignment of fullAssignments"
-      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition"
+      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition border-l-4"
+      [ngClass]="getCardBorderClass(assignment.confirmed)"
     >
 
       <!-- Shift Info -->
@@ -72,7 +73,7 @@
           </h2>
 
           <span
-            class="text-xs px-2 py-1 rounded min-w-24 text-center"
+            class="text-sm px-3 py-1.5 rounded-full font-semibold min-w-28 text-center border"
             [ngClass]="getStatusClass(assignment.confirmed)">
             {{ getStatusLabel(assignment.confirmed) }}
           </span>

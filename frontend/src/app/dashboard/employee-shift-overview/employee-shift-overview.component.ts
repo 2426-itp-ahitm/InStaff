@@ -230,9 +230,17 @@ export class EmployeeShiftOverviewComponent implements OnInit{
 
   getStatusClass(confirmed: boolean | null) {
     return {
-      'bg-green-100 text-green-800': confirmed === true,
-      'bg-yellow-100 text-yellow-800': confirmed === null,
-      'bg-red-100 text-red-800': confirmed === false
+      'bg-green-50 text-green-800 border-green-300': confirmed === true,
+      'bg-yellow-50 text-yellow-800 border-yellow-300': confirmed === null,
+      'bg-red-50 text-red-800 border-red-300': confirmed === false
+    };
+  }
+
+  getCardBorderClass(confirmed: boolean | null) {
+    return {
+      'border-l-green-500': confirmed === true,
+      'border-l-yellow-400': confirmed === null,
+      'border-l-red-500': confirmed === false
     };
   }
 }
