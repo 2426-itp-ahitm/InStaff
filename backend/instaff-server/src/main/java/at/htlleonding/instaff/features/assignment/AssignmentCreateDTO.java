@@ -5,4 +5,7 @@ public record AssignmentCreateDTO(
         Long shift,
         Long role
 ) {
+    public static boolean assignmentEmployeeCheck(AssignmentCreateDTO assignment) {
+        return assignment.employee != null;
+    }
 }
