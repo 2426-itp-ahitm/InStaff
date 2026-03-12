@@ -9,8 +9,6 @@ import SwiftUI
 
 let apiBaseUrl = "http://localhost:8080"
 
-let apiBaseUrl = "http://localhost:8080"
-
 struct Shift: Identifiable, Decodable {
     let id: Int
     var startTime: String

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, inject, OnInit} from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {NgClass, NgIf} from '@angular/common';
 import {KeycloakService} from 'keycloak-angular';
@@ -24,6 +24,9 @@ export class MenuComponent implements OnInit {
   isMenuOpen: boolean=false
   employee?: Employee;
   isManager: boolean = false;
+  userInitials: string = "";
+
+  constructor(private eRef: ElementRef) {}
 
   async ngOnInit(): Promise<void> {
     const isLoggedIn = await this.keycloakService.isLoggedIn();
@@ -39,6 +42,7 @@ export class MenuComponent implements OnInit {
     this.employeeService.getEmployeeByKeycloakId(keycloakId).subscribe((emp) => {
       this.employee = emp;
       this.isManager = emp.isManager;
+      this.userInitials = this.employee.firstname[0].toUpperCase() + this.employee.lastname[0].toUpperCase();
     });
   }
 
@@ -54,5 +58,16 @@ export class MenuComponent implements OnInit {
 
   logout() {
     this.keycloakService.logout();
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen ? this.isMenuOpen = false : true;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.isMenuOpen = false;
+    }
   }
 }
