@@ -16,7 +16,7 @@ values ('Kellner', 'Ist für den Service der Gäste verantwortlich', 1);
 insert into role (role_name, description, company_id)
 values ('Barkeeper', 'Serviert (anti-)akoholische Getränke an der Bar', 1);
 insert into role (role_name, description, company_id)
-values ('Abwasch', 'Reinigt und sortiert das Geschirr', 1);
+values ('Spülkraft', 'Reinigt und sortiert das Geschirr', 1);
 
 /*EMPLOYEE*/
 insert into employee (birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage)

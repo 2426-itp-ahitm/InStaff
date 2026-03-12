@@ -13,7 +13,11 @@ struct LoginView: View {
 
     var body: some View {
         VStack(spacing: 30) {
-            Text("Instaff Login")
+            Image("favicon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
+            Text("Instaff")
                 .font(.largeTitle)
                 .bold()
 

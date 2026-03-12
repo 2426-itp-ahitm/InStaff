@@ -1,25 +1,74 @@
-<div class="bg-green-darkest fixed top-0 left-0 max-md:w-auto max-md:rounded-md max-md:m-2 w-full z-50 shadow-md">
-  <nav class="" (mouseover)="isMenuOpen=true" (mouseleave)="isMenuOpen=false" (click)="isMenuOpen = !isMenuOpen">
-    <div class="flex items-center justify-between p-1 ">
-      <div class="rounded-md px-4 py-3 space-y-1 w-min text-sm font-medium text-gray-300 md:hidden cursor-pointer" >
+<div class="fixed top-0 left-0 w-full z-50">
+  <a routerLink="/profil"
+     class="mr-0 md:mr-3 fixed top-2 right-2 flex items-center justify-center w-9 h-9 rounded-full bg-green-base text-white text-sm font-semibold hover:bg-green-700 transition z-50">
+    {{ userInitials }}
+  </a>
+  <!-- MOBILE NAV -->
+  <nav class="bg-green-darkest inline-flex rounded-md m-2 shadow-md md:hidden"
+       (mouseover)="isMenuOpen=true"
+       (mouseleave)="isMenuOpen=false"
+       (click)="isMenuOpen = !isMenuOpen">
+
+    <div class="p-1">
+      <div class="rounded-md px-4 py-3 space-y-1 w-min text-sm font-medium text-gray-300 cursor-pointer">
         <svg width="20" height="20" viewBox="0 0 224 224" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M28 112H196M28 56H196M28 168H196" stroke="#F3F3F3" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M28 112H196M28 56H196M28 168H196" stroke="#F3F3F3" stroke-width="15" stroke-linecap="round"
+                stroke-linejoin="round"/>
         </svg>
+      </div>
+      <div class="flex-col space-y-1 px-2 pb-2 transition-all duration-700"
+           [ngClass]="{ 'hidden': !isMenuOpen, 'flex': isMenuOpen }">
+        <a (click)="$event.stopPropagation(); closeMenu()"
+           routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big"
+           *ngIf="!isAdmin()">Dashboard</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/home"
+           routerLinkActive="bg-green-base text-white" class="menu-item-big"
+           *ngIf="isAdmin()">Dashboard</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/calendar"
+           routerLinkActive="bg-green-base text-white"
+           class="menu-item-big"
+        >Kalender</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/emp-shift-overview"
+           routerLinkActive="bg-green-base text-white"
+           class="menu-item-big"
+        >Schichtübersicht</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/team"
+           routerLinkActive="bg-green-base text-white" class="menu-item-big"
+           *ngIf="isAdmin()">Team</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/role-list"
+           routerLinkActive="bg-green-base text-white"
+           class="menu-item-big"
+           *ngIf="isAdmin()">Rollen</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/shift-template-list"
+           routerLinkActive="bg-green-base text-white"
+           class="menu-item-big"
+           *ngIf="isAdmin()">Schichtvorlagen</a>
+        <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/wiki"
+           routerLinkActive="bg-green-base text-white" class="menu-item-big"
+        >Wiki</a>
       </div>
     </div>
 
-    <div class="flex-col space-y-1 px-2 pb-2 md:flex md:flex-row md:space-x-4 md:space-y-0 md:justify-center md:items-center md: transition-all duration-700"
-      [ngClass]="{ 'hidden': !isMenuOpen, 'flex': isMenuOpen, 'md:flex': true } ">
-      <a routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="!isAdmin()">Dashboard</a>
-      <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Dashboard</a>
-      <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Kalender</a>
-      <a routerLink="/emp-shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Schichtübersicht</a>
-      <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Team</a>
-      <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Rollen</a>
-      <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" *ngIf="isAdmin()">Schichtvorlagen</a>
-      <a routerLink="/wiki" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen" >Wiki</a>
-      <a routerLink="/profil" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="isMenuOpen=!isMenuOpen">Profil</a>
+  </nav>
+
+  <!-- DESKTOP NAV -->
+  <nav class="bg-green-darkest w-full shadow-md hidden md:flex justify-center">
+    <div class="flex flex-row space-x-4 items-center py-2">
+      <a routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="!isAdmin()"
+         (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
+         (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
+      <a routerLink="/emp-shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big"
+         (click)="closeMenu()">Schichtübersicht</a>
+      <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
+         (click)="closeMenu()">Team</a>
+      <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
+         (click)="closeMenu()">Rollen</a>
+      <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big"
+         *ngIf="isAdmin()" (click)="closeMenu()">Schichtvorlagen</a>
+      <a routerLink="/wiki" routerLinkActive="bg-green-base text-white" class="menu-item-big"
+         (click)="closeMenu()">Wiki</a>
     </div>
   </nav>
 </div>
-
