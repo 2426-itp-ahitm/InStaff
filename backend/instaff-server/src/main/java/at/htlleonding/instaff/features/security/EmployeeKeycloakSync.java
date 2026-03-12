@@ -23,7 +23,9 @@ public class EmployeeKeycloakSync {
 
         for (Employee employee : employeeList) {
             if (employee.keycloakUserId == null) {
-                employee.keycloakUserId = keycloakAdminService.createUser(employee);
+                if (!employee.getFirstname().equals("offen")) {
+                    employee.keycloakUserId = keycloakAdminService.createUser(employee);
+                }
             }
         }
     }
