@@ -6,6 +6,7 @@ ENV KEYCLOAK_ADMIN_PASSWORD=admin
 
 # Copy your exported realm to the import directory
 COPY realm-export.json /opt/keycloak/data/import/
+COPY themes /opt/keycloak/themes
 
 # Enable realm import
 RUN /opt/keycloak/bin/kc.sh build
