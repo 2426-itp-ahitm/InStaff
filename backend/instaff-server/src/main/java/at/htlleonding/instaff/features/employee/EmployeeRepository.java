@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class EmployeeRepository implements PanacheRepository<Employee> {
@@ -27,11 +28,18 @@ public class EmployeeRepository implements PanacheRepository<Employee> {
     EmployeeMapper employeeMapper;
 
     public List<Employee> getAllEmployees() {
-        return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class).getResultList();
+        return entityManager.createNamedQuery(Employee.FIND_ALL, Employee.class)
+                .getResultList()
+                .stream()
+                .filter(e -> !(e.getId() ==0))
+                .collect(Collectors.toList());
     }
 
     public List<Employee> getByCompanyId(Long companyId) {
-        return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList();
+        return entityManager.createNamedQuery(Employee.FIND_BY_COMPANY, Employee.class).setParameter("id", companyId).getResultList()
+                .stream()
+                .filter(e -> !(e.getId() ==0))
+                .collect(Collectors.toList());
     }
 
     public EmployeeDTO findByKcId(String kcId) {

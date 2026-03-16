@@ -1,1 +1,14 @@
-<p>presentation works!</p>
+<div class="presentation-bg">
+  <div class="slide" *ngIf="!isLoading && currentSlide as slide" [@slideIn]="slideIndex">
+    <div
+      *ngFor="let item of slide.content"
+      class="slide-content-item"
+      [ngStyle]="getContentStyles(item)"
+    >
+      <div class="slide-content-render" [style.animation]="getContentAnimation(item)">
+        <div *ngIf="item.text" [innerHTML]="item.text"></div>
+        <img *ngIf="item.image" [src]="item.image" alt="Slide image" class="slide-image">
+      </div>
+    </div>
+  </div>
+</div>

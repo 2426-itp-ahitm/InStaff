@@ -1,0 +1,568 @@
+import {Component, HostListener} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {Presentation} from '../../../interfaces/presentation';
+import {Slide} from '../../../interfaces/slide';
+import {SlideContent} from '../../../interfaces/slide-content';
+import {Animation} from '../../../interfaces/animation';
+
+@Component({
+  selector: 'app-presentation-edit',
+  imports: [
+    ReactiveFormsModule,
+    CommonModule
+  ],
+  templateUrl: './presentation-edit.component.html',
+  styleUrl: './presentation-edit.component.css'
+})
+export class PresentationEditComponent {
+  presentation: Presentation = {
+    name: 'Neue Praesentation',
+    slides: []
+  };
+
+  animations: Animation[] = [];
+  infoMessage = '';
+  previewSlideIndex = 0;
+  editingContentSource: {slideId: number; contentId: number} | null = null;
+
+  readonly animationTypes: Animation['type'][] = [
+    'fadeIn',
+    'fadeInLeft',
+    'fadeInRight',
+    'fadeInBottom',
+    'fadeInTop',
+    'fadeOut',
+    'fadeOutLeft',
+    'fadeOutRight',
+    'fadeOutBottom',
+    'fadeOutTop'
+  ];
+
+  readonly presentationForm = new FormGroup({
+    name: new FormControl('Neue Praesentation', {nonNullable: true, validators: [Validators.required]})
+  });
+
+  readonly slideForm = new FormGroup({
+    id: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]})
+  });
+
+  readonly animationForm = new FormGroup({
+    type: new FormControl<Animation['type']>('fadeIn', {nonNullable: true, validators: [Validators.required]}),
+    duration: new FormControl(600, {nonNullable: true, validators: [Validators.required, Validators.min(0)]}),
+    delay: new FormControl(0, {nonNullable: true, validators: [Validators.required, Validators.min(0)]})
+  });
+
+  readonly contentForm = new FormGroup({
+    id: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
+    slideId: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
+    text: new FormControl('', {nonNullable: true}),
+    image: new FormControl('', {nonNullable: true}),
+    zIndex: new FormControl(1, {nonNullable: true, validators: [Validators.required]}),
+    positionX: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
+    positionY: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
+    centerHorizontal: new FormControl(false, {nonNullable: true}),
+    centerVertical: new FormControl(false, {nonNullable: true}),
+    inAnimationIndex: new FormControl<number | null>(null),
+    outAnimationIndex: new FormControl<number | null>(null)
+  });
+
+  @HostListener('window:beforeunload', ['$event'])
+  confirmReload(event: BeforeUnloadEvent): void {
+    event.preventDefault();
+    event.returnValue = '';
+  }
+
+  get previewSlide(): Slide | null {
+    if (this.presentation.slides.length === 0) {
+      return null;
+    }
+
+    if (this.previewSlideIndex < 0) {
+      this.previewSlideIndex = 0;
+    }
+
+    if (this.previewSlideIndex >= this.presentation.slides.length) {
+      this.previewSlideIndex = this.presentation.slides.length - 1;
+    }
+
+    return this.presentation.slides[this.previewSlideIndex] ?? null;
+  }
+
+  get editingContent(): boolean {
+    return this.editingContentSource !== null;
+  }
+
+  updatePresentationMeta(): void {
+    if (this.presentationForm.invalid) {
+      this.infoMessage = 'Bitte einen gueltigen Namen eingeben.';
+      return;
+    }
+
+    this.presentation.name = this.presentationForm.controls.name.value.trim();
+    this.infoMessage = 'Praesentation aktualisiert.';
+  }
+
+  addSlide(): void {
+    if (this.slideForm.invalid) {
+      this.infoMessage = 'Bitte eine gueltige Slide-ID eingeben.';
+      return;
+    }
+
+    const slideId = this.slideForm.controls.id.value;
+    if (this.presentation.slides.some(slide => slide.id === slideId)) {
+      this.infoMessage = `Slide mit ID ${slideId} existiert bereits.`;
+      return;
+    }
+
+    const newSlide: Slide = {
+      id: slideId,
+      content: []
+    };
+
+    this.presentation.slides.push(newSlide);
+    this.infoMessage = `Slide ${slideId} wurde hinzugefuegt.`;
+    this.slideForm.patchValue({id: slideId + 1});
+    this.contentForm.patchValue({slideId});
+    this.previewSlideIndex = this.presentation.slides.length - 1;
+  }
+
+  deleteSlide(slideId: number): void {
+    const existingSlide = this.presentation.slides.find(slide => slide.id === slideId);
+    if (!existingSlide) {
+      this.infoMessage = `Slide ${slideId} existiert nicht.`;
+      return;
+    }
+
+    const confirmed = window.confirm(`Slide ${slideId} wirklich loeschen?`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.presentation.slides = this.presentation.slides.filter(slide => slide.id !== slideId);
+    this.previewSlideIndex = Math.max(0, Math.min(this.previewSlideIndex, this.presentation.slides.length - 1));
+
+    if (this.editingContentSource?.slideId === slideId) {
+      this.cancelContentEdit();
+    }
+
+    this.infoMessage = `Slide ${slideId} wurde geloescht.`;
+  }
+
+  addAnimation(): void {
+    if (this.animationForm.invalid) {
+      this.infoMessage = 'Bitte gueltige Animationsdaten eingeben.';
+      return;
+    }
+
+    const newAnimation: Animation = {
+      type: this.animationForm.controls.type.value,
+      duration: this.animationForm.controls.duration.value,
+      delay: this.animationForm.controls.delay.value
+    };
+
+    this.animations.push(newAnimation);
+    this.infoMessage = `Animation ${this.animations.length} wurde hinzugefuegt.`;
+
+    if (this.animations.length === 1) {
+      this.contentForm.patchValue({
+        inAnimationIndex: 0,
+        outAnimationIndex: 0
+      });
+    }
+  }
+
+  addContentToSlide(): void {
+    this.saveContent();
+  }
+
+  saveContent(): void {
+    if (this.contentForm.invalid) {
+      this.infoMessage = 'Bitte gueltige Content-Daten eingeben.';
+      return;
+    }
+
+    const slideId = this.contentForm.controls.slideId.value;
+    const targetSlide = this.presentation.slides.find(slide => slide.id === slideId);
+
+    if (!targetSlide) {
+      this.infoMessage = `Keine Slide mit ID ${slideId} gefunden.`;
+      return;
+    }
+
+    const inAnimationIndex = this.contentForm.controls.inAnimationIndex.value;
+    const outAnimationIndex = this.contentForm.controls.outAnimationIndex.value;
+    const inAnimation = this.getAnimationByIndex(inAnimationIndex);
+    const outAnimation = this.getAnimationByIndex(outAnimationIndex);
+
+    const contentId = this.contentForm.controls.id.value;
+
+    const rawText = this.contentForm.controls.text.value.trim();
+    const rawImage = this.contentForm.controls.image.value.trim();
+    if (!rawText && !rawImage) {
+      this.infoMessage = 'Bitte mindestens Text oder Bild setzen.';
+      return;
+    }
+
+    const newContent: SlideContent = {
+      id: contentId,
+      slideId,
+      text: rawText || null,
+      image: rawImage || null,
+      zIndex: this.contentForm.controls.zIndex.value,
+      positionX: this.clampPercent(this.contentForm.controls.positionX.value),
+      positionY: this.clampPercent(this.contentForm.controls.positionY.value),
+      centerHorizontal: this.contentForm.controls.centerHorizontal.value,
+      centerVertical: this.contentForm.controls.centerVertical.value,
+      inAnimation,
+      outAnimation
+    };
+
+    if (this.editingContentSource) {
+      this.applyContentUpdate(targetSlide, newContent);
+      return;
+    }
+
+    if (targetSlide.content.some(content => content.id === contentId)) {
+      this.infoMessage = `Content mit ID ${contentId} existiert in Slide ${slideId} bereits.`;
+      return;
+    }
+
+    targetSlide.content.push(newContent);
+    this.infoMessage = `Content ${contentId} wurde zu Slide ${slideId} hinzugefuegt.`;
+    this.contentForm.patchValue({id: contentId + 1, text: '', image: ''});
+  }
+
+  startEditContent(slideId: number, contentId: number): void {
+    const targetSlide = this.presentation.slides.find(slide => slide.id === slideId);
+    const content = targetSlide?.content.find(entry => entry.id === contentId);
+
+    if (!targetSlide || !content) {
+      this.infoMessage = 'Content zum Bearbeiten wurde nicht gefunden.';
+      return;
+    }
+
+    this.editingContentSource = {slideId, contentId};
+    this.contentForm.patchValue({
+      id: content.id,
+      slideId: targetSlide.id,
+      text: content.text ?? '',
+      image: content.image ?? '',
+      zIndex: content.zIndex,
+      positionX: content.positionX,
+      positionY: content.positionY,
+      centerHorizontal: content.centerHorizontal === true,
+      centerVertical: content.centerVertical === true,
+      inAnimationIndex: this.getAnimationIndex(content.inAnimation),
+      outAnimationIndex: this.getAnimationIndex(content.outAnimation)
+    });
+    this.infoMessage = `Content ${contentId} wird bearbeitet.`;
+  }
+
+  cancelContentEdit(): void {
+    this.editingContentSource = null;
+    this.contentForm.patchValue({text: '', image: ''});
+    this.infoMessage = 'Bearbeitung abgebrochen.';
+  }
+
+  deleteContent(slideId: number, contentId: number): void {
+    const targetSlide = this.presentation.slides.find(slide => slide.id === slideId);
+    if (!targetSlide) {
+      this.infoMessage = `Slide ${slideId} existiert nicht.`;
+      return;
+    }
+
+    const beforeLength = targetSlide.content.length;
+    targetSlide.content = targetSlide.content.filter(content => content.id !== contentId);
+    if (targetSlide.content.length === beforeLength) {
+      this.infoMessage = `Content ${contentId} wurde nicht gefunden.`;
+      return;
+    }
+
+    if (this.editingContentSource?.slideId === slideId && this.editingContentSource.contentId === contentId) {
+      this.cancelContentEdit();
+    }
+
+    this.infoMessage = `Content ${contentId} wurde geloescht.`;
+  }
+
+  goToPreviewSlide(index: number): void {
+    if (index < 0 || index >= this.presentation.slides.length) {
+      return;
+    }
+    this.previewSlideIndex = index;
+  }
+
+  nextPreviewSlide(): void {
+    if (this.presentation.slides.length === 0) {
+      return;
+    }
+    this.previewSlideIndex = (this.previewSlideIndex + 1) % this.presentation.slides.length;
+  }
+
+  previousPreviewSlide(): void {
+    if (this.presentation.slides.length === 0) {
+      return;
+    }
+    this.previewSlideIndex = (this.previewSlideIndex - 1 + this.presentation.slides.length) % this.presentation.slides.length;
+  }
+
+  uploadPresentation(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    file.text()
+      .then(content => {
+        const parsed = JSON.parse(content);
+        const uploadedPresentation = this.parsePresentation(parsed);
+
+        if (!uploadedPresentation) {
+          this.infoMessage = 'Datei hat kein gueltiges Presentation-Format.';
+          return;
+        }
+
+        this.presentation = uploadedPresentation;
+        this.presentationForm.patchValue({name: uploadedPresentation.name});
+        this.previewSlideIndex = 0;
+        this.editingContentSource = null;
+        this.contentForm.patchValue({
+          slideId: uploadedPresentation.slides[0]?.id ?? 1,
+          id: 1,
+          text: '',
+          image: '',
+          inAnimationIndex: null,
+          outAnimationIndex: null
+        });
+        this.infoMessage = 'Praesentation geladen. Seite neu laden, um eine andere neue Session zu starten.';
+      })
+      .catch(() => {
+        this.infoMessage = 'JSON-Datei konnte nicht geladen werden.';
+      })
+      .finally(() => {
+        input.value = '';
+      });
+  }
+
+  private getAnimationByIndex(index: number | null): Animation | null {
+    if (index === null || index < 0 || index >= this.animations.length) {
+      return null;
+    }
+
+    const animation = this.animations[index];
+    return {
+      type: animation.type,
+      duration: animation.duration,
+      delay: animation.delay
+    };
+  }
+
+  exportPresentationAsJson(): void {
+    const json = JSON.stringify(this.presentation, null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${this.presentation.name || 'presentation'}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+    this.infoMessage = 'Praesentation als JSON exportiert.';
+  }
+
+  getPreviewContentStyles(content: SlideContent): Record<string, string | number> {
+    const baseX = content.centerHorizontal === true ? 50 : content.positionX;
+    const baseY = content.centerVertical === true ? 50 : content.positionY;
+    const positionX = this.clampPercent(baseX);
+    const positionY = this.clampPercent(baseY);
+
+    return {
+      left: `${positionX}%`,
+      top: `${positionY}%`,
+      transform: `translate(-${positionX}%, -${positionY}%)`,
+      'z-index': content.zIndex
+    };
+  }
+
+  private applyContentUpdate(targetSlide: Slide, updatedContent: SlideContent): void {
+    const source = this.editingContentSource;
+    if (!source) {
+      return;
+    }
+
+    const sourceSlide = this.presentation.slides.find(slide => slide.id === source.slideId);
+    if (!sourceSlide) {
+      this.editingContentSource = null;
+      this.infoMessage = 'Original-Slide fuer die Bearbeitung nicht gefunden.';
+      return;
+    }
+
+    const sourceIndex = sourceSlide.content.findIndex(content => content.id === source.contentId);
+    if (sourceIndex < 0) {
+      this.editingContentSource = null;
+      this.infoMessage = 'Original-Content fuer die Bearbeitung nicht gefunden.';
+      return;
+    }
+
+    const duplicateInTarget = targetSlide.content.some(content => {
+      const isOriginalEntry = targetSlide.id === source.slideId && content.id === source.contentId;
+      return !isOriginalEntry && content.id === updatedContent.id;
+    });
+
+    if (duplicateInTarget) {
+      this.infoMessage = `Content mit ID ${updatedContent.id} existiert in Slide ${targetSlide.id} bereits.`;
+      return;
+    }
+
+    sourceSlide.content.splice(sourceIndex, 1);
+    targetSlide.content.push(updatedContent);
+
+    this.editingContentSource = null;
+    this.infoMessage = `Content ${updatedContent.id} wurde aktualisiert.`;
+    this.contentForm.patchValue({id: updatedContent.id + 1, text: '', image: ''});
+  }
+
+  private getAnimationIndex(animation: Animation | null): number | null {
+    if (!animation) {
+      return null;
+    }
+
+    const animationIndex = this.animations.findIndex(candidate => (
+      candidate.type === animation.type
+      && candidate.duration === animation.duration
+      && candidate.delay === animation.delay
+    ));
+
+    return animationIndex >= 0 ? animationIndex : null;
+  }
+
+  private parsePresentation(raw: unknown): Presentation | null {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+
+    const data = raw as Record<string, unknown>;
+    if (typeof data['name'] !== 'string' || !Array.isArray(data['slides'])) {
+      return null;
+    }
+
+    const slides: Slide[] = [];
+    for (const slideRaw of data['slides']) {
+      if (!slideRaw || typeof slideRaw !== 'object') {
+        return null;
+      }
+
+      const slideData = slideRaw as Record<string, unknown>;
+      if (typeof slideData['id'] !== 'number' || !Array.isArray(slideData['content'])) {
+        return null;
+      }
+
+      const content: SlideContent[] = [];
+      for (const contentRaw of slideData['content']) {
+        const normalized = this.parseSlideContent(contentRaw, slideData['id']);
+        if (!normalized) {
+          return null;
+        }
+        content.push(normalized);
+      }
+
+      slides.push({id: slideData['id'], content});
+    }
+
+    return {
+      name: data['name'],
+      slides
+    };
+  }
+
+  private parseSlideContent(raw: unknown, fallbackSlideId: number): SlideContent | null {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+
+    const data = raw as Record<string, unknown>;
+    if (typeof data['id'] !== 'number') {
+      return null;
+    }
+
+    const resolvedSlideId = typeof data['slideId'] === 'number' ? data['slideId'] : fallbackSlideId;
+    const resolvedText = typeof data['text'] === 'string' ? data['text'] : null;
+    const resolvedImage = typeof data['image'] === 'string' ? data['image'] : null;
+    const zIndex = typeof data['zIndex'] === 'number' ? data['zIndex'] : 1;
+    const positionX = this.parsePercentValue(data['positionX']);
+    const positionY = this.parsePercentValue(data['positionY']);
+
+    return {
+      id: data['id'],
+      slideId: resolvedSlideId,
+      text: resolvedText,
+      image: resolvedImage,
+      zIndex,
+      positionX,
+      positionY,
+      centerHorizontal: data['centerHorizontal'] === true,
+      centerVertical: data['centerVertical'] === true,
+      inAnimation: this.parseAnimation(raw, 'inAnimation'),
+      outAnimation: this.parseAnimation(raw, 'outAnimation')
+    };
+  }
+
+  private parsePercentValue(value: unknown): number {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return this.clampPercent(value);
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      const normalized = trimmed.endsWith('%') ? trimmed.slice(0, -1) : trimmed;
+      const parsed = Number(normalized);
+      if (Number.isFinite(parsed)) {
+        return this.clampPercent(parsed);
+      }
+    }
+
+    return 0;
+  }
+
+  private clampPercent(value: number): number {
+    return Math.max(0, Math.min(100, value));
+  }
+
+  private parseAnimation(raw: unknown, key: 'inAnimation' | 'outAnimation'): Animation | null {
+    if (!raw || typeof raw !== 'object') {
+      return null;
+    }
+
+    const data = raw as Record<string, unknown>;
+    const animationValue = data[key];
+    if (animationValue === null || animationValue === undefined) {
+      return null;
+    }
+
+    if (!animationValue || typeof animationValue !== 'object') {
+      return null;
+    }
+
+    const animation = animationValue as Record<string, unknown>;
+    if (typeof animation['type'] !== 'string') {
+      return null;
+    }
+
+    if (!this.animationTypes.includes(animation['type'] as Animation['type'])) {
+      return null;
+    }
+
+    const duration = typeof animation['duration'] === 'number' ? animation['duration'] : 0;
+    const delay = typeof animation['delay'] === 'number' ? animation['delay'] : 0;
+
+    return {
+      type: animation['type'] as Animation['type'],
+      duration,
+      delay
+    };
+  }
+
+}
