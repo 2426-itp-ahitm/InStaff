@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MenuComponent} from '../../essentials/menu/menu.component';
 import {RouterOutlet} from '@angular/router';
 
