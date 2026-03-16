@@ -73,10 +73,7 @@ export class ProfilComponent implements OnInit{
       });
     });
 
-
-
-
-
+    console.log(this.keycloackService.getToken())
 
     this.roleService.getRoles()
 
@@ -96,7 +93,7 @@ export class ProfilComponent implements OnInit{
 
   logout(): void {
     if (confirm('Sicher, dass du dich ausloggen willst?\nWir werden dich vermissen ):')) {
-      const home = `${window.location.origin}/home`
+      const home = `${window.location.origin}/`
       this.keycloackService.logout(home)
     }
   }

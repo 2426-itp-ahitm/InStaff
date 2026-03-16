@@ -1,22 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import {
   ActivatedRouteSnapshot,
   Router,
-  RouterStateSnapshot,
-} from '@angular/router';
-import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
+  RouterStateSnapshot
+} from '@angular/router'
+import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular'
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthGuard extends KeycloakAuthGuard {
 
   constructor(
     protected override readonly router: Router,
     protected readonly keycloakService: KeycloakService
   ) {
-    super(router, keycloakService);
+    super(router, keycloakService)
   }
 
   public async isAccessAllowed(
@@ -24,32 +23,31 @@ export class AuthGuard extends KeycloakAuthGuard {
     state: RouterStateSnapshot
   ): Promise<boolean> {
 
+    // User not logged in → trigger Keycloak login
     if (!this.authenticated) {
       await this.keycloakService.login({
-        redirectUri: window.location.origin + state.url,
-      });
-      return false;
+        redirectUri: window.location.origin + state.url
+      })
+      return false
     }
 
-    const requiredRoles = route.data['rolesAllowed'] as string[];
+    const requiredRoles = route.data['rolesAllowed'] as string[] | undefined
 
-    if (!Array.isArray(requiredRoles) || requiredRoles.length === 0) {
-      return true;
+    // If route has no role restriction → any logged in user allowed
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true
     }
 
-    const hasRole = requiredRoles.some(role =>
+    const hasRequiredRole = requiredRoles.some(role =>
       this.keycloakService.isUserInRole(role)
-    );
+    )
 
-    if (!hasRole && state.url === '/home') {
-      this.router.navigate(['/emp-home']);
-      return false;
-    }
-    else if (!hasRole) {
-      this.router.navigate(['/not-authorized']);
-      return false;
+    // Manager role required but user is employee
+    if (!hasRequiredRole) {
+      this.router.navigate(['/emp-home'])
+      return false
     }
 
-    return true;
+    return true
   }
 }
