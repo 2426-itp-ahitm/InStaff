@@ -17,9 +17,17 @@ public class Role extends PanacheEntity {
     @ManyToOne
     public Company company;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     public List<Employee> employees;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Assignment> assignments;
+
+    public Role() {}
+
+    public Role(String roleName, String description, Company company) {
+        this.roleName = roleName;
+        this.description = description;
+        this.company = company;
+    }
 }
