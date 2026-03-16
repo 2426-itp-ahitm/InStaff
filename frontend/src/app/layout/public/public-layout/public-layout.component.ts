@@ -1,22 +1,20 @@
 import {Component, inject, AfterViewInit} from '@angular/core';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {FeaturesComponent} from '../features/features.component';
 import {LandingPageComponent} from '../landing-page/landing-page.component';
-import {PresentationComponent} from '../presentation/presentation.component';
 import {AboutUsComponent} from '../about-us/about-us.component';
 import {KeycloakService} from 'keycloak-angular';
-import {NgClass} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-public-layout',
   imports: [
-    RouterLink,
     RouterOutlet,
     FeaturesComponent,
     LandingPageComponent,
-    PresentationComponent,
     AboutUsComponent,
-    NgClass
+    NgClass,
+    NgIf
   ],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css'
@@ -65,6 +63,11 @@ export class PublicLayoutComponent implements AfterViewInit {
     }
 
     await this.login()
+  }
+
+  isLandingPage(): boolean {
+    const path = this.router.url.split('?')[0].split('#')[0];
+    return path === '' || path === '/';
   }
 
   protected readonly Date = Date;

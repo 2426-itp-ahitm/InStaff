@@ -6,11 +6,13 @@ import {FeedbackBannerComponent} from '../feedback/feedback-banner/feedback-bann
 import {Feedback} from '../interfaces/feedback';
 import {FeedbackServiceService} from '../feedback/feedback-service/feedback-service.service';
 import {KeycloakService} from 'keycloak-angular';
+import { PresentationComponent } from "../layout/public/presentation/presentation.component";
+import {PresentationEditComponent} from '../layout/public/presentation-edit/presentation-edit.component';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuComponent, FeedbackBannerComponent,],
+  imports: [RouterOutlet, FeedbackBannerComponent, PresentationComponent, PresentationEditComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 
