@@ -18,6 +18,7 @@ import {FeaturesComponent} from '../layout/public/features/features.component';
 import {AboutUsComponent} from '../layout/public/about-us/about-us.component';
 import {LoginComponent} from '../layout/public/login/login';
 import {PrivateLayoutComponent} from '../layout/private-layout/private-layout.component';
+import {PresentationComponent} from '../layout/public/presentation/presentation.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: '', component: LandingPageComponent },
       { path: 'features', component: FeaturesComponent },
       { path: 'about-us', component: AboutUsComponent },
+      { path: 'presentation', component: PresentationComponent},
       { path: 'login', component: LoginComponent },
     ]
   },
