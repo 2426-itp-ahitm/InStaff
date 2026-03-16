@@ -26,7 +26,7 @@ export class PublicLayoutComponent implements AfterViewInit {
   router: Router = inject(Router);
   activeSection: string = 'start';
 
-  sections: string[] = ['start', 'features', 'presentation', 'about'];
+  sections: string[] = ['start', 'features', 'about'];
 
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(
