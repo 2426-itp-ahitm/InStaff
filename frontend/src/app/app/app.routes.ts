@@ -13,7 +13,7 @@ import {EmployeeShiftOverviewComponent} from '../dashboard/employee-shift-overvi
 import {RoleWikiComponent} from '../role/role-wiki/role-wiki.component';
 import {EmployeeCalendarComponent} from '../dashboard/employee-calendar/employee-calendar.component';
 import {PublicLayoutComponent} from '../layout/public/public-layout/public-layout.component';
-import {LandingPageComponent} from '../layout/landing-page/landing-page.component';
+import {LandingPageComponent} from '../layout/public/landing-page/landing-page.component';
 import {FeaturesComponent} from '../layout/public/features/features.component';
 import {AboutUsComponent} from '../layout/public/about-us/about-us.component';
 import {LoginComponent} from '../layout/public/login/login';

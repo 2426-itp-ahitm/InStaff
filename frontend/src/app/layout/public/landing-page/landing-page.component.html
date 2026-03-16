@@ -1,0 +1,77 @@
+<section class="relative bg-white text-slate-900 overflow-hidden min-h-screen">
+  <div class="relative max-w-6xl mx-auto px-6 pt-15 pb-24 text-center">
+
+    <!-- Badge -->
+    <span class="inline-block mb-6 px-4 py-1 text-sm rounded-full bg-beige text-green-darkest">
+      InStaff – Mitarbeiter & Aushilfskräfte Verwaltung
+    </span>
+
+    <!-- Headline -->
+    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+      Die einfache Lösung zur Verwaltung von
+      <span class="text-green-base">Mitarbeitern und Aushilfen</span>
+    </h1>
+
+
+    <!-- Subtext -->
+    <p class="text-slate-600 max-w-2xl mx-auto mb-10">
+      Plane Schichten, verwalte Mitarbeiter und koordiniere Aushilfskräfte
+      effizient in einer zentralen Plattform.
+    </p>
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4">
+      <a
+        href="mailto:instaff@office.at"
+        class="px-6 py-3 rounded-lg bg-green-base text-white font-semibold hover:bg-green-dark transition shadow-md hover:cursor-pointer"
+      >
+        Anfrage Starten
+      </a>
+
+      <a
+        href="#about"
+        class="px-6 py-3 rounded-lg border border-green-base text-green-dark transition hover:bg-green-light hover:text-white hover:cursor-pointer"
+      >
+        Mehr erfahren
+      </a>
+    </div>
+
+    <!-- App Screenshot -->
+    <div class="mt-16 flex justify-center">
+      <div
+        class="max-w-4xl perspective-[1200px]"
+        onmousemove="
+          const rect = this.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const midX = rect.width / 2;
+          const midY = rect.height / 2;
+          const rotateY = (x - midX) / 40;
+          const rotateX = -(y - midY) / 40;
+          const img = this.querySelector('img');
+          img.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+        "
+        onmouseleave="
+          const img = this.querySelector('img');
+          img.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+        "
+      >
+        <img
+          src="./instaff-dashboard.png"
+          alt="InStaff Dashboard"
+          class="rounded-xl max-w-4xl transition-transform duration-500 ease-out will-change-transform"
+        />
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Wave Divider -->
+  <div class="absolute bottom-0 left-0 w-full leading-none">
+    <svg viewBox="0 0 1440 120" class="w-full h-[120px]" preserveAspectRatio="none">
+      <path fill="#DAD7CD"
+            d="M0,64L80,74.7C160,85,320,107,480,112C640,117,800,107,960,90.7C1120,75,1280,53,1360,42.7L1440,32L1440,120L0,120Z"/>
+    </svg>
+  </div>
+
+</section>

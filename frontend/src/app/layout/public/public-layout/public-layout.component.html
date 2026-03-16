@@ -1,8 +1,90 @@
-<nav>
-  <a routerLink="/">Start</a>
-  <a routerLink="/features">Funktionen</a>
-  <a routerLink="/presentation">Präsentation</a>
-  <a routerLink="/about-us">Über uns</a>
+<nav class="fixed top-0 left-0 bg-green-darkest w-full shadow-md hidden md:flex justify-center z-50">
+  <div class="w-3/5 flex items-center justify-between py-2">
+
+    <div class="flex items-center">
+      <img src="./logo_white.png" class="h-10">
+    </div>
+
+    <div class="flex flex-row space-x-4 items-center">
+      <a href="#start" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'start'}">Start</a>
+      <a href="#features" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'features'}">Funktionen</a>
+      <a href="#about" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'about'}">Über uns</a>
+      <!--<a href="#presentation" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'presentation'}">Präsentation</a>-->
+    </div>
+
+    <div class="flex items-center">
+      <button (click)="goToDashboard()" class="menu-item-big">
+        Login
+      </button>
+    </div>
+
+  </div>
 </nav>
 
-<router-outlet></router-outlet>
+<div class="pt-16">
+  <section id="start">
+    <app-landing-page></app-landing-page>
+  </section>
+
+  <section id="features">
+    <app-features></app-features>
+  </section>
+
+  <section id="about">
+    <app-about-us></app-about-us>
+  </section>
+  <!--
+  <section id="presentation">
+    <app-presentation></app-presentation>
+  </section>
+  -->
+</div>
+
+<footer class="bg-green-darkest text-white mt-16">
+  <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+    <!-- Project -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <img src="./favicon.svg" class="h-6 brightness-0 invert" alt="In">
+        <h3 class="text-lg font-semibold">InStaff</h3>
+      </div>
+      <p class="text-sm text-green-light leading-relaxed">
+        InStaff ist eine Plattform zur Verwaltung von Mitarbeitern und
+        Aushilfskräften. Sie ermöglicht eine einfache Schichtplanung,
+        Verwaltung von Personal sowie eine mobile Nutzung für Aushilfen.
+      </p>
+    </div>
+
+    <!-- Navigation -->
+    <div>
+      <h3 class="text-lg font-semibold mb-3">Navigation</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#start" class="hover:text-green-light transition">Start</a></li>
+        <li><a href="#features" class="hover:text-green-light transition">Funktionen</a></li>
+        <li><a href="#about" class="hover:text-green-light transition">Über uns</a></li>
+      </ul>
+    </div>
+
+    <!-- Project Info -->
+    <div>
+      <h3 class="text-lg font-semibold mb-3">Projekt</h3>
+      <p class="text-sm text-green-light">
+        Projekt der HTL Leonding.
+      </p>
+      <p class="text-sm text-green-light mt-2">
+        Entwickelt von Tobias Klement, Alexander Hahn und Philip Pfarrhofer.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="border-t border-green-dark py-4 text-center text-sm text-green-light px-6">
+    <p>
+      © 2026 InStaff – Mitarbeiter- & Aushilfskräfteverwaltung
+    </p>
+    <p class="mt-1">
+      Mit viel Engagement entwickelt – danke fürs Vorbeischauen 👋
+    </p>
+  </div>
+</footer>
