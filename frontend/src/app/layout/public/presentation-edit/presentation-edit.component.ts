@@ -61,6 +61,8 @@ export class PresentationEditComponent {
     zIndex: new FormControl(1, {nonNullable: true, validators: [Validators.required]}),
     positionX: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
     positionY: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
+    centerHorizontal: new FormControl(false, {nonNullable: true}),
+    centerVertical: new FormControl(false, {nonNullable: true}),
     inAnimationIndex: new FormControl<number | null>(null),
     outAnimationIndex: new FormControl<number | null>(null)
   });
@@ -208,8 +210,10 @@ export class PresentationEditComponent {
       text: rawText || null,
       image: rawImage || null,
       zIndex: this.contentForm.controls.zIndex.value,
-      positionX: this.contentForm.controls.positionX.value,
-      positionY: this.contentForm.controls.positionY.value,
+      positionX: this.clampPercent(this.contentForm.controls.positionX.value),
+      positionY: this.clampPercent(this.contentForm.controls.positionY.value),
+      centerHorizontal: this.contentForm.controls.centerHorizontal.value,
+      centerVertical: this.contentForm.controls.centerVertical.value,
       inAnimation,
       outAnimation
     };
@@ -247,6 +251,8 @@ export class PresentationEditComponent {
       zIndex: content.zIndex,
       positionX: content.positionX,
       positionY: content.positionY,
+      centerHorizontal: content.centerHorizontal === true,
+      centerVertical: content.centerVertical === true,
       inAnimationIndex: this.getAnimationIndex(content.inAnimation),
       outAnimationIndex: this.getAnimationIndex(content.outAnimation)
     });
@@ -367,6 +373,20 @@ export class PresentationEditComponent {
     this.infoMessage = 'Praesentation als JSON exportiert.';
   }
 
+  getPreviewContentStyles(content: SlideContent): Record<string, string | number> {
+    const baseX = content.centerHorizontal === true ? 50 : content.positionX;
+    const baseY = content.centerVertical === true ? 50 : content.positionY;
+    const positionX = this.clampPercent(baseX);
+    const positionY = this.clampPercent(baseY);
+
+    return {
+      left: `${positionX}%`,
+      top: `${positionY}%`,
+      transform: `translate(-${positionX}%, -${positionY}%)`,
+      'z-index': content.zIndex
+    };
+  }
+
   private applyContentUpdate(targetSlide: Slide, updatedContent: SlideContent): void {
     const source = this.editingContentSource;
     if (!source) {
@@ -472,8 +492,8 @@ export class PresentationEditComponent {
     const resolvedText = typeof data['text'] === 'string' ? data['text'] : null;
     const resolvedImage = typeof data['image'] === 'string' ? data['image'] : null;
     const zIndex = typeof data['zIndex'] === 'number' ? data['zIndex'] : 1;
-    const positionX = typeof data['positionX'] === 'number' ? data['positionX'] : 0;
-    const positionY = typeof data['positionY'] === 'number' ? data['positionY'] : 0;
+    const positionX = this.parsePercentValue(data['positionX']);
+    const positionY = this.parsePercentValue(data['positionY']);
 
     return {
       id: data['id'],
@@ -483,9 +503,32 @@ export class PresentationEditComponent {
       zIndex,
       positionX,
       positionY,
+      centerHorizontal: data['centerHorizontal'] === true,
+      centerVertical: data['centerVertical'] === true,
       inAnimation: this.parseAnimation(raw, 'inAnimation'),
       outAnimation: this.parseAnimation(raw, 'outAnimation')
     };
+  }
+
+  private parsePercentValue(value: unknown): number {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return this.clampPercent(value);
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      const normalized = trimmed.endsWith('%') ? trimmed.slice(0, -1) : trimmed;
+      const parsed = Number(normalized);
+      if (Number.isFinite(parsed)) {
+        return this.clampPercent(parsed);
+      }
+    }
+
+    return 0;
+  }
+
+  private clampPercent(value: number): number {
+    return Math.max(0, Math.min(100, value));
   }
 
   private parseAnimation(raw: unknown, key: 'inAnimation' | 'outAnimation'): Animation | null {

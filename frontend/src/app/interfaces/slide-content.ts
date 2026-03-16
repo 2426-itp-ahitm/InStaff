@@ -10,6 +10,8 @@ export interface SlideContent {
   zIndex: number;
   positionX: number;
   positionY: number;
+  centerHorizontal?: boolean;
+  centerVertical?: boolean;
 
   inAnimation: Animation | null;
   outAnimation: Animation | null;

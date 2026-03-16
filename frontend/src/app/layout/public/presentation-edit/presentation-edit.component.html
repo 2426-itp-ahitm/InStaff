@@ -141,13 +141,23 @@
 			</label>
 
 			<label class="flex flex-col gap-1">
-				<span class="text-sm">Position X</span>
-				<input type="number" formControlName="positionX" class="rounded border px-2 py-1">
+				<span class="text-sm">Position X (%)</span>
+				<input type="number" min="0" max="100" step="0.1" formControlName="positionX" class="rounded border px-2 py-1">
 			</label>
 
 			<label class="flex flex-col gap-1">
-				<span class="text-sm">Position Y</span>
-				<input type="number" formControlName="positionY" class="rounded border px-2 py-1">
+				<span class="text-sm">Position Y (%)</span>
+				<input type="number" min="0" max="100" step="0.1" formControlName="positionY" class="rounded border px-2 py-1">
+			</label>
+
+			<label class="flex items-center gap-2 mt-6">
+				<input type="checkbox" formControlName="centerHorizontal">
+				<span class="text-sm">Horizontal zentrieren (50%)</span>
+			</label>
+
+			<label class="flex items-center gap-2 mt-6">
+				<input type="checkbox" formControlName="centerVertical">
+				<span class="text-sm">Vertikal zentrieren (50%)</span>
 			</label>
 
 			<label class="flex flex-col gap-1">
@@ -220,11 +230,9 @@
 				<div
 					*ngFor="let item of previewSlide.content"
 					class="absolute max-w-[280px] rounded border border-gray-200 bg-white/90 p-2 shadow"
-					[style.left.px]="item.positionX"
-					[style.top.px]="item.positionY"
-					[style.z-index]="item.zIndex"
+					[ngStyle]="getPreviewContentStyles(item)"
 				>
-					<p *ngIf="item.text" class="text-sm text-gray-900">{{ item.text }}</p>
+					<div *ngIf="item.text" class="text-sm text-gray-900" [innerHTML]="item.text"></div>
 					<img *ngIf="item.image" [src]="item.image" alt="Slide image" class="mt-2 max-h-32 w-auto rounded" />
 					<div class="mt-2 text-[10px] text-gray-600">
 						In: {{ item.inAnimation?.type || 'keine' }} | Out: {{ item.outAnimation?.type || 'keine' }}
