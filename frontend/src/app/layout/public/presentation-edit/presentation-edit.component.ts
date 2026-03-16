@@ -43,10 +43,6 @@ export class PresentationEditComponent {
     name: new FormControl('Neue Praesentation', {nonNullable: true, validators: [Validators.required]})
   });
 
-  readonly slideForm = new FormGroup({
-    id: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]})
-  });
-
   readonly animationForm = new FormGroup({
     type: new FormControl<Animation['type']>('fadeIn', {nonNullable: true, validators: [Validators.required]}),
     duration: new FormControl(600, {nonNullable: true, validators: [Validators.required, Validators.min(0)]}),
@@ -61,8 +57,6 @@ export class PresentationEditComponent {
     zIndex: new FormControl(1, {nonNullable: true, validators: [Validators.required]}),
     positionX: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
     positionY: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
-    centerHorizontal: new FormControl(false, {nonNullable: true}),
-    centerVertical: new FormControl(false, {nonNullable: true}),
     inAnimationIndex: new FormControl<number | null>(null),
     outAnimationIndex: new FormControl<number | null>(null)
   });
@@ -104,16 +98,7 @@ export class PresentationEditComponent {
   }
 
   addSlide(): void {
-    if (this.slideForm.invalid) {
-      this.infoMessage = 'Bitte eine gueltige Slide-ID eingeben.';
-      return;
-    }
-
-    const slideId = this.slideForm.controls.id.value;
-    if (this.presentation.slides.some(slide => slide.id === slideId)) {
-      this.infoMessage = `Slide mit ID ${slideId} existiert bereits.`;
-      return;
-    }
+    const slideId = this.getNextSlideId();
 
     const newSlide: Slide = {
       id: slideId,
@@ -122,7 +107,6 @@ export class PresentationEditComponent {
 
     this.presentation.slides.push(newSlide);
     this.infoMessage = `Slide ${slideId} wurde hinzugefuegt.`;
-    this.slideForm.patchValue({id: slideId + 1});
     this.contentForm.patchValue({slideId});
     this.previewSlideIndex = this.presentation.slides.length - 1;
   }
@@ -195,7 +179,9 @@ export class PresentationEditComponent {
     const inAnimation = this.getAnimationByIndex(inAnimationIndex);
     const outAnimation = this.getAnimationByIndex(outAnimationIndex);
 
-    const contentId = this.contentForm.controls.id.value;
+    const contentId = this.editingContentSource
+      ? this.contentForm.controls.id.value
+      : this.getNextContentId(targetSlide);
 
     const rawText = this.contentForm.controls.text.value.trim();
     const rawImage = this.contentForm.controls.image.value.trim();
@@ -212,8 +198,6 @@ export class PresentationEditComponent {
       zIndex: this.contentForm.controls.zIndex.value,
       positionX: this.clampPercent(this.contentForm.controls.positionX.value),
       positionY: this.clampPercent(this.contentForm.controls.positionY.value),
-      centerHorizontal: this.contentForm.controls.centerHorizontal.value,
-      centerVertical: this.contentForm.controls.centerVertical.value,
       inAnimation,
       outAnimation
     };
@@ -251,8 +235,6 @@ export class PresentationEditComponent {
       zIndex: content.zIndex,
       positionX: content.positionX,
       positionY: content.positionY,
-      centerHorizontal: content.centerHorizontal === true,
-      centerVertical: content.centerVertical === true,
       inAnimationIndex: this.getAnimationIndex(content.inAnimation),
       outAnimationIndex: this.getAnimationIndex(content.outAnimation)
     });
@@ -361,23 +343,21 @@ export class PresentationEditComponent {
 
   exportPresentationAsJson(): void {
     const json = JSON.stringify(this.presentation, null, 2);
-    const blob = new Blob([json], {type: 'application/json'});
+    const blob = new Blob([json], {type: 'text/javascript'});
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${this.presentation.name || 'presentation'}.json`;
+    link.download = `${this.presentation.name || 'presentation'}.js`;
     link.click();
 
     URL.revokeObjectURL(url);
-    this.infoMessage = 'Praesentation als JSON exportiert.';
+    this.infoMessage = 'Praesentation als JS exportiert.';
   }
 
   getPreviewContentStyles(content: SlideContent): Record<string, string | number> {
-    const baseX = content.centerHorizontal === true ? 50 : content.positionX;
-    const baseY = content.centerVertical === true ? 50 : content.positionY;
-    const positionX = this.clampPercent(baseX);
-    const positionY = this.clampPercent(baseY);
+    const positionX = this.clampPercent(content.positionX);
+    const positionY = this.clampPercent(content.positionY);
 
     return {
       left: `${positionX}%`,
@@ -385,6 +365,30 @@ export class PresentationEditComponent {
       transform: `translate(-${positionX}%, -${positionY}%)`,
       'z-index': content.zIndex
     };
+  }
+
+  getPreviewSlideStyle(index: number): Record<string, string> {
+    return {
+      backgroundColor: this.previewSlideIndex === index ? '#3A5A40' : '#d1d5db'
+    };
+  }
+
+  private getNextSlideId(): number {
+    if (this.presentation.slides.length === 0) {
+      return 1;
+    }
+
+    const maxId = Math.max(...this.presentation.slides.map(slide => slide.id));
+    return maxId + 1;
+  }
+
+  private getNextContentId(slide: Slide): number {
+    if (slide.content.length === 0) {
+      return 1;
+    }
+
+    const maxId = Math.max(...slide.content.map(content => content.id));
+    return maxId + 1;
   }
 
   private applyContentUpdate(targetSlide: Slide, updatedContent: SlideContent): void {
@@ -503,8 +507,6 @@ export class PresentationEditComponent {
       zIndex,
       positionX,
       positionY,
-      centerHorizontal: data['centerHorizontal'] === true,
-      centerVertical: data['centerVertical'] === true,
       inAnimation: this.parseAnimation(raw, 'inAnimation'),
       outAnimation: this.parseAnimation(raw, 'outAnimation')
     };

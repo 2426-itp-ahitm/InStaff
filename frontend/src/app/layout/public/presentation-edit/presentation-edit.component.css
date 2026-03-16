@@ -1,0 +1,264 @@
+.editor-shell {
+	min-height: 100vh;
+	background: linear-gradient(180deg, #e9edf3 0%, #dfe5ee 100%);
+	color: #1f2937;
+}
+
+.ribbon {
+	display: grid;
+	grid-template-columns: 260px 1fr auto;
+	gap: 1rem;
+	align-items: center;
+	padding: 1rem 1.25rem;
+	background: #ffffff;
+	border-bottom: 1px solid #cfd8e3;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ribbon-title-group h1 {
+	margin: 0;
+	font-size: 1.15rem;
+}
+
+.ribbon-title-group p {
+	margin: 0.2rem 0 0;
+	color: #64748b;
+	font-size: 0.8rem;
+}
+
+.name-form {
+	width: 100%;
+}
+
+.name-input {
+	width: 100%;
+	border: 1px solid #cbd5e1;
+	border-radius: 0.5rem;
+	padding: 0.5rem 0.7rem;
+}
+
+.ribbon-actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.btn {
+	border: none;
+	border-radius: 0.45rem;
+	padding: 0.5rem 0.8rem;
+	color: #fff;
+	cursor: pointer;
+	font-size: 0.85rem;
+}
+
+.btn-primary { background: #2563eb; }
+.btn-secondary { background: #0f766e; }
+.btn-dark { background: #111827; }
+.btn-upload { background: #334155; display: inline-flex; align-items: center; }
+.btn-danger { background: #b91c1c; width: 100%; }
+.btn-accent { background: #7c3aed; }
+.btn-muted { background: #6b7280; }
+.btn-nav { background: #334155; }
+.btn-small { background: #0ea5e9; padding: 0.35rem 0.6rem; }
+.btn-small-danger { background: #dc2626; padding: 0.35rem 0.6rem; }
+.full-width { width: 100%; }
+
+.info-banner {
+	margin: 0.8rem 1.25rem 0;
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1d4ed8;
+	border-radius: 0.5rem;
+	padding: 0.6rem 0.8rem;
+	font-size: 0.85rem;
+}
+
+.workspace {
+	display: grid;
+	grid-template-columns: 220px 1fr 300px;
+	gap: 1rem;
+	padding: 1rem 1.25rem 1.25rem;
+}
+
+.slides-panel,
+.right-panel,
+.editor-card {
+	background: #ffffff;
+	border: 1px solid #d8e0ea;
+	border-radius: 0.75rem;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.slides-panel {
+	padding: 0.8rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+}
+
+.slides-panel h2 {
+	margin: 0;
+	font-size: 0.95rem;
+}
+
+.slides-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+	max-height: 70vh;
+	overflow: auto;
+}
+
+.slide-thumb {
+	border: 1px solid #94a3b8;
+	border-radius: 0.55rem;
+	padding: 0.6rem;
+	text-align: left;
+	color: #fff;
+	cursor: pointer;
+}
+
+.slide-thumb span,
+.slide-thumb small {
+	display: block;
+}
+
+.slide-thumb small {
+	font-size: 0.72rem;
+	opacity: 0.9;
+}
+
+.main-stage {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.preview-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.8rem;
+}
+
+.slide-preview-canvas {
+	width: 100%;
+	background: #3A5A40;
+	border-radius: 0.8rem;
+	overflow: hidden;
+	border: 1px solid #2f4a36;
+}
+
+.slide-preview-stage {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	color: #fff;
+}
+
+.preview-content-item {
+	position: absolute;
+	max-width: 60%;
+	color: #fff;
+}
+
+.preview-content-inner {
+	color: #fff;
+}
+
+.preview-image {
+	display: block;
+	max-width: 100%;
+	max-height: 45vh;
+	border-radius: 0.4rem;
+}
+
+.no-slide {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	opacity: 0.85;
+}
+
+.editor-card {
+	padding: 0.9rem;
+}
+
+.editor-card h3 {
+	margin: 0 0 0.8rem;
+	font-size: 0.95rem;
+}
+
+.content-grid,
+.anim-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.65rem;
+}
+
+.content-grid label,
+.anim-grid label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.8rem;
+}
+
+.content-grid label.full {
+	grid-column: 1 / -1;
+}
+
+.content-grid input,
+.content-grid select,
+.anim-grid input,
+.anim-grid select {
+	border: 1px solid #cbd5e1;
+	border-radius: 0.45rem;
+	padding: 0.45rem 0.55rem;
+}
+
+.editor-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.8rem;
+}
+
+.elements-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.element-row {
+	border: 1px solid #e2e8f0;
+	border-radius: 0.5rem;
+	padding: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.element-row span {
+	display: block;
+	font-size: 0.78rem;
+	color: #64748b;
+}
+
+.row-actions {
+	display: flex;
+	gap: 0.4rem;
+}
+
+@media (max-width: 1200px) {
+	.workspace {
+		grid-template-columns: 1fr;
+	}
+
+	.ribbon {
+		grid-template-columns: 1fr;
+	}
+}
