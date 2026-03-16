@@ -24,5 +24,5 @@ public class Shift extends PanacheEntity {
     public Company company;
 
     @OneToMany(mappedBy = "shift")
-    List<Assignment> assignments;
+    public List<Assignment> assignments;
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public class Employee extends PanacheEntity {
     public String firstName;
     public String lastName;
+    @Column(unique = true)
     public String email;
     public String telephone;
     public LocalDate birthDate;
@@ -24,10 +25,10 @@ public class Employee extends PanacheEntity {
     @Column(name = "is_manager")
     public Boolean isManager;
 
-    @ManyToOne
+    @ManyToOne()
     public Company company;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "employee_role",
             joinColumns = @JoinColumn(name = "employee_id"),
@@ -35,7 +36,33 @@ public class Employee extends PanacheEntity {
     )
     public List<Role> roles;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Assignment> assignments;
 
+    public Employee() {}
+
+    public Employee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, Company company, List<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.telephone = telephone;
+        this.birthDate = birthDate;
+        this.hourlyWage = hourlyWage;
+        this.address = address;
+        this.isManager = isManager;
+        this.company = company;
+        this.roles = roles;
+    }
+
+    public void updateEmployee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, List<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.telephone = telephone;
+        this.birthDate = birthDate;
+        this.hourlyWage = hourlyWage;
+        this.address = address;
+        this.isManager = isManager;
+        this.roles = roles;
+    }
 }
