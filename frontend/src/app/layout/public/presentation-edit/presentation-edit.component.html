@@ -8,12 +8,11 @@
 			<input type="text" formControlName="name" class="name-input" placeholder="Praesentationsname">
 		</form>
 		<div class="ribbon-actions">
-			<button type="button" (click)="updatePresentationMeta()" class="btn btn-primary">Speichern</button>
-			<button type="button" (click)="addSlide()" class="btn btn-secondary">Neue Slide</button>
-			<button type="button" (click)="exportPresentationAsJson()" class="btn btn-dark">Als .js laden</button>
+			<button type="button" (click)="updatePresentationMeta()" class="btn btn-primary">Name Speichern</button>
+			<button type="button" (click)="exportPresentationAsJson()" class="btn btn-dark">Als .js Speichern</button>
 			<label class="btn btn-upload">
 				Upload
-				<input type="file" accept="application/json" class="hidden" (change)="uploadPresentation($event)">
+				<input type="file" accept=".js,.json" class="hidden" (change)="uploadPresentation($event)">
 			</label>
 		</div>
 	</header>
@@ -22,7 +21,10 @@
 
 	<div class="workspace">
 		<aside class="slides-panel">
-			<h2>Slides</h2>
+			<div class="slides-panel-header">
+				<h2>Slides</h2>
+				<button type="button" (click)="addSlide()" class="btn btn-secondary">Neue Slide</button>
+			</div>
 			<div class="slides-list">
 				<button
 					type="button"
@@ -69,20 +71,16 @@
 				<h3>Slide-Content hinzufuegen</h3>
 				<form [formGroup]="contentForm" class="content-grid">
 					<label>
-						<span>Slide ID</span>
-						<input type="number" formControlName="slideId">
-					</label>
-					<label>
-						<span>zIndex</span>
-						<input type="number" formControlName="zIndex">
-					</label>
-					<label>
 						<span>Position X (%)</span>
 						<input type="number" min="0" max="100" step="0.1" formControlName="positionX">
 					</label>
 					<label>
 						<span>Position Y (%)</span>
 						<input type="number" min="0" max="100" step="0.1" formControlName="positionY">
+					</label>
+					<label>
+						<span>zIndex</span>
+						<input type="number" formControlName="zIndex">
 					</label>
 					<label class="full">
 						<span>Text (HTML)</span>

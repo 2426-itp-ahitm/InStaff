@@ -1,7 +1,7 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
-import {Component, HostListener, OnInit, inject} from '@angular/core';
+import {Component, HostListener, OnInit, inject, ViewEncapsulation} from '@angular/core';
 import {Animation} from '../../../interfaces/animation';
 import {Presentation} from '../../../interfaces/presentation';
 import {Slide} from '../../../interfaces/slide';
@@ -15,6 +15,7 @@ import {SlideContent} from '../../../interfaces/slide-content';
   ],
   templateUrl: './presentation.component.html',
   styleUrl: './presentation.component.css',
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('slideIn', [
       transition('* => *', [
@@ -92,7 +93,7 @@ export class PresentationComponent implements OnInit {
     const styles: Record<string, string | number> = {
       left: `${positionX}%`,
       top: `${positionY}%`,
-      transform: `translate(-${positionX}%, -${positionY}%)`,
+      transform: 'translate(-50%, -50%)',
       'z-index': content.zIndex,
       color: '#ffffff'
     };

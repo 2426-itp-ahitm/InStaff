@@ -102,6 +102,13 @@
 	font-size: 0.95rem;
 }
 
+.slides-panel-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
 .slides-list {
 	display: flex;
 	flex-direction: column;
@@ -159,12 +166,63 @@
 
 .preview-content-item {
 	position: absolute;
+	width: max-content;
 	max-width: 60%;
 	color: #fff;
 }
 
 .preview-content-inner {
 	color: #fff;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes fadeInLeft {
+	from { opacity: 0; transform: translateX(-20px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+	from { opacity: 0; transform: translateX(20px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInBottom {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInTop {
+	from { opacity: 0; transform: translateY(-20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+@keyframes fadeOutLeft {
+	from { opacity: 1; transform: translateX(0); }
+	to { opacity: 0; transform: translateX(-20px); }
+}
+
+@keyframes fadeOutRight {
+	from { opacity: 1; transform: translateX(0); }
+	to { opacity: 0; transform: translateX(20px); }
+}
+
+@keyframes fadeOutBottom {
+	from { opacity: 1; transform: translateY(0); }
+	to { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes fadeOutTop {
+	from { opacity: 1; transform: translateY(0); }
+	to { opacity: 0; transform: translateY(-20px); }
 }
 
 .preview-image {
@@ -261,4 +319,48 @@
 	.ribbon {
 		grid-template-columns: 1fr;
 	}
+}
+
+
+
+.text-h1 {
+  font-size: 8rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+
+.text-h2 {
+  font-size: 5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.text-h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.bg-gradient{
+	background-image: url("/presentation/green-gradient.jpg");
+	background-size: cover;
+	background-position: center;
+
+	border: 2px solid #fff;
+	border-radius: 1rem;
+	padding: 6rem 10rem;
+}
+
+.team-box {
+  text-align: center;
+  border: #fff solid 2px;
+  border-radius: 1rem;
+  padding: 3rem;
+}
+
+.team-pic {
+  width: 350px;
+  height: 350px;
+  border-radius: 1rem;
 }
