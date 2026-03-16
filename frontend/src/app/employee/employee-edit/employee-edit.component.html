@@ -33,8 +33,11 @@
                 <div class="sm:col-span-4">
                   <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
                   <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
-                  <div *ngIf="editEmployeeForm.get('birthdate')?.invalid" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
-                </div>
+                  <div *ngIf="editEmployeeForm.get('birthdate')?.touched" class="text-red-600 text-sm">
+                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('required')">Geburtsdatum ist erforderlich.</div>
+                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('futureBirthdate')">Geburtsdatum darf nicht in der Zukunft liegen.</div>
+                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')">Ungültiges Datumsformat.</div>
+                  </div>                </div>
 
                 <!-- EMAIL -->
                 <div class="sm:col-span-5">

@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit, inject, HostListener} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
@@ -24,6 +24,8 @@ import {RoleServiceService} from '../../role/role-service/role-service.service';
 export class EmployeeAddComponent implements OnInit {
   roles: Role[] = [];
   addEmployeeForm!: FormGroup;
+
+  
 
   companyService:CompanyServiceService = inject(CompanyServiceService);
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
@@ -52,7 +54,7 @@ export class EmployeeAddComponent implements OnInit {
     this.addEmployeeForm = new FormGroup({
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
-      birthdate: new FormControl('', Validators.required),
+      birthdate: new FormControl('', [Validators.required, this.employeeService.birthdateValidator()]),
       email: new FormControl('', [Validators.required, Validators.email]),
       telephone: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),

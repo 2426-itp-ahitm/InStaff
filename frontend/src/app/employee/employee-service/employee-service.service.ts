@@ -8,6 +8,7 @@ import {EmployeeRole} from '../../interfaces/employee-role';
 import {NewEmployee} from '../../interfaces/new-employee';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
+import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +115,29 @@ export class EmployeeServiceService {
       const updatedEmployees = currentEmployees.filter(emp => emp.id !== id);
       this.employeesSubject.next(updatedEmployees);
     });
+  }
+
+  birthdateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const birthdate = new Date(control.value);
+      if (Number.isNaN(birthdate.getTime())) {
+        return {invalidBirthdate: true};
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      birthdate.setHours(0, 0, 0, 0);
+
+      if (birthdate > today) {
+        return {futureBirthdate: true};
+      }
+
+      return null;
+    };
   }
 
 

@@ -64,7 +64,7 @@ export class EmployeeEditComponent implements OnInit {
     this.editEmployeeForm = new FormGroup({
       firstname: new FormControl(this.employee.firstname, Validators.required),
       lastname: new FormControl(this.employee.lastname, Validators.required),
-      birthdate: new FormControl(this.employee.birthdate, Validators.required),
+      birthdate: new FormControl(this.employee.birthdate, [Validators.required, this.employeeService.birthdateValidator()]),
       email: new FormControl(this.employee.email, [Validators.required, Validators.email]),
       telephone: new FormControl(this.employee.telephone, Validators.required), // optional
       address: new FormControl(this.employee.address, Validators.required),
