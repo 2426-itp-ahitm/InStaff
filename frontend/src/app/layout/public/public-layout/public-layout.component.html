@@ -7,9 +7,9 @@
       </div>
 
       <div class="flex flex-row space-x-4 items-center">
-        <a href="#start" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'start'}">Start</a>
-        <a href="#features" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'features'}">Funktionen</a>
-        <a href="#about" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'about'}">Über uns</a>
+        <a (click)="scrollToSection('start')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'start'}">Start</a>
+        <a (click)="scrollToSection('features')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'features'}">Funktionen</a>
+        <a (click)="scrollToSection('about')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'about'}">Über uns</a>
         <!--<a href="#presentation" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'presentation'}">Präsentation</a>-->
       </div>
 
@@ -31,7 +31,7 @@
       <app-features></app-features>
     </section>
 
-    <section id="about">
+    <section id="about" class="py-30">
       <app-about-us></app-about-us>
     </section>
     <!--
@@ -40,9 +40,15 @@
     </section>
     -->
   </div>
-
-  <footer class="bg-green-darkest text-white mt-16">
-    <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+  <div class="relative w-full leading-none">
+    <svg viewBox="0 0 1440 120" class="w-full h-20" preserveAspectRatio="none">
+      <path fill="#344e41"
+            d="M0,96L120,80C240,64,480,32,720,37.3C960,43,1200,85,1320,101.3L1440,117L1440,120L0,120Z">
+      </path>
+    </svg>
+  </div>
+  <footer class="bg-green-darkest text-white">
+    <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
 
       <!-- Project -->
       <div>
@@ -51,19 +57,35 @@
           <h3 class="text-lg font-semibold">InStaff</h3>
         </div>
         <p class="text-sm text-green-light leading-relaxed">
-          InStaff ist eine Plattform zur Verwaltung von Mitarbeitern und
-          Aushilfskräften. Sie ermöglicht eine einfache Schichtplanung,
-          Verwaltung von Personal sowie eine mobile Nutzung für Aushilfen.
+          Die einfache Lösung für moderne Mitarbeiter- und Schichtverwaltung.
         </p>
+
+        <div class="mt-4">
+          <p class="text-sm font-medium text-white">Kontakt</p>
+          <a href="mailto:instaff@office.at"
+             class="text-sm text-green-light hover:text-white transition">
+            instaffoffice.at
+          </a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h3 class="text-lg font-semibold mb-3">Rechtliches</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a class="hover:text-green-light transition cursor-pointer">Impressum</a></li>
+          <li><a class="hover:text-green-light transition cursor-pointer">Datenschutzerklärung</a></li>
+          <li><a class="hover:text-green-light transition cursor-pointer">AGB</a></li>
+        </ul>
       </div>
 
       <!-- Navigation -->
       <div>
         <h3 class="text-lg font-semibold mb-3">Navigation</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href="#start" class="hover:text-green-light transition">Start</a></li>
-          <li><a href="#features" class="hover:text-green-light transition">Funktionen</a></li>
-          <li><a href="#about" class="hover:text-green-light transition">Über uns</a></li>
+          <li><a (click)="scrollToSection('start')" class="hover:text-green-light transition">Start</a></li>
+          <li><a (click)="scrollToSection('features')" class="hover:text-green-light transition">Funktionen</a></li>
+          <li><a (click)="scrollToSection('about')" class="hover:text-green-light transition">Über uns</a></li>
         </ul>
       </div>
 
@@ -80,12 +102,12 @@
 
     </div>
 
-    <div class="border-t border-green-dark py-4 text-center text-sm text-green-light px-6">
+    <div class="py-4 text-center text-sm text-green-light px-6">
       <p>
         © 2026 InStaff – Mitarbeiter- & Aushilfskräfteverwaltung
       </p>
       <p class="mt-1">
-        Mit viel Engagement entwickelt – danke fürs Vorbeischauen 👋
+        Ein Diplomarbeitsprojekt der HTL Leonding – entwickelt mit Leidenschaft für gute Software.
       </p>
     </div>
   </footer>

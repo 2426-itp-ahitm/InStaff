@@ -26,6 +26,8 @@ export class PublicLayoutComponent implements AfterViewInit {
 
   sections: string[] = ['start', 'features', 'about'];
 
+
+
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(
       entries => {
@@ -70,5 +72,11 @@ export class PublicLayoutComponent implements AfterViewInit {
     return path === '' || path === '/';
   }
 
-  protected readonly Date = Date;
+  scrollToSection(id: string): void {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+
+  }
 }
