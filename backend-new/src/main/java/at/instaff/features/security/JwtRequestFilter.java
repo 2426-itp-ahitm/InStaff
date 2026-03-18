@@ -121,7 +121,7 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                 return;
             }
 
-            CustomPrincipal principal = new CustomPrincipal(username, employee.company.id);
+            CustomPrincipal principal = new CustomPrincipal(username, employee.company.id, employee.id);
 
             CustomSecurityContext securityContext = new CustomSecurityContext();
             securityContext.fullName = fullName;

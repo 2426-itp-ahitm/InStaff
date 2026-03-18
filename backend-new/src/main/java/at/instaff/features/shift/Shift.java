@@ -3,10 +3,7 @@ package at.instaff.features.shift;
 import at.instaff.features.assignment.Assignment;
 import at.instaff.features.company.Company;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +20,15 @@ public class Shift extends PanacheEntity {
     @ManyToOne
     public Company company;
 
-    @OneToMany(mappedBy = "shift")
+    @OneToMany(mappedBy = "shift", cascade = CascadeType.ALL)
     public List<Assignment> assignments;
+
+    public Shift() {}
+
+    public Shift(String shiftName, LocalDateTime startTime, LocalDateTime endTime, Company company) {
+        this.shiftName = shiftName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.company = company;
+    }
 }

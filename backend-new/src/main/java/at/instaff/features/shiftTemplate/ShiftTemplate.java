@@ -16,6 +16,13 @@ public class ShiftTemplate extends PanacheEntity {
     @ManyToOne
     public Company company;
 
-    @OneToMany(mappedBy = "shiftTemplate")
+    @OneToMany(mappedBy = "shiftTemplate", cascade = CascadeType.ALL)
     public List<TemplateRole> templateRoles;
+
+    public ShiftTemplate() {}
+
+    public ShiftTemplate(String shiftTemplateName, Company company) {
+        this.shiftTemplateName = shiftTemplateName;
+        this.company = company;
+    }
 }

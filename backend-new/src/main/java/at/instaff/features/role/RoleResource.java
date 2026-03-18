@@ -73,6 +73,12 @@ public class RoleResource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
+        // remove all relations to Employees in join table
+        Role.getEntityManager()
+                .createNativeQuery("DELETE FROM employee_role WHERE role_id = ?")
+                .setParameter(1, id)
+                .executeUpdate();
+
         Role.deleteById(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }

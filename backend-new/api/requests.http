@@ -49,7 +49,7 @@ Authorization: Bearer {{access_token}}
 ###
 
 ### Get employees by partial name
-GET http://localhost:8080/api/employees/name/Jo
+GET http://localhost:8080/api/employees/name/White Dan
 Authorization: Bearer {{access_token}}
 
 ###
@@ -180,26 +180,25 @@ Authorization: Bearer {{access_token}}
 
 ### Get all assignments
 GET http://localhost:8080/api/assignments
-
-###
-
-### Get assignments by company ID
-GET http://localhost:8080/api/assignments/company/1
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Get assignment by ID
 GET http://localhost:8080/api/assignments/1
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Get assignments by shift ID
 GET http://localhost:8080/api/assignments/shift/1
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Get assignments by employee ID
-GET http://localhost:8080/api/assignments/employee/1
+GET http://localhost:8080/api/assignments/employee/4
+Authorization: Bearer {{access_token}}
 
 ###
 
@@ -209,13 +208,13 @@ GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
 ###
 
 ### Confirm assignment
-PUT http://localhost:8080/api/confirmation/confirm/1
+PUT http://localhost:8080/api/assignments/30/confirm/true
 Authorization: Bearer {{access_token}}
 
 ###
 
 ### Decline assignment
-PUT http://localhost:8080/api/confirmation/decline/1
+PUT http://localhost:8080/api/assignments/30/confirm/false
 Authorization: Bearer {{access_token}}
 
 
@@ -231,21 +230,19 @@ Authorization: Bearer {{access_token}}
 
 ### Get shift by ID
 GET http://localhost:8080/api/shifts/1
-
-###
-
-### Get shifts by company ID
-GET http://localhost:8080/api/shifts/company/1
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Get shifts by date
-GET http://localhost:8080/api/shifts/date/2025-03-25
+GET http://localhost:8080/api/shifts/date/2026-03-13
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Get shifts between dates
-GET http://localhost:8080/api/shifts/betweendates/2025-03-25/2025-03-27
+GET http://localhost:8080/api/shifts/betweendates/2026-03-13/2026-03-27
+Authorization: Bearer {{access_token}}
 
 ###
 
@@ -255,25 +252,25 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-  "shiftName": "Morning Shift",
+  "shiftName": "Test Shift",
   "startTime": "2026-03-20T06:00:00",
-  "endTime": "2026-03-20T14:00:00",
-  "companyId": 1
+  "endTime": "2026-03-20T14:00:00"
 }
 
 ###
 
 ### Create shift with assignments
-POST http://localhost:8080/api/shifts/create_with_assignments
+POST http://localhost:8080/api/shifts/create-with-assignments
+Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
   "shiftCreateDTO": {
+    "shiftName": "Test Shift",
     "startTime": "2026-03-20T06:00:00",
-    "endTime": "2026-03-20T14:00:00",
-    "companyId": 1
+    "endTime": "2026-03-20T14:00:00"
   },
-  "assignmentCreateDTOs": [
+  "assignmentCreateDTOS": [
     {
       "employee": 1,
       "role": 1
@@ -284,7 +281,7 @@ Content-Type: application/json
 ###
 
 ### Delete shift by ID
-DELETE http://localhost:8080/api/shifts/delete/1
+DELETE http://localhost:8080/api/shifts/1
 Authorization: Bearer {{access_token}}
 
 
@@ -294,16 +291,17 @@ Authorization: Bearer {{access_token}}
 
 ### Get all shift templates
 GET http://localhost:8080/api/shift-templates
+Authorization: Bearer {{access_token}}
 
 ###
 
 ### Create new shift template
 POST http://localhost:8080/api/shift-templates
+Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
   "shiftTemplateName": "Standard Morning",
-  "companyId": 1,
   "templateRoles": [
     {
       "roleId": 1,
@@ -315,17 +313,20 @@ Content-Type: application/json
 ###
 
 ### Update shift template
-PUT http://localhost:8080/api/shift-templates
+PUT http://localhost:8080/api/shift-templates/4
+Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-  "id": 1,
   "shiftTemplateName": "Updated Morning Template",
-  "companyId": 1,
   "templateRoles": [
     {
       "roleId": 1,
       "count": 3
+    },
+    {
+      "roleId": 2,
+      "count": 1
     }
   ]
 }
@@ -333,4 +334,5 @@ Content-Type: application/json
 ###
 
 ### Delete shift template by ID
-DELETE http://localhost:8080/api/shift-templates/delete/1
+DELETE http://localhost:8080/api/shift-templates/1
+Authorization: Bearer {{access_token}}
