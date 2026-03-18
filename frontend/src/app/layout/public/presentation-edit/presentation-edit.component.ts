@@ -18,7 +18,12 @@ import {Animation} from '../../../interfaces/animation';
 export class PresentationEditComponent {
   presentation: Presentation = {
     name: 'Neue Praesentation',
-    slides: []
+    slides: [
+      {
+        id: 1,
+        content: []
+      }
+    ]
   };
 
   animations: Animation[] = [];
@@ -51,7 +56,6 @@ export class PresentationEditComponent {
 
   readonly contentForm = new FormGroup({
     id: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
-    slideId: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
     text: new FormControl('', {nonNullable: true}),
     image: new FormControl('', {nonNullable: true}),
     zIndex: new FormControl(1, {nonNullable: true, validators: [Validators.required]}),
@@ -107,7 +111,6 @@ export class PresentationEditComponent {
 
     this.presentation.slides.push(newSlide);
     this.infoMessage = `Slide ${slideId} wurde hinzugefuegt.`;
-    this.contentForm.patchValue({slideId});
     this.previewSlideIndex = this.presentation.slides.length - 1;
   }
 
@@ -166,13 +169,14 @@ export class PresentationEditComponent {
       return;
     }
 
-    const slideId = this.contentForm.controls.slideId.value;
-    const targetSlide = this.presentation.slides.find(slide => slide.id === slideId);
+    const targetSlide = this.previewSlide;
 
     if (!targetSlide) {
-      this.infoMessage = `Keine Slide mit ID ${slideId} gefunden.`;
+      this.infoMessage = 'Keine ausgewaehlte Slide gefunden.';
       return;
     }
+
+    const slideId = targetSlide.id;
 
     const inAnimationIndex = this.contentForm.controls.inAnimationIndex.value;
     const outAnimationIndex = this.contentForm.controls.outAnimationIndex.value;
@@ -229,7 +233,6 @@ export class PresentationEditComponent {
     this.editingContentSource = {slideId, contentId};
     this.contentForm.patchValue({
       id: content.id,
-      slideId: targetSlide.id,
       text: content.text ?? '',
       image: content.image ?? '',
       zIndex: content.zIndex,
@@ -307,11 +310,13 @@ export class PresentationEditComponent {
         }
 
         this.presentation = uploadedPresentation;
+        if (this.presentation.slides.length === 0) {
+          this.presentation.slides = [{id: 1, content: []}];
+        }
         this.presentationForm.patchValue({name: uploadedPresentation.name});
         this.previewSlideIndex = 0;
         this.editingContentSource = null;
         this.contentForm.patchValue({
-          slideId: uploadedPresentation.slides[0]?.id ?? 1,
           id: 1,
           text: '',
           image: '',
@@ -362,7 +367,7 @@ export class PresentationEditComponent {
     return {
       left: `${positionX}%`,
       top: `${positionY}%`,
-      transform: `translate(-${positionX}%, -${positionY}%)`,
+      transform: 'translate(-50%, -50%)',
       'z-index': content.zIndex
     };
   }
