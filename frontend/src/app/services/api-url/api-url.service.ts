@@ -9,7 +9,7 @@ import {environment} from '../../../environments/environment';
 export class ApiUrlService {
   companyService: CompanyServiceService = inject(CompanyServiceService)
   public getApiUrl(): string {
-    return  `${environment.apiUrl}/${this.companyService.getCompanyId()}`
+    return  `${environment.apiUrl}`
     //return `http://backend.philip-pfarrhofer.at/api/${this.companyService.getCompanyId()}`;
   }
 }
