@@ -22,4 +22,12 @@ public class TemplateRole extends PanacheEntity {
     public ShiftTemplate shiftTemplate;
 
     public Integer count;
+
+    public TemplateRole() {}
+
+    public TemplateRole(Role role, ShiftTemplate shiftTemplate, Integer count) {
+        this.role = role;
+        this.shiftTemplate = shiftTemplate;
+        this.count = count;
+    }
 }

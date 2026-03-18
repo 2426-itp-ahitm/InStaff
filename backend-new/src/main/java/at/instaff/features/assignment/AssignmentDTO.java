@@ -1,16 +1,20 @@
 package at.instaff.features.assignment;
 
-import at.instaff.features.employee.EmployeeDTO;
+import at.instaff.features.employee.EmployeeShortDTO;
 import at.instaff.features.role.RoleDTO;
-import at.instaff.features.shift.ShiftDTO;
+import at.instaff.features.shift.ShiftShortDTO;
+
+import java.util.List;
 
 public record AssignmentDTO(
-        EmployeeDTO employee,
-        ShiftDTO shift,
+        long id,
+        Boolean confirmed,
+        EmployeeShortDTO employee,
+        ShiftShortDTO shift,
         RoleDTO role
 ) {
     public static AssignmentDTO toResource(Assignment assignment) {
-        return new AssignmentDTO(EmployeeDTO.toResource(assignment.employee), ShiftDTO.toResource(assignment.shift),
+        return new AssignmentDTO(assignment.id, assignment.confirmed, EmployeeShortDTO.toResource(assignment.employee), ShiftShortDTO.toResource(assignment.shift),
                 RoleDTO.toResource(assignment.role));
     }
 }

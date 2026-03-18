@@ -7,10 +7,16 @@ public class CustomPrincipal implements Principal {
 
     private final String name;
     private final long companyId;
+    private final long employeeId;
 
-    public CustomPrincipal(String name, long companyId) {
+    public CustomPrincipal(String name, long companyId, long employeeId) {
         this.name = name;
         this.companyId = companyId;
+        this.employeeId = employeeId;
+    }
+
+    public long getEmployeeId() {
+        return employeeId;
     }
 
     public long getCompanyId() {

@@ -66,7 +66,9 @@ public class EmployeeResource {
     @Path("/name/{name}")
     public Response getEmployeesByName(@PathParam("name") String name, @Context SecurityContext sc) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-        List<Employee> employees = Employee.list("LOWER(firstName || lastName) LIKE concat('%', ?1, '%') and company.id = ?2", name.toLowerCase(), principal.getCompanyId());
+        List<Employee> employees = Employee.list("LOWER(firstName || ' ' || lastName) LIKE concat('%', ?1, '%') or " +
+                "LOWER(lastName || ' ' || firstName) LIKE concat('%', ?1, '%') " +
+                "and company.id = ?2", name.toLowerCase(), principal.getCompanyId());
         if (employees.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

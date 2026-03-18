@@ -26,6 +26,8 @@ public class Assignment extends PanacheEntity {
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     public List<News> news;
 
+    public Boolean confirmed;
+
     public Assignment() {}
 
     public Assignment(Employee employee, Shift shift, Role role) {
