@@ -4,3 +4,5 @@
 /web/package-lock.json
 /web/target
 /backend/instaff-server/src/main/resources/application.properties
+/android/.gradle-local/
+.gradle/
