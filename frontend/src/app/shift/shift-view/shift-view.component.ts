@@ -1,9 +1,17 @@
-import {Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Shift} from '../../interfaces/shift';
-import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
-import {ShiftTemplate} from '../../interfaces/shift-template';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
@@ -12,7 +20,8 @@ import {AssignmentServiceService} from '../../services/assignment-service/assign
 import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
 import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
-import {NewAssignment} from '../../interfaces/new-assignment';
+import {ShiftCreate} from '../../interfaces/shift-create';
+import {Shifttemplate} from '../../interfaces/shifttemplate';
 
 @Component({
   selector: 'app-shift-view',
@@ -26,7 +35,7 @@ import {NewAssignment} from '../../interfaces/new-assignment';
   templateUrl: './shift-view.component.html',
   styleUrl: './shift-view.component.css'
 })
-export class ShiftViewComponent {
+export class ShiftViewComponent implements OnInit {
   @Output() closeShiftView = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
@@ -41,9 +50,9 @@ export class ShiftViewComponent {
   }
 
   shift!: Shift;
-  selectedDate!: ShiftCreateDTO;
-  shiftTemplates: ShiftTemplate[] = [];
-  selectedShiftTemplate: ShiftTemplate | null = null;
+  selectedDate!: ShiftCreate;
+  shiftTemplates: Shifttemplate[] = [];
+  selectedShiftTemplate: Shifttemplate | null = null;
 
 
   @ViewChild('shiftTemplateInput') shiftTemplateInput!: ElementRef;
@@ -62,7 +71,7 @@ export class ShiftViewComponent {
   groupedAssignments: { roleId: number; roleName: string; assignments: Assignment[] }[] = [];
 
   ngOnInit(): void {
-    this.employeeService.getEmployees();
+    this.employeeService.getAllEmployees();
 
     this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
       console.log(s);
@@ -76,7 +85,7 @@ export class ShiftViewComponent {
     })
 
     //get all Employees
-    this.employeeService.getEmployees()
+    this.employeeService.getAllEmployees()
     this.employeeService.employees$.subscribe((e) => {
       this.employees = e;
       this.buildGroupedAssignments();
@@ -102,72 +111,14 @@ export class ShiftViewComponent {
 
   }
 
-
-  initializeSelectedEmployees(roleId: number, count: number): boolean {
-    if (!this.selectedEmployees[roleId]) {
-      this.selectedEmployees[roleId] = Array(count).fill(null);
-    }
-    return true;
-  }
-
-
-  collectAssignments(): NewAssignment[] {
-    const assignments: NewAssignment[] = [];
-    const tmpRoles = this.selectedShiftTemplate!.templateRoles
-    for (let i = 0; i < tmpRoles.length; i++) {
-      for (let j = 0; j < tmpRoles.at(i)!.count; j++) {
-        const dropdownId = `employee-select-${tmpRoles[i].roleId}-${j}`;
-        const dropdown = document.getElementById(dropdownId) as HTMLSelectElement | null;
-        if (dropdown) {
-          const value = Number(dropdown.value);
-          assignments.push({employee: value, role: tmpRoles.at(i)!.roleId})
-        }
-      }
-    }
-    {
-    }
-
-    return assignments;
-  }
-/*
-  save() {
-
-    const newShift: NewShift = {
-      shiftCreateDTO: {
-        shiftName:
-        startTime: this.selectedDate.startTime,
-        endTime: this.selectedDate.endTime,
-        companyId: this.selectedDate.companyId,
-      },
-      assignmentCreateDTOs: this.collectAssignments(),
-    };
-
-    // logic to save newShift
-    this.shiftService.addShift(newShift)
-    this.closeViewShift()
-
-  }
-
-
-
-
-  chooseShiftTemplate() {
-    let shiftTemplateId: number = this.shiftTemplateInput.nativeElement.value;
-    for (let i = 0; i < this.shiftTemplates.length; i++) {
-      if (shiftTemplateId == this.shiftTemplates[i].id) {
-        this.selectedShiftTemplate = this.shiftTemplates[i];
-      }
-    }
-  }
-
- */
-
   closeViewShift() {
     this.closeShiftView.emit();
 
   }
 
+  //TODO
   private buildGroupedAssignments(): void {
+    /*
     const groups = new Map<number, Assignment[]>();
 
     for (const assignment of this.assignments) {
@@ -184,15 +135,17 @@ export class ShiftViewComponent {
         assignments: [...roleAssignments].sort((a, b) => {
           const aEmployee = this.employeeService.getEmployeeById(a.employee);
           const bEmployee = this.employeeService.getEmployeeById(b.employee);
-          const aName = `${aEmployee.firstname} ${aEmployee.lastname}`.trim();
+          const aName = `${aEmployee.firstName} ${aEmployee.lastname}`.trim();
           const bName = `${bEmployee.firstname} ${bEmployee.lastname}`.trim();
           return aName.localeCompare(bName, 'de');
         })
       }))
       .sort((a, b) => a.roleName.localeCompare(b.roleName, 'de'));
+
+     */
   }
 
-  makeStringFromBoolean(confirmed: boolean) {
+  makeStringFromBoolean(confirmed: boolean | null) {
     if (confirmed) {
       return "Bestätigt";
     } else if (confirmed == null) {

@@ -12,22 +12,24 @@ public record EmployeeCreateDTO(
         String lastname,
         String email,
         String telephone,
-        LocalDate birthdate,
+        LocalDate birthDate,
         boolean isManager,
         List<Long> roles, // List of role IDs
         double hourlyWage,
-        String address
+        String address,
+        boolean isActive
 ) {
     public static Employee toEmployee(EmployeeCreateDTO dto, long companyId) {
         return new Employee(dto.firstname(),
                 dto.lastname(),
                 dto.email(),
                 dto.telephone(),
-                dto.birthdate(),
+                dto.birthDate(),
                 dto.hourlyWage(),
                 dto.address(),
                 dto.isManager(),
                 Company.findById(companyId),
-                Role.findByIds(dto.roles));
+                Role.findByIds(dto.roles),
+                dto.isActive());
     }
 }

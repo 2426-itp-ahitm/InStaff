@@ -3,12 +3,7 @@ import {Assignment} from './assignment';
 export interface Shift {
   id: number;
   shiftName: string;
-  startTime: string;     // ISO timestamp string
-  endTime: string;       // ISO timestamp string
-  companyId: number;
-  companyName: string;
-  employees: number[];    // Array of employee IDs
+  startTime: Date;
+  endTime: Date;
   assignments: Assignment[];
-  reservations: number[]; // Array of reservation IDs
 }
-

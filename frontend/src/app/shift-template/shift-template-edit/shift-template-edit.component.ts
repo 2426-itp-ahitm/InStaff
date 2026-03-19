@@ -2,12 +2,12 @@ import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, View
 import {Role} from '../../interfaces/role';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
-import {ShiftTemplate} from '../../interfaces/shift-template';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {Employee} from '../../interfaces/employee';
+import {Shifttemplate} from '../../interfaces/shifttemplate';
 
 @Component({
   selector: 'app-shift-template-edit',
@@ -26,7 +26,7 @@ export class ShiftTemplateEditComponent implements OnInit {
 
 
 
-  @Input() shiftTemplate!: ShiftTemplate;
+  @Input() shiftTemplate!: Shifttemplate;
   @Output() closeShiftTemplateEdit = new EventEmitter<unknown>();
 
   @ViewChild('shiftTemplateNameInput') shiftTemplateNameInput!: ElementRef;
@@ -43,24 +43,29 @@ export class ShiftTemplateEditComponent implements OnInit {
     this.roleService.roles$.subscribe(r => this.roles = r);
 
     // load employees for the dropdowns (optional but useful)
-    this.employeeService.getEmployees();
+    this.employeeService.getAllEmployees();
     this.employeeService.employees$.subscribe(e => this.employees = e);
 
+    //TODO
     // initialize addedRoles from the provided shiftTemplate
     if (this.shiftTemplate && this.shiftTemplate.templateRoles) {
-      this.addedRoles = this.shiftTemplate.templateRoles.map(tr => ({ roleId: tr.roleId, count: tr.count, selectedEmployees: Array(tr.count).fill(null) }));
+      //this.addedRoles = this.shiftTemplate.templateRoles.map((tr: { roleId: any; count: any; }) => ({ roleId: tr.roleId, count: tr.count, selectedEmployees: Array(tr.count).fill(null) }));
     }
   }
 
+  //TODO
   save(): void {
+    /*
     const templateRoles = this.addedRoles.map(ar => ({ roleId: ar.roleId, count: ar.count }));
-    const updatedShiftTemplate: ShiftTemplate = {
+    const updatedShiftTemplate: Shifttemplate = {
       ...this.shiftTemplate,
       shiftTemplateName: this.shiftTemplateNameInput.nativeElement.value,
       templateRoles: templateRoles
     };
     this.shiftTemplateService.updateShiftTemplate(updatedShiftTemplate);
     this.close();
+
+     */
 
   }
 
@@ -70,7 +75,7 @@ export class ShiftTemplateEditComponent implements OnInit {
 
 
 
-  deleteShiftTemplate(shiftTemplateToDelte: ShiftTemplate) {
+  deleteShiftTemplate(shiftTemplateToDelte: Shifttemplate) {
     const confirmed = confirm(`Bist du dir sicher, dass du die Schichtvorlage "${ shiftTemplateToDelte.shiftTemplateName }" löschen willst?`);
     if (!confirmed) {
       return;
@@ -99,8 +104,8 @@ export class ShiftTemplateEditComponent implements OnInit {
   removeAddedRole(index: number) {
     this.addedRoles.splice(index, 1);
   }
-
+  //TODO
   employeesWithRole(roleId: number) {
-    return this.employees.filter(emp => emp.roles?.some(r => r.roleId === roleId && r.hasRole));
+    return this.employees.filter(emp => emp.roles?.some(r => r.id === roleId && true));
   }
 }

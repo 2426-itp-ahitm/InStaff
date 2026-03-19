@@ -35,7 +35,7 @@
                     [(ngModel)]="assignment.employee"
                     (click)="somethingChangedSetTrue()"
                     class="flex-1 block rounded-md bg-white px-2 py-1 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2"
-                    [class.text-gray-400]="assignment.employee === 0">
+                    [class.text-gray-400]="assignment.employee.id === 0">
                     <option [value]="0" class="text-gray-400">offen</option>
                     <option *ngFor="let emp of getEmployeesForRole(group.roleId)" [value]="emp.id">
                       {{ emp.firstname }} {{ emp.lastname }}
@@ -44,7 +44,7 @@
 
                   <!-- Status-Anzeige -->
                   <span
-                    *ngIf="assignment.employee !== 0"
+                    *ngIf="assignment.employee.id !== 0"
                     class="text-xs px-2 py-1 rounded"
                     [ngClass]="{
                       'bg-green-100 text-green-800': assignment.confirmed === true,

@@ -2,13 +2,12 @@ import {Component, ElementRef, EventEmitter, inject, Output, ViewChild, OnInit} 
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
-import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
-import {ShiftTemplate, TemplateRole} from '../../interfaces/shift-template';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {Role} from '../../interfaces/role';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
-import {Employee} from '../../interfaces/employee';
+import {Templaterole} from '../../interfaces/templaterole';
+import {TemplateroleCreate} from '../../interfaces/templaterole-create';
 
 @Component({
   selector: 'app-shift-template-add',
@@ -42,7 +41,7 @@ export class ShiftTemplateAddComponent implements OnInit {
       this.roles = r;
     });
 
-    
+
   }
 
   getRoleName(roleId: number): string {
@@ -57,8 +56,8 @@ export class ShiftTemplateAddComponent implements OnInit {
 
   save(): void {
     const newShiftTemplateName: string = this.shiftTemplateNameInput.nativeElement.value;
-
-    const templateRoles: TemplateRole[] = this.addedRoles.map(ar => ({ roleId: ar.roleId, count: ar.count }));
+    /*
+    const templateRoles: TemplateroleCreate[] = this.addedRoles.map(ar => ({ roleId: ar.roleId, count: ar.count }));
 
     const newShiftTemplate: ShiftTemplate = {
       id: -1,
@@ -70,6 +69,8 @@ export class ShiftTemplateAddComponent implements OnInit {
     this.shiftTemplateService.addShiftTemplate(newShiftTemplate);
 
     this.closeAddRole();
+
+     */
   }
 
   closeAddRole(): void {

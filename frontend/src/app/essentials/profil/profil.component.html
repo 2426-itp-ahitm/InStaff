@@ -24,7 +24,7 @@
           <!-- BDAY -->
           <div class="sm:col-span-4 mt-2">
             <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
-            <input formControlName="birthdate" value="{{ employee.birthdate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field-long">
+            <input formControlName="birthdate" value="{{ employee.birthDate }}" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field-long">
             <div *ngIf="editEmployeeForm.get('birthdate')?.invalid" class="text-red-600 text-sm">Ein gültiges Geburtsdatum ist erforderlich</div>
           </div>
 

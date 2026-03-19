@@ -2,18 +2,19 @@ import {Component, ElementRef, EventEmitter, HostListener, inject, OnInit, Outpu
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {ShiftServiceService} from '../shift-service/shift-service.service';
-import {ShiftTemplate, TemplateRole} from '../../interfaces/shift-template';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {Role} from '../../interfaces/role';
 import {Assignment} from '../../interfaces/assignment';
-import {NewAssignment} from '../../interfaces/new-assignment';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
-import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
+import {ShiftCreate} from '../../interfaces/shift-create';
+import {Shifttemplate} from '../../interfaces/shifttemplate';
+import {AssignmentCreate} from '../../interfaces/assignment-create';
+import {Templaterole} from '../../interfaces/templaterole';
 
 @Component({
   selector: 'app-shift-add',
@@ -27,13 +28,13 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
   styleUrl: './shift-add.component.css'
 })
 export class ShiftAddComponent implements OnInit {
-  selectedDate!: ShiftCreateDTO;
-  shiftTemplates: ShiftTemplate[] = [];
-  selectedShiftTemplate: ShiftTemplate | null = null;
+  selectedDate!: ShiftCreate;
+  shiftTemplates: Shifttemplate[] = [];
+  selectedShiftTemplate: Shifttemplate | null = null;
   assignments: Assignment[] = [];
   step: number = 0; // 0: date/time, 1: template choose, 2: assign employees
-  startTime!: string;
-  endTime!: string;
+  startTime!: Date;
+  endTime!: Date;
   shiftName: string = '';
   dateError: string | null = null;
 
@@ -78,7 +79,7 @@ export class ShiftAddComponent implements OnInit {
 
 
     //get all Employees
-    this.employeeService.getEmployees()
+    this.employeeService.getAllEmployees()
     this.employeeService.employees$.subscribe((e) => {
       this.employees = e;
     })
@@ -125,11 +126,13 @@ export class ShiftAddComponent implements OnInit {
     if (!roleId || !this.roles.find(r => r.id === roleId)) return;
     this.manualRoles.push({ roleId, count });
   }
-
+  //TODO
   private getCurrentRoles(): { roleId: number; count: number }[] {
+    /*
     if (this.selectedShiftTemplate) {
       return this.selectedShiftTemplate.templateRoles;
     }
+     */
     return this.manualRoles;
   }
 
@@ -213,7 +216,13 @@ export class ShiftAddComponent implements OnInit {
         this.shiftName = this.selectedShiftTemplate?.shiftTemplateName ?? '';
       }
       const roles = this.selectedShiftTemplate ? this.selectedShiftTemplate.templateRoles : this.manualRoles;
-      roles.forEach(r => this.initializeSelectedEmployees(r.roleId, r.count));
+      //TODO
+      /*
+      roles.forEach((r: { roleId: number; count: number; }) => {
+        this.initializeSelectedEmployees(r.roleId, r.count);
+      });
+
+       */
     }
   }
 
@@ -246,8 +255,8 @@ export class ShiftAddComponent implements OnInit {
     const defaultEnd = new Date(start);
     defaultEnd.setHours(21, 0, 0, 0);
 
-    this.startTime = this.toDateTimeLocalValue(defaultStart);
-    this.endTime = this.toDateTimeLocalValue(defaultEnd);
+    this.startTime = defaultStart;
+    this.endTime = defaultEnd;
   }
 
   private toDateTimeLocalValue(date: Date): string {
@@ -265,11 +274,13 @@ export class ShiftAddComponent implements OnInit {
 
 
 
-  collectAssignments(): NewAssignment[] {
-    const assignments: NewAssignment[] = [];
+  collectAssignments(): AssignmentCreate[] {
+    //TODO
+    const assignments: AssignmentCreate[] = [];
+    /*
     const roles = this.selectedShiftTemplate ? this.selectedShiftTemplate.templateRoles : this.manualRoles;
     for (let i = 0; i < roles.length; i++) {
-      const roleId = roles[i].roleId;
+      let roleId = roles[i].roleId;
       const count = roles[i].count;
       const sel = this.selectedEmployees[roleId] || [];
       for (let j = 0; j < count; j++) {
@@ -278,22 +289,20 @@ export class ShiftAddComponent implements OnInit {
       }
     }
 
+     */
+
     return assignments;
   }
 
   save() {
     const normalizedShiftName = (this.shiftName ?? '').trim();
-    let assignments: NewAssignment[] = this.collectAssignments();
-    const newShift: NewShift = {
+    let assignments: AssignmentCreate[] = this.collectAssignments();
+    const newShift: ShiftCreate = {
       shiftName: normalizedShiftName.length > 0
         ? normalizedShiftName
         : (this.selectedShiftTemplate?.shiftTemplateName ?? 'Schicht'),
-      shiftCreateDTO: {
         startTime: this.selectedDate.startTime,
         endTime: this.selectedDate.endTime,
-        companyId: this.selectedDate.companyId,
-      },
-      assignmentCreateDTOs: assignments,
     };
 
     this.shiftService.addShift(newShift);
@@ -324,8 +333,8 @@ export class ShiftAddComponent implements OnInit {
   protected readonly RoleServiceService = RoleServiceService;
 
 
-  checkIfEmpHasRole(emp: Employee, tmpRole: TemplateRole): boolean {
-    return emp.roles.some(role => role.roleId === tmpRole.roleId && role.hasRole);
+  checkIfEmpHasRole(emp: Employee, tmpRole: Templaterole): boolean {
+    return emp.roles.some(role => role.id === tmpRole.id && true);
   }
 
   protected readonly Date = Date;

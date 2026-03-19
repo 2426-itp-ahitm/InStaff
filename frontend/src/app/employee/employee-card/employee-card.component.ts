@@ -20,19 +20,9 @@ export class EmployeeCardComponent implements OnInit {
   employeeHasRoles: Boolean = false;
 
   ngOnInit() {
-    console.log(this.employee);
-    this.checkIfEmployeeHasRoles()
   }
 
-  checkIfEmployeeHasRoles() {
-    for (let r of this.employee.roles) {
-      if (r.hasRole) {
-        this.employeeHasRoles = true;
-        return;
-      }
-    }
-    this.employeeHasRoles = false;
-  }
+
 
   openEmpEdit() {
     this.editEmployee.emit(this.employee);

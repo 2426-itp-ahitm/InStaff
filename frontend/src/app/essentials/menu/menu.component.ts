@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
       return;
     }
 
-    this.employeeService.getEmployeeByKeycloakId(keycloakId).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(keycloakId).subscribe((emp) => {
       this.employee = emp;
       this.isManager = emp.isManager;
       this.userInitials = this.employee.firstname[0].toUpperCase() + this.employee.lastname[0].toUpperCase();

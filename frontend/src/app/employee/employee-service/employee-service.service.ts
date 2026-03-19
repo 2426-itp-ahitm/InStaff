@@ -2,13 +2,12 @@ import { switchMap, map } from 'rxjs/operators';
 import {inject, Injectable} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
 import {forkJoin, Observable, BehaviorSubject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Role} from '../../interfaces/role';
-import {EmployeeRole} from '../../interfaces/employee-role';
-import {NewEmployee} from '../../interfaces/new-employee';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {EmployeeCreate} from '../../interfaces/employee-create';
 
 @Injectable({
   providedIn: 'root'
@@ -22,100 +21,67 @@ export class EmployeeServiceService {
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
 
-  private getApiUrl(): string {
-    return this.apiUrl.getApiUrl();
+  private getEmployeeApiUrl(): string {
+    return `${this.apiUrl.getApiUrl()}/employees`;
   }
 
-  getEmployees(): void {
-    this.httpClient.get<Employee[]>(`${this.getApiUrl()}/employees/`).pipe(
-      switchMap((employees: Employee[]) => {
-        const enrichedEmployeeObservables = employees.map(emp =>
-          this.getEnrichedEmployeeById(emp.id)
-        );
-        return forkJoin(enrichedEmployeeObservables);
-      })
-    ).subscribe((enrichedEmployees: Employee[]) => {
-      this.employeesSubject.next(enrichedEmployees);
-    });
+  /* GET */
+
+  getAllEmployees(): void{
+    this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}`).subscribe(employees => this.employeesSubject.next(employees));
   }
 
-  getRoles(): Observable<Role[]> {
-    return this.httpClient.get<Role[]>(`${this.getApiUrl()}/roles`);
+  getEmployeeById(id: number): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.getEmployeeApiUrl()}/${id}`)
   }
 
-  getEmployeeById(id: number): Employee{
-    let emps: Employee[] = [];
-    this.employees$.subscribe((data) => {
-      emps = data;
-    });
-
-    if(emps.find(emp => emp.id === id) != null){
-      return emps.find(emp => emp.id === id)!;
-    }else{
-      return emps[0]
-    }
+  getEmployeeByKeykloackId(keykloackId: string): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.getEmployeeApiUrl()}/keycloak/${keykloackId}`)
   }
 
-  getEmployeeByKeycloakId(keycloakId: string): Observable<Employee> {
-    return this.httpClient.get<Employee>(`${this.getApiUrl()}/employees/keycloak/${keycloakId}`);
+  getEmployeeByName(name: string): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.getEmployeeApiUrl()}/name/${name}`)
   }
 
-  getEnrichedEmployeeById(id: number): Observable<Employee> {
-    return this.httpClient.get<Employee>(`${this.getApiUrl()}/employees/${id}`).pipe(
-      switchMap((employee: any) => {
-        return this.getRoles().pipe(
-          map((allRoles: Role[]) => {
-            const enrichedRoles: EmployeeRole[] = allRoles.map(role => ({
-              roleId: role.id,
-              name: role.roleName,
-              hasRole: (employee.roles ?? []).includes(role.id)
-            }));
-            return {
-              ...employee,
-              roles: enrichedRoles
-            };
-          })
-        );
-      })
+  getAllEmployeesByRoleId(roleId: number): Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}/role/${roleId}`)
+  }
+
+
+  /* POST */
+
+  createEmployee(newEmployee: EmployeeCreate): Observable<Employee> {
+    return this.httpClient.post<Employee>(`${this.getEmployeeApiUrl()}`, newEmployee)
+  }
+
+
+  /* PUT */
+
+  updateEmployee(empId: number, newEmployee: EmployeeCreate): Observable<Employee> {
+    console.log(newEmployee);
+    return this.httpClient.put<Employee>(`${this.getEmployeeApiUrl()}/${empId}`, newEmployee)
+  }
+
+  addRoleToEmployee(empId: number, roleId: number): Observable<Employee> {
+    return this.httpClient.put<Employee>(`${this.getEmployeeApiUrl()}/${empId}/assignrole/${roleId}`, {})
+  }
+
+  removeRoleFromEmployee(empId: number, roleId: number): Observable<Employee> {
+    return this.httpClient.put<Employee>(`${this.getEmployeeApiUrl()}/${empId}/removerole/${roleId}`, {})
+  }
+
+
+  /* DELETE */
+
+  deleteEmployee(id: number): Observable<HttpResponse<Employee>> {
+    return this.httpClient.delete<Employee>(
+      `${this.getEmployeeApiUrl()}/${id}`,
+      { observe: 'response' }
     );
   }
 
 
-  updateEmployee(updatedEmployee: Employee): void {
-    const transformedEmployee = {
-      ...updatedEmployee,
-      roles: updatedEmployee.roles
-        .filter(role => role.hasRole)
-        .map(role => role.roleId)
-    };
 
-
-    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees/${transformedEmployee.id}`, transformedEmployee)
-      .subscribe((response) => {
-        const currentEmployees = this.employeesSubject.getValue();
-        const updatedList = currentEmployees.map(emp =>
-          emp.id === updatedEmployee.id ? updatedEmployee : emp
-        );
-        this.employeesSubject.next(updatedList);
-      });
-  }
-
-  addNewEmployee(newEmployee: NewEmployee): void {
-    this.httpClient.post<Employee>(`${this.getApiUrl()}/employees`, newEmployee)
-      .subscribe(() => {
-        // Reload enriched data so roles are available immediately in the list.
-        this.getEmployees();
-      });
-  }
-
-  deleteEmployee(id: number): void {
-    this.httpClient.delete<Employee>(`${this.getApiUrl()}/employees/delete/${id}`)
-    .subscribe((response) => {
-      const currentEmployees = this.employeesSubject.getValue();
-      const updatedEmployees = currentEmployees.filter(emp => emp.id !== id);
-      this.employeesSubject.next(updatedEmployees);
-    });
-  }
 
   birthdateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {

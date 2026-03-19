@@ -22,7 +22,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeService.employees$.subscribe((data) => this.employees = data);
-    this.employeeService.getEmployees();
+    this.employeeService.getAllEmployees();
   }
 /*
   selectEmployee(id: string) {

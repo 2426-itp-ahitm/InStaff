@@ -27,6 +27,14 @@ public class EmployeeResource {
     }
 
     @GET
+    @Path("/managers")
+    public Response getAllManagers(@Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+        List<Employee> managers = Employee.list("company.id=?1 and isManager=true", principal.getCompanyId());
+        return Response.ok(managers.stream().map(EmployeeDTO::toResource)).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getEmployee(@PathParam("id") long id, @Context SecurityContext sc) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
@@ -95,7 +103,7 @@ public class EmployeeResource {
         if (employee == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthdate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
+        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
 
         employee.persist();
         return Response.ok(EmployeeDTO.toResource(employee)).build();

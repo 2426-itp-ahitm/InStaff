@@ -56,7 +56,8 @@ public class ShiftTemplateResource {
         shiftTemplate.shiftTemplateName = dto.shiftTemplateName();
         shiftTemplate.persist();
 
-        ShiftTemplate.getEntityManager().createNativeQuery("DELETE FROM template_role WHERE shift_template_id = " + shiftTemplate.id).executeUpdate();
+        ShiftTemplate.getEntityManager().createNativeQuery("DELETE FROM template_role WHERE shift_template_id = :id")
+                .setParameter("id", shiftTemplate.id).executeUpdate();
 
         for (TemplateRoleCreateDTO templateRoleDTO : dto.templateRoles()) {
             TemplateRole templateRole = new TemplateRole(Role.findById(templateRoleDTO.roleId()), shiftTemplate, templateRoleDTO.count());

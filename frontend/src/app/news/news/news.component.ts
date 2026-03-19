@@ -1,5 +1,4 @@
 import {Component, inject, OnInit, Output, EventEmitter} from '@angular/core';
-import {News} from '../../interfaces/news';
 import {NewsService} from '../news-service/news.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {NewsWebsocketServiceService} from '../news-websocket-serivce/news-websocket-service.service';
@@ -17,6 +16,10 @@ import {DateService} from '../../services/date-service/date.service';
   styleUrl: './news.component.css'
 })
 export class NewsComponent implements OnInit {
+  ngOnInit() {
+
+  }
+  /*
   message: string = '';
 
   constructor(private ws: NewsWebsocketServiceService) {}
@@ -69,4 +72,6 @@ export class NewsComponent implements OnInit {
      this.newsService.deleteAllNewsItem()
 
    }
+
+   */
 }

@@ -9,12 +9,13 @@ import java.util.List;
 public record AssignmentDTO(
         long id,
         Boolean confirmed,
+        Boolean seen,
         EmployeeShortDTO employee,
         ShiftShortDTO shift,
         RoleDTO role
 ) {
     public static AssignmentDTO toResource(Assignment assignment) {
-        return new AssignmentDTO(assignment.id, assignment.confirmed, EmployeeShortDTO.toResource(assignment.employee), ShiftShortDTO.toResource(assignment.shift),
+        return new AssignmentDTO(assignment.id, assignment.confirmed, assignment.seen, EmployeeShortDTO.toResource(assignment.employee), ShiftShortDTO.toResource(assignment.shift),
                 RoleDTO.toResource(assignment.role));
     }
 }

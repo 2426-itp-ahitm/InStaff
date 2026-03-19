@@ -34,11 +34,10 @@ export class EmployeeListComponent implements OnInit {
   constructor(private employeeService: EmployeeServiceService) {}
 
   ngOnInit(): void {
-    console.log(this.keycloakService.getToken())
     this.employeeService.employees$.subscribe((data) => {
       this.employees = data;
     });
-    this.employeeService.getEmployees();
+    this.employeeService.getAllEmployees();
   }
 
   onSearch(term: string) {
@@ -66,6 +65,6 @@ export class EmployeeListComponent implements OnInit {
   closeAddEmployee() {
     this.isAddMode = false;
     this.roleService.getRoles()
-    this.employeeService.getEmployees()
+    this.employeeService.getAllEmployees()
   }
 }

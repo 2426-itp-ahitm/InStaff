@@ -24,6 +24,8 @@ public class Employee extends PanacheEntity {
     public String address;
     @Column(name = "is_manager")
     public Boolean isManager;
+    @Column(name = "is_active")
+    public Boolean isActive = true;
 
     @ManyToOne()
     public Company company;
@@ -41,7 +43,7 @@ public class Employee extends PanacheEntity {
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, Company company, List<Role> roles) {
+    public Employee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, Company company, List<Role> roles, boolean isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -52,6 +54,7 @@ public class Employee extends PanacheEntity {
         this.isManager = isManager;
         this.company = company;
         this.roles = roles;
+        this.isActive = isActive;
     }
 
     public void updateEmployee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, List<Role> roles) {
