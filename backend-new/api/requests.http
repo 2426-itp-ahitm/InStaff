@@ -30,6 +30,12 @@ Authorization: Bearer {{access_token}}
 
 ###
 
+### Get all managers
+GET http://localhost:8080/api/employees/managers
+Authorization: Bearer {{access_token}}
+
+###
+
 ### Get employee by ID
 GET http://localhost:8080/api/employees/3
 Authorization: Bearer {{access_token}}

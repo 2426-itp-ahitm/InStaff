@@ -27,6 +27,14 @@ public class EmployeeResource {
     }
 
     @GET
+    @Path("/managers")
+    public Response getAllManagers(@Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+        List<Employee> managers = Employee.list("company.id=?1 and isManager=true", principal.getCompanyId());
+        return Response.ok(managers.stream().map(EmployeeDTO::toResource)).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getEmployee(@PathParam("id") long id, @Context SecurityContext sc) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
