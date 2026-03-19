@@ -16,7 +16,8 @@ public record EmployeeCreateDTO(
         boolean isManager,
         List<Long> roles, // List of role IDs
         double hourlyWage,
-        String address
+        String address,
+        boolean isActive
 ) {
     public static Employee toEmployee(EmployeeCreateDTO dto, long companyId) {
         return new Employee(dto.firstname(),
@@ -28,6 +29,7 @@ public record EmployeeCreateDTO(
                 dto.address(),
                 dto.isManager(),
                 Company.findById(companyId),
-                Role.findByIds(dto.roles));
+                Role.findByIds(dto.roles),
+                dto.isActive());
     }
 }
