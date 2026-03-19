@@ -37,7 +37,7 @@ Authorization: Bearer {{access_token}}
 ###
 
 ### Get employee by Keycloak ID
-GET http://localhost:8080/api/employees/keycloak/c741c588-00cb-472a-8207-384ca0926098
+GET http://localhost:8080/api/employees/keycloak/dd677b80-eaf8-4e2a-b79b-fa625d232188
 Authorization: Bearer {{access_token}}
 
 ###
@@ -172,6 +172,12 @@ Content-Type: application/json
 
 ###
 
+### Mark Assignment as Seen
+PUT http://localhost:8080/api/assignments/36/mark-seen
+Authorization: Bearer {{access_token}}
+
+###
+
 ### Delete Assignment
 DELETE http://localhost:8080/api/assignments/1
 Authorization: Bearer {{access_token}}
@@ -208,7 +214,7 @@ GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
 ###
 
 ### Confirm assignment
-PUT http://localhost:8080/api/assignments/30/confirm/true
+PUT http://localhost:8080/api/assignments/36/confirm/false
 Authorization: Bearer {{access_token}}
 
 ###

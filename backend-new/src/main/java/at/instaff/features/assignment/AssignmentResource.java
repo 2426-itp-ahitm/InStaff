@@ -18,6 +18,8 @@ import java.util.List;
 public class AssignmentResource {
     @Inject
     AssignmentRepository assignmentRepository;
+    @Inject
+    AssignmentSocket assignmentSocket;
 
     @GET
     public Response getAssignments(@Context SecurityContext sc) {
@@ -81,14 +83,37 @@ public class AssignmentResource {
     public Response confirmAssignment(@PathParam("id") long id, @Context SecurityContext sc, @PathParam("isConfirmed") boolean isConfirmed) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
         Assignment assignment = Assignment.findById(id);
+        Employee employee = Employee.findById(principal.getEmployeeId());
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (principal.getEmployeeId() != assignment.employee.id) {
+        if (principal.getEmployeeId() != assignment.employee.id && !employee.isManager) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         assignment.confirmed = isConfirmed;
+        assignment.seen = false;
         assignment.persist();
+        assignmentSocket.assignmentUpdated(assignment);
+
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
+    }
+
+    @PUT
+    @Path("/{id}/mark-seen")
+    @Transactional
+    public Response markSeen(@PathParam("id") long id, @Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+        Assignment assignment = Assignment.findById(id);
+        if (assignment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        if (principal.getCompanyId() != assignment.employee.company.id) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        assignment.seen = true;
+        assignment.persist();
+        assignmentSocket.assignmentSeen(assignment);
 
         return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
@@ -106,6 +131,7 @@ public class AssignmentResource {
 
         Assignment assignment = new Assignment(employee, shift, role);
         assignment.persist();
+
         return Response.status(Response.Status.CREATED).entity(AssignmentDTO.toResource(assignment)).build();
     }
 
