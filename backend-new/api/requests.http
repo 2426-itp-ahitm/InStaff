@@ -349,3 +349,22 @@ Content-Type: application/json
 ### Delete shift template by ID
 DELETE http://localhost:8080/api/shift-templates/1
 Authorization: Bearer {{access_token}}
+
+###############################################
+# Companies
+###############################################
+
+### Get your Company
+GET http://localhost:8080/api/companies
+Authorization: Bearer {{access_token}}
+
+###
+
+### Create new Company
+POST http://localhost:8080/api/companies
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "companyName": "Gasthof Prangl"
+}

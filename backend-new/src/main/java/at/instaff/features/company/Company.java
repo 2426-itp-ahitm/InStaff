@@ -8,4 +8,10 @@ import jakarta.persistence.Entity;
 public class Company extends PanacheEntity {
     @Column(name = "company_name")
     public String companyName;
+
+    public Company() {}
+
+    public Company(String companyName) {
+        this.companyName = companyName;
+    }
 }
