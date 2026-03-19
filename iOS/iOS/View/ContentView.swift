@@ -10,8 +10,7 @@ import SwiftUI
 @MainActor
 class SessionManager: ObservableObject {
     @Published var isLoggedIn = false
-    @Published var companyId: Int64? = nil
-    @Published var employeeId: Int64? = nil
+    @Published var company: Company? = nil
     @Published var employee: Employee? = nil
     @Published var accessToken: String? = nil
     
@@ -42,16 +41,13 @@ class SessionManager: ObservableObject {
             let data = try await APIClient.shared.request(url: url)
             let decoded = try JSONDecoder().decode(Employee.self, from: data)
 
-            DispatchQueue.main.async {
-                self.employee = decoded
-                self.companyId = decoded.companyId
-                self.employeeId = decoded.id
-                self.isLoggedIn = true
-            }
+            self.employee = decoded
+            self.company = decoded.company
+            self.isLoggedIn = true
             
             print("Loaded employee:")
-            print("employeeId =", decoded.id)
-            print("companyId =", decoded.companyId)
+            print("employee =", decoded)
+            print("company =", decoded.company?.companyName)
             print("keycloakId =", decoded.keycloakUserId)
             
         } catch {

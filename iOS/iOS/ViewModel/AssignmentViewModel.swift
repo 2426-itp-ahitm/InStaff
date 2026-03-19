@@ -11,22 +11,22 @@ import SwiftUI
 class AssignmentViewModel: ObservableObject {
     @Published var assignments: [Assignment] = []
     
-    var companyId: Int64
+    var employeeId: Int64
 
-    init(companyId: Int64) {
-        self.companyId = companyId
+    init(employeeId: Int64) {
+        self.employeeId = employeeId
         Task {
             await loadAssignmentsAsync()
         }
     }
 
     private func load() -> [Assignment] {
-        guard companyId > 0 else { return []}
+        guard employeeId > 0 else { return []}
         
         var assignments: [Assignment] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/assignments") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/assignments/employee/\(employeeId)") else {
             print("Invalid URL: assignment")
             return assignments
         }
@@ -53,9 +53,9 @@ class AssignmentViewModel: ObservableObject {
     }
 
     private func loadAssignmentsAsync() async {
-        guard companyId > 0 else { return }
+        guard employeeId > 0 else { return }
 
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/assignments") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/assignments/employee/\(employeeId)") else {
             return
         }
 
@@ -65,6 +65,7 @@ class AssignmentViewModel: ObservableObject {
 
             await MainActor.run {
                 self.assignments = decoded
+                print("loaded assignments for employee \(employeeId)")
             }
 
         } catch {
@@ -79,9 +80,7 @@ class AssignmentViewModel: ObservableObject {
     // PUT /api/{companyId}/confirmation/confirm/{assignmentId}
     // PUT /api/{companyId}/confirmation/decline/{assignmentId}
     public func confirmAssignment(assignmentId: Int, isAccepted: Bool) {
-        let action = isAccepted ? "confirm" : "decline"
-
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/confirmation/\(action)/\(assignmentId)") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/assignments/\(assignmentId)/confirm/\(isAccepted)") else {
             return
         }
 

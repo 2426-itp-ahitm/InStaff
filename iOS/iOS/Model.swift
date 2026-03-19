@@ -11,74 +11,83 @@ let apiBaseUrl = "http://localhost:8080"
 
 struct Shift: Identifiable, Decodable {
     let id: Int
+    var shiftName: String
     var startTime: String
     var endTime: String
-    var companyId: Int
-    var companyName: String
-    var employees: [Int]
-    var reservations: [Int]
-    
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case startTime
-        case endTime
-        case companyId = "companyId"
-        case companyName = "company_name"
-        case employees
-        case reservations
+    var assignments: [Assignment]
+
+    enum CodingKeys: String, CodingKey {
+        case id, shiftName, startTime, endTime, assignments
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(Int.self, forKey: .id)
+        shiftName = try container.decode(String.self, forKey: .shiftName)
+        startTime = try container.decode(String.self, forKey: .startTime)
+        endTime = try container.decode(String.self, forKey: .endTime)
+        assignments = try container.decodeIfPresent([Assignment].self, forKey: .assignments) ?? []
     }
 }
 
-struct Employee: Identifiable, Decodable, Encodable {
+
+struct Employee: Identifiable, Decodable, Encodable, Equatable {
+    static func == (lhs: Employee, rhs: Employee) -> Bool {
+        lhs.id == rhs.id || lhs.keycloakUserId == rhs.keycloakUserId
+    }
+    
     let id: Int64
+    var keycloakUserId: String
     var firstname: String
     var lastname: String
     var email: String
     var telephone: String
-    var birthdate: String
-    var companyId: Int64
-    var companyName: String
+    var birthDate: String
     var isManager: Bool
-    var roles: [Int]
-    var keycloakUserId: String
-}
-
-struct Reservation: Identifiable, Decodable {
-    let id: Int
-    var name: String
-    var infos: String
-    var number_of_people: Int
-    var start_time: String
-    var end_time: String
-    var shift: Int
+    var hourlyWage: Int
+    var address: String
+    var company: Company!
+    var roles: [Role]
+    
+    enum CodingKeys: String, CodingKey {
+        case id, keycloakUserId, firstname, lastname, email, telephone, birthDate, isManager, hourlyWage, address, company, roles
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int64.self, forKey: .id)
+        keycloakUserId = try container.decode(String.self, forKey: .keycloakUserId)
+        firstname = try container.decode(String.self, forKey: .firstname)
+        lastname = try container.decode(String.self, forKey: .lastname)
+        email = try container.decode(String.self, forKey: .email)
+        telephone = try container.decode(String.self, forKey: .telephone)
+        birthDate = try container.decode(String.self, forKey: .birthDate)
+        isManager = try container.decode(Bool.self, forKey: .isManager)
+        hourlyWage = try container.decode(Int.self, forKey: .hourlyWage)
+        address = try container.decode(String.self, forKey: .address)
+        company = try container.decodeIfPresent(Company.self, forKey: .company)
+        roles = try container.decodeIfPresent([Role].self, forKey: .roles) ?? []
+    }
 }
 
 struct Assignment: Identifiable, Decodable {
     let id: Int
-    var shift: Int
-    var role: Int
-    var employee: Int64
     var confirmed: Bool?
+    var employee: Employee
+    var shift: Shift
+    var role: Role
 }
 
-struct Role: Identifiable, Decodable {
+struct Role: Identifiable, Codable {
     let id: Int
     var roleName: String
-    var companyId: Int
-    var employees: [Int]
+    var description: String
 }
 
-struct Company: Identifiable, Decodable {
+struct Company: Identifiable, Codable, Equatable {
     let id: Int
     var companyName: String
-}
-
-struct CalendarEvent: Identifiable {
-    let id: UUID = UUID()
-    let title: String
-    let startDate: Date
-    let endDate: Date
-    let description: String
 }
 
 func formatDateComponents(_ dateString: String) -> (date: String, time: String)? {
@@ -89,8 +98,13 @@ func formatDateComponents(_ dateString: String) -> (date: String, time: String)?
     return (date, time)
 }
 
-func getRoleNames(for employee: Employee, from allRoles: [Role]) -> [String] {
-    return allRoles
-        .filter { role in employee.roles.contains(role.id) }
-        .map { $0.roleName }
+func parseISODate(_ string: String) -> Date? {
+    let formatter = ISO8601DateFormatter()
+    return formatter.date(from: string)
+}
+
+func formatTime(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm"
+    return formatter.string(from: date)
 }

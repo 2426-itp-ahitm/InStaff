@@ -18,34 +18,48 @@ struct RequestView: View {
     @State private var filterByUpcomingOnly = false
     
     var filteredAssignments: [Assignment] {
-        guard let employeeId = session.employeeId else { return [] }
+        guard let employeeId = session.employee?.id else { return [] }
         
         return assignmentViewModel.assignments
-            .filter { $0.employee == employeeId }
             .filter { assignment in
                 if let selectedRoleId = selectedRoleId {
-                    return assignment.role == selectedRoleId
+                    return assignment.role.id == selectedRoleId
                 }
                 return true
             }
             .sorted { l, r in
-                let lShift = shiftViewModel.shift(for: l.shift)
-                let rShift = shiftViewModel.shift(for: r.shift)
+                let now = Date()
 
-                let lDate = lShift.flatMap { DateUtils.toDate($0.startTime) } ?? .distantPast
-                let rDate = rShift.flatMap { DateUtils.toDate($0.startTime) } ?? .distantPast
+                let lStart = DateUtils.toDate(l.shift.startTime) ?? .distantFuture
+                let rStart = DateUtils.toDate(r.shift.startTime) ?? .distantFuture
 
-                return lDate < rDate
+                let lIsPast = lStart < now
+                let rIsPast = rStart < now
+
+                // Future assignments first, past assignments last
+                if lIsPast != rIsPast {
+                    return !lIsPast
+                }
+
+                // Both future → sort ascending (next first)
+                if !lIsPast {
+                    return lStart < rStart
+                }
+
+                // Both past → sort descending (most recent past first)
+                return lStart > rStart
             }
     }
     
     func isPast(_ assignment: Assignment) -> Bool {
-        if let shift = shiftViewModel.shift(for: assignment.shift),
-           let start = DateUtils.toDate(shift.startTime) {
-            return start < Date()
+        let endString = assignment.shift.endTime
+        guard let endDate = DateUtils.toDate(endString) else {
+            return false
         }
-        return true
+
+        return endDate < Date()
     }
+    
 
     var body: some View {
         //Text("employeeId: \(session.employeeId.map(String.init) ?? "nix")")
@@ -53,13 +67,16 @@ struct RequestView: View {
             NavigationStack {
                 Menu("Filter") {
                     Picker("Rolle", selection: $selectedRoleId) {
-                        Text("Alle Rollen").tag(Int?.none)
+                        Text("Alle Rollen").tag(nil as Int?)
                         ForEach(roleViewModel.roles) { role in
-                            if let employee = session.employee, employee.roles.contains(role.id) {
-                                Text(roleViewModel.roleName(for: role.id)).tag(Optional(role.id))
+                            let employeeRoles = session.employee?.roles ?? []
+
+                            if employeeRoles.isEmpty || employeeRoles.contains(where: { $0.id == role.id }) {
+                                Text(role.roleName).tag(role.id as Int?)
                             }
                         }
                     }
+
                 }
                 .padding()
                 List {
@@ -69,24 +86,29 @@ struct RequestView: View {
                         HStack {
                             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
                         }
+                        .opacity(isPast(assignment) ? 0.4 : 1.0)
                         .contentShape(Rectangle())
                         .swipeActions(edge: .leading) {
                             Button {
-                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+                                Task {
+                                    await assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+                                }
                             } label: {
                                 Label("Annehmen", systemImage: "checkmark")
                             }
-                            .disabled(isPast(assignment))
                             .tint(.green)
+                            .disabled(isPast(assignment))
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+                                Task {
+                                    await assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+                                }
                             } label: {
                                 Label("Ablehnen", systemImage: "xmark")
                             }
-                            .tint(.red)
                             .disabled(isPast(assignment))
+                            .tint(.red)
                         }
                     }
                 }

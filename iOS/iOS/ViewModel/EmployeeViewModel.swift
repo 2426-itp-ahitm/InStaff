@@ -22,7 +22,7 @@ class EmployeeViewModel: ObservableObject {
         var employees: [Employee] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/employees") else {
             print("Invalid URL: employee")
             return employees
         }
@@ -48,7 +48,7 @@ class EmployeeViewModel: ObservableObject {
         return employees
     }
     func saveEmployeeChanges(_ employee: Employee, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/employees/\(employee.id)") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/employees/\(employee.id)") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))
             return
         }

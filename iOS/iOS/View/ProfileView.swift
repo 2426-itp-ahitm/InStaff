@@ -28,14 +28,14 @@ struct ProfileView: View {
             employee.lastname != lastName ||
             employee.email != email ||
             employee.telephone != telephone ||
-            employee.birthdate != birthdate
+            employee.birthDate != birthdate
 
         if hasChanges {
             employee.firstname = firstName
             employee.lastname = lastName
             employee.email = email
             employee.telephone = telephone
-            employee.birthdate = birthdate
+            employee.birthDate = birthdate
 
             employeeViewModel.saveEmployeeChanges(employee) { result in
                 switch result {
@@ -56,7 +56,7 @@ struct ProfileView: View {
             if let employee = session.employee {
                 VStack {
                     Form {
-                        Section(header: Text("Persönliche Informationen")) {
+                        Section {
                             HStack {
                                 Text("Vorname:")
                                     .frame(width: 120, alignment: .leading)
@@ -110,36 +110,42 @@ struct ProfileView: View {
                                     .background(Color.appGreen)
                                     .cornerRadius(8)
                             }
+                        } header: {
+                            Text("Persönliche Informationen")
                         }
-                        Section(header: Text("Firma")) {
+                        Section {
                             HStack {
                                 Text("Firmenname: ")
                                     .frame(width: 120, alignment: .leading)
                                 Spacer()
-                                TextField("Firmenname", text: $companyName)
-                                    .disabled(true)
-                                    .foregroundStyle(.secondary)
+                                Text(employee.company?.companyName ?? "-")
                             }
+                        } header: {
+                            Text("Firma")
                         }
-                        Section(header: Text("Rollen")) {
-                            ForEach(roleViewModel.roles) { role in
-                                HStack {
-                                    Text(role.roleName)
-                                    Spacer()
-                                    if employee.roles.contains(role.id) {
+                        Section {
+                            if employee.roles.isEmpty {
+                                Text("Keine Rollen")
+                                    .foregroundColor(.gray)
+                            } else {
+                                ForEach(employee.roles) { role in
+                                    HStack {
+                                        Text(role.roleName)
+                                        Spacer()
                                         Image(systemName: "checkmark.circle.fill")
                                             .foregroundColor(.green)
-                                    } else {
-                                        Image(systemName: "circle")
-                                            .foregroundColor(.gray)
                                     }
                                 }
                             }
+                        } header: {
+                            Text("Rollen")
                         }
-                        Section(header: Text("App Einstellungen")) {
+                        Section {
                             Text("Folgt in Kürze :)")
+                        } header: {
+                            Text("App Einstellungen")
                         }
-                        Section(header: Text("")) {
+                        Section {
                             Button(action: {
                                 session.isLoggedIn = false
                             }) {
@@ -150,6 +156,8 @@ struct ProfileView: View {
                                     .background(Color(.red))
                                     .cornerRadius(8)
                             }
+                        } header: {
+                            Text("")
                         }
                     }
                 }
@@ -158,8 +166,7 @@ struct ProfileView: View {
                     lastName = employee.lastname
                     email = employee.email
                     telephone = employee.telephone
-                    birthdate = employee.birthdate
-                    companyName = employee.companyName
+                    birthdate = employee.birthDate
                 }
             } else {
                 VStack {

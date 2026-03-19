@@ -14,13 +14,11 @@ struct HomeView: View {
     @ObservedObject var shiftViewModel: ShiftViewModel
     
     var filteredAssignments: [Assignment] {
-        guard let employeeId = session.employeeId else { return [] }
+        guard let employee = session.employee else { return [] }
 
         return assignmentViewModel.assignments
-            .filter { $0.employee == employeeId }
             .filter { assignment in
-                guard let shift = shiftViewModel.shift(for: assignment.shift),
-                      let start = DateUtils.toDate(shift.startTime) else { return false }
+                guard let start = DateUtils.toDate(assignment.shift.startTime) else { return false }
 
                 let calendar = Calendar.current
                 let now = Date()
@@ -31,10 +29,10 @@ struct HomeView: View {
                 return start >= startOfWeek && start < endOfWeek
             }
             .sorted { l, r in
-                guard let lShift = shiftViewModel.shift(for: l.shift),
-                      let rShift = shiftViewModel.shift(for: r.shift),
-                      let lStart = DateUtils.toDate(lShift.startTime),
-                      let rStart = DateUtils.toDate(rShift.startTime) else {
+                guard
+                    let lStart = DateUtils.toDate(l.shift.startTime),
+                    let rStart = DateUtils.toDate(r.shift.startTime)
+                else {
                     return l.id < r.id
                 }
                 return lStart < rStart

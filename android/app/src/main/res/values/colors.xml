@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="instaff_primary">#FF597D57</color>
+    <color name="instaff_primary_dark">#FF3F5E3D</color>
+    <color name="instaff_secondary">#FFE5C86B</color>
+    <color name="instaff_background">#FFF7F4ED</color>
+    <color name="instaff_surface">#FFFFFFFF</color>
+    <color name="instaff_surface_muted">#FFF0ECE1</color>
+    <color name="instaff_text">#FF1F261F</color>
+    <color name="instaff_text_muted">#FF6B756B</color>
+    <color name="instaff_border">#FFD9D3C5</color>
+    <color name="status_open">#FFE0A432</color>
+    <color name="status_accepted">#FF4D8B55</color>
+    <color name="status_declined">#FFD95555</color>
+    <color name="status_past">#FF9A9A9A</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>

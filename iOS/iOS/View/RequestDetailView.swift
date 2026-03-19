@@ -18,11 +18,12 @@ struct RequestDetailView: View {
     @State private var errorMessage: String? = nil
     
     var isPastShift: Bool {
-        if let startTime = shiftViewModel.shift(for: assignment.shift)?.startTime,
-           let shiftDate = DateUtils.toDate(startTime) {
-            return shiftDate < Date()
+        let endString = assignment.shift.endTime
+        guard let endDate = DateUtils.toDate(endString) else {
+            return false
         }
-        return false
+
+        return endDate < Date()
     }
     
     private func germanWeekdayName(for date: Date) -> String {
@@ -36,8 +37,8 @@ struct RequestDetailView: View {
             Form{
                 Section {
                     // Build Dates
-                    let rawStartDate = shiftViewModel.shiftStartTime(by: assignment.shift)
-                    let rawEndDate = shiftViewModel.shiftEndTime(by: assignment.shift)
+                    let rawStartDate = assignment.shift.startTime
+                    let rawEndDate = assignment.shift.endTime
                     
                     // Parse to Date for accurate comparisons
                     let startDate = DateUtils.toDate(rawStartDate)
@@ -97,7 +98,7 @@ struct RequestDetailView: View {
                         }
                     }
                     
-                    RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
+                    RoleTag(roleName: assignment.role.roleName)
                         .font(.title)
                     
                     

@@ -23,48 +23,43 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        TabView {
-            NavigationStack {
-                Group {
+        SwiftUI.TabView {
+            SwiftUI.NavigationStack {
+                SwiftUI.Group {
                     if let aVM = assignmentViewModelHolder.instance,
                        let rVM = roleViewModelHolder.instance,
                        let sVM = shiftViewModelHolder.instance {
-                        HomeView(
-                            assignmentViewModel: aVM,
-                            roleViewModel: rVM,
-                            shiftViewModel: sVM
-                        )
-                    } else if session.companyId == nil {
-                        VStack(spacing: 12) {
-                            ProgressView("Loading…")
-                            Text("Waiting for company context…")
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                        }
+                        HomeView(assignmentViewModel: aVM, roleViewModel: rVM, shiftViewModel: sVM)
+                        
+                    } else if session.company?.id == nil {
+                        
+                            VStack(spacing: 12) {
+                                ProgressView("Loading…")
+                                Text("Waiting for company context…")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                            }
+                        
                     } else {
-                        ProgressView("Loading…")
+                        
+                            ProgressView("Loading…")
+                        
                     }
                 }
                 .navigationTitle("Home")
             }
-            .task(id: session.companyId) {
-                if let companyId = session.companyId {
-                    assignmentViewModelHolder.setIfNeeded { AssignmentViewModel(companyId: companyId) }
-                    roleViewModelHolder.setIfNeeded { RoleViewModel(companyId: companyId) }
-                    shiftViewModelHolder.setIfNeeded { ShiftViewModel(companyId: companyId) }
-                    employeeViewModelHolder.setIfNeeded { EmployeeViewModel(companyId: companyId) }
+            .task {
+                if let employeeId = session.employee?.id {
+                    assignmentViewModelHolder.setIfNeeded { AssignmentViewModel(employeeId: Int64(employeeId)) }
+                    roleViewModelHolder.setIfNeeded { RoleViewModel(companyId: Int64(employeeId)) }
+                    shiftViewModelHolder.setIfNeeded { ShiftViewModel(companyId: Int64(employeeId)) }
+                    employeeViewModelHolder.setIfNeeded { EmployeeViewModel(companyId: Int64(employeeId)) }
                 }
             }
-            .tabItem { Label("Home", systemImage: "house") }
+            .tabItem { SwiftUI.Label("Home", systemImage: "house") }
             
-            NavigationStack {
-                CalendarView()
-                    .navigationTitle("Kalender")
-            }
-            .tabItem { Label("Kalender", systemImage: "calendar") }
-            
-            NavigationStack {
-                Group {
+            SwiftUI.NavigationStack {
+                SwiftUI.Group {
                     if let aVM = assignmentViewModelHolder.instance,
                        let rVM = roleViewModelHolder.instance,
                        let sVM = shiftViewModelHolder.instance {
@@ -73,7 +68,7 @@ struct MainTabView: View {
                             roleViewModel: rVM,
                             shiftViewModel: sVM
                         )
-                    } else if session.companyId == nil {
+                    } else if session.company?.id == nil {
                         VStack(spacing: 12) {
                             ProgressView("Loading…")
                             Text("Waiting for company context…")
@@ -86,18 +81,18 @@ struct MainTabView: View {
                 }
                 .navigationTitle("Alle Dienste")
             }
-            .task(id: session.companyId) {
-                if let companyId = session.companyId {
-                    assignmentViewModelHolder.setIfNeeded { AssignmentViewModel(companyId: companyId) }
-                    roleViewModelHolder.setIfNeeded { RoleViewModel(companyId: companyId) }
-                    shiftViewModelHolder.setIfNeeded { ShiftViewModel(companyId: companyId) }
+            .task {
+                if let employeeId = session.employee?.id {
+                    assignmentViewModelHolder.setIfNeeded { AssignmentViewModel(employeeId: Int64(employeeId)) }
+                    roleViewModelHolder.setIfNeeded { RoleViewModel(companyId: Int64(employeeId)) }
+                    shiftViewModelHolder.setIfNeeded { ShiftViewModel(companyId: Int64(employeeId)) }
                 }
             }
-            .tabItem { Label("Alle Dienste", systemImage: "list.bullet.clipboard") }
+            .tabItem { SwiftUI.Label("Alle Dienste", systemImage: "list.bullet.clipboard") }
             
-            NavigationStack {
-                Group {
-                    if let companyId = session.companyId {
+            SwiftUI.NavigationStack {
+                SwiftUI.Group {
+                    if session.company?.id != nil {
                         if let rVM = roleViewModelHolder.instance,
                            let eVM = employeeViewModelHolder.instance {
                             ProfileView(
@@ -119,7 +114,7 @@ struct MainTabView: View {
                 }
                 .navigationTitle("Profil")
             }
-            .tabItem { Label("Profil", systemImage: "person.circle") }
+            .tabItem { SwiftUI.Label("Profil", systemImage: "person.circle") }
         }
     }
 }

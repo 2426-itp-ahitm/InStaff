@@ -22,7 +22,7 @@ class ShiftViewModel: ObservableObject {
         var shifts: [Shift] = []
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/shifts") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/shifts") else {
             print("Invalid URL: shift")
             return shifts
         }

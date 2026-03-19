@@ -16,8 +16,8 @@ struct RequestRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Build Dates
-            let rawStartDate = shiftViewModel.shiftStartTime(by: assignment.shift)
-            let rawEndDate = shiftViewModel.shiftEndTime(by: assignment.shift)
+            let rawStartDate = assignment.shift.startTime
+            let rawEndDate = assignment.shift.endTime
 
             // Parse to Date for accurate comparisons
             let startDate = DateUtils.toDate(rawStartDate)
@@ -77,7 +77,7 @@ struct RequestRowView: View {
                 }
             }
 
-            RoleTag(roleName: roleViewModel.roleName(for: assignment.role))
+            RoleTag(roleName: assignment.role.roleName)
 
             let (confirmationText, confirmationColor): (String, Color) = {
                 switch assignment.confirmed {

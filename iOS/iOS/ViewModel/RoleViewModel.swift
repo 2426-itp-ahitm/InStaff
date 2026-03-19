@@ -16,39 +16,27 @@ class RoleViewModel: ObservableObject {
         loadRolesAsync()
     }
     
-    private func load() -> [Role] {
-        var roles: [Role] = []
+    private func load() async -> [Role] {
         let jsonDecoder = JSONDecoder()
 
-        guard let url = URL(string: "\(apiBaseUrl)/api/\(companyId)/roles") else {
+        guard let url = URL(string: "\(apiBaseUrl)/api/roles") else {
             print("Invalid URL: role")
-            return roles
+            return []
         }
 
-        let semaphore = DispatchSemaphore(value: 0)
-
-        Task {
-            do {
-                let data = try await APIClient.shared.request(url: url)
-                if let loadedRoles = try? jsonDecoder.decode([Role].self, from: data) {
-                    roles = loadedRoles
-                } else {
-                    print("Failed to decode roles")
-                }
-            } catch {
-                print("Failed to load roles:", error)
-            }
-            semaphore.signal()
+        do {
+            let data = try await APIClient.shared.request(url: url)
+            return try jsonDecoder.decode([Role].self, from: data)
+        } catch {
+            print("Failed to load roles:", error)
+            return []
         }
-
-        semaphore.wait()
-        return roles
     }
     
     private func loadRolesAsync() {
-        DispatchQueue.global(qos: .background).async {
-            let loadedRoles = self.load()
-            DispatchQueue.main.async {
+        Task {
+            let loadedRoles = await load()
+            await MainActor.run {
                 self.roles = loadedRoles
             }
         }
