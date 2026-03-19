@@ -214,7 +214,7 @@ GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
 ###
 
 ### Confirm assignment
-PUT http://localhost:8080/api/assignments/36/confirm/false
+PUT http://localhost:8080/api/assignments/36/confirm/true
 Authorization: Bearer {{access_token}}
 
 ###
