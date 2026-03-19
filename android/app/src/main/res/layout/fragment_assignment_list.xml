@@ -24,6 +24,27 @@
             android:textColor="@color/instaff_text" />
     </com.google.android.material.appbar.MaterialToolbar>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/roleFilterLayout"
+        style="@style/Widget.InStaff.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:hint="@string/shifts_role_filter_hint"
+        android:visibility="visible"
+        app:endIconMode="dropdown_menu">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/roleFilterDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:textAlignment="viewStart" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/emptyState"
         android:layout_width="match_parent"

@@ -1,9 +1,11 @@
 package at.htlleonding.instaff.ui.shifts;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +17,15 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import at.htlleonding.instaff.R;
 import at.htlleonding.instaff.data.model.Assignment;
+import at.htlleonding.instaff.data.model.Employee;
+import at.htlleonding.instaff.data.model.Role;
 import at.htlleonding.instaff.data.repository.AssignmentRepository;
 import at.htlleonding.instaff.data.repository.RepositoryCallback;
 import at.htlleonding.instaff.databinding.FragmentAssignmentListBinding;
@@ -30,6 +37,10 @@ public class ShiftsFragment extends Fragment implements AssignmentActionListener
     private AssignmentAdapter adapter;
     private AssignmentRepository assignmentRepository;
     private SharedAppViewModel sharedAppViewModel;
+    private final List<RoleFilterOption> roleFilterOptions = new ArrayList<>();
+    private List<Assignment> latestAssignments = new ArrayList<>();
+    private final Set<Long> employeeRoleIds = new HashSet<>();
+    private Long selectedRoleId = null;
 
     public static ShiftsFragment newInstance() {
         return new ShiftsFragment();
@@ -49,10 +60,79 @@ public class ShiftsFragment extends Fragment implements AssignmentActionListener
         sharedAppViewModel = new ViewModelProvider(requireActivity()).get(SharedAppViewModel.class);
 
         binding.screenTitle.setText(R.string.tab_shifts);
+        binding.roleFilterLayout.setVisibility(View.VISIBLE);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
 
-        sharedAppViewModel.getAssignments().observe(getViewLifecycleOwner(), assignments -> render(assignments != null ? assignments : new ArrayList<>()));
+        sharedAppViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> configureRoleFilter(employee));
+        sharedAppViewModel.getAssignments().observe(getViewLifecycleOwner(), assignments -> {
+            latestAssignments = assignments != null ? new ArrayList<>(assignments) : new ArrayList<>();
+            renderFilteredAssignments();
+        });
+    }
+
+    private void configureRoleFilter(@Nullable Employee employee) {
+        employeeRoleIds.clear();
+        roleFilterOptions.clear();
+        roleFilterOptions.add(new RoleFilterOption(null, getString(R.string.shifts_role_filter_all)));
+
+        if (employee != null) {
+            for (Role role : employee.getRoles()) {
+                if (role == null || TextUtils.isEmpty(role.getRoleName())) {
+                    continue;
+                }
+                employeeRoleIds.add(role.getId());
+                boolean alreadyPresent = false;
+                for (RoleFilterOption option : roleFilterOptions) {
+                    if (Objects.equals(option.roleId, role.getId())) {
+                        alreadyPresent = true;
+                        break;
+                    }
+                }
+                if (!alreadyPresent) {
+                    roleFilterOptions.add(new RoleFilterOption(role.getId(), role.getRoleName()));
+                }
+            }
+        }
+
+        ArrayAdapter<RoleFilterOption> filterAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_list_item_1,
+                roleFilterOptions
+        );
+        binding.roleFilterDropdown.setAdapter(filterAdapter);
+
+        RoleFilterOption selectedOption = findSelectedOption();
+        if (selectedOption == null) {
+            selectedRoleId = null;
+            selectedOption = roleFilterOptions.get(0);
+        }
+
+        binding.roleFilterDropdown.setText(selectedOption.label, false);
+        binding.roleFilterDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            RoleFilterOption option = filterAdapter.getItem(position);
+            selectedRoleId = option != null ? option.roleId : null;
+            renderFilteredAssignments();
+        });
+
+        renderFilteredAssignments();
+    }
+
+    private void renderFilteredAssignments() {
+        List<Assignment> filteredAssignments = new ArrayList<>();
+        for (Assignment assignment : latestAssignments) {
+            if (assignment.getRole() == null) {
+                continue;
+            }
+            long assignmentRoleId = assignment.getRole().getId();
+            if (!employeeRoleIds.isEmpty() && !employeeRoleIds.contains(assignmentRoleId)) {
+                continue;
+            }
+            if (selectedRoleId == null || assignmentRoleId == selectedRoleId) {
+                filteredAssignments.add(assignment);
+            }
+        }
+        render(filteredAssignments);
     }
 
     private void render(@NonNull List<Assignment> assignments) {
@@ -83,6 +163,16 @@ public class ShiftsFragment extends Fragment implements AssignmentActionListener
         adapter.submitList(items);
     }
 
+    @Nullable
+    private RoleFilterOption findSelectedOption() {
+        for (RoleFilterOption option : roleFilterOptions) {
+            if (Objects.equals(option.roleId, selectedRoleId)) {
+                return option;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onAccept(@NonNull Assignment assignment) {
         updateStatus(assignment, true);
@@ -98,12 +188,12 @@ public class ShiftsFragment extends Fragment implements AssignmentActionListener
             @Override
             public void onSuccess(@NonNull Assignment data) {
                 sharedAppViewModel.updateAssignment(data);
-                Snackbar.make(binding.getRoot(), R.string.assignment_update_success, Snackbar.LENGTH_LONG).show();
+                showSnackbar(R.string.assignment_update_success);
             }
 
             @Override
             public void onError(@NonNull String message) {
-                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
+                showSnackbar(message);
             }
         });
     }
@@ -112,5 +202,50 @@ public class ShiftsFragment extends Fragment implements AssignmentActionListener
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void showSnackbar(int messageRes) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), messageRes, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    private void showSnackbar(@NonNull String message) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    @Nullable
+    private View getSnackbarAnchor() {
+        Fragment parent = getParentFragment();
+        if (parent instanceof at.htlleonding.instaff.ui.main.MainContainerFragment) {
+            return ((at.htlleonding.instaff.ui.main.MainContainerFragment) parent).getSnackbarAnchor();
+        }
+        return null;
+    }
+
+    private static final class RoleFilterOption {
+        @Nullable
+        private final Long roleId;
+        @NonNull
+        private final String label;
+
+        private RoleFilterOption(@Nullable Long roleId, @NonNull String label) {
+            this.roleId = roleId;
+            this.label = label;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }

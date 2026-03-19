@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InStaff</string>
+    <string name="app_name" translatable="false">InStaff</string>
     <string name="login_title">Willkommen bei InStaff</string>
     <string name="login_subtitle">Melde dich mit Keycloak an, um deine Schichten zu verwalten.</string>
     <string name="login_action">Mit Keycloak anmelden</string>
@@ -11,6 +11,8 @@
     <string name="section_past">Vergangen</string>
     <string name="empty_home">Diese Woche hast du keine offenen Anfragen.</string>
     <string name="empty_shifts">Du hast derzeit keine Schichten.</string>
+    <string name="shifts_role_filter_hint">Rolle filtern</string>
+    <string name="shifts_role_filter_all">Alle Rollen</string>
     <string name="status_open">Offen</string>
     <string name="status_accepted">Angenommen</string>
     <string name="status_declined">Abgelehnt</string>
@@ -30,6 +32,7 @@
     <string name="profile_company">Firma</string>
     <string name="profile_manager">Manager-Status</string>
     <string name="profile_edit">Daten bearbeiten</string>
+    <string name="profile_edit_mode_notice">Bearbeitungsmodus aktiv. Du kannst deine persoenlichen Daten jetzt aendern.</string>
     <string name="save">Speichern</string>
     <string name="discard">Verwerfen</string>
     <string name="cancel">Abbrechen</string>
@@ -39,6 +42,7 @@
     <string name="role_detail_title">Rolle</string>
     <string name="required_error">Pflichtfeld</string>
     <string name="birthdate_future_error">Das Geburtsdatum darf nicht in der Zukunft liegen</string>
+    <string name="birthdate_invalid_error">Bitte waehle ein gueltiges Geburtsdatum</string>
     <string name="logout_confirm_message">Moechtest du dich wirklich abmelden?</string>
     <string name="unsaved_leave_message">Speichere deine Aenderungen bevor du die Seite wechselst.</string>
     <string name="unsaved_logout_message">Speichere deine Aenderungen bevor du dich abmeldest.</string>

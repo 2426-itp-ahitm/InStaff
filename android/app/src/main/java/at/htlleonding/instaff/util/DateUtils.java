@@ -1,5 +1,7 @@
 package at.htlleonding.instaff.util;
 
+import android.text.TextUtils;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.DayOfWeek;
@@ -42,6 +44,9 @@ public final class DateUtils {
     }
 
     public static String formatBirthDate(String birthDate) {
+        if (TextUtils.isEmpty(birthDate)) {
+            return "";
+        }
         return DATE_FORMAT.format(LocalDate.parse(birthDate));
     }
 
@@ -56,6 +61,9 @@ public final class DateUtils {
     }
 
     public static LocalDate parseBirthDate(String birthDate) {
+        if (TextUtils.isEmpty(birthDate)) {
+            return null;
+        }
         return LocalDate.parse(birthDate);
     }
 }

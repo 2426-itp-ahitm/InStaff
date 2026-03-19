@@ -3,8 +3,6 @@ package at.htlleonding.instaff;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements
     private ActivityMainBinding binding;
     private SessionManager sessionManager;
     private AuthManager authManager;
-    private ActivityResultLauncher<Intent> authLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,27 +35,14 @@ public class MainActivity extends AppCompatActivity implements
         sessionManager = SessionManager.getInstance(getApplicationContext());
         authManager = AuthManager.getInstance(getApplicationContext());
 
-        authLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> authManager.handleAuthorizationResponse(result.getData(), new AuthManager.AuthCallback() {
-                    @Override
-                    public void onSuccess() {
-                        showLoading();
-                    }
-
-                    @Override
-                    public void onError(@NonNull String message) {
-                        showLogin(message);
-                    }
-                })
-        );
-
         sessionManager.getLogoutEvents().observe(this, message -> {
             if (message != null && !message.isBlank()) {
                 Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
             }
             showLogin(null);
         });
+
+        handleAuthIntent(getIntent());
 
         if (savedInstanceState == null) {
             if (sessionManager.hasStoredSession()) {
@@ -71,10 +55,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void requestLogin() {
-        authManager.startLogin(this, authLauncher, new AuthManager.AuthCallback() {
+        authManager.startLogin(this, new AuthManager.AuthCallback() {
             @Override
             public void onSuccess() {
-                showLoading();
             }
 
             @Override
@@ -82,6 +65,26 @@ public class MainActivity extends AppCompatActivity implements
                 showLogin(message);
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleAuthIntent(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.root_container);
+        if (sessionManager.hasStoredSession()
+                && !(current instanceof LoadingFragment)
+                && !(current instanceof LoginFragment)
+                && !hasPendingAuthAction(getIntent())) {
+            showLoading();
+        }
     }
 
     @Override
@@ -107,6 +110,38 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showLoading() {
         replaceRootFragment(LoadingFragment.newInstance(), false);
+    }
+
+    private void handleAuthIntent(@Nullable Intent intent) {
+        if (intent == null || intent.getAction() == null) {
+            return;
+        }
+
+        if (AuthManager.ACTION_AUTH_COMPLETE.equals(intent.getAction())) {
+            authManager.handleAuthorizationResponse(intent, new AuthManager.AuthCallback() {
+                @Override
+                public void onSuccess() {
+                    showLoading();
+                }
+
+                @Override
+                public void onError(@NonNull String message) {
+                    showLogin(message);
+                }
+            });
+            intent.setAction(null);
+        } else if (AuthManager.ACTION_AUTH_CANCEL.equals(intent.getAction())) {
+            showLogin("Anmeldung wurde abgebrochen.");
+            intent.setAction(null);
+        }
+    }
+
+    private boolean hasPendingAuthAction(@Nullable Intent intent) {
+        if (intent == null || intent.getAction() == null) {
+            return false;
+        }
+        return AuthManager.ACTION_AUTH_COMPLETE.equals(intent.getAction())
+                || AuthManager.ACTION_AUTH_CANCEL.equals(intent.getAction());
     }
 
     private void replaceRootFragment(@NonNull Fragment fragment, boolean addToBackStack) {

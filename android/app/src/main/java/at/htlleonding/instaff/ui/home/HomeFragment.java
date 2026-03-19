@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment implements AssignmentActionListener {
 
         binding.screenTitle.setText(R.string.tab_home);
         binding.emptyState.setText(R.string.empty_home);
+        binding.roleFilterLayout.setVisibility(View.GONE);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(adapter);
 
@@ -91,14 +92,41 @@ public class HomeFragment extends Fragment implements AssignmentActionListener {
             @Override
             public void onSuccess(@NonNull Assignment data) {
                 sharedAppViewModel.updateAssignment(data);
-                Snackbar.make(binding.getRoot(), R.string.assignment_update_success, Snackbar.LENGTH_LONG).show();
+                showSnackbar(R.string.assignment_update_success);
             }
 
             @Override
             public void onError(@NonNull String message) {
-                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
+                showSnackbar(message);
             }
         });
+    }
+
+    private void showSnackbar(int messageRes) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), messageRes, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    private void showSnackbar(@NonNull String message) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    @Nullable
+    private View getSnackbarAnchor() {
+        Fragment parent = getParentFragment();
+        if (parent instanceof at.htlleonding.instaff.ui.main.MainContainerFragment) {
+            return ((at.htlleonding.instaff.ui.main.MainContainerFragment) parent).getSnackbarAnchor();
+        }
+        return null;
     }
 
     @Override

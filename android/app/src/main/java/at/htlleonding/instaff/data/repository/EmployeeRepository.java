@@ -37,7 +37,28 @@ public class EmployeeRepository {
     }
 
     public void updateEmployee(@NonNull Employee employee, @NonNull RepositoryCallback<Employee> callback) {
-        ApiClient.getInstance(context).getApi().updateEmployee(employee.getId(), employee.toUpdateRequest()).enqueue(new Callback<>() {
+        updateEmployee(
+                employee,
+                employee.getFirstname(),
+                employee.getLastname(),
+                employee.getTelephone(),
+                employee.getBirthDate(),
+                employee.getAddress(),
+                callback
+        );
+    }
+
+    public void updateEmployee(@NonNull Employee employee,
+                               @NonNull String firstname,
+                               @NonNull String lastname,
+                               @NonNull String telephone,
+                               @NonNull String birthDate,
+                               @NonNull String address,
+                               @NonNull RepositoryCallback<Employee> callback) {
+        ApiClient.getInstance(context).getApi().updateEmployee(
+                employee.getId(),
+                employee.toUpdateRequest(firstname, lastname, telephone, birthDate, address)
+        ).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Employee> call, @NonNull Response<Employee> response) {
                 if (response.isSuccessful() && response.body() != null) {

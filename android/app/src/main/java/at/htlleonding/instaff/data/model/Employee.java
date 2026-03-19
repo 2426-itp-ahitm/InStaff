@@ -12,10 +12,12 @@ public class Employee {
     private String lastname;
     private String email;
     private String telephone;
+    @SerializedName(value = "birthDate", alternate = {"birthdate"})
     private String birthDate;
     private boolean isManager;
     private double hourlyWage;
     private String address;
+    private Boolean isActive;
     private Company company;
     private List<Role> roles = new ArrayList<>();
 
@@ -83,11 +85,15 @@ public class Employee {
         return company;
     }
 
+    public boolean isActive() {
+        return isActive == null || isActive;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
 
-    public EmployeeUpdateRequest toUpdateRequest() {
+    public EmployeeUpdateRequest toUpdateRequest(String firstname, String lastname, String telephone, String birthDate, String address) {
         List<Long> roleIds = new ArrayList<>();
         for (Role role : roles) {
             roleIds.add(role.getId());
@@ -101,7 +107,8 @@ public class Employee {
                 isManager,
                 roleIds,
                 hourlyWage,
-                address
+                address,
+                isActive()
         );
     }
 
@@ -110,16 +117,17 @@ public class Employee {
         private final String lastname;
         private final String email;
         private final String telephone;
-        @SerializedName("birthdate")
+        @SerializedName(value = "birthDate", alternate = {"birthdate"})
         private final String birthDate;
         private final boolean isManager;
         private final List<Long> roles;
         private final double hourlyWage;
         private final String address;
+        private final boolean isActive;
 
         public EmployeeUpdateRequest(String firstname, String lastname, String email,
                                      String telephone, String birthDate, boolean isManager,
-                                     List<Long> roles, double hourlyWage, String address) {
+                                     List<Long> roles, double hourlyWage, String address, boolean isActive) {
             this.firstname = firstname;
             this.lastname = lastname;
             this.email = email;
@@ -129,6 +137,7 @@ public class Employee {
             this.roles = roles;
             this.hourlyWage = hourlyWage;
             this.address = address;
+            this.isActive = isActive;
         }
     }
 }

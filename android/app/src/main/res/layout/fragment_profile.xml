@@ -35,6 +35,18 @@
                     android:padding="16dp">
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/editModeNotice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:background="@color/instaff_surface_muted"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp"
+                        android:text="@string/profile_edit_mode_notice"
+                        android:textColor="@color/instaff_text"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/profile_personal_data"
@@ -96,13 +108,17 @@
                         android:id="@+id/birthDateLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/profile_birthdate"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@android:drawable/ic_menu_my_calendar">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/birthDateInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/profile_birthdate" />
+                            android:focusable="false"
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -52,6 +53,29 @@ public class MainContainerFragment extends Fragment {
             showChild(HomeFragment.newInstance(), false);
         }
 
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getChildFragmentManager().getBackStackEntryCount() > 0) {
+                    getChildFragmentManager().popBackStack();
+                    return;
+                }
+
+                int selectedItemId = binding.bottomNavigation.getSelectedItemId();
+                if (selectedItemId == R.id.menu_shifts) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.menu_home);
+                    return;
+                }
+                if (selectedItemId == R.id.menu_profile) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.menu_home);
+                    return;
+                }
+
+                setEnabled(false);
+                requireActivity().onBackPressed();
+            }
+        });
+
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (updatingSelection) {
                 return true;
@@ -71,6 +95,11 @@ public class MainContainerFragment extends Fragment {
 
     public MainNavigationHost getNavigationHost() {
         return host;
+    }
+
+    @Nullable
+    public View getSnackbarAnchor() {
+        return binding != null ? binding.bottomNavigation : null;
     }
 
     private boolean switchRootTab(int menuItemId, @NonNull Fragment fragment) {

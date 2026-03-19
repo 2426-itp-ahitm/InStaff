@@ -1,11 +1,11 @@
 package at.htlleonding.instaff.auth;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -19,6 +19,9 @@ import net.openid.appauth.EndSessionRequest;
 import net.openid.appauth.AuthState;
 
 public final class AuthManager {
+    public static final String ACTION_AUTH_COMPLETE = "at.htlleonding.instaff.AUTH_COMPLETE";
+    public static final String ACTION_AUTH_CANCEL = "at.htlleonding.instaff.AUTH_CANCEL";
+
     public interface AuthCallback {
         void onSuccess();
 
@@ -56,7 +59,6 @@ public final class AuthManager {
     }
 
     public void startLogin(@NonNull Activity activity,
-                           @NonNull ActivityResultLauncher<Intent> launcher,
                            @NonNull AuthCallback callback) {
         AuthorizationServiceConfiguration configuration = new AuthorizationServiceConfiguration(
                 AuthConfig.AUTH_URI,
@@ -72,7 +74,23 @@ public final class AuthManager {
                 AuthConfig.REDIRECT_URI
         ).setScope(AuthConfig.SCOPE).build();
 
-        launcher.launch(authorizationService.getAuthorizationRequestIntent(request));
+        Intent completeIntent = new Intent(activity, activity.getClass()).setAction(ACTION_AUTH_COMPLETE);
+        Intent cancelIntent = new Intent(activity, activity.getClass()).setAction(ACTION_AUTH_CANCEL);
+
+        PendingIntent completionPendingIntent = PendingIntent.getActivity(
+                activity,
+                1001,
+                completeIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
+        );
+        PendingIntent cancelPendingIntent = PendingIntent.getActivity(
+                activity,
+                1002,
+                cancelIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE
+        );
+
+        authorizationService.performAuthorizationRequest(request, completionPendingIntent, cancelPendingIntent);
     }
 
     public void handleAuthorizationResponse(@Nullable Intent intent, @NonNull AuthCallback callback) {

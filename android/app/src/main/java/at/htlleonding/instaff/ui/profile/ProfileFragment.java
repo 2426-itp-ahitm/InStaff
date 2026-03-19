@@ -2,6 +2,7 @@ package at.htlleonding.instaff.ui.profile;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
     private EmployeeRepository employeeRepository;
     private Employee originalEmployee;
     private boolean isEditing;
+    private LocalDate selectedBirthDate;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -54,6 +56,7 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
 
         binding.profileToolbar.setTitle(getString(R.string.tab_profile));
         setDisplayOnly(binding.emailInput);
+        setDisplayOnly(binding.birthDateInput);
         setDisplayOnly(binding.hourlyWageInput);
         setDisplayOnly(binding.companyNameInput);
         setDisplayOnly(binding.managerStatusInput);
@@ -65,7 +68,10 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
         }, false));
         binding.logoutButton.setOnClickListener(v -> attemptLogout());
         binding.birthDateInput.setOnClickListener(v -> openDatePicker());
-        binding.birthDateInput.setFocusable(false);
+        binding.birthDateLayout.setEndIconOnClickListener(v -> openDatePicker());
+        binding.birthDateInput.setInputType(InputType.TYPE_NULL);
+        binding.birthDateInput.setKeyListener(null);
+        binding.birthDateInput.setLongClickable(false);
 
         sharedAppViewModel.getEmployee().observe(getViewLifecycleOwner(), employee -> {
             if (employee == null) {
@@ -102,7 +108,8 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
         binding.lastNameInput.setText(employee.getLastname());
         binding.emailInput.setText(employee.getEmail());
         binding.telephoneInput.setText(employee.getTelephone());
-        binding.birthDateInput.setText(DateUtils.formatBirthDate(employee.getBirthDate()));
+        selectedBirthDate = DateUtils.parseBirthDate(employee.getBirthDate());
+        syncBirthDateField();
         binding.addressInput.setText(employee.getAddress());
         binding.hourlyWageInput.setText(getString(R.string.currency_per_hour, DateUtils.formatHourlyWage(employee.getHourlyWage())));
         binding.companyNameInput.setText(employee.getCompany() != null ? employee.getCompany().getCompanyName() : "-");
@@ -137,8 +144,12 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
         setEditable(binding.firstNameInput, enabled);
         setEditable(binding.lastNameInput, enabled);
         setEditable(binding.telephoneInput, enabled);
-        setEditable(binding.birthDateInput, enabled);
         setEditable(binding.addressInput, enabled);
+        syncBirthDateField();
+        setDisplayOnly(binding.birthDateInput);
+        binding.birthDateInput.setClickable(enabled);
+        binding.birthDateLayout.setEndIconVisible(enabled);
+        binding.editModeNotice.setVisibility(enabled ? View.VISIBLE : View.GONE);
 
         binding.editButton.setVisibility(enabled ? View.GONE : View.VISIBLE);
         binding.saveButton.setVisibility(enabled ? View.VISIBLE : View.GONE);
@@ -165,14 +176,25 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
         if (!isEditing) {
             return;
         }
-        LocalDate current = originalEmployee != null ? DateUtils.parseBirthDate(originalEmployee.getBirthDate()) : LocalDate.now();
+        LocalDate current = selectedBirthDate != null
+                ? selectedBirthDate
+                : originalEmployee != null
+                ? DateUtils.parseBirthDate(originalEmployee.getBirthDate())
+                : LocalDate.now();
+        if (current == null) {
+            current = LocalDate.now();
+        }
         DatePickerDialog pickerDialog = new DatePickerDialog(
                 requireContext(),
-                (view, year, month, dayOfMonth) -> binding.birthDateInput.setText(String.format("%02d.%02d.%04d", dayOfMonth, month + 1, year)),
+                (view, year, month, dayOfMonth) -> {
+                    selectedBirthDate = LocalDate.of(year, month + 1, dayOfMonth);
+                    syncBirthDateField();
+                },
                 current.getYear(),
                 current.getMonthValue() - 1,
                 current.getDayOfMonth()
         );
+        pickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         pickerDialog.show();
     }
 
@@ -182,32 +204,28 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
             return;
         }
 
-        Employee employee = originalEmployee;
-        employee.setFirstname(textOf(binding.firstNameInput));
-        employee.setLastname(textOf(binding.lastNameInput));
-        employee.setTelephone(textOf(binding.telephoneInput));
-        employee.setAddress(textOf(binding.addressInput));
-        employee.setBirthDate(LocalDate.parse(toIsoDate(textOf(binding.birthDateInput))).toString());
-
-        employeeRepository.updateEmployee(employee, new RepositoryCallback<>() {
+        String birthDate = selectedBirthDate != null ? selectedBirthDate.toString() : "";
+        employeeRepository.updateEmployee(
+                originalEmployee,
+                textOf(binding.firstNameInput),
+                textOf(binding.lastNameInput),
+                textOf(binding.telephoneInput),
+                birthDate,
+                textOf(binding.addressInput),
+                new RepositoryCallback<>() {
             @Override
             public void onSuccess(@NonNull Employee data) {
                 originalEmployee = data;
                 sharedAppViewModel.setEmployee(data);
-                Snackbar.make(binding.getRoot(), R.string.save_success, Snackbar.LENGTH_LONG).show();
+                showSnackbar(R.string.save_success);
                 bindEmployee(data);
             }
 
             @Override
             public void onError(@NonNull String message) {
-                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
+                showSnackbar(message);
             }
         });
-    }
-
-    private String toIsoDate(String displayDate) {
-        String[] parts = displayDate.split("\\.");
-        return parts[2] + "-" + parts[1] + "-" + parts[0];
     }
 
     private boolean validate() {
@@ -228,15 +246,12 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
             binding.addressLayout.setError(getString(R.string.required_error));
             isValid = false;
         }
-        if (textOf(binding.birthDateInput).isBlank()) {
+        if (selectedBirthDate == null) {
             binding.birthDateLayout.setError(getString(R.string.required_error));
             isValid = false;
-        } else {
-            LocalDate date = LocalDate.parse(toIsoDate(textOf(binding.birthDateInput)));
-            if (date.isAfter(LocalDate.now())) {
-                binding.birthDateLayout.setError(getString(R.string.birthdate_future_error));
-                isValid = false;
-            }
+        } else if (selectedBirthDate.isAfter(LocalDate.now())) {
+            binding.birthDateLayout.setError(getString(R.string.birthdate_future_error));
+            isValid = false;
         }
         return isValid;
     }
@@ -295,6 +310,38 @@ public class ProfileFragment extends Fragment implements MainContainerFragment.N
 
     private String textOf(com.google.android.material.textfield.TextInputEditText editText) {
         return editText.getText() == null ? "" : editText.getText().toString().trim();
+    }
+
+    private void syncBirthDateField() {
+        String formattedBirthDate = selectedBirthDate != null ? DateUtils.formatBirthDate(selectedBirthDate.toString()) : "";
+        binding.birthDateInput.setText(formattedBirthDate);
+    }
+
+    private void showSnackbar(int messageRes) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), messageRes, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    private void showSnackbar(@NonNull String message) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG);
+        View anchor = getSnackbarAnchor();
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+        snackbar.show();
+    }
+
+    @Nullable
+    private View getSnackbarAnchor() {
+        Fragment parent = getParentFragment();
+        if (parent instanceof MainContainerFragment) {
+            return ((MainContainerFragment) parent).getSnackbarAnchor();
+        }
+        return null;
     }
 
     @Override
