@@ -103,7 +103,7 @@ public class EmployeeResource {
         if (employee == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthdate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
+        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
 
         employee.persist();
         return Response.ok(EmployeeDTO.toResource(employee)).build();

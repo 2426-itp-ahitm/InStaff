@@ -1,23 +1,20 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import {Calendar, CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
+import { CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg, Draggable} from '@fullcalendar/interaction';
-import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
-import {Employee} from '../../interfaces/employee';
 import {Shift} from '../../interfaces/shift';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { CompanyServiceService} from '../../services/company-service/company-service.service';
-import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import deLocale from '@fullcalendar/core/locales/de';
 import { ShiftAddComponent } from "../../shift/shift-add/shift-add.component";
-import {ShiftEditOldComponent} from '../../shift/shift-edit-old/shift-edit-old.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {KeycloakOperationService} from '../../services/keycloak-service/keycloak.service';
+import {ShiftCreate} from '../../interfaces/shift-create';
 
 @Component({
   selector: 'app-calendar',
@@ -173,40 +170,32 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateClick(arg:DateClickArg) {
-    let  newShift: ShiftCreateDTO = {
-      companyId: this.companyService.getCompanyId(),
-      startTime: arg.date.toString(),
-      endTime: arg.date.toString(),
+    let  newShift: ShiftCreate = {
+      shiftName: "",
+      startTime: arg.date,
+      endTime: arg.date,
     }
     this.openAddShift(newShift)
   }
 
   handleDateSelected(arg: DateSelectArg) {
-    const newStartTime: string = this.getStringFromArg(arg.start);
-    const newEndTime: string = this.getStringFromArg(arg.end);
-    let  newShift: ShiftCreateDTO = {
-      companyId: this.companyService.getCompanyId(),
-      startTime: newStartTime,
-      endTime: newEndTime,
+    let  newShift: ShiftCreate = {
+      shiftName: "",
+      startTime: arg.start,
+      endTime: arg.end
     }
     //2024-12-19T09:00:00
     this.openAddShift(newShift);
   }
 
   handleEventSelected(arg: EventClickArg) {
-    const startTime: string = this.getStringFromArg(arg.event.start!);
-    const endTime: string = this.getStringFromArg(arg.event.end!);
 
     let  selectedShift: Shift = {
-      companyId: this.companyService.getCompanyId(),
       shiftName: "",
-      startTime: startTime,
-      endTime: endTime,
-      companyName: "",
+      startTime: arg.event.start!,
+      endTime: arg.event.end!,
       id: Number(arg.event.id),
-      employees: [],
       assignments: [],
-      reservations: []
     }
 
 
@@ -221,7 +210,7 @@ export class CalendarComponent implements OnInit {
     this.isEditMode = false;
   }
 
-  openAddShift(newShift: ShiftCreateDTO): void {
+  openAddShift(newShift: ShiftCreate): void {
     this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
   }

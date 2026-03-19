@@ -3,13 +3,13 @@ import {CompanyServiceService} from '../../services/company-service/company-serv
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs';
 import {Employee} from '../../interfaces/employee';
-import {News} from '../../interfaces/news';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
+  /*
   constructor(private companyService: CompanyServiceService) {}
 
   httpClient: HttpClient = inject(HttpClient);
@@ -64,6 +64,7 @@ export class NewsService {
     this.newsSubject.next([news, ...current]);
   }
 
+   */
 
 
 }

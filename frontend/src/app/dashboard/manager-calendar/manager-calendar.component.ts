@@ -14,16 +14,12 @@ import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import {ShiftCreateDTO} from '../../interfaces/new-shift';
+import {ShiftCreate} from '../../interfaces/shift-create';
 
 @Component({
   selector: 'app-manager-calendar',
   imports: [
     FullCalendarModule,
-    NgIf,
-    ShiftAddComponent,
-    ShiftEditComponent,
-    ShiftViewComponent
   ],
   templateUrl: './manager-calendar.component.html',
   styleUrl: './manager-calendar.component.css'
@@ -36,7 +32,7 @@ export class ManagerCalendarComponent implements OnInit {
   @Input() isAllowedToEdit: boolean = false;
   @Input() initialView!: string;
   @Output() openShiftEdit = new EventEmitter<Shift>();
-  @Output() openShiftAdd = new EventEmitter<ShiftCreateDTO>();
+  @Output() openShiftAdd = new EventEmitter<ShiftCreate>();
 
 
 
@@ -171,19 +167,19 @@ export class ManagerCalendarComponent implements OnInit {
   }
 
   handleDateClick(arg:DateClickArg) {
-    let  newShift: ShiftCreateDTO = {
-      companyId: this.companyService.getCompanyId(),
-      startTime: arg.date.toString(),
-      endTime: arg.date.toString(),
+    let  newShift: ShiftCreate = {
+      shiftName: "",
+      startTime: arg.date,
+      endTime: arg.date,
     }
     this.openAddShift(newShift)
   }
 
   handleDateSelected(arg: DateSelectArg) {
-    const newStartTime: string = this.getStringFromArg(arg.start);
-    const newEndTime: string = this.getStringFromArg(arg.end);
-    let  newShift: ShiftCreateDTO = {
-      companyId: this.companyService.getCompanyId(),
+    const newStartTime: Date = arg.start;
+    const newEndTime: Date = arg.end;
+    let  newShift: ShiftCreate = {
+      shiftName: "",
       startTime: newStartTime,
       endTime: newEndTime,
     }
@@ -196,15 +192,11 @@ export class ManagerCalendarComponent implements OnInit {
     const endTime: string = this.getStringFromArg(arg.event.end!);
 
     let  selectedShift: Shift = {
-      companyId: this.companyService.getCompanyId(),
       shiftName: "",
-      startTime: startTime,
-      endTime: endTime,
-      companyName: "",
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
       id: Number(arg.event.id),
-      employees: [],
       assignments: [],
-      reservations: []
     }
 
 
@@ -215,7 +207,7 @@ export class ManagerCalendarComponent implements OnInit {
     this.isEditMode = false;
   }
 
-  openAddShift(newShift: ShiftCreateDTO): void {
+  openAddShift(newShift: ShiftCreate): void {
     this.shiftService.selectedDate = newShift;
     this.isAddMode = true;
     this.openShiftAdd.emit(newShift);

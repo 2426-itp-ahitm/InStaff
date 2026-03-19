@@ -6,8 +6,9 @@ import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {Employee} from '../../interfaces/employee';
-import {EmployeeRole} from '../../interfaces/employee-role';
 import {KeycloakService} from 'keycloak-angular';
+import {EmployeeCreate} from '../../interfaces/employee-create';
+import {Role} from '../../interfaces/role';
 
 @Component({
   selector: 'app-profil',
@@ -53,10 +54,10 @@ export class ProfilComponent implements OnInit{
       address: new FormControl('', Validators.required),
       hourlyWage: new FormControl('', Validators.required),
       isManager: new FormControl(false),
-      roles: new FormControl<EmployeeRole[]>([], Validators.required),
+      roles: new FormControl<Role[]>([], Validators.required),
     });
 
-    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
       console.log(this.keycloackService.getToken());
 
@@ -64,7 +65,7 @@ export class ProfilComponent implements OnInit{
       this.editEmployeeForm.patchValue({
         firstname: this.employee.firstname,
         lastname: this.employee.lastname,
-        birthdate: this.employee.birthdate,
+        birthdate: this.employee.birthDate,
         email: this.employee.email,
         telephone: this.employee.telephone,
         address: this.employee.address,
@@ -84,9 +85,8 @@ export class ProfilComponent implements OnInit{
 
   save(): void {
     if (this.editEmployeeForm.valid) {
-      const updatedEmp: Employee = this.editEmployeeForm.value;
-      updatedEmp.id = this.employee.id;
-      this.employeeService.updateEmployee(updatedEmp);
+      const updatedEmp: EmployeeCreate = this.editEmployeeForm.value;
+      this.employeeService.updateEmployee(this.employee.id, updatedEmp);
       this.feedbackService.newFeedback({message:"Employee successfully edited", type: 'success', showFeedback: true})
     }else{
     }

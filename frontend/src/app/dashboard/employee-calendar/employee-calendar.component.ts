@@ -1,8 +1,6 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {NgIf} from '@angular/common';
-import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
-import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {Shift} from '../../interfaces/shift';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
@@ -14,7 +12,6 @@ import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 
@@ -115,7 +112,7 @@ export class EmployeeCalendarComponent implements OnInit {
       this.loadShiftsToEvents();
     });
 
-    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.shiftService.getShiftByEmployeeId(emp.id);
     });
 
@@ -126,15 +123,11 @@ export class EmployeeCalendarComponent implements OnInit {
     const endTime: string = this.getStringFromArg(arg.event.end!);
 
     let selectedShift: Shift = {
-      companyId: this.companyService.getCompanyId(),
       shiftName: "",
-      startTime: startTime,
-      endTime: endTime,
-      companyName: "",
+      startTime: new Date(startTime),
+      endTime: new Date(startTime),
       id: Number(arg.event.id),
-      employees: [],
-      assignments: [],
-      reservations: []
+      assignments: []
     }
 
 

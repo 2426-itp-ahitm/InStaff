@@ -7,7 +7,7 @@
           <div *ngIf="shift">
             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ shift.shiftName }}</h3>
             <p class="text-sm text-gray-600 mb-3">
-              {{ shift.startTime.substring(0, 10) }} bis {{ shift.endTime.substring(0, 10) }}
+              {{ shift.startTime.toString() }} bis {{ shift.endTime.toString() }}
             </p>
 
             <div class="space-y-0 max-h-96 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300 pb-3">
@@ -22,7 +22,7 @@
                     *ngFor="let a of group.assignments"
                     class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
                     <span class="text-sm text-gray-900 flex-1">
-                      {{ employeeService.getEmployeeById(a.employee).firstname }} {{ employeeService.getEmployeeById(a.employee).lastname }}
+                      {{a.employee.firstname}} {{ a.employee.lastname }}
                     </span>
 
                     <span
@@ -38,7 +38,7 @@
                 </div>
 
                 }
-                
+
               </div>
             </div>
           </div>

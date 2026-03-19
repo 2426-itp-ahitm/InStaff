@@ -12,17 +12,18 @@ import {
 import {Shift} from '../../interfaces/shift';
 import {FormsModule} from "@angular/forms";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {NewShift} from '../../interfaces/new-shift';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {Employee} from '../../interfaces/employee';
-import {NewAssignment} from '../../interfaces/new-assignment';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {Assignment} from '../../interfaces/assignment';
 import {Role} from '../../interfaces/role';
 import {DateService} from '../../services/date-service/date.service';
+import {AssignmentCreate} from '../../interfaces/assignment-create';
+import {ShiftCreate} from '../../interfaces/shift-create';
+import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
 
 @Component({
   selector: 'app-shift-edit',
@@ -63,15 +64,15 @@ export class ShiftEditComponent implements OnInit {
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
-  assignments: Assignment[] = [];
+  assignments: AssignmentCreate[] = [];
   availableRoles: Role[] = [];
   selectedNewRoleId: number = -1;
   groupedAssignments: { roleId: number, roleName: string, assignments: Assignment[], count: number }[] = [];
   employeesByRole: { [roleId: number]: Employee[] } = {};
   somethingChanged: boolean = false;
 
-  shiftStartTime!: string;
-  shiftEndTime!: string;
+  shiftStartTime!: Date;
+  shiftEndTime!: Date;
 
   private rolesLoaded = false;
   private assignmentsLoaded = false;
@@ -92,22 +93,25 @@ export class ShiftEditComponent implements OnInit {
     this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
       this.shift = s
       console.log(s)
-      this.shiftStartTime = this.toDateTimeLocalValue(s.startTime)
-      this.shiftEndTime = this.toDateTimeLocalValue(s.endTime)
+      this.shiftStartTime = s.startTime
+      this.shiftEndTime = s.endTime
 
       console.log(this.shiftStartTime);
       console.log(this.shiftEndTime);
     })
-
+    //TODO
+    /*
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
       this.assignments = a;
       this.assignmentsLoaded = true;
       this.updateGroupedIfReady();
     })
 
+     */
+
 
     //get all Employees
-    this.employeeService.getEmployees()
+    this.employeeService.getAllEmployees()
     this.employeeService.employees$.subscribe((e) => {
       this.employees = e;
       this.updateEmployeesByRole();
@@ -130,27 +134,32 @@ export class ShiftEditComponent implements OnInit {
 
 
   save() {
+    // TODO
     // Filtere nur gültige Zuweisungen (mit zugewiesenem Mitarbeiter)
-    const validAssignments: NewAssignment[] = this.assignments
-      .filter(a => a.employee !== 0) // Nur Zuweisungen mit zugewiesenem Mitarbeiter
+    /*
+    const validAssignments: AssignmentCreate[] = this.assignments
+      .filter(a => a.employee.id !== 0) // Nur Zuweisungen mit zugewiesenem Mitarbeiter
       .map(a => ({
         employee: a.employee,
         role: a.role
-      }));
+     }));
 
-    const newShift: NewShift = {
-      shiftName: this.shiftNameInput.nativeElement.value,
+     */
+    //TODO
+    let validAssignments: AssignmentCreate[] = [];
+    const newShift: ShiftCreateAssignments = {
       shiftCreateDTO: {
-        startTime: this.toBackendDateTimeString(this.shiftStartTime),
-        endTime: this.toBackendDateTimeString(this.shiftEndTime),
-        companyId: this.shift.companyId,
+        shiftName: this.shiftNameInput.nativeElement.value,
+        startTime: this.shiftStartTime,
+        endTime: this.shiftEndTime,
       },
       assignmentCreateDTOs: validAssignments,
     };
     console.log("***********+")
     console.log(newShift);
-
+    //TODO
     // If editing an existing shift, call update; otherwise fallback to add
+    /*
     if (this.shift && this.shift.id) {
       this.shiftService.updateShift(this.shift.id, newShift).subscribe({
         next: () => {
@@ -163,6 +172,8 @@ export class ShiftEditComponent implements OnInit {
     } else {
       this.shiftService.addShift(newShift);
     }
+
+     */
   }
 
 
@@ -176,15 +187,19 @@ export class ShiftEditComponent implements OnInit {
   updateGroupedAssignments(): void {
     const grouped: { [roleId: number]: Assignment[] } = {};
 
+    //TODO
     // Gruppiere alle Zuweisungen nach Rolle
+    /*
     this.assignments.forEach(a => {
       if (!grouped[a.role]) {
         grouped[a.role] = [];
       }
       grouped[a.role].push(a);
     });
-
+    */
+    // TODO
     // Konvertiere in Array mit zusätzlichen Informationen
+    /*
     this.groupedAssignments = Object.keys(grouped).map(roleIdStr => {
       const roleId = Number(roleIdStr);
       return {
@@ -194,6 +209,8 @@ export class ShiftEditComponent implements OnInit {
         count: grouped[roleId].length
       };
     });
+
+     */
   }
 
   getRoleName(roleId: number): string {
@@ -205,11 +222,14 @@ export class ShiftEditComponent implements OnInit {
     if (confirmed === false) return 'abgelehnt';
     return 'ausstehend';
   }
-
+  // TODO
   // Entferne eine spezifische Zuweisung
   removeAssignment(assignmentId: number) {
+    /*
     this.somethingChanged = true;
     this.assignments = this.assignments.filter(a => a.id !== assignmentId);
+
+     */
     this.updateGroupedAssignments();
     this.updateAvailableRoles();
   }
@@ -219,7 +239,7 @@ export class ShiftEditComponent implements OnInit {
     console.log("removeRole", roleId);
     this.somethingChanged = true;
     const normalizedRoleId = Number(roleId);
-    this.assignments = this.assignments.filter(a => Number(a.role) !== normalizedRoleId);
+    this.assignments = this.assignments.filter(a => Number(a.roleId) !== normalizedRoleId);
     this.updateGroupedAssignments();
     this.updateAvailableRoles();
   }
@@ -227,12 +247,10 @@ export class ShiftEditComponent implements OnInit {
   // Füge eine leere Zuweisung für eine Rolle hinzu
   addAssignmentToRole(roleId: number) {
     this.somethingChanged = true;
-    const newAssignment: Assignment = {
-      id: -1 * (Date.now()), // Temporäre negative ID für neue Zuweisungen
-      employee: 0, // 0 bedeutet "offen"
-      shift: this.shiftId,
-      role: roleId,
-      confirmed: null as any
+    const newAssignment: AssignmentCreate = {
+      employeeId: null, // 0 bedeutet "offen"
+      shiftId: this.shiftId,
+      roleId: roleId,
     };
     this.assignments.push(newAssignment);
     this.updateGroupedAssignments();
@@ -262,7 +280,8 @@ export class ShiftEditComponent implements OnInit {
     if (this.roles && this.employees) {
       this.roles.forEach(role => {
         this.employeesByRole[role.id] = this.employees.filter(emp =>
-          emp.roles.some(r => r.roleId === role.id && r.hasRole)
+          //TODO
+          emp.roles.some(r => r.id === role.id && true)
         );
       });
     }
@@ -275,7 +294,7 @@ export class ShiftEditComponent implements OnInit {
 
 
   deleteShift(){
-    if (confirm(`Sicher, dass du die ${this.shift.shiftName} am ${this.dateService.dateStringToString(this.shift.startTime, true, true, "von")} bis ${this.dateService.dateStringToString(this.shift.endTime, true, false, "")} löschen willst?`)) {
+    if (confirm(`Sicher, dass du die ${this.shift.shiftName} am ${this.dateService.dateStringToString(this.shift.startTime.toString(), true, true, "von")} bis ${this.dateService.dateStringToString(this.shift.endTime.toString(), true, false, "")} löschen willst?`)) {
       this.shiftService.deleteShift(this.shiftId).subscribe({
         next: () => {
           this.shiftService.getShifts()

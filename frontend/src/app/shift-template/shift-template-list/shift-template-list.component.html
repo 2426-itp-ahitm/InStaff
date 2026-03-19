@@ -11,7 +11,7 @@
       </div>
       <div class="card-role">
         <ng-container *ngFor="let r of sT.templateRoles">
-          <p class="card-role-item" >{{ r.count}}x {{ getRoleNameById(r.roleId) }}</p>
+          <p class="card-role-item" >{{ r.count}}x {{ getRoleNameById(r.id) }}</p>
         </ng-container>
         <p *ngIf="sT.templateRoles.length == 0" class="flex-none">Hinweis: Schicht-Vorlage hat noch keine Rollen</p>
       </div>

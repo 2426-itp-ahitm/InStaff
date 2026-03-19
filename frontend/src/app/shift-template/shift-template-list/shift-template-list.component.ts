@@ -1,13 +1,11 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {EmployeeAddComponent} from '../../employee/employee-add/employee-add.component';
-import {EmployeeEditComponent} from '../../employee/employee-edit/employee-edit.component';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
-import {ShiftTemplate} from '../../interfaces/shift-template';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {ShiftTemplateEditComponent} from '../shift-template-edit/shift-template-edit.component';
 import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-add.component';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {Role} from '../../interfaces/role';
+import {Shifttemplate} from '../../interfaces/shifttemplate';
 
 @Component({
   selector: 'app-shift-template-list',
@@ -26,12 +24,12 @@ export class ShiftTemplateListComponent implements OnInit {
   private roleService: RoleServiceService = inject(RoleServiceService);
 
 
-  shiftTemplates: ShiftTemplate[] = [];
+  shiftTemplates: Shifttemplate[] = [];
   roles: Role[] = [];
   searchTerm: string = '';
   isEditMode: boolean = false;
   isAddMode: boolean = false;
-  selectedShiftTemplate!: ShiftTemplate;
+  selectedShiftTemplate!: Shifttemplate;
 
   ngOnInit() {
     //gets all Templates
@@ -53,7 +51,7 @@ export class ShiftTemplateListComponent implements OnInit {
       this.searchTerm = term || '';
     }
 
-    get filteredShiftTemplates(): ShiftTemplate[] {
+    get filteredShiftTemplates(): Shifttemplate[] {
       const q = this.searchTerm.trim().toLowerCase();
       if (!q) return this.shiftTemplates;
       return this.shiftTemplates.filter(t => {
@@ -67,7 +65,7 @@ export class ShiftTemplateListComponent implements OnInit {
 
   }
 
-  openShiftTemplateEdit(sT: ShiftTemplate) {
+  openShiftTemplateEdit(sT: Shifttemplate) {
     this.isEditMode = true;
     this.selectedShiftTemplate = sT
   }

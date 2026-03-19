@@ -4,7 +4,6 @@ import {AssignmentServiceService} from '../../services/assignment-service/assign
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
-import {AssignmentFull} from '../../interfaces/assignment-full';
 import {Shift} from '../../interfaces/shift';
 import {BehaviorSubject, combineLatest, forkJoin} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -32,8 +31,8 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   roleService: RoleServiceService = inject(RoleServiceService)
   keycloakService: KeycloakService = inject(KeycloakService)
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
-  fullAssignments: AssignmentFull[] = [];
-  allAssignments: AssignmentFull[] = [];
+  fullAssignments: Assignment[] = [];
+  allAssignments: Assignment[] = [];
   employee!: Employee;
   availableRoleIds = new Set<number>();
   selectedRoleIds = new Set<number>();
@@ -57,21 +56,21 @@ export class EmployeeShiftOverviewComponent implements OnInit{
 
   ngOnInit() {
     this.roleService.getRoles()
-    this.employeeService.getEmployees()
+    this.employeeService.getAllEmployees()
     this.assignmentService.assignments$.subscribe(assignments => {
       this.buildAssignmentsFromSubject(assignments);
     });
     this.loadAssignments()
-    this.setStatusFilter('open')
+    //this.setStatusFilter('open')
   }
 
   loadAssignments(){
-    this.employeeService.getEmployeeByKeycloakId(this.keycloakService.getKeycloakInstance().subject!).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(this.keycloakService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.employee = emp;
 
       this.employeeSubject$.next(emp);
 
-      this.availableRoleIds = new Set(this.employee.roles.map(r => typeof r === 'number' ? r : r.roleId))
+      this.availableRoleIds = new Set(this.employee.roles.map(r => typeof r === 'number' ? r : r.id))
       this.selectedRoleIds = new Set(this.availableRoleIds)
 
 
@@ -89,14 +88,14 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       this.fullAssignments = [];
       return;
     }
-
+/**
     const requests = assignments.map(assignment =>
-      this.shiftService.getShiftById(assignment.shift).pipe(
+      this.shiftService.getShiftById(assignment.shift.id).pipe(
         map(shift => ({
           id: assignment.id,
           shift,
           employee: assignment.employee,
-          role: this.roleService.getRoleById(assignment.role),
+          role: this.roleService.getRoleById(assignment.role.id),
           confirmed: assignment.confirmed
         } as AssignmentFull))
       )
@@ -113,6 +112,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       this.applyFilters();
     });
   }
+
 
   confirmAssignment(assignment: AssignmentFull) {
     assignment.confirmed = true;
@@ -242,5 +242,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       'border-l-yellow-400': confirmed === null,
       'border-l-red-500': confirmed === false
     };
+      **/
   }
+
 }

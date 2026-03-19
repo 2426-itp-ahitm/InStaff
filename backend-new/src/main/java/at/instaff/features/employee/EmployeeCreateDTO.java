@@ -12,7 +12,7 @@ public record EmployeeCreateDTO(
         String lastname,
         String email,
         String telephone,
-        LocalDate birthdate,
+        LocalDate birthDate,
         boolean isManager,
         List<Long> roles, // List of role IDs
         double hourlyWage,
@@ -24,7 +24,7 @@ public record EmployeeCreateDTO(
                 dto.lastname(),
                 dto.email(),
                 dto.telephone(),
-                dto.birthdate(),
+                dto.birthDate(),
                 dto.hourlyWage(),
                 dto.address(),
                 dto.isManager(),

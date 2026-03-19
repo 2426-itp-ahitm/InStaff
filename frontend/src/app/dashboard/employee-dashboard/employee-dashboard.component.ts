@@ -13,8 +13,6 @@ import {EmployeeShiftOverviewComponent} from '../employee-shift-overview/employe
 @Component({
   selector: 'app-employee-dashboard',
   imports: [
-    CalendarComponent,
-    NewsComponent,
     EmployeeCalendarComponent,
     NgIf,
     ShiftViewComponent,
@@ -35,7 +33,7 @@ export class EmployeeDashboardComponent implements OnInit {
   userName: string = "";
 
   ngOnInit(): void {
-    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.userName = emp.firstname + ' ' + emp.lastname;
       if(emp == null){
         this.userName = "bei Instaff";

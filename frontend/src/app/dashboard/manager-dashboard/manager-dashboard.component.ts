@@ -6,26 +6,23 @@ import {NewsComponent} from '../../news/news/news.component';
 import {NgIf} from '@angular/common';
 import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
-import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {ManagerCalendarComponent} from '../manager-calendar/manager-calendar.component';
-import {ShiftCreateDTO} from '../../interfaces/new-shift';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
+import {ShiftCreate} from '../../interfaces/shift-create';
 
 
 @Component({
   selector: 'app-manager-dashboard',
   imports: [
-    CalendarComponent,
     NewsComponent,
     NgIf,
     ShiftAddComponent,
     ShiftEditComponent,
-    ShiftViewComponent,
     ManagerCalendarComponent
   ],
   templateUrl: './manager-dashboard.component.html',
@@ -53,7 +50,7 @@ export class ManagerDashboardComponent implements OnInit {
 
     if(!this.companyService.isDataLoaded) {
       console.log("data loaded")
-      this.employeeService.getEmployees();
+      this.employeeService.getAllEmployees();
       this.roleService.getRoles()
       this.shiftTemplateService.getShiftTemplates()
 
@@ -61,12 +58,12 @@ export class ManagerDashboardComponent implements OnInit {
       this.companyService.isDataLoaded = true;
     }
 
-    this.employeeService.getEmployeeByKeycloakId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
+    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
       this.userName = emp.firstname + ' ' + emp.lastname;
       this.assignmentService.getAssignmentsForEmployee(emp.id)
 
     });
-    this.employeeService.getEmployees();
+    this.employeeService.getAllEmployees();
 
   }
   openShiftEditWithId(shiftId: number) {
@@ -77,7 +74,7 @@ export class ManagerDashboardComponent implements OnInit {
     });
   }
 
-  openShiftAdd(shift: ShiftCreateDTO) {
+  openShiftAdd(shift: ShiftCreate) {
     console.log(shift);
     this.selectedShift = shift as unknown as Shift;
     this.isAddMode = true;

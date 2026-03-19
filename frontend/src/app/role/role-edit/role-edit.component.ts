@@ -35,6 +35,7 @@ export class RoleEditComponent implements OnInit {
 
 
   @Input() role!: Role;
+  @Output() closeRoleEdit = new EventEmitter<unknown>();
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
   @ViewChild('roleDescriptionInput') roleDescriptionInput!: ElementRef;
@@ -44,17 +45,20 @@ export class RoleEditComponent implements OnInit {
     if (event.key === 'Enter') {
 
     }else if (event.key === 'Escape') {
-      this.close()
+      new this.closeRoleEdit()
     }
   }
 
   ngOnInit(): void {
+    /*
     if (this.role.employees.length > 0) {
       for (let i = 0; i < this.role.employees.length; i++) {
         this.employeeService.getEnrichedEmployeeById(this.role.employees.at(i)!).subscribe(e => {
           this.employeesWithRole.push(e);
         });
       }
+
+     */
     }
 
   }
@@ -62,8 +66,7 @@ export class RoleEditComponent implements OnInit {
 
 
 
-  @Output() closeRoleEdit = new EventEmitter<unknown>();
-
+/*
   save(): void {
     const updatedRole: Role = {
       ...this.role,
@@ -94,4 +97,7 @@ export class RoleEditComponent implements OnInit {
   removeEmployeeFromRole(id: number) {
 
   }
+
+
 }
+ */

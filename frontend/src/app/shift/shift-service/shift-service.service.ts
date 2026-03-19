@@ -2,14 +2,11 @@ import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, forkJoin, Observable} from 'rxjs';
-import {Employee} from '../../interfaces/employee';
 import {Shift} from '../../interfaces/shift';
 import {tap} from 'rxjs/operators';
-import {DateClickArg} from '@fullcalendar/interaction';
-import {ShiftTemplate} from '../../interfaces/shift-template';
-import {NewShift, ShiftCreateDTO} from '../../interfaces/new-shift';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
+import {ShiftCreate} from '../../interfaces/shift-create';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +23,7 @@ export class ShiftServiceService {
   private employeeShiftsSubject = new BehaviorSubject<Shift[]>([]);
   public employeeShifts$ = this.employeeShiftsSubject.asObservable();
 
-  public selectedDate!: ShiftCreateDTO;
+  public selectedDate!: ShiftCreate;
 
 
   private getApiUrl(): string {
@@ -47,16 +44,12 @@ export class ShiftServiceService {
       this.employeeShiftsSubject.next(shifts);
     });
   }
-
-  addShift(newShift: NewShift): void {
+  // TODO: add assignemnts
+  addShift(newShift: ShiftCreate): void {
     const addShift = {
-      shiftCreateDTO: {
         shiftName: newShift.shiftName,
-        startTime: newShift.shiftCreateDTO.startTime,
-        endTime: newShift.shiftCreateDTO.endTime,
-        companyId: newShift.shiftCreateDTO.companyId,
-      },
-      assignmentCreateDTOs: newShift.assignmentCreateDTOs
+        startTime: newShift.startTime,
+        endTime: newShift.endTime,
     }
     this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, addShift)
       .subscribe((createdShift )=> {
@@ -66,17 +59,14 @@ export class ShiftServiceService {
     })
   }
 
-  updateShift(shiftId: number, newShift: NewShift): Observable<Shift> {
+  // TODO: add assignemnts
+  updateShift(shiftId: number, newShift: ShiftCreate): Observable<Shift> {
     console.log("*****0***")
     console.log(newShift);
     const updateShift = {
-      shiftCreateDTO: {
-        shiftName: newShift.shiftName,
-        startTime: newShift.shiftCreateDTO.startTime,
-        endTime: newShift.shiftCreateDTO.endTime,
-        companyId: newShift.shiftCreateDTO.companyId,
-      },
-      assignmentCreateDTOs: newShift.assignmentCreateDTOs
+      shiftName: newShift.shiftName,
+      startTime: newShift.startTime,
+      endTime: newShift.endTime,
     }
     return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, updateShift)
       .pipe(

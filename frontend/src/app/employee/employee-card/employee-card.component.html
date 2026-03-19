@@ -5,9 +5,9 @@
   </div>
   <div class="card-role">
     <ng-container *ngFor="let r of employee.roles">
-      <p class="card-role-item" *ngIf="r.hasRole">{{ r.name }}</p>
+      <p class="card-role-item" >{{ r.roleName }}</p>
     </ng-container>
-    <p *ngIf="!employeeHasRoles" class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
+    <p *ngIf="employee.roles.length == 0" class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
   </div>
 
   <div class="card-item">
@@ -21,7 +21,7 @@
 
   <div class="card-item">
     <img ngSrc="/icons/birthday-black.png" alt="birthday" width="25" height="25">
-    <p>{{employee.birthdate}}</p>
+    <p>{{employee.birthDate }}</p>
   </div>
 
   <div class="card-item">
