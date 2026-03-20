@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements AssignmentActionListener {
     }
 
     private void render(@NonNull List<Assignment> assignments) {
-        List<Assignment> currentWeek = AssignmentUiUtils.getCurrentWeekUpcoming(assignments, LocalDate.now(), LocalDateTime.now());
+        List<Assignment> currentWeek = AssignmentUiUtils.getUpcomingWithinNextSevenDays(assignments, LocalDate.now(), LocalDateTime.now());
         List<AssignmentListItem> items = new ArrayList<>();
         if (currentWeek.isEmpty()) {
             binding.emptyState.setVisibility(View.VISIBLE);

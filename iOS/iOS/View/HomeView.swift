@@ -14,19 +14,15 @@ struct HomeView: View {
     @ObservedObject var shiftViewModel: ShiftViewModel
     
     var filteredAssignments: [Assignment] {
-        guard let employee = session.employee else { return [] }
+        guard session.employee != nil else { return [] }
+        let calendar = Calendar.current
+        let now = Date()
+        let endDate = calendar.date(byAdding: .day, value: 7, to: now) ?? now
 
         return assignmentViewModel.assignments
             .filter { assignment in
                 guard let start = DateUtils.toDate(assignment.shift.startTime) else { return false }
-
-                let calendar = Calendar.current
-                let now = Date()
-
-                let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: now)?.start ?? now
-                let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
-
-                return start >= startOfWeek && start < endOfWeek
+                return start >= now && start < endDate
             }
             .sorted { l, r in
                 guard
@@ -40,39 +36,45 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack{
-            NavigationStack {
-                List {
-                    if filteredAssignments.isEmpty {
-                        Text("Diese Woche sind keine Schichten geplant.")
-                            .foregroundColor(.gray)
-                    }
-                    ForEach(filteredAssignments, id: \.id) { assignment in
-                        HStack {
-                            RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
-                        }
-                        .contentShape(Rectangle())
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
-                            } label: {
-                                Label("Annehmen", systemImage: "checkmark")
-                            }
-                            .tint(.green)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
-                            } label: {
-                                Label("Ablehnen", systemImage: "xmark")
-                            }
-                            .tint(.red)
-                        }
-                    }
+        List {
+            if filteredAssignments.isEmpty {
+                Text("In den nächsten 7 Tagen sind keine Schichten geplant.")
+                    .foregroundColor(.gray)
+            }
+            ForEach(filteredAssignments, id: \.id) { assignment in
+                let isPast = isPast(assignment)
+                HStack {
+                    RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
                 }
-                .navigationTitle("Aktuelle Anfragen")
+                .opacity(isPast ? 0.4 : 1.0)
+                .contentShape(Rectangle())
+                .swipeActions(edge: .leading) {
+                    Button {
+                        assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+                    } label: {
+                        Label("Annehmen", systemImage: "checkmark")
+                    }
+                    .tint(.green)
+                    .disabled(isPast)
+                }
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+                    } label: {
+                        Label("Ablehnen", systemImage: "xmark")
+                    }
+                    .tint(.red)
+                    .disabled(isPast)
+                }
             }
         }
+        .navigationTitle("Aktuelle Anfragen")
     }
-    
+
+    private func isPast(_ assignment: Assignment) -> Bool {
+        guard let endDate = DateUtils.toDate(assignment.shift.endTime) else {
+            return false
+        }
+        return endDate < Date()
+    }
 }

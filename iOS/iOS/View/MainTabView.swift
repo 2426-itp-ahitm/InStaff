@@ -9,11 +9,21 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var session: SessionManager
+    @State private var selectedTab: Tab = .home
+    @State private var pendingTab: Tab?
+    @State private var showUnsavedChangesAlert = false
 
     @StateObject private var assignmentViewModelHolder = ViewModelHolder<AssignmentViewModel>()
     @StateObject private var roleViewModelHolder = ViewModelHolder<RoleViewModel>()
     @StateObject private var shiftViewModelHolder = ViewModelHolder<ShiftViewModel>()
     @StateObject private var employeeViewModelHolder = ViewModelHolder<EmployeeViewModel>()
+    @StateObject private var profileCoordinator = ProfileCoordinator()
+
+    enum Tab {
+        case home
+        case shifts
+        case profile
+    }
     
     private final class ViewModelHolder<VM: ObservableObject>: ObservableObject {
         @Published var instance: VM?
@@ -23,7 +33,7 @@ struct MainTabView: View {
     }
 
     var body: some View {
-        SwiftUI.TabView {
+        SwiftUI.TabView(selection: tabSelection) {
             SwiftUI.NavigationStack {
                 SwiftUI.Group {
                     if let aVM = assignmentViewModelHolder.instance,
@@ -57,6 +67,7 @@ struct MainTabView: View {
                 }
             }
             .tabItem { SwiftUI.Label("Home", systemImage: "house") }
+            .tag(Tab.home)
             
             SwiftUI.NavigationStack {
                 SwiftUI.Group {
@@ -89,6 +100,7 @@ struct MainTabView: View {
                 }
             }
             .tabItem { SwiftUI.Label("Alle Dienste", systemImage: "list.bullet.clipboard") }
+            .tag(Tab.shifts)
             
             SwiftUI.NavigationStack {
                 SwiftUI.Group {
@@ -97,7 +109,8 @@ struct MainTabView: View {
                            let eVM = employeeViewModelHolder.instance {
                             ProfileView(
                                 roleViewModel: rVM,
-                                employeeViewModel: eVM
+                                employeeViewModel: eVM,
+                                coordinator: profileCoordinator
                             )
                         } else {
                             ProgressView("Loading...")
@@ -115,7 +128,46 @@ struct MainTabView: View {
                 .navigationTitle("Profil")
             }
             .tabItem { SwiftUI.Label("Profil", systemImage: "person.circle") }
+            .tag(Tab.profile)
         }
+        .alert("Ungespeicherte Änderungen", isPresented: $showUnsavedChangesAlert) {
+            Button("Speichern") {
+                profileCoordinator.afterSuccessfulSave = {
+                    if let pendingTab {
+                        selectedTab = pendingTab
+                    }
+                    pendingTab = nil
+                }
+                profileCoordinator.requestSave()
+            }
+            Button("Verwerfen", role: .destructive) {
+                profileCoordinator.requestDiscard()
+                if let pendingTab {
+                    selectedTab = pendingTab
+                }
+                pendingTab = nil
+            }
+            Button("Abbrechen", role: .cancel) {
+                pendingTab = nil
+            }
+        } message: {
+            Text("Speichere deine Änderungen bevor du die Seite wechselst.")
+        }
+    }
+
+    private var tabSelection: Binding<Tab> {
+        Binding(
+            get: { selectedTab },
+            set: { newTab in
+                guard newTab != selectedTab else { return }
+                if selectedTab == .profile && profileCoordinator.hasUnsavedChanges {
+                    pendingTab = newTab
+                    showUnsavedChangesAlert = true
+                } else {
+                    selectedTab = newTab
+                }
+            }
+        )
     }
 }
 

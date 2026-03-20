@@ -9,7 +9,7 @@
     <string name="tab_profile">Profil</string>
     <string name="section_upcoming">Bevorstehend</string>
     <string name="section_past">Vergangen</string>
-    <string name="empty_home">Diese Woche hast du keine offenen Anfragen.</string>
+    <string name="empty_home">In den naechsten 7 Tagen hast du keine offenen Anfragen.</string>
     <string name="empty_shifts">Du hast derzeit keine Schichten.</string>
     <string name="shifts_role_filter_hint">Rolle filtern</string>
     <string name="shifts_role_filter_all">Alle Rollen</string>
@@ -19,7 +19,7 @@
     <string name="action_accept">Annehmen</string>
     <string name="action_decline">Ablehnen</string>
     <string name="generic_load_error">Daten konnten nicht geladen werden. Bitte versuche es erneut.</string>
-    <string name="profile_personal_data">Persoenliche Daten</string>
+    <string name="profile_personal_data">Persönliche Daten</string>
     <string name="profile_company_info">Firmeninformationen</string>
     <string name="profile_roles">Rollen</string>
     <string name="profile_first_name">Vorname</string>

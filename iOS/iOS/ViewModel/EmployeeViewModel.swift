@@ -8,6 +8,19 @@
 import Foundation
 import SwiftUI
 
+private struct EmployeeUpdateRequest: Encodable {
+    let firstname: String
+    let lastname: String
+    let email: String
+    let telephone: String
+    let birthDate: String
+    let isManager: Bool
+    let roles: [Int]
+    let hourlyWage: Double
+    let address: String
+    let isActive: Bool
+}
+
 class EmployeeViewModel: ObservableObject {
     @Published var employees: [Employee] = []
 
@@ -53,34 +66,40 @@ class EmployeeViewModel: ObservableObject {
             return
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
         let encoder = JSONEncoder()
+        let requestBody = EmployeeUpdateRequest(
+            firstname: employee.firstname,
+            lastname: employee.lastname,
+            email: employee.email,
+            telephone: employee.telephone,
+            birthDate: employee.birthDate,
+            isManager: employee.isManager,
+            roles: employee.roles.map(\.id),
+            hourlyWage: employee.hourlyWage,
+            address: employee.address,
+            isActive: employee.isActive ?? true
+        )
 
         do {
-            request.httpBody = try encoder.encode(employee)
-        } catch {
-            completion(.failure(error))
-            return
-        }
-
-        Task {
-            do {
-                _ = try await APIClient.shared.request(
-                    url: url,
-                    method: "POST",
-                    body: request.httpBody
-                )
-                DispatchQueue.main.async {
-                    completion(.success(()))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
+            let body = try encoder.encode(requestBody)
+            Task {
+                do {
+                    _ = try await APIClient.shared.request(
+                        url: url,
+                        method: "PUT",
+                        body: body
+                    )
+                    DispatchQueue.main.async {
+                        completion(.success(()))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
                 }
             }
+        } catch {
+            completion(.failure(error))
         }
     }
 

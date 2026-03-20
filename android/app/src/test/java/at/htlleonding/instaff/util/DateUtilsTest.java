@@ -25,8 +25,10 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void overlapsCurrentWeek_detectsOverlapCorrectly() {
-        assertTrue(DateUtils.overlapsCurrentWeek("2026-03-16T10:00:00", "2026-03-17T15:00:00", LocalDate.of(2026, 3, 18)));
-        assertFalse(DateUtils.overlapsCurrentWeek("2026-03-10T10:00:00", "2026-03-10T15:00:00", LocalDate.of(2026, 3, 18)));
+    public void overlapsNextSevenDays_detectsOverlapCorrectly() {
+        assertTrue(DateUtils.overlapsNextSevenDays("2026-03-20T10:00:00", "2026-03-20T15:00:00", LocalDate.of(2026, 3, 18)));
+        assertTrue(DateUtils.overlapsNextSevenDays("2026-03-24T10:00:00", "2026-03-25T15:00:00", LocalDate.of(2026, 3, 18)));
+        assertFalse(DateUtils.overlapsNextSevenDays("2026-03-10T10:00:00", "2026-03-10T15:00:00", LocalDate.of(2026, 3, 18)));
+        assertFalse(DateUtils.overlapsNextSevenDays("2026-03-26T10:00:00", "2026-03-26T15:00:00", LocalDate.of(2026, 3, 18)));
     }
 }

@@ -25,15 +25,15 @@ public final class AssignmentUiUtils {
         return !DateUtils.parseDateTime(assignment.getShift().getStartTime()).isAfter(now);
     }
 
-    public static List<Assignment> getCurrentWeekUpcoming(@NonNull List<Assignment> assignments, @NonNull LocalDate today, @NonNull LocalDateTime now) {
+    public static List<Assignment> getUpcomingWithinNextSevenDays(@NonNull List<Assignment> assignments, @NonNull LocalDate today, @NonNull LocalDateTime now) {
         List<Assignment> filtered = new ArrayList<>();
         for (Assignment assignment : assignments) {
-            boolean overlapsWeek = DateUtils.overlapsCurrentWeek(
+            boolean overlapsNextSevenDays = DateUtils.overlapsNextSevenDays(
                     assignment.getShift().getStartTime(),
                     assignment.getShift().getEndTime(),
                     today
             );
-            if (overlapsWeek && !isStarted(assignment, now)) {
+            if (overlapsNextSevenDays && !isStarted(assignment, now)) {
                 filtered.add(assignment);
             }
         }

@@ -32,7 +32,7 @@ struct Shift: Identifiable, Decodable {
 }
 
 
-struct Employee: Identifiable, Decodable, Encodable, Equatable {
+struct Employee: Identifiable, Decodable, Equatable {
     static func == (lhs: Employee, rhs: Employee) -> Bool {
         lhs.id == rhs.id || lhs.keycloakUserId == rhs.keycloakUserId
     }
@@ -45,13 +45,14 @@ struct Employee: Identifiable, Decodable, Encodable, Equatable {
     var telephone: String
     var birthDate: String
     var isManager: Bool
-    var hourlyWage: Int
+    var hourlyWage: Double
     var address: String
     var company: Company!
     var roles: [Role]
+    var isActive: Bool?
     
     enum CodingKeys: String, CodingKey {
-        case id, keycloakUserId, firstname, lastname, email, telephone, birthDate, isManager, hourlyWage, address, company, roles
+        case id, keycloakUserId, firstname, lastname, email, telephone, birthDate, isManager, hourlyWage, address, company, roles, isActive
     }
     
     init(from decoder: Decoder) throws {
@@ -64,10 +65,11 @@ struct Employee: Identifiable, Decodable, Encodable, Equatable {
         telephone = try container.decode(String.self, forKey: .telephone)
         birthDate = try container.decode(String.self, forKey: .birthDate)
         isManager = try container.decode(Bool.self, forKey: .isManager)
-        hourlyWage = try container.decode(Int.self, forKey: .hourlyWage)
+        hourlyWage = try container.decode(Double.self, forKey: .hourlyWage)
         address = try container.decode(String.self, forKey: .address)
         company = try container.decodeIfPresent(Company.self, forKey: .company)
         roles = try container.decodeIfPresent([Role].self, forKey: .roles) ?? []
+        isActive = try container.decodeIfPresent(Bool.self, forKey: .isActive)
     }
 }
 

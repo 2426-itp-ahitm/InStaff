@@ -19,12 +19,13 @@ import static org.junit.Assert.assertTrue;
 public class AssignmentUiUtilsTest {
 
     @Test
-    public void currentWeekUpcoming_filtersStartedAssignmentsOut() throws Exception {
-        Assignment futureThisWeek = assignment(1, null, "2026-03-19T12:00:00", "2026-03-19T16:00:00");
+    public void nextSevenDaysUpcoming_filtersStartedAssignmentsOut() throws Exception {
+        Assignment futureWithinRange = assignment(1, null, "2026-03-19T12:00:00", "2026-03-19T16:00:00");
         Assignment alreadyStarted = assignment(2, null, "2026-03-18T08:00:00", "2026-03-18T12:00:00");
+        Assignment outsideRange = assignment(3, null, "2026-03-26T12:00:00", "2026-03-26T16:00:00");
 
-        List<Assignment> result = AssignmentUiUtils.getCurrentWeekUpcoming(
-                List.of(futureThisWeek, alreadyStarted),
+        List<Assignment> result = AssignmentUiUtils.getUpcomingWithinNextSevenDays(
+                List.of(futureWithinRange, alreadyStarted, outsideRange),
                 LocalDate.of(2026, 3, 18),
                 LocalDateTime.of(2026, 3, 18, 13, 0)
         );
