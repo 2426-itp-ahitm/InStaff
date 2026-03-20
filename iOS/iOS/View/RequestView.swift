@@ -13,41 +13,56 @@ struct RequestView: View {
     @ObservedObject var roleViewModel: RoleViewModel
     @ObservedObject var shiftViewModel: ShiftViewModel
     
-    
     @State private var selectedRoleId: Int? = nil
-    @State private var filterByUpcomingOnly = false
-    
-    var filteredAssignments: [Assignment] {
-        guard let employeeId = session.employee?.id else { return [] }
-        
-        return assignmentViewModel.assignments
-            .filter { assignment in
-                if let selectedRoleId = selectedRoleId {
-                    return assignment.role.id == selectedRoleId
-                }
-                return true
+
+    var availableRoles: [Role] {
+        let employeeRoles = session.employee?.roles ?? []
+        let roleIds = Set(employeeRoles.map(\.id))
+        return roleViewModel.roles.filter { roleIds.isEmpty || roleIds.contains($0.id) }
+    }
+
+    var roleFilteredAssignments: [Assignment] {
+        assignmentViewModel.assignments.filter { assignment in
+            if let selectedRoleId {
+                return assignment.role.id == selectedRoleId
             }
-            .sorted { l, r in
-                let now = Date()
 
-                let lStart = DateUtils.toDate(l.shift.startTime) ?? .distantFuture
-                let rStart = DateUtils.toDate(r.shift.startTime) ?? .distantFuture
+            let employeeRoleIds = Set((session.employee?.roles ?? []).map(\.id))
+            return employeeRoleIds.isEmpty || employeeRoleIds.contains(assignment.role.id)
+        }
+    }
 
-                let lIsPast = lStart < now
-                let rIsPast = rStart < now
+    var upcomingAssignments: [Assignment] {
+        let now = Date()
+        let limit = Calendar.current.date(byAdding: .day, value: 30, to: now) ?? now
 
-                // Future assignments first, past assignments last
-                if lIsPast != rIsPast {
-                    return !lIsPast
+        return roleFilteredAssignments
+            .filter { assignment in
+                guard let startDate = DateUtils.toDate(assignment.shift.startTime) else {
+                    return false
                 }
+                return startDate >= now && startDate <= limit
+            }
+            .sorted {
+                (DateUtils.toDate($0.shift.startTime) ?? .distantFuture) <
+                (DateUtils.toDate($1.shift.startTime) ?? .distantFuture)
+            }
+    }
 
-                // Both future → sort ascending (next first)
-                if !lIsPast {
-                    return lStart < rStart
+    var pastAssignments: [Assignment] {
+        let now = Date()
+        let limit = Calendar.current.date(byAdding: .day, value: -30, to: now) ?? now
+
+        return roleFilteredAssignments
+            .filter { assignment in
+                guard let startDate = DateUtils.toDate(assignment.shift.startTime) else {
+                    return false
                 }
-
-                // Both past → sort descending (most recent past first)
-                return lStart > rStart
+                return startDate < now && startDate >= limit
+            }
+            .sorted {
+                (DateUtils.toDate($0.shift.startTime) ?? .distantPast) >
+                (DateUtils.toDate($1.shift.startTime) ?? .distantPast)
             }
     }
     
@@ -62,57 +77,68 @@ struct RequestView: View {
     
 
     var body: some View {
-        //Text("employeeId: \(session.employeeId.map(String.init) ?? "nix")")
-        VStack{
-            NavigationStack {
-                Menu("Filter") {
-                    Picker("Rolle", selection: $selectedRoleId) {
-                        Text("Alle Rollen").tag(nil as Int?)
-                        ForEach(roleViewModel.roles) { role in
-                            let employeeRoles = session.employee?.roles ?? []
+        VStack {
+            Menu("Filter") {
+                Picker("Rolle", selection: $selectedRoleId) {
+                    Text("Alle Rollen").tag(nil as Int?)
+                    ForEach(availableRoles) { role in
+                        Text(role.roleName).tag(role.id as Int?)
+                    }
+                }
+            }
+            .padding(.horizontal)
 
-                            if employeeRoles.isEmpty || employeeRoles.contains(where: { $0.id == role.id }) {
-                                Text(role.roleName).tag(role.id as Int?)
-                            }
+            List {
+                if upcomingAssignments.isEmpty && pastAssignments.isEmpty {
+                    Text("Du hast derzeit keine Schichten.")
+                        .foregroundColor(.gray)
+                }
+
+                if !upcomingAssignments.isEmpty {
+                    Section("Bevorstehend") {
+                        ForEach(upcomingAssignments, id: \.id) { assignment in
+                            assignmentRow(assignment)
                         }
                     }
-
                 }
-                .padding()
-                List {
-                    //Text("Count: \(filteredAssignments.count)")
-                    ForEach(filteredAssignments, id: \.id) { assignment in
-                        
-                        HStack {
-                            RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
-                        }
-                        .opacity(isPast(assignment) ? 0.4 : 1.0)
-                        .contentShape(Rectangle())
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                Task {
-                                    await assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
-                                }
-                            } label: {
-                                Label("Annehmen", systemImage: "checkmark")
-                            }
-                            .tint(.green)
-                            .disabled(isPast(assignment))
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                Task {
-                                    await assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
-                                }
-                            } label: {
-                                Label("Ablehnen", systemImage: "xmark")
-                            }
-                            .disabled(isPast(assignment))
-                            .tint(.red)
+
+                if !pastAssignments.isEmpty {
+                    Section("Vergangen") {
+                        ForEach(pastAssignments, id: \.id) { assignment in
+                            assignmentRow(assignment)
                         }
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private func assignmentRow(_ assignment: Assignment) -> some View {
+        let past = isPast(assignment)
+
+        HStack {
+            RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
+        }
+        .opacity(past ? 0.4 : 1.0)
+        .contentShape(Rectangle())
+        .swipeActions(edge: .leading) {
+            Button {
+                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
+            } label: {
+                Label("Annehmen", systemImage: "checkmark")
+            }
+            .tint(.green)
+            .disabled(past)
+        }
+        .swipeActions(edge: .trailing) {
+            Button(role: .destructive) {
+                assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
+            } label: {
+                Label("Ablehnen", systemImage: "xmark")
+            }
+            .disabled(past)
+            .tint(.red)
         }
     }
 }
@@ -130,4 +156,3 @@ struct RequestView: View {
         assignment: assignment
     )
 }*/
-//                .navigationTitle("Anfragen")

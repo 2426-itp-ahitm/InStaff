@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -35,12 +34,11 @@ public final class DateUtils {
                 + DATE_FORMAT.format(endDateTime) + " " + TIME_FORMAT.format(endDateTime);
     }
 
-    public static boolean overlapsCurrentWeek(String start, String end, LocalDate today) {
+    public static boolean overlapsNextSevenDays(String start, String end, LocalDate today) {
         LocalDate startDate = parseDateTime(start).toLocalDate();
         LocalDate endDate = parseDateTime(end).toLocalDate();
-        LocalDate weekStart = today.with(DayOfWeek.MONDAY);
-        LocalDate weekEnd = weekStart.plusDays(6);
-        return !endDate.isBefore(weekStart) && !startDate.isAfter(weekEnd);
+        LocalDate rangeEnd = today.plusDays(6);
+        return !endDate.isBefore(today) && !startDate.isAfter(rangeEnd);
     }
 
     public static String formatBirthDate(String birthDate) {
