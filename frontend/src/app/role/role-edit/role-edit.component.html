@@ -5,7 +5,7 @@
     <div class="modal-card-2">
       <div class="modal-card-3">
         <div class="modal-card-4">
-<!--
+
           <form (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
@@ -32,16 +32,24 @@
 
                 <div class="mt-4 space-y-3">
                   <p class="block text-sm/6 font-medium text-gray-900" >Mitarbeiter mit der Rolle: </p>
-                  <div *ngFor="let e of employeesWithRole" class="py-1 px-3 outline-1 outline-gray-300 rounded-md bg-white">
-                    <div class="flex items-center justify-between">
-                      <p class="block text-sm/6 font-medium text-gray-900">{{ e.firstname }} {{ e.lastname }}</p>
-                      <div class="flex gap-2">
-                        <button type="button" (click)="removeEmployeeFromRole(e.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
-                          <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
-                        </button>
+                  @if (employeesWithRole.length == 0){
+                    <div class="mt-4 text-sm text-center text-gray-500">Keine Mitarbeiter mit der Rolle gefunden.</div>
+
+                  }
+                  @for (e of employeesWithRole; track e.id){
+                    <div class="py-1 px-3 outline-1 outline-gray-300 rounded-md bg-white">
+
+                      <div class="flex items-center justify-between">
+                        <p class="block text-sm/6 font-medium text-gray-900">{{ e.firstname }} {{ e.lastname }}</p>
+                        <div class="flex gap-2">
+                          <button type="button" (click)="removeEmployeeFromRole(e.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
+                            <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  }
+
                 </div>
               </div>
             </div>
@@ -52,7 +60,6 @@
               <button type="submit" class="button-green">Speichern</button>
             </div>
           </form>
-          -->
         </div>
       </div>
     </div>

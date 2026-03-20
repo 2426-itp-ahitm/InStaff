@@ -1,8 +1,8 @@
-import { switchMap, map } from 'rxjs/operators';
+import {switchMap, map, catchError} from 'rxjs/operators';
 import {inject, Injectable} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
-import {forkJoin, Observable, BehaviorSubject} from 'rxjs';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {forkJoin, Observable, BehaviorSubject, throwError, of} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Role} from '../../interfaces/role';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
@@ -44,7 +44,14 @@ export class EmployeeServiceService {
   }
 
   getAllEmployeesByRoleId(roleId: number): Observable<Employee[]> {
-    return this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}/role/${roleId}`)
+    return this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}/role/${roleId}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          return of([]);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
 

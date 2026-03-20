@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {Role} from '../../interfaces/role';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
@@ -21,7 +21,8 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
   selector: 'app-role-edit',
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './role-edit.component.html',
   styleUrl: './role-edit.component.css'
@@ -48,25 +49,14 @@ export class RoleEditComponent implements OnInit {
       new this.closeRoleEdit()
     }
   }
-
+  //TODO make the edit role work
   ngOnInit(): void {
-    /*
-    if (this.role.employees.length > 0) {
-      for (let i = 0; i < this.role.employees.length; i++) {
-        this.employeeService.getEnrichedEmployeeById(this.role.employees.at(i)!).subscribe(e => {
-          this.employeesWithRole.push(e);
-        });
+    this.employeeService.getAllEmployeesByRoleId(this.role.id).subscribe(e => {
+        this.employeesWithRole = e
       }
-
-     */
+    )
     }
 
-  }
-
-
-
-
-/*
   save(): void {
     const updatedRole: Role = {
       ...this.role,
@@ -95,9 +85,13 @@ export class RoleEditComponent implements OnInit {
   }
 
   removeEmployeeFromRole(id: number) {
-
+    this.employeeService.removeRoleFromEmployee(id, this.role.id).subscribe(data =>{
+      this.employeeService.getAllEmployeesByRoleId(this.role.id).subscribe(e => {
+        this.employeesWithRole = e
+        console.log(e)
+      })
+      //this.employeesWithRole = this.employeesWithRole.filter(employee => employee !== e);
+      })
   }
-
-
 }
- */
+
