@@ -49,7 +49,6 @@ export class RoleEditComponent implements OnInit {
       new this.closeRoleEdit()
     }
   }
-  //TODO make the edit role work
   ngOnInit(): void {
     this.employeeService.getAllEmployeesByRoleId(this.role.id).subscribe(e => {
         this.employeesWithRole = e
@@ -90,8 +89,7 @@ export class RoleEditComponent implements OnInit {
         this.employeesWithRole = e
         console.log(e)
       })
-      //this.employeesWithRole = this.employeesWithRole.filter(employee => employee !== e);
-      })
+    })
   }
 }
 
