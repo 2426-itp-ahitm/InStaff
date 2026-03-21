@@ -6,11 +6,16 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Form;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @ApplicationScoped
 public class KeycloakAdminService {
@@ -84,6 +89,101 @@ public class KeycloakAdminService {
 
         client.close();
         return userId;
+    }
+
+    /* Not in use
+    public void promoteEmployeeToManager(Employee employee) {
+        try (Client client = ClientBuilder.newClient()) {
+            String accessToken = getAdminToken(client);
+            String userId = resolveOrCreateUserId(client, accessToken, employee);
+            setManagerGroupMembership(client, accessToken, userId, true);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to promote employee to manager", e);
+        }
+    }
+    */
+
+    public void syncEmployee(Employee employee, boolean emailChanged) {
+        try (Client client = ClientBuilder.newClient()) {
+            String accessToken = getAdminToken(client);
+            String userId = resolveOrCreateUserId(client, accessToken, employee);
+            ensureEmailNotUsedByAnotherUser(client, accessToken, userId, employee.email);
+
+            Response updateResponse = client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId)
+                    .request(MediaType.APPLICATION_JSON_TYPE)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .put(Entity.json(buildUserUpdateRequest(employee, emailChanged)));
+
+            if (updateResponse.getStatus() != 204) {
+                int status = updateResponse.getStatus();
+                String responseBody = updateResponse.hasEntity() ? updateResponse.readEntity(String.class) : "";
+                updateResponse.close();
+                throw new IllegalStateException("Failed to update user in Keycloak: " + status + " " + responseBody);
+            }
+            updateResponse.close();
+
+            setManagerGroupMembership(client, accessToken, userId, employee.isManager);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to sync employee to Keycloak", e);
+        }
+    }
+
+    private void ensureEmailNotUsedByAnotherUser(Client client, String accessToken, String currentUserId, String email) {
+        Response response = client
+                .target(keycloakUrl + "/admin/realms/" + realm + "/users")
+                .queryParam("email", email)
+                .request()
+                .header("Authorization", "Bearer " + accessToken)
+                .get();
+
+        if (response.getStatus() != 200) {
+            int status = response.getStatus();
+            response.close();
+            throw new IllegalStateException("Failed to check email in Keycloak: " + status);
+        }
+
+        List<?> users = response.readEntity(List.class);
+        response.close();
+
+        for (Object user : users) {
+            Map<?, ?> keycloakUser = (Map<?, ?>) user;
+            Object foundId = keycloakUser.get("id");
+            if (foundId != null && !foundId.toString().equals(currentUserId)) {
+                throw new IllegalStateException("Email already used in Keycloak: " + email);
+            }
+        }
+    }
+
+    private String resolveOrCreateUserId(Client client, String accessToken, Employee employee) {
+        if (employee.keycloakUserId != null && !employee.keycloakUserId.isBlank()) {
+            return employee.keycloakUserId;
+        }
+
+        try {
+            String userId = findUserIdByEmail(client, accessToken, employee.email);
+            employee.keycloakUserId = userId;
+            return userId;
+        } catch (IllegalStateException ignored) {
+            String userId = createUser(employee);
+            employee.keycloakUserId = userId;
+            return userId;
+        }
+    }
+
+    private Map<String, Object> buildUserUpdateRequest(Employee employee, boolean emailChanged) {
+        Map<String, Object> request = new HashMap<>();
+        request.put("email", employee.email);
+        request.put("firstName", employee.firstName);
+        request.put("lastName", employee.lastName);
+        request.put("enabled", employee.isActive);
+
+        if (emailChanged) {
+            request.put("emailVerified", false);
+            request.put("requiredActions", new ArrayList<>(List.of("VERIFY_EMAIL")));
+        }
+
+        return request;
     }
 
     private String getAdminToken(Client client) {
@@ -245,10 +345,24 @@ public class KeycloakAdminService {
         public boolean enabled = true;
 
         public KeycloakUserRequest(Employee e) {
-            this.username = e.email;
+            this.username = buildUsername(e);
             this.email = e.email;
             this.firstName = e.firstName;
             this.lastName = e.lastName;
+        }
+
+        private static String buildUsername(Employee employee) {
+            String companyName = employee.company != null ? employee.company.companyName : "company";
+            String normalizedCompanyName = companyName
+                    .toLowerCase(Locale.ROOT)
+                    .replaceAll("[^a-z0-9]+", "-")
+                    .replaceAll("^-+|-+$", "");
+
+            if (normalizedCompanyName.isBlank()) {
+                normalizedCompanyName = "company";
+            }
+
+            return "employee-" + normalizedCompanyName + "-" + employee.id;
         }
     }
 

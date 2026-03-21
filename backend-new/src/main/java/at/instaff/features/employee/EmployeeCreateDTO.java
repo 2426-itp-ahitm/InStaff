@@ -3,6 +3,9 @@ package at.instaff.features.employee;
 import at.instaff.features.assignment.Assignment;
 import at.instaff.features.company.Company;
 import at.instaff.features.role.Role;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +15,9 @@ public record EmployeeCreateDTO(
         String lastname,
         String email,
         String telephone,
+        @JsonProperty("birthdate")
+        @JsonAlias("birthDate")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate birthDate,
         boolean isManager,
         List<Long> roles, // List of role IDs

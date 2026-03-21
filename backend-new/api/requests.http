@@ -31,7 +31,7 @@ Authorization: Bearer {{access_token}}
 ###
 
 ### Get employee by ID
-GET http://localhost:8080/api/employees/3
+GET http://localhost:8080/api/employees/2
 Authorization: Bearer {{access_token}}
 
 ###
@@ -85,10 +85,27 @@ Content-Type: application/json
   "email": "jane.doe@example.com",
   "birthdate": "1992-05-14",
   "telephone": "+43 123 456789",
-  "isManager": false,
+  "isManager": true,
   "roles": [1, 2],
   "hourlyWage": 14.5,
   "address": "Musterstrasse 12"
+}
+
+### Update alexander hahn
+PUT http://localhost:8080/api/employees/2
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "firstname": "Alexander",
+  "lastname": "Hahn",
+  "email": "a.hahn@example.com",
+  "birthdate": "2001-11-09",
+  "telephone": "65626625",
+  "isManager": false,
+  "roles": [2, 3],
+  "hourlyWage": 20.0,
+  "address": "Limesstraße 12, 4060 Leonding"
 }
 
 ###
@@ -197,7 +214,7 @@ Authorization: Bearer {{access_token}}
 ###
 
 ### Get assignments by employee ID
-GET http://localhost:8080/api/assignments/employee/4
+GET http://localhost:8080/api/assignments/employee/2
 Authorization: Bearer {{access_token}}
 
 ###

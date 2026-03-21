@@ -17,7 +17,7 @@ insert into employee (id, birthdate, email, firstname, lastname, telephone, comp
 values
     (1, '2004-11-11 00:00:00', 'p.pfarrhofer@students.htl-leonding.ac.at', 'john', 'doe', '1233456899', 1, false, 'Limesstraße 12, 4060 Leonding', 10, true),
     (2, '2001-11-09 00:00:00', 'alexander.hahn1@outlook.de', 'Alexander', 'Hahn', '65626625', 1, false, 'Limesstraße 12, 4060 Leonding', 20, true),
-    (3, '2006-11-11 00:00:00', 'o.ffen@students.htl-leonding.ac.at', 'offen', '', '1233456899', 1, false, 'Limesstraße 12, 4060 Leonding', 10, true),
+    (3, '1998-06-15 00:00:00', 'anna.schmid@example.com', 'Anna', 'Schmid', '436601112233', 1, false, 'Limesstraße 12, 4060 Leonding', 15, true),
     (4, '1975-02-27 00:00:00', 'bernhard@penkner.com', 'Bernhard', 'Penkner', '67734144524', 1, true, 'Limesstraße 12, 4060 Leonding', 10, true),
     (5, '1995-03-22 00:00:00', 'michael.brown@example.com', 'Michael', 'Brown', '5551234567', 1, false, 'Limesstraße 12, 4060 Leonding', 10, true),
     (6, '1992-08-17 00:00:00', 'sarah.jones@example.com', 'Sarah', 'Jones', '4441239876', 1, false, 'Limesstraße 12, 4060 Leonding', 10, true),

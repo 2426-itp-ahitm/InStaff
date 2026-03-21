@@ -3,6 +3,7 @@ package at.instaff.features.employee;
 import at.instaff.features.role.Role;
 import at.instaff.features.security.CustomPrincipal;
 import at.instaff.features.security.CustomSecurityContext;
+import at.instaff.features.security.KeycloakAdminService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Path("employees")
 public class EmployeeResource {
+    @Inject
+    KeycloakAdminService keycloakAdminService;
 
     @GET
     public Response getAllEmployees(@Context SecurityContext sc) {
@@ -103,7 +106,9 @@ public class EmployeeResource {
         if (employee == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        String oldEmail = employee.email;
         employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
+        keycloakAdminService.syncEmployee(employee, oldEmail != null && !oldEmail.equals(dto.email()));
 
         employee.persist();
         return Response.ok(EmployeeDTO.toResource(employee)).build();
