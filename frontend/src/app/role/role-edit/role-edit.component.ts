@@ -16,6 +16,7 @@ import {RoleServiceService} from '../role-service/role-service.service';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
+import {RoleCreate} from '../../interfaces/role-create';
 
 @Component({
   selector: 'app-role-edit',
@@ -57,12 +58,11 @@ export class RoleEditComponent implements OnInit {
     }
 
   save(): void {
-    const updatedRole: Role = {
-      ...this.role,
+    const updatedRole: RoleCreate = {
       roleName: this.roleNameInput.nativeElement.value,
       description: this.roleDescriptionInput.nativeElement.value,
     };
-    this.roleService.updateRole(updatedRole);
+    this.roleService.updateRole(updatedRole, this.role.id);
     this.close();
     this.feedbackService.newFeedback({message:"Rolle erfolgreich gespeichert", type: 'success', showFeedback: true})
 

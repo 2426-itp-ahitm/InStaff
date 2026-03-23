@@ -6,6 +6,7 @@ import {CompanyServiceService} from '../../services/company-service/company-serv
 import {Employee} from '../../interfaces/employee';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
+import {RoleCreate} from '../../interfaces/role-create';
 
 @Injectable({
   providedIn: 'root'
@@ -43,17 +44,12 @@ export class RoleServiceService {
 
     });
   }
-  updateRole(updatedRole: Role): void {
-    this.httpClient.put<Role>(`${this.getApiUrl()}/roles`, {
-      id: updatedRole.id,
-      roleName: updatedRole.roleName,
-      description: updatedRole.description
-    }).subscribe((response) => {
-        const currentRoles = this.rolesSubject.getValue();
-        const updatedList = currentRoles.map(role =>
-          role.id === updatedRole.id ? updatedRole : role
-        );
-        this.rolesSubject.next(updatedList);
+  updateRole(updatedRole: RoleCreate, roleId: number): void {
+    this.httpClient.put<Role>(`${this.getApiUrl()}/roles/${roleId}`, updatedRole ).subscribe((r) => {
+        let currentRoles = this.rolesSubject.getValue();
+        currentRoles = currentRoles.filter(role => role.id != r.id);
+        console.log(currentRoles);
+        this.rolesSubject.next([...currentRoles, r]);
         this.feedbackService.newFeedback({message:"Rolle erfolgreich bearbeitet", type: 'success', showFeedback: true})
 
       });

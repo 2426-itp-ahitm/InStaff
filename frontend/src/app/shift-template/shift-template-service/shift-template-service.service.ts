@@ -6,6 +6,7 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
 import {ApiUrlService} from '../../services/api-url/api-url.service';
 import {ShiftCreate} from '../../interfaces/shift-create';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
+import {ShifttemplateCreate} from '../../interfaces/shifttemplate-create';
 
 @Injectable({
   providedIn: 'root'
@@ -41,17 +42,24 @@ export class ShiftTemplateServiceService {
         this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich gelöscht", type: 'success', showFeedback: true})
       });
   }
-
-  updateShiftTemplate(updatedShiftTemplate: Shifttemplate) {
+  //TODO mit Phiz besprechen
+  /*
+  updateShiftTemplate(updatedShiftTemplate: ShifttemplateCreate) {
     this.httpClient.put<Shifttemplate>(`${this.getApiUrl()}/shift-templates/`, updatedShiftTemplate)
-      .subscribe((response) => {
+      .subscribe((sT) => {
         const currentShiftTemplates = this.shiftTemplatesSubject.getValue();
-        const updatedShiftTemplatesList = currentShiftTemplates.map(sT =>
-          sT.id === updatedShiftTemplate.id ? updatedShiftTemplate : sT
-        );
-        this.shiftTemplatesSubject.next(updatedShiftTemplatesList);
+
+        //this.shiftTemplatesSubject.next(updatedShiftTemplatesList);
         this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich bearbeitet", type: 'success', showFeedback: true})
       });
+  }
+  */
+  updateShiftTemplate(updatedShiftTemplate: ShifttemplateCreate, shiftTemplateId: number) {
+    this.httpClient.put(`${this.getApiUrl()}/shift-templates/${shiftTemplateId}`, updatedShiftTemplate).subscribe((r) => {
+      console.log(r);
+
+      this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich bearbeitet", type: 'success', showFeedback: true})
+    });
   }
 
   addShiftTemplate(newShiftTemplate: Shifttemplate) {

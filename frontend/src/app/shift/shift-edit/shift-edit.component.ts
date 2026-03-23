@@ -64,7 +64,8 @@ export class ShiftEditComponent implements OnInit {
 
   roleNameMap: { [id: number]: string } = {};
   employees: Employee[] = [];
-  assignments: AssignmentCreate[] = [];
+  assignments: Assignment[] = [];
+  newAssignments: AssignmentCreate[] = [];
   availableRoles: Role[] = [];
   selectedNewRoleId: number = -1;
   groupedAssignments: { roleId: number, roleName: string, assignments: Assignment[], count: number }[] = [];
@@ -100,14 +101,12 @@ export class ShiftEditComponent implements OnInit {
       console.log(this.shiftEndTime);
     })
     //TODO
-    /*
+
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
       this.assignments = a;
       this.assignmentsLoaded = true;
       this.updateGroupedIfReady();
     })
-
-     */
 
 
     //get all Employees
@@ -189,17 +188,15 @@ export class ShiftEditComponent implements OnInit {
 
     //TODO
     // Gruppiere alle Zuweisungen nach Rolle
-    /*
     this.assignments.forEach(a => {
-      if (!grouped[a.role]) {
-        grouped[a.role] = [];
+      if (!grouped[a.role.id]) {
+        grouped[a.role.id] = [];
       }
-      grouped[a.role].push(a);
+      grouped[a.role.id].push(a);
     });
-    */
     // TODO
     // Konvertiere in Array mit zusätzlichen Informationen
-    /*
+
     this.groupedAssignments = Object.keys(grouped).map(roleIdStr => {
       const roleId = Number(roleIdStr);
       return {
@@ -210,7 +207,7 @@ export class ShiftEditComponent implements OnInit {
       };
     });
 
-     */
+
   }
 
   getRoleName(roleId: number): string {
@@ -238,8 +235,8 @@ export class ShiftEditComponent implements OnInit {
   removeRole(roleId: number) {
     console.log("removeRole", roleId);
     this.somethingChanged = true;
-    const normalizedRoleId = Number(roleId);
-    this.assignments = this.assignments.filter(a => Number(a.roleId) !== normalizedRoleId);
+    this.assignments = this.assignments.filter(a => a.role.id != roleId);
+    this.newAssignments = this.newAssignments.filter(a => a.roleId != roleId);
     this.updateGroupedAssignments();
     this.updateAvailableRoles();
   }
@@ -252,7 +249,7 @@ export class ShiftEditComponent implements OnInit {
       shiftId: this.shiftId,
       roleId: roleId,
     };
-    this.assignments.push(newAssignment);
+    this.newAssignments.push(newAssignment);
     this.updateGroupedAssignments();
     this.updateAvailableRoles();
   }

@@ -5,9 +5,10 @@ import {NgForOf} from '@angular/common';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
-import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
-import {Employee} from '../../interfaces/employee';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
+import {Templaterole} from '../../interfaces/templaterole';
+import {TemplateroleCreate} from '../../interfaces/templaterole-create';
+import {ShifttemplateCreate} from '../../interfaces/shifttemplate-create';
 
 @Component({
   selector: 'app-shift-template-edit',
@@ -32,40 +33,30 @@ export class ShiftTemplateEditComponent implements OnInit {
   @ViewChild('shiftTemplateNameInput') shiftTemplateNameInput!: ElementRef;
 
   // UI state like in add component
-  employeeService: EmployeeServiceService = inject(EmployeeServiceService);
   roles: Role[] = [];
-  employees: Employee[] = [];
-
-  addedRoles: { roleId: number; count: number; selectedEmployees: (number | null)[] }[] = [];
+  addedRoles: TemplateroleCreate[] = []
 
   ngOnInit(): void {
     this.roleService.getRoles();
     this.roleService.roles$.subscribe(r => this.roles = r);
 
-    // load employees for the dropdowns (optional but useful)
-    this.employeeService.getAllEmployees();
-    this.employeeService.employees$.subscribe(e => this.employees = e);
-
     //TODO
     // initialize addedRoles from the provided shiftTemplate
     if (this.shiftTemplate && this.shiftTemplate.templateRoles) {
-      //this.addedRoles = this.shiftTemplate.templateRoles.map((tr: { roleId: any; count: any; }) => ({ roleId: tr.roleId, count: tr.count, selectedEmployees: Array(tr.count).fill(null) }));
+      this.addedRoles = this.shiftTemplate.templateRoles.map((tr: { role: Role; count: number; }) => ({ role: tr.role, count: tr.count, selectedEmployees: Array(tr.count).fill(null) }));
     }
   }
 
   //TODO
   save(): void {
-    /*
-    const templateRoles = this.addedRoles.map(ar => ({ roleId: ar.roleId, count: ar.count }));
-    const updatedShiftTemplate: Shifttemplate = {
+
+    const updatedShiftTemplate: ShifttemplateCreate = {
       ...this.shiftTemplate,
       shiftTemplateName: this.shiftTemplateNameInput.nativeElement.value,
-      templateRoles: templateRoles
+      templateRoles: this.addedRoles
     };
-    this.shiftTemplateService.updateShiftTemplate(updatedShiftTemplate);
+    this.shiftTemplateService.updateShiftTemplate(updatedShiftTemplate, this.shiftTemplate.id);
     this.close();
-
-     */
 
   }
 
@@ -90,22 +81,20 @@ export class ShiftTemplateEditComponent implements OnInit {
   }
 
   availableRoles(): Role[] {
-    return this.roles.filter(r => !this.addedRoles.some(ar => ar.roleId === r.id));
+    return this.roles.filter(r => !this.addedRoles.some(ar => ar.role.id === r.id));
   }
 
+  //TODO needs a Template Role Service
   addRole(roleIdStr: string) {
     const roleId = Number(roleIdStr);
-    if (!roleId || !this.roles.find(r => r.id === roleId)) return;
+    const role = this.roles.find(r => r.id === roleId)
+    if (!roleId || role == undefined) return;
     const count = 1; // Default to 1
-    const selectedEmployees = Array(count).fill(null);
-    this.addedRoles.push({ roleId, count, selectedEmployees });
+    this.addedRoles.push({ role , count });
   }
 
   removeAddedRole(index: number) {
     this.addedRoles.splice(index, 1);
   }
-  //TODO
-  employeesWithRole(roleId: number) {
-    return this.employees.filter(emp => emp.roles?.some(r => r.id === roleId && true));
-  }
+
 }
