@@ -289,8 +289,8 @@ Content-Type: application/json
   },
   "assignmentCreateDTOS": [
     {
-      "employee": 1,
-      "role": 1
+      "employeeId": 1,
+      "roleId": 1
     }
   ]
 }

@@ -85,7 +85,7 @@ public class ShiftResource {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    /*@POST
+    @POST
     @Path("/create-with-assignments")
     @Transactional
     public Response createShiftWithAssignments(ShiftCreateWithAssignmentsDTO dto, @Context SecurityContext sc) {
@@ -101,6 +101,6 @@ public class ShiftResource {
         }
 
         return Response.status(Response.Status.CREATED).build();
-    }*/
+    }
 
 }
