@@ -276,7 +276,7 @@ Content-Type: application/json
 
 ###
 
-### Create shift with assignments
+### Create shift with assignments (201 if all assignments could be created. 207 if one or more assignments could not be created)
 POST http://localhost:8080/api/shifts/create-with-assignments
 Authorization: Bearer {{access_token}}
 Content-Type: application/json

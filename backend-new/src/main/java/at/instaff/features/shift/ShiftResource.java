@@ -94,13 +94,22 @@ public class ShiftResource {
         Shift shift = new Shift(dto.shiftCreateDTO().shiftName(), dto.shiftCreateDTO().startTime(), dto.shiftCreateDTO().endTime(), Company.findById(principal.getCompanyId()));
         shift.persist();
 
+        int status = Response.Status.CREATED.getStatusCode();
+
         for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOS()) {
-            Assignment assignment = new Assignment(Employee.findById(assignmentCreateDTO.employeeId()), Shift.findById(shift.id),
-                    Role.findById(assignmentCreateDTO.roleId()));
-            assignment.persist();
+            Employee employee = Employee.findById(assignmentCreateDTO.employeeId());
+            Role role = Role.findById(assignmentCreateDTO.roleId());
+
+            if (employee != null && role != null) {
+                Assignment assignment = new Assignment(employee, Shift.findById(shift.id),
+                        role);
+                assignment.persist();
+            } else {
+                status = 207;
+            }
         }
 
-        return Response.status(Response.Status.CREATED).build();
+        return Response.status(status).build();
     }
 
 }
