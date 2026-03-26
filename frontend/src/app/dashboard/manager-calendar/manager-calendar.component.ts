@@ -152,12 +152,15 @@ export class ManagerCalendarComponent implements OnInit {
   }
 
   loadShiftsToEvents(data:Shift[]): void {
+
     this.calendarOptions.events = data.map(shift => ({
       title: shift.shiftName,
       start: shift.startTime,
       end: shift.endTime,
       id: String(shift.id),
     }));
+
+
   }
 
   getStringFromArg(arg: Date) {

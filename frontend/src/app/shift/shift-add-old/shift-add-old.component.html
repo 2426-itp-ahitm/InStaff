@@ -43,7 +43,6 @@
                     <div *ngIf="initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)">
                       <select [id]="'employee-select-' + tmpRole.roleId + '-' + idx" name="employee" class="block w-64 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                         <ng-container *ngFor="let emp of employees">
-                          <!-- TODO: the if statement looks for roles(tmpRole.roleId) instead of looking if roles includes the role-->
                           <option *ngIf="checkIfEmpHasRole(emp, tmpRole)" [value]="emp.id">
                             {{ emp.firstname }} {{ emp.lastname }}
                           </option>

@@ -59,8 +59,8 @@ export class ShiftEditComponent implements OnInit {
   dateService: DateService = inject(DateService);
 
   shift!:Shift;
-  shiftStartTime!: Date;
-  shiftEndTime!: Date;
+  shiftStartTime!: string;
+  shiftEndTime!: string;
   groupedAssignments: {role: Role, assignments:Assignment[]}[] = [];
   employeesByRole: {roleId: number, employees: Employee[]}[] = [];
 
@@ -72,8 +72,8 @@ export class ShiftEditComponent implements OnInit {
   ngOnInit(): void {
     this.shiftService.getShiftById(this.shiftId).subscribe(s => {
       this.shift = s
-      this.shiftStartTime = s.startTime
-      this.shiftEndTime = s.endTime;
+      this.shiftStartTime = this.toDateTimeLocalValue(new Date(s.startTime));
+      this.shiftEndTime = this.toDateTimeLocalValue(new Date(s.endTime));
       console.log(this.shift)
 
       const groups = new Map<number, { role: Role; assignments: Assignment[] }>();
@@ -114,6 +114,15 @@ export class ShiftEditComponent implements OnInit {
 
 
 
+
+  private toDateTimeLocalValue(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
 
 
   somethingChangedSetTrue(){

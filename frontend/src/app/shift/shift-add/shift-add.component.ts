@@ -16,6 +16,7 @@ import {Shifttemplate} from '../../interfaces/shifttemplate';
 import {AssignmentCreate} from '../../interfaces/assignment-create';
 import {Templaterole} from '../../interfaces/templaterole';
 import {forkJoin} from 'rxjs';
+import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
 
 @Component({
   selector: 'app-shift-add',
@@ -34,8 +35,8 @@ export class ShiftAddComponent implements OnInit {
   selectedShiftTemplate: Shifttemplate | null = null;
   assignments: Assignment[] = [];
   step: number = 0; // 0: date/time, 1: template choose, 2: assign employees
-  startTime!: Date;
-  endTime!: Date;
+  startTime!: string;
+  endTime!: string;
   shiftName: string = '';
   dateError: string | null = null;
 
@@ -73,9 +74,9 @@ export class ShiftAddComponent implements OnInit {
     this.selectedDate = this.shiftService.selectedDate
 
     // initialize editable times with selectedDate values
-    this.startTime = this.selectedDate.startTime;
-    this.endTime = this.selectedDate.endTime;
-    this.applyDefaultShiftHoursIfCalendarPassedAllDaySlot();
+    this.startTime = this.toDateTimeLocalValue(new Date(this.selectedDate.startTime));
+    this.endTime = this.toDateTimeLocalValue(new Date(this.selectedDate.endTime));
+    console.log(this.startTime);
 
 
 
@@ -132,7 +133,7 @@ export class ShiftAddComponent implements OnInit {
     if (!roleId || !this.roles.find(r => r.id === roleId)) return;
     this.manualRoles.push({ roleId, count });
   }
-  //TODO
+
   getCurrentRoles(): { roleId: number; count: number }[] {
     return this.manualRoles;
   }
@@ -202,8 +203,8 @@ export class ShiftAddComponent implements OnInit {
       }
       this.dateError = null;
       // save edited times into selectedDate
-      this.selectedDate.startTime = this.startTime;
-      this.selectedDate.endTime = this.endTime;
+      this.selectedDate.startTime = new Date(this.startTime);
+      this.selectedDate.endTime = new Date(this.endTime);
     }
     if(this.step === 1) {
       this.chooseShiftTemplate()
@@ -252,8 +253,8 @@ export class ShiftAddComponent implements OnInit {
     const defaultEnd = new Date(start);
     defaultEnd.setHours(21, 0, 0, 0);
 
-    this.startTime = defaultStart;
-    this.endTime = defaultEnd;
+    this.startTime = this.toDateTimeLocalValue(defaultStart);
+    this.endTime = this.toDateTimeLocalValue(defaultEnd);
   }
 
   private toDateTimeLocalValue(date: Date): string {
@@ -280,10 +281,12 @@ export class ShiftAddComponent implements OnInit {
       const sel = this.selectedEmployees[roleId] || [];
       for (let j = 0; j < count; j++) {
         const value = sel[j] ?? null;
-        assignments.push({ employeeId: value, shiftId: 0, roleId: roleId });
+        // Backend expects a non-null employeeId; skip open slots.
+        if (value !== null) {
+          assignments.push({ employeeId: value, roleId: roleId });
+        }
       }
     }
-
     return assignments;
   }
 
@@ -294,12 +297,20 @@ export class ShiftAddComponent implements OnInit {
       shiftName: normalizedShiftName.length > 0
         ? normalizedShiftName
         : (this.selectedShiftTemplate?.shiftTemplateName ?? 'Schicht'),
-        startTime: this.selectedDate.startTime,
-        endTime: this.selectedDate.endTime,
+        startTime: new Date(this.startTime),
+        endTime: new Date(this.endTime),
     };
-
-    this.shiftService.addShift(newShift).subscribe();
-
+    const shiftWithAssignments: ShiftCreateAssignments ={
+      shiftCreateDTO: newShift,
+      assignmentCreateDTOS: assignments
+    }
+    this.shiftService.addShift(shiftWithAssignments).subscribe({
+      next: () => {
+        this.closeAddShift();
+      },
+      error: () => {
+      }
+    });
   }
 
   closeAddShift() {

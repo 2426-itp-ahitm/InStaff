@@ -7,6 +7,7 @@ import {tap} from 'rxjs/operators';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
 import {ShiftCreate} from '../../interfaces/shift-create';
+import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
 
 @Injectable({
   providedIn: 'root'
@@ -44,20 +45,41 @@ export class ShiftServiceService {
       this.employeeShiftsSubject.next(shifts);
     });
   }
-  // TODO: add assignemnts
-  addShift(newShift: ShiftCreate): Observable<Shift> {
-    const addShift = {
-      shiftName: newShift.shiftName,
-      startTime: newShift.startTime,
-      endTime: newShift.endTime,
+
+  private toLocalDateTimeString(dateValue: Date | string): string {
+    const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  // TODO: empty assignemnts don't work
+  addShift(shiftWithAssignments:ShiftCreateAssignments): Observable<Response> {
+    const payload = {
+      ...shiftWithAssignments,
+      shiftCreateDTO: {
+        ...shiftWithAssignments.shiftCreateDTO,
+        startTime: this.toLocalDateTimeString(shiftWithAssignments.shiftCreateDTO.startTime),
+        endTime: this.toLocalDateTimeString(shiftWithAssignments.shiftCreateDTO.endTime),
+      }
     };
-    return this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts`, addShift)
-      .pipe(
-        tap((createdShift) => {
-          const currentShift = this.shiftsSubject.getValue();
-          this.shiftsSubject.next([...currentShift, createdShift]);
-        })
-      );
+    console.log(payload);
+    return this.httpClient.post<Response>(`${this.getApiUrl()}/shifts/create-with-assignments`, payload).pipe(
+      tap({
+        next: () => {
+          this.feedbackService.newFeedback({ message: 'Schicht erfolgreich erstellt', type: 'success', showFeedback: true });
+          this.getShifts();
+        },
+        error: () => {
+          this.feedbackService.newFeedback({ message: 'Schicht konnte nicht erstellt werden', type: 'error', showFeedback: true });
+        }
+      })
+    );
+
   }
 
   // TODO: add assignemnts
@@ -66,8 +88,8 @@ export class ShiftServiceService {
     console.log(newShift);
     const updateShift = {
       shiftName: newShift.shiftName,
-      startTime: newShift.startTime,
-      endTime: newShift.endTime,
+      startTime: this.toLocalDateTimeString(newShift.startTime),
+      endTime: this.toLocalDateTimeString(newShift.endTime),
     }
     return this.httpClient.put<Shift>(`${this.getApiUrl()}/shifts/${shiftId}`, updateShift)
       .pipe(

@@ -99,7 +99,6 @@ export class ShiftEditOldComponent implements OnInit {
       console.log(this.shiftStartTime);
       console.log(this.shiftEndTime);
     })
-    //TODO
 
     this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
       this.assignments = a;
@@ -132,7 +131,6 @@ export class ShiftEditOldComponent implements OnInit {
 
 
   save() {
-    // TODO
     // Filtere nur gültige Zuweisungen (mit zugewiesenem Mitarbeiter)
     /*
     const validAssignments: AssignmentCreate[] = this.assignments
@@ -143,7 +141,6 @@ export class ShiftEditOldComponent implements OnInit {
      }));
 
      */
-    //TODO
     let validAssignments: AssignmentCreate[] = [];
     const newShift: ShiftCreateAssignments = {
       shiftCreateDTO: {
@@ -151,12 +148,11 @@ export class ShiftEditOldComponent implements OnInit {
         startTime: this.shiftStartTime,
         endTime: this.shiftEndTime,
       },
-      assignmentCreateDTOs: validAssignments,
+      assignmentCreateDTOS: validAssignments,
     };
     console.log("***********+")
     console.log(newShift);
-    //TODO
-    // If editing an existing shift, call update; otherwise fallback to add
+
     /*
     if (this.shift && this.shift.id) {
       this.shiftService.updateShift(this.shift.id, newShift).subscribe({
@@ -185,15 +181,12 @@ export class ShiftEditOldComponent implements OnInit {
   updateGroupedAssignments(): void {
     const grouped: { [roleId: number]: Assignment[] } = {};
 
-    //TODO
-    // Gruppiere alle Zuweisungen nach Rolle
     this.assignments.forEach(a => {
       if (!grouped[a.role.id]) {
         grouped[a.role.id] = [];
       }
       grouped[a.role.id].push(a);
     });
-    // TODO
     // Konvertiere in Array mit zusätzlichen Informationen
 
     this.groupedAssignments = Object.keys(grouped).map(roleIdStr => {
@@ -218,7 +211,6 @@ export class ShiftEditOldComponent implements OnInit {
     if (confirmed === false) return 'abgelehnt';
     return 'ausstehend';
   }
-  // TODO
   // Entferne eine spezifische Zuweisung
   removeAssignment(assignmentId: number) {
     /*
@@ -245,7 +237,6 @@ export class ShiftEditOldComponent implements OnInit {
     this.somethingChanged = true;
     const newAssignment: AssignmentCreate = {
       employeeId: null, // 0 bedeutet "offen"
-      shiftId: this.shiftId,
       roleId: roleId,
     };
     this.newAssignments.push(newAssignment);
@@ -276,7 +267,6 @@ export class ShiftEditOldComponent implements OnInit {
     if (this.roles && this.employees) {
       this.roles.forEach(role => {
         this.employeesByRole[role.id] = this.employees.filter(emp =>
-          //TODO
           emp.roles.some(r => r.id === role.id && true)
         );
       });
