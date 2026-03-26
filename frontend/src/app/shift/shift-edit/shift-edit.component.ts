@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {Shift} from '../../interfaces/shift';
 import {FormsModule} from "@angular/forms";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {NgClass} from "@angular/common";
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
@@ -24,19 +24,19 @@ import {DateService} from '../../services/date-service/date.service';
 import {AssignmentCreate} from '../../interfaces/assignment-create';
 import {ShiftCreate} from '../../interfaces/shift-create';
 import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
+import {EmployeeShort} from '../../interfaces/employee-short';
 
 @Component({
   selector: 'app-shift-edit',
   imports: [
     FormsModule,
-    NgForOf,
-    NgIf,
     NgClass
   ],
   templateUrl: './shift-edit.component.html',
   styleUrl: './shift-edit.component.css'
 })
 export class ShiftEditComponent implements OnInit {
+
   @Output() closeShiftEdit = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
@@ -51,9 +51,6 @@ export class ShiftEditComponent implements OnInit {
     }
   }
 
-  roles!: Role[];
-  shift!: Shift;
-
   companyService:CompanyServiceService = inject(CompanyServiceService);
   employeeService:EmployeeServiceService = inject(EmployeeServiceService);
   shiftService:ShiftServiceService = inject(ShiftServiceService);
@@ -61,153 +58,66 @@ export class ShiftEditComponent implements OnInit {
   assignmentService:AssignmentServiceService = inject(AssignmentServiceService);
   dateService: DateService = inject(DateService);
 
-
-  roleNameMap: { [id: number]: string } = {};
-  employees: Employee[] = [];
-  assignments: Assignment[] = [];
-  newAssignments: AssignmentCreate[] = [];
-  availableRoles: Role[] = [];
-  selectedNewRoleId: number = -1;
-  groupedAssignments: { roleId: number, roleName: string, assignments: Assignment[], count: number }[] = [];
-  employeesByRole: { [roleId: number]: Employee[] } = {};
-  somethingChanged: boolean = false;
-
+  shift!:Shift;
   shiftStartTime!: Date;
   shiftEndTime!: Date;
+  groupedAssignments: {role: Role, assignments:Assignment[]}[] = [];
+  employeesByRole: {roleId: number, employees: Employee[]}[] = [];
 
-  private rolesLoaded = false;
-  private assignmentsLoaded = false;
+
+  roleNameMap: { [id: number]: string } = {};
+  somethingChanged: boolean = false;
+
+
+  ngOnInit(): void {
+    this.shiftService.getShiftById(this.shiftId).subscribe(s => {
+      this.shift = s
+      this.shiftStartTime = s.startTime
+      this.shiftEndTime = s.endTime;
+      console.log(this.shift)
+
+      const groups = new Map<number, { role: Role; assignments: Assignment[] }>();
+
+      (this.shift.assignments ?? []).forEach((assignment) => {
+        if (!assignment.employee?.id) {
+          assignment.employee = { id: 0 } as EmployeeShort;
+        }
+
+        const roleId = assignment.role.id;
+        const existingGroup = groups.get(roleId);
+
+        if (existingGroup) {
+          existingGroup.assignments.push(assignment);
+          return;
+        }
+
+        groups.set(roleId, {
+          role: assignment.role,
+          assignments: [assignment]
+        });
+      });
+
+      this.groupedAssignments = Array.from(groups.values());
+      this.employeesByRole = [];
+      this.groupedAssignments.forEach(gA => {
+        this.employeeService.getAllEmployeesByRoleId(gA.role.id).subscribe(es => {
+          this.employeesByRole.push({roleId: gA.role.id, employees: es});
+          this.normalizeRoleAssignments(gA.role.id, es);
+          console.log(this.employeesByRole)
+        })
+      })
+
+    })
+
+
+  }
+
+
+
+
 
   somethingChangedSetTrue(){
     this.somethingChanged = true
-  }
-
-  private updateGroupedIfReady() {
-    if (this.rolesLoaded && this.assignmentsLoaded) {
-      this.updateGroupedAssignments();
-      this.updateAvailableRoles();
-    }
-  }
-
-  ngOnInit(): void {
-
-    this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
-      this.shift = s
-      console.log(s)
-      this.shiftStartTime = s.startTime
-      this.shiftEndTime = s.endTime
-
-      console.log(this.shiftStartTime);
-      console.log(this.shiftEndTime);
-    })
-    //TODO
-
-    this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
-      this.assignments = a;
-      this.assignmentsLoaded = true;
-      this.updateGroupedIfReady();
-    })
-
-
-    //get all Employees
-    this.employeeService.getAllEmployees()
-    this.employeeService.employees$.subscribe((e) => {
-      this.employees = e;
-      this.updateEmployeesByRole();
-    })
-
-    //gets all Roles
-    this.roleService.getRoles()
-    this.roleService.roles$.subscribe((roles) => {
-      this.roles = roles;
-      this.roleNameMap = roles.reduce((map, role) => {
-        map[role.id] = role.roleName;
-        return map;
-      }, {} as { [id: number]: string });
-      this.rolesLoaded = true;
-      this.updateGroupedIfReady();
-    });
-  }
-
-
-
-
-  save() {
-    // TODO
-    // Filtere nur gültige Zuweisungen (mit zugewiesenem Mitarbeiter)
-    /*
-    const validAssignments: AssignmentCreate[] = this.assignments
-      .filter(a => a.employee.id !== 0) // Nur Zuweisungen mit zugewiesenem Mitarbeiter
-      .map(a => ({
-        employee: a.employee,
-        role: a.role
-     }));
-
-     */
-    //TODO
-    let validAssignments: AssignmentCreate[] = [];
-    const newShift: ShiftCreateAssignments = {
-      shiftCreateDTO: {
-        shiftName: this.shiftNameInput.nativeElement.value,
-        startTime: this.shiftStartTime,
-        endTime: this.shiftEndTime,
-      },
-      assignmentCreateDTOs: validAssignments,
-    };
-    console.log("***********+")
-    console.log(newShift);
-    //TODO
-    // If editing an existing shift, call update; otherwise fallback to add
-    /*
-    if (this.shift && this.shift.id) {
-      this.shiftService.updateShift(this.shift.id, newShift).subscribe({
-        next: () => {
-          this.closeEditShift();
-        },
-        error: (err) => {
-          console.error("Failed to update shift", err);
-        }
-      });
-    } else {
-      this.shiftService.addShift(newShift);
-    }
-
-     */
-  }
-
-
-  closeEditShift() {
-    console.log("closeEditShift");
-    this.closeShiftEdit.emit();
-
-  }
-
-  // Gruppiere Zuweisungen nach Rollen und cache das Ergebnis
-  updateGroupedAssignments(): void {
-    const grouped: { [roleId: number]: Assignment[] } = {};
-
-    //TODO
-    // Gruppiere alle Zuweisungen nach Rolle
-    this.assignments.forEach(a => {
-      if (!grouped[a.role.id]) {
-        grouped[a.role.id] = [];
-      }
-      grouped[a.role.id].push(a);
-    });
-    // TODO
-    // Konvertiere in Array mit zusätzlichen Informationen
-
-    this.groupedAssignments = Object.keys(grouped).map(roleIdStr => {
-      const roleId = Number(roleIdStr);
-      return {
-        roleId: roleId,
-        roleName: this.getRoleName(roleId),
-        assignments: grouped[roleId],
-        count: grouped[roleId].length
-      };
-    });
-
-
   }
 
   getRoleName(roleId: number): string {
@@ -219,105 +129,97 @@ export class ShiftEditComponent implements OnInit {
     if (confirmed === false) return 'abgelehnt';
     return 'ausstehend';
   }
-  // TODO
-  // Entferne eine spezifische Zuweisung
-  removeAssignment(assignmentId: number) {
-    /*
-    this.somethingChanged = true;
-    this.assignments = this.assignments.filter(a => a.id !== assignmentId);
 
-     */
-    this.updateGroupedAssignments();
-    this.updateAvailableRoles();
+  closeEditShift() {
+    console.log("closeEditShift");
+    this.closeShiftEdit.emit();
+
   }
 
-  // Entferne alle Zuweisungen einer Rolle
-  removeRole(roleId: number) {
-    console.log("removeRole", roleId);
-    this.somethingChanged = true;
-    this.assignments = this.assignments.filter(a => a.role.id != roleId);
-    this.newAssignments = this.newAssignments.filter(a => a.roleId != roleId);
-    this.updateGroupedAssignments();
-    this.updateAvailableRoles();
+  removeRole(id: number) {
+
   }
 
-  // Füge eine leere Zuweisung für eine Rolle hinzu
-  addAssignmentToRole(roleId: number) {
-    this.somethingChanged = true;
-    const newAssignment: AssignmentCreate = {
-      employeeId: null, // 0 bedeutet "offen"
-      shiftId: this.shiftId,
-      roleId: roleId,
+  getEmployeesForRole(roleId: any):Employee[] {
+    return this.employeesByRole.find((entry) => entry.roleId === roleId)?.employees ?? []
+  }
+
+  getAssignmentEmployeeId(assignment: Assignment): number {
+    const employeeId = assignment.employee?.id;
+    if (!employeeId) {
+      return 0;
+    }
+
+    const roleEmployees = this.getEmployeesForRole(assignment.role.id);
+    if (roleEmployees.length === 0) {
+      return 0;
+    }
+
+    return roleEmployees.some((employee) => employee.id === employeeId) ? employeeId : 0;
+  }
+
+  setAssignmentEmployeeId(assignment: Assignment, employeeId: number): void {
+    if (employeeId === 0) {
+      assignment.employee = { id: 0 } as EmployeeShort;
+      return;
+    }
+
+    const roleEmployees = this.getEmployeesForRole(assignment.role.id);
+    const selectedEmployee = roleEmployees.find((employee) => employee.id === employeeId);
+    if (selectedEmployee) {
+      assignment.employee = selectedEmployee as unknown as EmployeeShort;
+    }
+  }
+
+  private normalizeRoleAssignments(roleId: number, roleEmployees: Employee[]): void {
+    const validEmployeeIds = new Set(roleEmployees.map((employee) => employee.id));
+    const targetGroup = this.groupedAssignments.find((group) => group.role.id === roleId);
+    if (!targetGroup) {
+      return;
+    }
+
+    targetGroup.assignments.forEach((assignment) => {
+      const currentEmployeeId = assignment.employee?.id ?? 0;
+      if (!currentEmployeeId || !validEmployeeIds.has(currentEmployeeId)) {
+        assignment.employee = { id: 0 } as EmployeeShort;
+      }
+    });
+  }
+
+  protected removeAssignment(id: number) {
+
+  }
+
+  protected addAssignmentToRole(group: {role: Role, assignments:Assignment[]}): void {
+    const newAssignment: Assignment = {
+      id: -Date.now(),
+      confirmed: null,
+      seen: false,
+      employee: { id: 0 } as EmployeeShort,
+      shift: {
+        id: this.shift.id,
+        shiftName: this.shift.shiftName,
+        startTime: this.shift.startTime,
+        endTime: this.shift.endTime
+      },
+      role: group.role
     };
-    this.newAssignments.push(newAssignment);
-    this.updateGroupedAssignments();
-    this.updateAvailableRoles();
-  }
 
-  // Ändere den Mitarbeiter für eine Zuweisung
-  // Aktualisiere die Liste der verfügbaren Rollen (die noch nicht zugewiesen sind)
-  updateAvailableRoles() {
-    const displayedRoleIds = new Set(this.groupedAssignments.map(group => group.roleId));
-    this.availableRoles = this.roles.filter(role => !displayedRoleIds.has(role.id));
-  }
+    group.assignments.push(newAssignment);
+    this.shift.assignments = [...(this.shift.assignments ?? []), newAssignment];
+    this.somethingChanged = true;
 
-  // Füge eine neue Rolle zur Schicht hinzu
-  addNewRole() {
-    if (this.selectedNewRoleId && this.selectedNewRoleId !== -1) {
-      this.somethingChanged = true;
-      this.addAssignmentToRole(this.selectedNewRoleId);
-      this.updateAvailableRoles();
-      this.selectedNewRoleId = -1;
-    }
-  }
-
-  // Cache Mitarbeiter nach Rolle
-  updateEmployeesByRole(): void {
-    this.employeesByRole = {};
-    if (this.roles && this.employees) {
-      this.roles.forEach(role => {
-        this.employeesByRole[role.id] = this.employees.filter(emp =>
-          //TODO
-          emp.roles.some(r => r.id === role.id && true)
-        );
-      });
-    }
-  }
-
-  // Filtere Mitarbeiter, die die entsprechende Rolle haben
-  getEmployeesForRole(roleId: number): Employee[] {
-    return this.employeesByRole[roleId] || [];
   }
 
 
-  deleteShift(){
-    if (confirm(`Sicher, dass du die ${this.shift.shiftName} am ${this.dateService.dateStringToString(this.shift.startTime.toString(), true, true, "von")} bis ${this.dateService.dateStringToString(this.shift.endTime.toString(), true, false, "")} löschen willst?`)) {
-      this.shiftService.deleteShift(this.shiftId).subscribe({
-        next: () => {
-          this.shiftService.getShifts()
-          this.closeEditShift();
-        }
-      })
-    }
+  //TODO
+  protected save() {
+
+
   }
 
-  private toDateTimeLocalValue(dateString: string): string {
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) {
-      return '';
-    }
+  protected deleteShift() {
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hour = String(date.getHours()).padStart(2, '0');
-    const minute = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hour}:${minute}`;
-  }
-
-  private toBackendDateTimeString(dateTimeLocal: string): string {
-    return dateTimeLocal.length === 16 ? `${dateTimeLocal}:00` : dateTimeLocal;
   }
 
 

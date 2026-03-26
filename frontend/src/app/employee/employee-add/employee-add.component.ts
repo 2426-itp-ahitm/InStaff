@@ -51,7 +51,7 @@ export class EmployeeAddComponent implements OnInit {
     this.addEmployeeForm = new FormGroup({
       firstname: new FormControl('', Validators.required),
       lastname: new FormControl('', Validators.required),
-      birthDate: new FormControl('', [Validators.required, this.employeeService.birthdateValidator()]),
+      birthdate: new FormControl('', [Validators.required, this.employeeService.birthdateValidator()]),
       email: new FormControl('', [Validators.required, Validators.email]),
       telephone: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),

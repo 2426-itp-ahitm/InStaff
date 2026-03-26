@@ -45,18 +45,19 @@ export class ShiftServiceService {
     });
   }
   // TODO: add assignemnts
-  addShift(newShift: ShiftCreate): void {
+  addShift(newShift: ShiftCreate): Observable<Shift> {
     const addShift = {
-        shiftName: newShift.shiftName,
-        startTime: newShift.startTime,
-        endTime: newShift.endTime,
-    }
-    this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts/create_with_assignments`, addShift)
-      .subscribe((createdShift )=> {
-        console.log(createdShift);
-        const currentShift = this.shiftsSubject.getValue();
-        this.shiftsSubject.next([...currentShift, createdShift]);
-    })
+      shiftName: newShift.shiftName,
+      startTime: newShift.startTime,
+      endTime: newShift.endTime,
+    };
+    return this.httpClient.post<Shift>(`${this.getApiUrl()}/shifts`, addShift)
+      .pipe(
+        tap((createdShift) => {
+          const currentShift = this.shiftsSubject.getValue();
+          this.shiftsSubject.next([...currentShift, createdShift]);
+        })
+      );
   }
 
   // TODO: add assignemnts

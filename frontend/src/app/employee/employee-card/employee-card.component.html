@@ -4,9 +4,10 @@
     <img class="icon-button" ngSrc="/icons/edit-white.png" alt="edit" width="36" height="36" (click)="openEmpEdit()">
   </div>
   <div class="card-role">
-    <ng-container *ngFor="let r of employee.roles">
+    @for (r of employee.roles; track r.id){
       <p class="card-role-item" >{{ r.roleName }}</p>
-    </ng-container>
+
+    }
     <p *ngIf="employee.roles.length == 0" class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
   </div>
 
@@ -21,7 +22,7 @@
 
   <div class="card-item">
     <img ngSrc="/icons/birthday-black.png" alt="birthday" width="25" height="25">
-    <p>{{employee.birthDate }}</p>
+    <p>{{ dateService.dateToString(employee.birthdate)}}</p>
   </div>
 
   <div class="card-item">

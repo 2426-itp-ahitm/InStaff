@@ -8,7 +8,7 @@ export interface Employee {
   lastname: string;
   email: string;
   telephone: string;
-  birthDate: Date;
+  birthdate: Date;
   isManager: boolean;
   hourlyWage: number;
   address: string;

@@ -15,6 +15,7 @@ import {ShiftCreate} from '../../interfaces/shift-create';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
 import {AssignmentCreate} from '../../interfaces/assignment-create';
 import {Templaterole} from '../../interfaces/templaterole';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-shift-add',
@@ -51,7 +52,7 @@ export class ShiftAddComponent implements OnInit {
   }
 
 
-  private selectedEmployees:  { [roleId: number]: number[] } = {};
+  private selectedEmployees:  { [roleId: number]: (number | null)[] } = {};
   // for manual roles when skipping template
   manualRoles: { roleId: number; count: number }[] = [];
   selectedNewRoleId: number = -1;
@@ -112,12 +113,17 @@ export class ShiftAddComponent implements OnInit {
     return true;
   }
 
-  onEmployeeSelect(roleId: number, idx: number, value: string) {
+  onEmployeeSelect(roleId: number, idx: number, value: string | number) {
     const v = Number(value);
     if (!this.selectedEmployees[roleId]) {
       this.selectedEmployees[roleId] = [];
     }
-    this.selectedEmployees[roleId][idx] = isNaN(v) ? null as any : v;
+    this.selectedEmployees[roleId][idx] = isNaN(v) || v < 0 ? null : v;
+  }
+
+  getSelectedEmployeeId(roleId: number, idx: number): number {
+    const value = this.selectedEmployees[roleId]?.[idx];
+    return typeof value === 'number' && value > 0 ? value : -1;
   }
 
   addManualRole(roleIdStr: string, countStr: string) {
@@ -127,12 +133,7 @@ export class ShiftAddComponent implements OnInit {
     this.manualRoles.push({ roleId, count });
   }
   //TODO
-  private getCurrentRoles(): { roleId: number; count: number }[] {
-    /*
-    if (this.selectedShiftTemplate) {
-      return this.selectedShiftTemplate.templateRoles;
-    }
-     */
+  getCurrentRoles(): { roleId: number; count: number }[] {
     return this.manualRoles;
   }
 
@@ -215,14 +216,10 @@ export class ShiftAddComponent implements OnInit {
       if (!this.shiftName?.trim()) {
         this.shiftName = this.selectedShiftTemplate?.shiftTemplateName ?? '';
       }
-      const roles = this.selectedShiftTemplate ? this.selectedShiftTemplate.templateRoles : this.manualRoles;
-      //TODO
-      /*
+      const roles = this.getCurrentRoles();
       roles.forEach((r: { roleId: number; count: number; }) => {
         this.initializeSelectedEmployees(r.roleId, r.count);
       });
-
-       */
     }
   }
 
@@ -275,28 +272,24 @@ export class ShiftAddComponent implements OnInit {
 
 
   collectAssignments(): AssignmentCreate[] {
-    //TODO
     const assignments: AssignmentCreate[] = [];
-    /*
-    const roles = this.selectedShiftTemplate ? this.selectedShiftTemplate.templateRoles : this.manualRoles;
+    const roles = this.getCurrentRoles();
     for (let i = 0; i < roles.length; i++) {
       let roleId = roles[i].roleId;
       const count = roles[i].count;
       const sel = this.selectedEmployees[roleId] || [];
       for (let j = 0; j < count; j++) {
         const value = sel[j] ?? null;
-        assignments.push({ employee: value ?? -1, role: roleId });
+        assignments.push({ employeeId: value, shiftId: 0, roleId: roleId });
       }
     }
-
-     */
 
     return assignments;
   }
 
   save() {
     const normalizedShiftName = (this.shiftName ?? '').trim();
-    let assignments: AssignmentCreate[] = this.collectAssignments();
+    const assignments: AssignmentCreate[] = this.collectAssignments();
     const newShift: ShiftCreate = {
       shiftName: normalizedShiftName.length > 0
         ? normalizedShiftName
@@ -305,8 +298,7 @@ export class ShiftAddComponent implements OnInit {
         endTime: this.selectedDate.endTime,
     };
 
-    this.shiftService.addShift(newShift);
-    this.closeAddShift();
+    this.shiftService.addShift(newShift).subscribe();
 
   }
 
@@ -323,6 +315,11 @@ export class ShiftAddComponent implements OnInit {
           templateRoles: selectedTemplate.templateRoles.map(r => ({ ...r }))
         }
       : null;
+
+    this.manualRoles = this.selectedShiftTemplate
+      ? this.selectedShiftTemplate.templateRoles.map((r) => ({ roleId: r.role.id, count: r.count }))
+      : [];
+
     if (!this.shiftName?.trim()) {
       this.shiftName = this.selectedShiftTemplate?.shiftTemplateName ?? '';
     }
@@ -333,8 +330,8 @@ export class ShiftAddComponent implements OnInit {
   protected readonly RoleServiceService = RoleServiceService;
 
 
-  checkIfEmpHasRole(emp: Employee, tmpRole: Templaterole): boolean {
-    return emp.roles.some(role => role.id === tmpRole.id && true);
+  checkIfEmpHasRole(emp: Employee, roleId: number): boolean {
+    return emp.roles.some(role => role.id === roleId);
   }
 
   protected readonly Date = Date;

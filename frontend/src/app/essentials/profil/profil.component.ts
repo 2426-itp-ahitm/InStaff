@@ -65,7 +65,7 @@ export class ProfilComponent implements OnInit{
       this.editEmployeeForm.patchValue({
         firstname: this.employee.firstname,
         lastname: this.employee.lastname,
-        birthdate: this.employee.birthDate,
+        birthdate: this.employee.birthdate,
         email: this.employee.email,
         telephone: this.employee.telephone,
         address: this.employee.address,

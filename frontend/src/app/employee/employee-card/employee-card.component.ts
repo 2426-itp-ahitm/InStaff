@@ -2,6 +2,7 @@ import {Component, inject, Input, OnInit, Output, EventEmitter} from '@angular/c
 import { Employee } from "../../interfaces/employee";
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {DateService} from '../../services/date-service/date.service';
 
 @Component({
   selector: 'app-employee-card',
@@ -18,6 +19,7 @@ export class EmployeeCardComponent implements OnInit {
   @Input() employee!: Employee;
   @Output() editEmployee: EventEmitter<Employee> = new EventEmitter<Employee>();
   employeeHasRoles: Boolean = false;
+  dateService: DateService = inject(DateService);
 
   ngOnInit() {
   }

@@ -6,6 +6,7 @@ import {Shift} from '../../interfaces/shift';
 import {Assignment} from '../../interfaces/assignment';
 import {ApiUrlService} from '../api-url/api-url.service';
 import {Role} from '../../interfaces/role';
+import {AssignmentCreate} from '../../interfaces/assignment-create';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,10 @@ export class AssignmentServiceService {
   confirmAssignment(assignmentId: number): Observable<any> {
     const url = `${this.getApiUrl()}/confirmation/confirm/${assignmentId}`;
     return this.httpClient.put<any>(url, {});
+  }
+
+  createAssignment(assignment: AssignmentCreate): Observable<Assignment> {
+    return this.httpClient.post<Assignment>(`${this.getApiUrl()}/assignments`, assignment);
   }
 
   declineAssignment(assignmentId: number): Observable<any> {

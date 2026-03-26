@@ -5,7 +5,7 @@ export interface EmployeeShort {
     lastname: string;
     email: string;
     telephone: string;
-    birthDate: Date;
+    birthdate: Date;
     isManager: boolean;
     roles: number[];
     hourlyWage: number;
