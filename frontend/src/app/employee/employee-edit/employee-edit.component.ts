@@ -74,6 +74,7 @@ export class EmployeeEditComponent implements OnInit {
       address: new FormControl(this.employee.address, Validators.required),
       hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
       isManager: new FormControl(this.employee.isManager),
+      isActive: new FormControl(this.employee.isActive),
       roles: new FormControl<number[]>(this.employee.roles?.map(role => role.id) ?? [], Validators.required),
     });
 
@@ -88,6 +89,7 @@ export class EmployeeEditComponent implements OnInit {
         address: this.employee.address,
         hourlyWage: this.employee.hourlyWage,
         isManager: this.employee.isManager,
+        isActive: this.employee.isActive,
         roles: this.employee.roles.map(role => role.id)
       });
       this.updateRoleSelections();
@@ -114,6 +116,7 @@ export class EmployeeEditComponent implements OnInit {
         address: formValue.address,
         hourlyWage: formValue.hourlyWage,
         isManager: formValue.isManager,
+        isActive: formValue.isActive,
         roles: formValue.roles ?? []
       };
 
@@ -128,6 +131,7 @@ export class EmployeeEditComponent implements OnInit {
     } else {
     }
   }
+
 
   onRoleChange(roleId: number, event: Event): void {
     const rolesControl = this.editEmployeeForm.get('roles') as FormControl<number[]>;

@@ -97,16 +97,57 @@
                   <div *ngIf="addEmployeeForm.get('hourlyWage')?.invalid && addEmployeeForm.get('hourlyWage')?.touched" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
                 </div>
 
-                <!-- IS MANAGER -->
-                <div class="sm:col-span-3">
-                  <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
-                  <div class="mt-2">
-                    <input formControlName="isManager" type="checkbox" id="isManager" class="rounded border-gray-300 text-green-base shadow-sm focus:ring-indigo-500">
-                    <label for="isManager" class="ml-2 text-sm text-gray-700">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
+                <!-- IS ACTIVE -->
+                <div class="sm:col-span-3 mt-2">
+                  <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Aktiver Mitarbeiter</label>
+                  <div class="">
+                    <div class="flex gap-3">
+                      <div class="flex h-6 shrink-0 items-center">
+                        <div class="group grid size-4 grid-cols-1">
+                          <input
+                            formControlName="isActive"
+                            type="checkbox"
+                            id="isActive"
+                            class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                          >
+                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="text-sm/6">
+                        <label for="isActive" class="font-medium text-gray-900">Den Mitarbeiter aktiv/inaktiv setzen</label>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-              </div>
+                <!-- IS MANAGER -->
+                <div class="sm:col-span-3 mt-2">
+                  <label for="isManager" class="block text-sm/6 font-medium text-gray-900">Manager</label>
+                  <div class="">
+                    <div class="flex gap-3">
+                      <div class="flex h-6 shrink-0 items-center">
+                        <div class="group grid size-4 grid-cols-1">
+                          <input
+                            formControlName="isManager"
+                            type="checkbox"
+                            id="isManager"
+                            class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                          >
+                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="text-sm/6">
+                        <label for="isManager" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
               <!-- ROLES -->
@@ -145,6 +186,7 @@
 
 
             </div>
+          </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
               <button type="button" class="button-cancel" (click)="closeAddEmployee()">Abbrechen</button>

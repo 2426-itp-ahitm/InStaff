@@ -7,6 +7,7 @@ export interface EmployeeShort {
     telephone: string;
     birthdate: Date;
     isManager: boolean;
+    isActive: boolean;
     roles: number[];
     hourlyWage: number;
     address: string;
