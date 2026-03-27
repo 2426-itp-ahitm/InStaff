@@ -107,7 +107,7 @@ public class EmployeeResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         String oldEmail = employee.email;
-        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()));
+        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()), dto.isActive());
         keycloakAdminService.syncEmployee(employee, oldEmail != null && !oldEmail.equals(dto.email()));
 
         employee.persist();

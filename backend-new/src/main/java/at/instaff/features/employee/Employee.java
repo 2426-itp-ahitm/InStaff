@@ -57,7 +57,7 @@ public class Employee extends PanacheEntity {
         this.isActive = isActive;
     }
 
-    public void updateEmployee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, List<Role> roles) {
+    public void updateEmployee(String firstName, String lastName, String email, String telephone, LocalDate birthDate, Double hourlyWage, String address, Boolean isManager, List<Role> roles, boolean isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -67,5 +67,6 @@ public class Employee extends PanacheEntity {
         this.address = address;
         this.isManager = isManager;
         this.roles = roles;
+        this.isActive = isActive;
     }
 }

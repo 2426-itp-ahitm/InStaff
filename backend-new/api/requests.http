@@ -62,14 +62,15 @@ Content-Type: application/json
 {
   "firstname": "John",
   "lastname": "Smith",
-  "email": "john.smith@example.com",
+  "email": "johnn.smith@example.com",
   "telephone": "+43 987 654321",
   "password": "securePassword123",
   "birthdate": "1990-01-01",
   "isManager": false,
   "roles": [1, 2],
   "hourlyWage": 12.5,
-  "address": "Example Street 123"
+  "address": "Example Street 123",
+  "isActive": true
 }
 
 ###
@@ -88,7 +89,8 @@ Content-Type: application/json
   "isManager": true,
   "roles": [1, 2],
   "hourlyWage": 14.5,
-  "address": "Musterstrasse 12"
+  "address": "Musterstrasse 12",
+  "isActive": false
 }
 
 ### Update alexander hahn
