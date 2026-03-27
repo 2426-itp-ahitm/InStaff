@@ -97,10 +97,14 @@ public class ShiftResource {
         int status = Response.Status.CREATED.getStatusCode();
 
         for (AssignmentCreateDTO assignmentCreateDTO : dto.assignmentCreateDTOS()) {
-            Employee employee = Employee.findById(assignmentCreateDTO.employeeId());
+            Employee employee = null;
+            if (assignmentCreateDTO.employeeId() != null) {
+                employee = Employee.findById(assignmentCreateDTO.employeeId());
+            }
+
             Role role = Role.findById(assignmentCreateDTO.roleId());
 
-            if (employee != null && role != null) {
+            if (role != null) {
                 Assignment assignment = new Assignment(employee, Shift.findById(shift.id),
                         role);
                 assignment.persist();

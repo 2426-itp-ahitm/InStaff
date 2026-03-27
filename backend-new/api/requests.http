@@ -182,6 +182,19 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
+  "employeeId": null,
+  "shiftId": 1,
+  "roleId": 1
+}
+
+###
+
+### Update Assignment
+PUT http://localhost:8080/api/assignments/1
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
   "employeeId": 1,
   "shiftId": 1,
   "roleId": 1
@@ -225,13 +238,19 @@ GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
 ###
 
 ### Confirm assignment
-PUT http://localhost:8080/api/assignments/30/confirm/true
+PUT http://localhost:8080/api/assignments/36/confirm/true
 Authorization: Bearer {{access_token}}
 
 ###
 
 ### Decline assignment
 PUT http://localhost:8080/api/assignments/30/confirm/false
+Authorization: Bearer {{access_token}}
+
+###
+
+### Mark Assignment as seen
+PUT http://localhost:8080/api/assignments/36/mark-seen
 Authorization: Bearer {{access_token}}
 
 
@@ -289,7 +308,7 @@ Content-Type: application/json
   },
   "assignmentCreateDTOS": [
     {
-      "employeeId": 1,
+      "employeeId": null,
       "roleId": 1
     }
   ]

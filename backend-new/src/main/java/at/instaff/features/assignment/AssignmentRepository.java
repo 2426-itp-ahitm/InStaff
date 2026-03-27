@@ -11,10 +11,10 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
     public List<Assignment> getByCompanyId(long companyId) {
         return find(
                 "select a from Assignment a " +
-                        "join fetch a.employee e " +
+                        "left join fetch a.employee e " +
                         "join fetch a.shift s " +
                         "join fetch a.role r " +
-                        "where e.company.id = ?1",
+                        "where s.company.id = ?1",
                 companyId
         ).list();
     }
@@ -22,10 +22,10 @@ public class AssignmentRepository implements PanacheRepository<Assignment> {
     public Assignment getById(long id, long companyId) {
         return find(
                 "select a from Assignment a " +
-                        "join fetch a.employee e " +
+                        "left join fetch a.employee e " +
                         "join fetch a.shift s " +
                         "join fetch a.role r " +
-                        "where e.company.id = ?1" +
+                        "where s.company.id = ?1" +
                         "and a.id = ?2",
                 companyId, id
         ).singleResult();

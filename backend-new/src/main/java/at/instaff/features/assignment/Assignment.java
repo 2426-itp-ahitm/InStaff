@@ -32,4 +32,9 @@ public class Assignment extends PanacheEntity {
         this.shift = shift;
         this.role = role;
     }
+
+    public Assignment(Shift shift, Role role) {
+        this.shift = shift;
+        this.role = role;
+    }
 }

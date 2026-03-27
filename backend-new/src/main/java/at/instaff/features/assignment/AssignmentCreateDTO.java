@@ -1,7 +1,7 @@
 package at.instaff.features.assignment;
 
 public record AssignmentCreateDTO(
-        long employeeId,
+        Long employeeId,
         long shiftId,
         long roleId
 ) {

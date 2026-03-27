@@ -49,7 +49,7 @@ public class AssignmentSocket {
     }
 
     public void assignmentUpdated(Assignment assignment) {
-        Long companyId = assignment.employee.company.id;
+        Long companyId = assignment.shift.company.id;
 
         for (Session session : sessions) {
             Long sessionCompanyId = (Long) session.getUserProperties().get("companyId");
@@ -63,7 +63,7 @@ public class AssignmentSocket {
     }
 
     public void assignmentSeen(Assignment assignment) {
-        Long companyId = assignment.employee.company.id;
+        Long companyId = assignment.shift.company.id;
 
         for (Session session : sessions) {
             Long sessionCompanyId = (Long) session.getUserProperties().get("companyId");

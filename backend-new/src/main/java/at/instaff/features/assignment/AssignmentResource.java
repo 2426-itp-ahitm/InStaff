@@ -82,14 +82,22 @@ public class AssignmentResource {
     @Transactional
     public Response confirmAssignment(@PathParam("id") long id, @Context SecurityContext sc, @PathParam("isConfirmed") boolean isConfirmed) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
         Assignment assignment = Assignment.findById(id);
-        Employee employee = Employee.findById(principal.getEmployeeId());
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (principal.getEmployeeId() != assignment.employee.id && !employee.isManager) {
+
+        Employee employee = Employee.findById(principal.getEmployeeId());
+
+        boolean isManager = employee.isManager;
+        boolean isOwner = assignment.employee != null
+                && assignment.employee.id == principal.getEmployeeId();
+
+        if (!isManager && !isOwner) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+
         assignment.confirmed = isConfirmed;
         assignment.seen = false;
         assignment.persist();
@@ -107,7 +115,7 @@ public class AssignmentResource {
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (principal.getCompanyId() != assignment.employee.company.id) {
+        if (principal.getCompanyId() != assignment.shift.company.id) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
@@ -122,17 +130,68 @@ public class AssignmentResource {
     @Transactional
     public Response createAssignment(AssignmentCreateDTO dto, @Context SecurityContext sc) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-        Employee employee = Employee.find("id=?1 and company.id=?2", dto.employeeId(), principal.getCompanyId()).singleResult();
+
         Shift shift = Shift.findById(dto.shiftId());
         Role role = Role.findById(dto.roleId());
-        if (employee == null || shift == null || role == null || !employee.roles.contains(role)) {
+
+        if (shift == null || role == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Assignment assignment = new Assignment(employee, shift, role);
+        Assignment assignment;
+
+        if (dto.employeeId() != null) {
+            Employee employee = Employee.find(
+                    "id = ?1 and company.id = ?2",
+                    dto.employeeId(),
+                    principal.getCompanyId()
+            ).firstResult();
+
+            if (employee == null || !employee.roles.contains(role)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            assignment = new Assignment(employee, shift, role);
+        } else {
+            assignment = new Assignment(shift, role);
+        }
+
         assignment.persist();
 
-        return Response.status(Response.Status.CREATED).entity(AssignmentDTO.toResource(assignment)).build();
+        return Response.status(Response.Status.CREATED)
+                .entity(AssignmentDTO.toResource(assignment))
+                .build();
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response updateAssignment(AssignmentCreateDTO dto, @PathParam("id") long id, @Context SecurityContext sc) {
+        Assignment assignment = Assignment.findById(id);
+        if (assignment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Shift shift = Shift.findById(dto.shiftId());
+        Role role = Role.findById(dto.roleId());
+        if (shift == null || role == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        Employee employee = null;
+        if (dto.employeeId() != null) {
+            employee = Employee.findById(dto.employeeId());
+
+            if (!employee.roles.contains(role)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }
+        assignment.shift = shift;
+        assignment.role = role;
+        assignment.employee = employee;
+        assignment.persist();
+        assignmentSocket.assignmentUpdated(assignment);
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
 
     @DELETE
@@ -144,7 +203,7 @@ public class AssignmentResource {
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (assignment.employee.company.id != principal.getCompanyId()) {
+        if (assignment.shift.company.id != principal.getCompanyId()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 

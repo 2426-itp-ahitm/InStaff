@@ -19,10 +19,11 @@ public record EmployeeShortDTO(
         LocalDate birthDate,
         boolean isManager,
         double hourlyWage,
-        String address
+        String address,
+        boolean isActive
 ) {
     public static EmployeeShortDTO toResource(Employee employee) {
         return new EmployeeShortDTO(employee.id, employee.keycloakUserId, employee.firstName, employee.lastName, employee.email, employee.telephone, employee.birthDate,
-                employee.isManager, employee.hourlyWage, employee.address);
+                employee.isManager, employee.hourlyWage, employee.address, employee.isActive);
     }
 }
