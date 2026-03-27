@@ -9,6 +9,8 @@ export class CompanyServiceService {
 
   private companyId: number = 1;
   public isDataLoaded: boolean = false;
+  defaultStartingHour: number = 12;
+  defaultEndingHour: number = 18;
 
 
   getCompanyId():number {
@@ -17,5 +19,13 @@ export class CompanyServiceService {
 
   setCompanyId(id:number) {
     this.companyId = id;
+  }
+
+  getDefaultStartingHour(){
+    return this.defaultStartingHour
+  }
+
+  getDefaultEndingHour(){
+    return this.defaultEndingHour;
   }
 }

@@ -55,14 +55,15 @@ export class ShiftTemplateServiceService {
   }
   */
   updateShiftTemplate(updatedShiftTemplate: ShifttemplateCreate, shiftTemplateId: number) {
+    console.log(updatedShiftTemplate);
     this.httpClient.put(`${this.getApiUrl()}/shift-templates/${shiftTemplateId}`, updatedShiftTemplate).subscribe((r) => {
       console.log(r);
-
+      this.getShiftTemplates()
       this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich bearbeitet", type: 'success', showFeedback: true})
     });
   }
 
-  addShiftTemplate(newShiftTemplate: Shifttemplate) {
+  addShiftTemplate(newShiftTemplate: ShifttemplateCreate) {
     this.httpClient.post<Shifttemplate>(`${this.getApiUrl()}/shift-templates`, newShiftTemplate)
       .subscribe(() => {
         // Reload from backend so the newly created template is emitted with complete fields.

@@ -76,7 +76,6 @@ export class ShiftAddComponent implements OnInit {
     // initialize editable times with selectedDate values
     this.startTime = this.toDateTimeLocalValue(new Date(this.selectedDate.startTime));
     this.endTime = this.toDateTimeLocalValue(new Date(this.selectedDate.endTime));
-    console.log(this.startTime);
 
 
 

@@ -170,10 +170,19 @@ export class ManagerCalendarComponent implements OnInit {
   }
 
   handleDateClick(arg:DateClickArg) {
+    let startTime: Date = arg.date;
+    let endTime: Date = arg.date;
+
+    console.log(startTime.getHours().toString());
+
+    if(startTime.getHours().toString() == "00:00:00"){
+
+    }
+
     let  newShift: ShiftCreate = {
       shiftName: "",
-      startTime: arg.date,
-      endTime: arg.date,
+      startTime: startTime,
+      endTime: endTime
     }
     this.openAddShift(newShift)
   }

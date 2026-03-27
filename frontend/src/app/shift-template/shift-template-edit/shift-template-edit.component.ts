@@ -1,20 +1,17 @@
 import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Role} from '../../interfaces/role';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
-import {Templaterole} from '../../interfaces/templaterole';
 import {TemplateroleCreate} from '../../interfaces/templaterole-create';
 import {ShifttemplateCreate} from '../../interfaces/shifttemplate-create';
 
 @Component({
   selector: 'app-shift-template-edit',
   imports: [
-    FormsModule,
-    NgForOf
+    FormsModule
   ],
   templateUrl: './shift-template-edit.component.html',
   styleUrl: './shift-template-edit.component.css'
@@ -34,7 +31,7 @@ export class ShiftTemplateEditComponent implements OnInit {
 
   // UI state like in add component
   roles: Role[] = [];
-  addedRoles: TemplateroleCreate[] = []
+  addedRoles: { role: Role; count: number }[] = []
 
   ngOnInit(): void {
     this.roleService.getRoles();
@@ -43,17 +40,19 @@ export class ShiftTemplateEditComponent implements OnInit {
     //TODO
     // initialize addedRoles from the provided shiftTemplate
     if (this.shiftTemplate && this.shiftTemplate.templateRoles) {
-      this.addedRoles = this.shiftTemplate.templateRoles.map((tr: { role: Role; count: number; }) => ({ role: tr.role, count: tr.count, selectedEmployees: Array(tr.count).fill(null) }));
+      this.addedRoles = this.shiftTemplate.templateRoles.map(tr => ({ role: tr.role, count: tr.count }));
     }
   }
 
   //TODO
   save(): void {
-
+    const newRoles: TemplateroleCreate[] = this.addedRoles.map(tr => ({
+      roleId: tr.role.id,
+      count: Math.max(1, tr.count)
+    }));
     const updatedShiftTemplate: ShifttemplateCreate = {
-      ...this.shiftTemplate,
       shiftTemplateName: this.shiftTemplateNameInput.nativeElement.value,
-      templateRoles: this.addedRoles
+      templateRoles: newRoles
     };
     this.shiftTemplateService.updateShiftTemplate(updatedShiftTemplate, this.shiftTemplate.id);
     this.close();

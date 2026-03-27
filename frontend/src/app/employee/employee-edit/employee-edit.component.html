@@ -17,7 +17,9 @@
                   <div class="">
                     <input formControlName="firstname" type="text" name="firstname" id="firstname" class="input-field-long">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('firstname')?.invalid" class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
+                  @if (editEmployeeForm.get('firstname')?.invalid) {
+                    <div class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
+                  }
                 </div>
 
                 <!-- LASTNAME -->
@@ -26,18 +28,27 @@
                   <div class="">
                     <input formControlName="lastname" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field-long">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('lastname')?.invalid" class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
+                  @if (editEmployeeForm.get('lastname')?.invalid) {
+                    <div class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
+                  }
                 </div>
 
                 <!-- BDAY -->
                 <div class="sm:col-span-4 mt-2">
                   <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
                   <input formControlName="birthdate" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
-                  <div *ngIf="editEmployeeForm.get('birthdate')?.touched" class="text-red-600 text-sm">
-                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('required')">Geburtsdatum ist erforderlich.</div>
-                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('futureBirthdate')">Geburtsdatum darf nicht in der Zukunft liegen.</div>
-                    <div *ngIf="editEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')">Ungültiges Datumsformat.</div>
-                  </div>
+                  @if (editEmployeeForm.get('birthdate')?.touched) {
+                    <div class="text-red-600 text-sm">
+                      @if (editEmployeeForm.get('birthdate')?.hasError('required')) {
+                        <div>Geburtsdatum ist erforderlich.</div>
+                      } @else if (editEmployeeForm.get('birthdate')?.hasError('futureBirthdate')){
+                        <div>Geburtsdatum darf nicht in der Zukunft liegen.</div>
+                      } @else if (editEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')){
+                        <div>Ungültiges Datumsformat.</div>
+                      }
+                    </div>
+                  }
+
                 </div>
 
                 <!-- EMAIL -->
@@ -46,7 +57,9 @@
                   <div class="">
                     <input formControlName="email" id="email" name="email" type="email" autocomplete="email" class="input-field-long">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('email')?.invalid" class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
+                  @if (editEmployeeForm.get('email')?.invalid) {
+                    <div class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
+                  }
                 </div>
 
                 <!-- TELEPHONE -->
@@ -55,7 +68,9 @@
                   <div class="">
                     <input formControlName="telephone" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('telephone')?.invalid" class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+                  @if (editEmployeeForm.get('telephone')?.invalid) {
+                    <div class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+                  }
                 </div>
 
                 <!-- ADDRESS -->
@@ -64,7 +79,9 @@
                   <div class="">
                     <input formControlName="address" id="address" name="address" type="text" autocomplete="address" class="input-field-long">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('address')?.invalid" class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+                  @if (editEmployeeForm.get('address')?.invalid) {
+                    <div class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
+                  }
                 </div>
 
                 <!-- HOURLY WAGE -->
@@ -73,7 +90,9 @@
                   <div class="">
                     <input formControlName="hourlyWage"  id="hourlyWage" name="hourlyWage" type="number" class="input-field">
                   </div>
-                  <div *ngIf="editEmployeeForm.get('hourlyWage')?.invalid" class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
+                  @if (editEmployeeForm.get('hourlyWage')?.invalid){
+                    <div class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
+                  }
                 </div>
 
                 <!-- IS ACTIVE -->

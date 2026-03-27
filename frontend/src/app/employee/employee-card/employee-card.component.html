@@ -8,7 +8,9 @@
       <p class="card-role-item" >{{ r.roleName }}</p>
 
     }
-    <p *ngIf="employee.roles.length == 0" class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
+    @if (employee.roles.length == 0) {
+      <p  class="flex-none">Hinweis: Mitarbeiter hat noch keine Rollen</p>
+    }
   </div>
 
   <div class="card-item">

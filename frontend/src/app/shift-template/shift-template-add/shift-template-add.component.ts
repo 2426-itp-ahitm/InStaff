@@ -1,6 +1,5 @@
 import {Component, ElementRef, EventEmitter, inject, Output, ViewChild, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
@@ -8,12 +7,12 @@ import {Role} from '../../interfaces/role';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {Templaterole} from '../../interfaces/templaterole';
 import {TemplateroleCreate} from '../../interfaces/templaterole-create';
+import {ShifttemplateCreate} from '../../interfaces/shifttemplate-create';
 
 @Component({
   selector: 'app-shift-template-add',
   imports: [
-  FormsModule,
-  NgForOf
+  FormsModule
   ],
   templateUrl: './shift-template-add.component.html',
   styleUrl: './shift-template-add.component.css'
@@ -55,22 +54,19 @@ export class ShiftTemplateAddComponent implements OnInit {
   }
 
   save(): void {
-    const newShiftTemplateName: string = this.shiftTemplateNameInput.nativeElement.value;
-    /*
-    const templateRoles: TemplateroleCreate[] = this.addedRoles.map(ar => ({ roleId: ar.roleId, count: ar.count }));
+    const newRoles: TemplateroleCreate[] = this.addedRoles.map(tr => ({
+      roleId: tr.roleId,
+      count: Math.max(1, tr.count)
+    }));
 
-    const newShiftTemplate: ShiftTemplate = {
-      id: -1,
-      shiftTemplateName: newShiftTemplateName,
-      companyId: this.companyService.getCompanyId(),
-      templateRoles: templateRoles
+    const newShiftTemplate: ShifttemplateCreate = {
+      shiftTemplateName: this.shiftTemplateNameInput.nativeElement.value,
+      templateRoles: newRoles
     };
 
     this.shiftTemplateService.addShiftTemplate(newShiftTemplate);
 
     this.closeAddRole();
-
-     */
   }
 
   closeAddRole(): void {
@@ -91,6 +87,8 @@ export class ShiftTemplateAddComponent implements OnInit {
   removeAddedRole(index: number) {
     this.addedRoles.splice(index, 1);
   }
+
+
 
 
 }

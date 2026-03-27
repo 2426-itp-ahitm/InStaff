@@ -112,7 +112,6 @@ export class CalendarComponent implements OnInit {
 
     if(!this.isAllowedToEdit){
       this.isAllowedToEdit = this.keycloakOperationService.getUserRoles().includes('user-is-manager');
-      console.log(this.isAllowedToEdit);
     }
 
     this.shiftService.shifts$.subscribe((data) => {
@@ -170,21 +169,41 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateClick(arg:DateClickArg) {
+    let startTime: Date = arg.date;
+    let endTime: Date = arg.date;
+
+    if(startTime.getHours().toString() == "0" && endTime.getHours().toString() == "0"){
+      startTime.setHours(this.companyService.getDefaultStartingHour())
+      endTime.setDate(endTime.getDate() -1);
+      endTime.setHours(this.companyService.getDefaultEndingHour())
+    }
+
     let  newShift: ShiftCreate = {
       shiftName: "",
-      startTime: arg.date,
-      endTime: arg.date,
+      startTime: startTime,
+      endTime: endTime
     }
     this.openAddShift(newShift)
   }
 
   handleDateSelected(arg: DateSelectArg) {
+    let startTime: Date = arg.start;
+    let endTime: Date = arg.end;
+
+
+    if(startTime.getHours().toString() == "0" && endTime.getHours().toString() == "0"){
+      startTime.setHours(this.companyService.getDefaultStartingHour())
+      endTime.setDate(endTime.getDate() -1);
+      endTime.setHours(this.companyService.getDefaultEndingHour())
+    }
+
+
+
     let  newShift: ShiftCreate = {
       shiftName: "",
-      startTime: arg.start,
-      endTime: arg.end
+      startTime: startTime,
+      endTime: endTime
     }
-    //2024-12-19T09:00:00
     this.openAddShift(newShift);
   }
 

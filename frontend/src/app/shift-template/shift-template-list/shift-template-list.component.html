@@ -12,7 +12,7 @@
         </div>
         <div class="card-role">
           @for(r of sT.templateRoles; track r.id){
-            <p class="card-role-item" >{{ r.count}}x {{ getRoleNameById(r.id) }}</p>
+            <p class="card-role-item" >{{ r.count}}x {{ r.role.roleName }}</p>
           }
           @if (sT.templateRoles.length == 0) {
             <p class="flex-none">Hinweis: Schicht-Vorlage hat noch keine Rollen</p>
