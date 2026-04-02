@@ -1,7 +1,8 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
-import {Component, HostListener, OnInit, inject, ViewEncapsulation} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChildren, QueryList, inject, ViewEncapsulation} from '@angular/core';
+import {Router} from '@angular/router';
 import {Animation} from '../../../interfaces/animation';
 import {Presentation} from '../../../interfaces/presentation';
 import {Slide} from '../../../interfaces/slide';
@@ -27,11 +28,15 @@ import {SlideContent} from '../../../interfaces/slide-content';
 })
 export class PresentationComponent implements OnInit {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+
+    @ViewChildren('videoElement') videoElements!: QueryList<any>;
 
   presentation: Presentation | null = null;
   slideIndex = 0;
   isLoading = true;
   errorMessage = '';
+  private scrollTimeout: number | null = null;
 
   ngOnInit(): void {
     this.loadPresentation();
@@ -64,6 +69,23 @@ export class PresentationComponent implements OnInit {
     }
   }
 
+  @HostListener('window:wheel', ['$event'])
+  onScroll(event: WheelEvent): void {
+    // Only handle scroll down
+    if (event.deltaY <= 0) {
+      return;
+    }
+
+    // Check if current slide is marked as scroll trigger
+    if (!this.currentSlide || !this.currentSlide.isScrollTrigger) {
+      return;
+    }
+
+    // Prevent default scroll behavior and navigate
+    event.preventDefault();
+    this.navigateToLandingPage();
+  }
+
   nextSlide(): void {
     if (!this.presentation || this.presentation.slides.length === 0) {
       return;
@@ -71,6 +93,7 @@ export class PresentationComponent implements OnInit {
 
     if (this.slideIndex < this.presentation.slides.length - 1) {
       this.slideIndex += 1;
+        this.playSlideVideos();
     }
   }
 
@@ -81,8 +104,38 @@ export class PresentationComponent implements OnInit {
 
     if (this.slideIndex > 0) {
       this.slideIndex -= 1;
+      this.playSlideVideos();
     }
   }
+
+  private navigateToLandingPage(): void {
+    // Debounce rapid scroll events
+    if (this.scrollTimeout !== null) {
+      return;
+    }
+
+    this.scrollTimeout = window.setTimeout(() => {
+      this.scrollTimeout = null;
+    }, 800);
+
+    this.router.navigate(['/']);
+  }
+  
+    private playSlideVideos(): void {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        if (this.videoElements) {
+          this.videoElements.forEach(video => {
+            if (video.nativeElement) {
+              video.nativeElement.currentTime = 0;
+              video.nativeElement.play().catch(() => {
+                // Autoplay might be blocked by browser, ignore the error
+              });
+            }
+          });
+        }
+      }, 100);
+    }
 
   getContentStyles(content: SlideContent): Record<string, string | number> {
     const baseX = content.centerHorizontal === true ? 50 : content.positionX;
@@ -108,6 +161,15 @@ export class PresentationComponent implements OnInit {
     return this.toCssAnimation(content.inAnimation);
   }
 
+  getMediaStyles(content: SlideContent): Record<string, string> {
+    const scaleFactor = this.clampScale(content.scale ?? 100) / 100;
+
+    return {
+      transform: `scale(${scaleFactor})`,
+      'transform-origin': 'center center'
+    };
+  }
+
   private toCssAnimation(animation: Animation): string {
     return `${animation.type} ${animation.duration}ms ease ${animation.delay}ms both`;
   }
@@ -128,6 +190,7 @@ export class PresentationComponent implements OnInit {
 
         this.presentation = parsed;
         this.slideIndex = 0;
+            this.playSlideVideos();
         this.isLoading = false;
       },
       error: () => {
@@ -210,7 +273,8 @@ export class PresentationComponent implements OnInit {
 
     return {
       id: data['id'],
-      content
+      content,
+      isScrollTrigger: data['isScrollTrigger'] === true
     };
   }
 
@@ -229,6 +293,8 @@ export class PresentationComponent implements OnInit {
       slideId: typeof data['slideId'] === 'number' ? data['slideId'] : fallbackSlideId,
       text: typeof data['text'] === 'string' ? data['text'] : null,
       image: typeof data['image'] === 'string' ? data['image'] : null,
+      video: typeof data['video'] === 'string' ? data['video'] : null,
+      scale: this.parseScaleValue(data['scale']),
       zIndex: typeof data['zIndex'] === 'number' ? data['zIndex'] : 1,
       positionX: this.parsePercentValue(data['positionX']),
       positionY: this.parsePercentValue(data['positionY']),
@@ -258,6 +324,25 @@ export class PresentationComponent implements OnInit {
 
   private clampPercent(value: number): number {
     return Math.max(0, Math.min(100, value));
+  }
+
+  private parseScaleValue(value: unknown): number {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return this.clampScale(value);
+    }
+
+    if (typeof value === 'string') {
+      const parsed = Number(value.trim());
+      if (Number.isFinite(parsed)) {
+        return this.clampScale(parsed);
+      }
+    }
+
+    return 100;
+  }
+
+  private clampScale(value: number): number {
+    return Math.max(1, Math.min(300, value));
   }
 
   private parseAnimationObject(raw: unknown): Animation | null {

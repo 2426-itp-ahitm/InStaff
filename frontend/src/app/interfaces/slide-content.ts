@@ -7,6 +7,9 @@ export interface SlideContent {
   text: string|null;
   image: string|null;
 
+  video: string|null;
+  scale: number;
+
   zIndex: number;
   positionX: number;
   positionY: number;

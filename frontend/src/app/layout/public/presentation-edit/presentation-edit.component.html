@@ -35,9 +35,15 @@
 				>
 					<span>Slide {{ i + 1 }}</span>
 					<small>#{{ slide.id }} | {{ slide.content.length }} Elemente</small>
+					<div class="slide-trigger-mark" *ngIf="slide.isScrollTrigger" title="Scroll-Trigger aktiviert">
+						✓
+					</div>
 				</button>
 			</div>
 			<div class="slides-actions" *ngIf="previewSlide">
+				<button type="button" class="btn btn-secondary" (click)="toggleScrollTrigger(previewSlide.id)">
+					{{ previewSlide.isScrollTrigger ? 'Scroll-Trigger deaktivieren' : 'Als Scroll-Trigger setzen' }}
+				</button>
 				<button type="button" class="btn btn-danger" (click)="deleteSlide(previewSlide.id)">Aktive Slide loeschen</button>
 			</div>
 		</aside>
@@ -58,7 +64,11 @@
 					>
 						<div class="preview-content-inner" [style.animation]="item.inAnimation ? (item.inAnimation.type + ' ' + item.inAnimation.duration + 'ms ease ' + item.inAnimation.delay + 'ms both') : null">
 							<div *ngIf="item.text" [innerHTML]="item.text"></div>
-							<img *ngIf="item.image" [src]="item.image" alt="Slide image" class="preview-image" />
+							<img *ngIf="item.image" [src]="item.image" alt="Slide image" class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" />
+							<video *ngIf="item.video" class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" muted controls>
+								<source [src]="item.video" type="video/mp4">
+								Ihr Browser unterstützt das Video-Element nicht.
+							</video>
 						</div>
 					</div>
 				</div>
@@ -89,6 +99,14 @@
 					<label class="full">
 						<span>Bild URL / Pfad</span>
 						<input type="text" formControlName="image">
+					</label>
+					<label class="full">
+						<span>Video URL / Pfad</span>
+						<input type="text" formControlName="video">
+					</label>
+					<label>
+						<span>Skalierung (%)</span>
+						<input type="number" min="1" max="300" step="1" formControlName="scale">
 					</label>
 					<label>
 						<span>In Animation</span>

@@ -124,6 +124,29 @@
 	text-align: left;
 	color: #fff;
 	cursor: pointer;
+	position: relative;
+	transition: all 0.2s ease;
+}
+
+.slide-thumb:hover {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.slide-trigger-mark {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	background: #10b981;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.85rem;
+	font-weight: bold;
+	color: #fff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .slide-thumb span,
@@ -363,4 +386,147 @@
   width: 350px;
   height: 350px;
   border-radius: 1rem;
+}
+
+.presentation-bg {
+  height: 100vh;
+  width: 100vw;
+  background-color: #3A5A40;
+  overflow: hidden;
+}
+
+.slide {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+.slide-content-item {
+  position: absolute;
+  width: max-content;
+  max-width: 60%;
+  color: #ffffff;
+}
+
+.slide-image {
+  display: block;
+  max-width: 100%;
+  max-height: 50vh;
+  border-radius: 0.4rem;
+}
+ 
+.slide-video {
+  display: block;
+  max-width: 100%;
+  max-height: 50vh;
+  border-radius: 0.4rem;
+  background: #000;
+}
+
+.slide-content-render {
+  color: #ffffff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInBottom {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInTop {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fadeOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-30px); }
+}
+
+@keyframes fadeOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(30px); }
+}
+
+@keyframes fadeOutBottom {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(30px); }
+}
+
+@keyframes fadeOutTop {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-30px); }
+}
+
+.text-h1 {
+  font-size: 8rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+
+.text-h2 {
+  text-align: left;
+  font-size: 5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.text-h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.bg-gradient{
+  background-image: url("/presentation/green-gradient.jpg");
+  background-size: cover;
+  background-position: center;
+  
+  border: 2px solid #fff;
+  border-radius: 1rem;
+  padding: 6rem 10rem;
+}
+
+
+
+.team-box {
+  text-align: center;
+  border: #fff solid 2px;
+  border-radius: 1rem;
+  padding: 3rem;
+}
+
+.team-text{
+  margin-top: 0.7rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.team-pic {
+  width: 350px;
+  height: 350px;
+  border-radius: 1rem;
+  margin-bottom: 0.7rem;
 }

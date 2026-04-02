@@ -1,6 +1,7 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, ViewEncapsulation, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 import {Presentation} from '../../../interfaces/presentation';
 import {Slide} from '../../../interfaces/slide';
 import {SlideContent} from '../../../interfaces/slide-content';
@@ -13,9 +14,12 @@ import {Animation} from '../../../interfaces/animation';
     CommonModule
   ],
   templateUrl: './presentation-edit.component.html',
-  styleUrl: './presentation-edit.component.css'
+  styleUrl: './presentation-edit.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class PresentationEditComponent {
+  private readonly http = inject(HttpClient);
+
   presentation: Presentation = {
     name: 'Neue Praesentation',
     slides: [
@@ -58,12 +62,18 @@ export class PresentationEditComponent {
     id: new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]}),
     text: new FormControl('', {nonNullable: true}),
     image: new FormControl('', {nonNullable: true}),
+    video: new FormControl('', {nonNullable: true}),
+    scale: new FormControl(100, {nonNullable: true, validators: [Validators.required, Validators.min(1), Validators.max(300)]}),
     zIndex: new FormControl(1, {nonNullable: true, validators: [Validators.required]}),
     positionX: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
     positionY: new FormControl(0, {nonNullable: true, validators: [Validators.required]}),
     inAnimationIndex: new FormControl<number | null>(null),
     outAnimationIndex: new FormControl<number | null>(null)
   });
+
+  constructor() {
+    this.loadSharedPresentation();
+  }
 
   @HostListener('window:beforeunload', ['$event'])
   confirmReload(event: BeforeUnloadEvent): void {
@@ -136,6 +146,26 @@ export class PresentationEditComponent {
     this.infoMessage = `Slide ${slideId} wurde geloescht.`;
   }
 
+  toggleScrollTrigger(slideId: number): void {
+    const targetSlide = this.presentation.slides.find(slide => slide.id === slideId);
+    if (!targetSlide) {
+      return;
+    }
+
+    // Remove scroll trigger from all other slides
+    this.presentation.slides.forEach(slide => {
+      if (slide.id !== slideId) {
+        slide.isScrollTrigger = false;
+      }
+    });
+
+    // Toggle for current slide
+    targetSlide.isScrollTrigger = !targetSlide.isScrollTrigger;
+    this.infoMessage = targetSlide.isScrollTrigger 
+      ? `Slide ${slideId} ist jetzt die Scroll-Trigger Slide.` 
+      : `Scroll-Trigger wurde von Slide ${slideId} entfernt.`;
+  }
+
   addAnimation(): void {
     if (this.animationForm.invalid) {
       this.infoMessage = 'Bitte gueltige Animationsdaten eingeben.';
@@ -189,8 +219,9 @@ export class PresentationEditComponent {
 
     const rawText = this.contentForm.controls.text.value.trim();
     const rawImage = this.contentForm.controls.image.value.trim();
-    if (!rawText && !rawImage) {
-      this.infoMessage = 'Bitte mindestens Text oder Bild setzen.';
+    const rawVideo = this.contentForm.controls.video.value.trim();
+    if (!rawText && !rawImage && !rawVideo) {
+      this.infoMessage = 'Bitte mindestens Text, Bild oder Video setzen.';
       return;
     }
 
@@ -199,6 +230,8 @@ export class PresentationEditComponent {
       slideId,
       text: rawText || null,
       image: rawImage || null,
+      video: rawVideo || null,
+      scale: this.clampScale(this.contentForm.controls.scale.value),
       zIndex: this.contentForm.controls.zIndex.value,
       positionX: this.clampPercent(this.contentForm.controls.positionX.value),
       positionY: this.clampPercent(this.contentForm.controls.positionY.value),
@@ -218,7 +251,7 @@ export class PresentationEditComponent {
 
     targetSlide.content.push(newContent);
     this.infoMessage = `Content ${contentId} wurde zu Slide ${slideId} hinzugefuegt.`;
-    this.contentForm.patchValue({id: contentId + 1, text: '', image: ''});
+    this.contentForm.patchValue({id: contentId + 1, text: '', image: '', video: '', scale: 100});
   }
 
   startEditContent(slideId: number, contentId: number): void {
@@ -235,6 +268,8 @@ export class PresentationEditComponent {
       id: content.id,
       text: content.text ?? '',
       image: content.image ?? '',
+      video: content.video ?? '',
+      scale: this.clampScale(content.scale ?? 100),
       zIndex: content.zIndex,
       positionX: content.positionX,
       positionY: content.positionY,
@@ -246,7 +281,7 @@ export class PresentationEditComponent {
 
   cancelContentEdit(): void {
     this.editingContentSource = null;
-    this.contentForm.patchValue({text: '', image: ''});
+    this.contentForm.patchValue({text: '', image: '', video: '', scale: 100});
     this.infoMessage = 'Bearbeitung abgebrochen.';
   }
 
@@ -301,28 +336,14 @@ export class PresentationEditComponent {
 
     file.text()
       .then(content => {
-        const parsed = JSON.parse(content);
-        const uploadedPresentation = this.parsePresentation(parsed);
+        const uploadedPresentation = this.parsePresentationText(content);
 
         if (!uploadedPresentation) {
           this.infoMessage = 'Datei hat kein gueltiges Presentation-Format.';
           return;
         }
 
-        this.presentation = uploadedPresentation;
-        if (this.presentation.slides.length === 0) {
-          this.presentation.slides = [{id: 1, content: []}];
-        }
-        this.presentationForm.patchValue({name: uploadedPresentation.name});
-        this.previewSlideIndex = 0;
-        this.editingContentSource = null;
-        this.contentForm.patchValue({
-          id: 1,
-          text: '',
-          image: '',
-          inAnimationIndex: null,
-          outAnimationIndex: null
-        });
+        this.applyLoadedPresentation(uploadedPresentation);
         this.infoMessage = 'Praesentation geladen. Seite neu laden, um eine andere neue Session zu starten.';
       })
       .catch(() => {
@@ -369,6 +390,15 @@ export class PresentationEditComponent {
       top: `${positionY}%`,
       transform: 'translate(-50%, -50%)',
       'z-index': content.zIndex
+    };
+  }
+
+  getPreviewMediaStyles(content: SlideContent): Record<string, string> {
+    const scaleFactor = this.clampScale(content.scale ?? 100) / 100;
+
+    return {
+      transform: `scale(${scaleFactor})`,
+      'transform-origin': 'center center'
     };
   }
 
@@ -431,7 +461,101 @@ export class PresentationEditComponent {
 
     this.editingContentSource = null;
     this.infoMessage = `Content ${updatedContent.id} wurde aktualisiert.`;
-    this.contentForm.patchValue({id: updatedContent.id + 1, text: '', image: ''});
+    this.contentForm.patchValue({id: updatedContent.id + 1, text: '', image: '', video: '', scale: 100});
+  }
+
+  private loadSharedPresentation(): void {
+    this.http.get('/presentation.js', {responseType: 'text'}).subscribe({
+      next: (fileContent: string) => {
+        const parsed = this.parsePresentationText(fileContent);
+        if (!parsed) {
+          this.infoMessage = 'presentation.js konnte nicht als gueltige Praesentation gelesen werden.';
+          return;
+        }
+
+        this.applyLoadedPresentation(parsed);
+        this.infoMessage = 'Praesentation aus presentation.js geladen.';
+      },
+      error: () => {
+        this.infoMessage = 'presentation.js konnte nicht geladen werden. Standard-Praesentation aktiv.';
+      }
+    });
+  }
+
+  private applyLoadedPresentation(loaded: Presentation): void {
+    this.presentation = loaded;
+    if (this.presentation.slides.length === 0) {
+      this.presentation.slides = [{id: 1, content: []}];
+    }
+
+    this.animations = this.collectAnimations(this.presentation);
+    this.presentationForm.patchValue({name: loaded.name});
+    this.previewSlideIndex = 0;
+    this.editingContentSource = null;
+    this.contentForm.patchValue({
+      id: 1,
+      text: '',
+      image: '',
+      video: '',
+      scale: 100,
+      inAnimationIndex: null,
+      outAnimationIndex: null
+    });
+  }
+
+  private collectAnimations(presentation: Presentation): Animation[] {
+    const uniqueAnimations: Animation[] = [];
+
+    const pushIfUnique = (candidate: Animation | null): void => {
+      if (!candidate) {
+        return;
+      }
+
+      const exists = uniqueAnimations.some(animation => (
+        animation.type === candidate.type
+        && animation.duration === candidate.duration
+        && animation.delay === candidate.delay
+      ));
+
+      if (!exists) {
+        uniqueAnimations.push(candidate);
+      }
+    };
+
+    for (const slide of presentation.slides) {
+      for (const content of slide.content) {
+        pushIfUnique(content.inAnimation);
+        pushIfUnique(content.outAnimation);
+      }
+    }
+
+    return uniqueAnimations;
+  }
+
+  private parsePresentationText(raw: string): Presentation | null {
+    const trimmed = raw.trim();
+
+    const directJson = this.tryParseJson(trimmed);
+    if (directJson) {
+      return directJson;
+    }
+
+    const firstBrace = trimmed.indexOf('{');
+    const lastBrace = trimmed.lastIndexOf('}');
+    if (firstBrace < 0 || lastBrace <= firstBrace) {
+      return null;
+    }
+
+    return this.tryParseJson(trimmed.slice(firstBrace, lastBrace + 1));
+  }
+
+  private tryParseJson(rawJson: string): Presentation | null {
+    try {
+      const parsed = JSON.parse(rawJson);
+      return this.parsePresentation(parsed);
+    } catch {
+      return null;
+    }
   }
 
   private getAnimationIndex(animation: Animation | null): number | null {
@@ -478,7 +602,7 @@ export class PresentationEditComponent {
         content.push(normalized);
       }
 
-      slides.push({id: slideData['id'], content});
+      slides.push({id: slideData['id'], content, isScrollTrigger: slideData['isScrollTrigger'] === true});
     }
 
     return {
@@ -500,6 +624,8 @@ export class PresentationEditComponent {
     const resolvedSlideId = typeof data['slideId'] === 'number' ? data['slideId'] : fallbackSlideId;
     const resolvedText = typeof data['text'] === 'string' ? data['text'] : null;
     const resolvedImage = typeof data['image'] === 'string' ? data['image'] : null;
+    const resolvedVideo = typeof data['video'] === 'string' ? data['video'] : null;
+    const resolvedScale = this.parseScaleValue(data['scale']);
     const zIndex = typeof data['zIndex'] === 'number' ? data['zIndex'] : 1;
     const positionX = this.parsePercentValue(data['positionX']);
     const positionY = this.parsePercentValue(data['positionY']);
@@ -509,6 +635,8 @@ export class PresentationEditComponent {
       slideId: resolvedSlideId,
       text: resolvedText,
       image: resolvedImage,
+      video: resolvedVideo,
+      scale: resolvedScale,
       zIndex,
       positionX,
       positionY,
@@ -536,6 +664,25 @@ export class PresentationEditComponent {
 
   private clampPercent(value: number): number {
     return Math.max(0, Math.min(100, value));
+  }
+
+  private parseScaleValue(value: unknown): number {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return this.clampScale(value);
+    }
+
+    if (typeof value === 'string') {
+      const parsed = Number(value.trim());
+      if (Number.isFinite(parsed)) {
+        return this.clampScale(parsed);
+      }
+    }
+
+    return 100;
+  }
+
+  private clampScale(value: number): number {
+    return Math.max(1, Math.min(300, value));
   }
 
   private parseAnimation(raw: unknown, key: 'inAnimation' | 'outAnimation'): Animation | null {

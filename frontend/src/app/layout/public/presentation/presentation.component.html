@@ -7,7 +7,11 @@
     >
       <div class="slide-content-render" [style.animation]="getContentAnimation(item)">
         <div *ngIf="item.text" [innerHTML]="item.text"></div>
-        <img *ngIf="item.image" [src]="item.image" alt="Slide image" class="slide-image">
+        <img *ngIf="item.image" [src]="item.image" alt="Slide image" class="slide-image" [ngStyle]="getMediaStyles(item)">
+        <video *ngIf="item.video" #videoElement class="slide-video" muted [ngStyle]="getMediaStyles(item)">
+          <source [src]="item.video" type="video/mp4">
+          Ihr Browser unterstützt das Video-Element nicht.
+        </video>
       </div>
     </div>
   </div>
