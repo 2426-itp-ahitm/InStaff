@@ -36,6 +36,7 @@ public class KeycloakAdminService {
 
         Client client = ClientBuilder.newClient();
         String accessToken = getAdminToken(client);
+        ensureVerifyEmailBeforeUpdatePassword(client, accessToken);
 
         Response createResponse = client
                 .target(keycloakUrl + "/admin/realms/" + realm + "/users")
@@ -55,31 +56,35 @@ public class KeycloakAdminService {
             );
         }
 
-        if(employee.isManager) {
+        if (employee.isManager) {
             client
                     .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
                     .request()
                     .header("Authorization", "Bearer " + accessToken)
                     .put(Entity.json(new PasswordRequest("admin")));
         } else {
-            // Startpasswort setzen
+            PasswordRequest passwordRequest = new PasswordRequest("Start1234");
+            passwordRequest.temporary = false;
+
             client
                     .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId + "/reset-password")
                     .request()
                     .header("Authorization", "Bearer " + accessToken)
-                    .put(Entity.json(new PasswordRequest("Start1234")));
+                    .put(Entity.json(passwordRequest));
 
-            // Required Actions setzen
             client
                     .target(keycloakUrl + "/admin/realms/" + realm + "/users/" + userId)
                     .request()
                     .header("Authorization", "Bearer " + accessToken)
-                    .put(Entity.json(
-                            java.util.Map.of(
-                                    "requiredActions",
-                                    List.of("VERIFY_EMAIL", "UPDATE_PASSWORD")
-                            )
-                    ));
+                    .put(Entity.json(Map.of(
+                            "username", KeycloakUserRequest.buildUsername(employee),
+                            "email", employee.email,
+                            "firstName", employee.firstName,
+                            "lastName", employee.lastName,
+                            "enabled", true,
+                            "emailVerified", false,
+                            "requiredActions", List.of("VERIFY_EMAIL", "UPDATE_PASSWORD")
+                    )));
         }
 
 
@@ -106,6 +111,7 @@ public class KeycloakAdminService {
     public void syncEmployee(Employee employee, boolean emailChanged) {
         try (Client client = ClientBuilder.newClient()) {
             String accessToken = getAdminToken(client);
+            ensureVerifyEmailBeforeUpdatePassword(client, accessToken);
             String userId = resolveOrCreateUserId(client, accessToken, employee);
             ensureEmailNotUsedByAnotherUser(client, accessToken, userId, employee.email);
 
@@ -184,6 +190,73 @@ public class KeycloakAdminService {
         }
 
         return request;
+    }
+
+    private void ensureVerifyEmailBeforeUpdatePassword(Client client, String accessToken) {
+        List<Map<String, Object>> requiredActions = getRequiredActions(client, accessToken);
+
+        int verifyEmailPriority = getRequiredActionPriority(requiredActions, "VERIFY_EMAIL");
+        int updatePasswordPriority = getRequiredActionPriority(requiredActions, "UPDATE_PASSWORD");
+
+        if (verifyEmailPriority == -1 || updatePasswordPriority == -1) {
+            throw new IllegalStateException("VERIFY_EMAIL or UPDATE_PASSWORD required action not found in Keycloak");
+        }
+
+        while (verifyEmailPriority > updatePasswordPriority) {
+            Response raiseResponse = client
+                    .target(keycloakUrl + "/admin/realms/" + realm + "/authentication/required-actions/VERIFY_EMAIL/raise-priority")
+                    .request()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .post(Entity.text(""));
+
+            if (raiseResponse.getStatus() != 204) {
+                int status = raiseResponse.getStatus();
+                String responseBody = raiseResponse.hasEntity() ? raiseResponse.readEntity(String.class) : "";
+                raiseResponse.close();
+                throw new IllegalStateException("Failed to raise VERIFY_EMAIL priority in Keycloak: " + status + " " + responseBody);
+            }
+            raiseResponse.close();
+
+            requiredActions = getRequiredActions(client, accessToken);
+            verifyEmailPriority = getRequiredActionPriority(requiredActions, "VERIFY_EMAIL");
+            updatePasswordPriority = getRequiredActionPriority(requiredActions, "UPDATE_PASSWORD");
+        }
+    }
+
+    private List<Map<String, Object>> getRequiredActions(Client client, String accessToken) {
+        Response response = client
+                .target(keycloakUrl + "/admin/realms/" + realm + "/authentication/required-actions")
+                .request()
+                .header("Authorization", "Bearer " + accessToken)
+                .get();
+
+        if (response.getStatus() != 200) {
+            int status = response.getStatus();
+            String responseBody = response.hasEntity() ? response.readEntity(String.class) : "";
+            response.close();
+            throw new IllegalStateException("Failed to load required actions from Keycloak: " + status + " " + responseBody);
+        }
+
+        List<Map<String, Object>> requiredActions = response.readEntity(List.class);
+        response.close();
+        return requiredActions;
+    }
+
+    private int getRequiredActionPriority(List<Map<String, Object>> requiredActions, String alias) {
+        for (Map<String, Object> requiredAction : requiredActions) {
+            Object currentAlias = requiredAction.get("alias");
+            if (alias.equals(currentAlias)) {
+                Object priority = requiredAction.get("priority");
+                if (priority instanceof Number) {
+                    return ((Number) priority).intValue();
+                }
+                if (priority != null) {
+                    return Integer.parseInt(priority.toString());
+                }
+            }
+        }
+
+        return -1;
     }
 
     private String getAdminToken(Client client) {
@@ -311,7 +384,7 @@ public class KeycloakAdminService {
 
         // 2) Create group if missing
         Response createResponse = client
-                .target(keycloakUrl + "/admin/realms/" + realm + "/groups")
+                .target(keycloakUrl + "/admin/realms/" + realm + "/groups") 
                 .request()
                 .header("Authorization", "Bearer " + accessToken)
                 .post(Entity.json(java.util.Map.of("name", groupName)));
@@ -351,7 +424,7 @@ public class KeycloakAdminService {
             this.lastName = e.lastName;
         }
 
-        private static String buildUsername(Employee employee) {
+        static String buildUsername(Employee employee) {
             String companyName = employee.company != null ? employee.company.companyName : "company";
             String normalizedCompanyName = companyName
                     .toLowerCase(Locale.ROOT)
