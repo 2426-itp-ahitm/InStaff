@@ -384,7 +384,7 @@ public class KeycloakAdminService {
 
         // 2) Create group if missing
         Response createResponse = client
-                .target(keycloakUrl + "/admin/realms/" + realm + "/groups") 
+                .target(keycloakUrl + "/admin/realms/" + realm + "/groups")
                 .request()
                 .header("Authorization", "Bearer " + accessToken)
                 .post(Entity.json(java.util.Map.of("name", groupName)));
