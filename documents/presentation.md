@@ -32,9 +32,51 @@ And since an app speaks louder than a thousand words, let's jump straight into t
 
 -- Zurück in Präsi
 
+
+
+Now we are in the live demo of Instaff.
+
+At the beginning, you can see our landing page.
+This page gives a quick first impression of the platform and shows the main idea behind our project: making shift planning simple, digital, and easy to understand for everyone involved.
+
+Next, we log in as the manager, because this is where the planning process usually starts.
+
+From the manager side, the main goal is to prepare the next working day as fast as possible while still making sure that every role is filled with the right employee.
+
+First, we add the new role BBQ.
+This is a good example of how flexible our system is.
+If there is a special event, a seasonal menu, or a new task in the restaurant, the manager can easily create a fitting role without changing any existing workflows.
+
+After that, we create a shift template called Grilled Chicken Tuesday.
+Templates are very important for daily business, because many shifts repeat every week.
+Instead of creating the same setup again and again, the manager can simply reuse an existing template and save valuable time.
+
+Now we assign Paul Müller the BBQ role.
+This ensures that only employees with the right qualification or responsibility can be selected later in the shift.
+
+In the next step, we create the shift for next Tuesday based on this template.
+Here you can already see how fast the whole planning becomes.
+With only a few clicks, the manager can prepare a complete shift with all required roles and staff members.
+
+In our second window, Paul is already logged in as an employee.
+We prepared this in advance so that we can focus directly on the most important part of the workflow.
+
+As soon as the shift is created, Paul immediately receives the request.
+He can review it and accept it with just one click.
+
+And this brings us to one of our strongest features: real-time updates.
+The manager instantly sees the confirmation through our WebSocket connection.
+
+This removes the need for phone calls, messages, or checking multiple apps.
+Everything happens in one central platform and in real time.
+
+The result is a planning process that is faster, clearer, and much more reliable for both the manager and the employees.
+
 # Slide 6 – Mobile Apps – Ali
 — iOS & Android side by side —
-Since ease of use is a top priority for us, we'd like to show you what the employee view looks like on both an iOS and an Android device.
+Since usability is one of our top priorities, we want to give you a quick look at the employee experience on both platforms.
+On the left, you can see the iOS version, and on the right, the Android version.
+Even though both systems follow their own design language, the workflow stays consistent, so employees can immediately find their shifts, accept or decline requests, and manage their profile without any learning effort.
 
 # Slide 7 – Practical Application – Phiz
 And to show you how this all works in practice, let's bring in our three little helpers.

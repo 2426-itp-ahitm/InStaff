@@ -135,6 +135,30 @@ struct ProfileView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                Section {
+                    if isEditing {
+                        Button(action: { saveProfileChanges() }) {
+                            Text("Speichern")
+                        }
+                        .foregroundColor(.white)
+                        .listRowBackground(Color.appGreen)
+
+                        Button("Verwerfen", role: .destructive) {
+                            if hasUnsavedChanges {
+                                showDiscardAlert = true
+                            } else {
+                                resetForm(with: employee)
+                                isEditing = false
+                            }
+                        }
+                    } else {
+                        Button(action: { isEditing = true }) {
+                            Text("Daten bearbeiten")
+                        }
+                        .foregroundColor(.white)
+                        .listRowBackground(Color.appGreen)
+                    }
+                }
                 Section("Firma") {
                     LabeledContent("Firmenname") {
                         Text(employee.company?.companyName ?? "-")
@@ -160,37 +184,9 @@ struct ProfileView: View {
                             } label: {
                                 HStack {
                                     Text(role.roleName)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.footnote)
-                                        .foregroundStyle(.tertiary)
                                 }
                             }
                         }
-                    }
-                }
-                Section {
-                    if isEditing {
-                        Button(action: { saveProfileChanges() }) {
-                            Text("Speichern")
-                        }
-                        .foregroundColor(.white)
-                        .listRowBackground(Color.appGreen)
-
-                        Button("Verwerfen", role: .destructive) {
-                            if hasUnsavedChanges {
-                                showDiscardAlert = true
-                            } else {
-                                resetForm(with: employee)
-                                isEditing = false
-                            }
-                        }
-                    } else {
-                        Button(action: { isEditing = true }) {
-                            Text("Daten bearbeiten")
-                        }
-                        .foregroundColor(.white)
-                        .listRowBackground(Color.appGreen)
                     }
                 }
                 Section {
