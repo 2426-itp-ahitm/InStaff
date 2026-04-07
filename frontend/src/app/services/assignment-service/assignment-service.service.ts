@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Shift} from '../../interfaces/shift';
 import {Assignment} from '../../interfaces/assignment';
@@ -23,9 +23,6 @@ export class AssignmentServiceService {
 
   private assignmentSubject = new BehaviorSubject<Assignment[]>([]);
   public assignments$ = this.assignmentSubject.asObservable();
-  private assignmentSocket?: WebSocket;
-  private assignmentSocketMessageSubject = new Subject<string>();
-  public assignmentSocketMessages$ = this.assignmentSocketMessageSubject.asObservable();
 
 
   getAssignmentByShiftId(shiftId: number): Observable<Assignment[]> {
@@ -43,39 +40,6 @@ export class AssignmentServiceService {
       .subscribe((ass: Assignment[]) => {
         this.assignmentSubject.next(ass)
       })
-  }
-
-  private getAssignmentsWsUrl(token: string): string {
-    const normalizedApiUrl = this.getApiUrl().replace(/\/+$/, '');
-    const wsBaseUrl = normalizedApiUrl
-      .replace(/^http:/, 'ws:')
-      .replace(/^https:/, 'wss:');
-
-    return `${wsBaseUrl}/ws/assignments?token=${encodeURIComponent(token)}`;
-  }
-
-  connectAssignmentSocket(token: string): void {
-    if (this.assignmentSocket && this.assignmentSocket.readyState !== WebSocket.CLOSED) {
-      return;
-    }
-
-    this.assignmentSocket = new WebSocket(this.getAssignmentsWsUrl(token));
-
-    this.assignmentSocket.onmessage = (event) => {
-      this.assignmentSocketMessageSubject.next(event.data);
-    };
-
-    this.assignmentSocket.onerror = (error) => {
-      console.error('Assignment WebSocket error:', error);
-    };
-  }
-
-  disconnectAssignmentSocket(): void {
-    if (!this.assignmentSocket) {
-      return;
-    }
-    this.assignmentSocket.close();
-    this.assignmentSocket = undefined;
   }
 
 

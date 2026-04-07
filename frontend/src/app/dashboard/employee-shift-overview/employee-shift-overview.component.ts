@@ -1,29 +1,30 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
 import {ShiftShort} from '../../interfaces/shift-short';
-import {Subscription} from 'rxjs';
 
 type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 
 @Component({
   selector: 'app-employee-shift-overview',
   imports: [
+    NgForOf,
     DatePipe,
+    NgIf,
     NgClass,
     AsyncPipe
   ],
   templateUrl: './employee-shift-overview.component.html',
   styleUrl: './employee-shift-overview.component.css'
 })
-export class EmployeeShiftOverviewComponent implements OnInit, OnDestroy {
+export class EmployeeShiftOverviewComponent implements OnInit{
   assignmentService: AssignmentServiceService = inject(AssignmentServiceService)
   roleService: RoleServiceService = inject(RoleServiceService)
   keycloakService: KeycloakService = inject(KeycloakService)
@@ -34,7 +35,6 @@ export class EmployeeShiftOverviewComponent implements OnInit, OnDestroy {
   availableRoleIds = new Set<number>();
   selectedRoleIds = new Set<number>();
   selectedStatusFilter: AssignmentStatusFilter = 'all';
-  private assignmentSocketSubscription?: Subscription;
 
   private employeeSubject$ = new BehaviorSubject<Employee | null>(null);
 
@@ -60,25 +60,7 @@ export class EmployeeShiftOverviewComponent implements OnInit, OnDestroy {
       this.buildAssignmentsFromSubject(assignments);
     });
     this.loadAssignments()
-    this.initAssignmentSocket()
     //this.setStatusFilter('open')
-  }
-
-  ngOnDestroy() {
-    this.assignmentSocketSubscription?.unsubscribe();
-    this.assignmentService.disconnectAssignmentSocket();
-  }
-
-  private async initAssignmentSocket() {
-    try {
-      const token = await this.keycloakService.getToken();
-      this.assignmentService.connectAssignmentSocket(token);
-      this.assignmentSocketSubscription = this.assignmentService.assignmentSocketMessages$.subscribe(() => {
-        this.loadAssignments();
-      });
-    } catch (error) {
-      console.error('Failed to initialize assignment websocket', error);
-    }
   }
 
   loadAssignments(){
