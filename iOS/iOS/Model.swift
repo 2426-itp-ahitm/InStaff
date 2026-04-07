@@ -52,7 +52,7 @@ struct Employee: Identifiable, Decodable, Equatable {
     var isActive: Bool?
     
     enum CodingKeys: String, CodingKey {
-        case id, keycloakUserId, firstname, lastname, email, telephone, birthDate, isManager, hourlyWage, address, company, roles, isActive
+        case id, keycloakUserId, firstname, lastname, email, telephone, birthDate, birthdate, isManager, hourlyWage, address, company, roles, isActive
     }
     
     init(from decoder: Decoder) throws {
@@ -63,7 +63,9 @@ struct Employee: Identifiable, Decodable, Equatable {
         lastname = try container.decode(String.self, forKey: .lastname)
         email = try container.decode(String.self, forKey: .email)
         telephone = try container.decode(String.self, forKey: .telephone)
-        birthDate = try container.decode(String.self, forKey: .birthDate)
+        birthDate = try container.decodeIfPresent(String.self, forKey: .birthDate)
+            ?? container.decodeIfPresent(String.self, forKey: .birthdate)
+            ?? ""
         isManager = try container.decode(Bool.self, forKey: .isManager)
         hourlyWage = try container.decode(Double.self, forKey: .hourlyWage)
         address = try container.decode(String.self, forKey: .address)
