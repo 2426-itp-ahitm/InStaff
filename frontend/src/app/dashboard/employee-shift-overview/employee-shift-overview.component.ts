@@ -1,32 +1,29 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
-import {Shift} from '../../interfaces/shift';
-import {BehaviorSubject, combineLatest, forkJoin} from 'rxjs';
+import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
+import {ShiftShort} from '../../interfaces/shift-short';
+import {Subscription} from 'rxjs';
 
 type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 
 @Component({
   selector: 'app-employee-shift-overview',
   imports: [
-    NgForOf,
     DatePipe,
-    NgIf,
     NgClass,
     AsyncPipe
   ],
   templateUrl: './employee-shift-overview.component.html',
   styleUrl: './employee-shift-overview.component.css'
 })
-export class EmployeeShiftOverviewComponent implements OnInit{
-  shiftService: ShiftServiceService = inject(ShiftServiceService)
+export class EmployeeShiftOverviewComponent implements OnInit, OnDestroy {
   assignmentService: AssignmentServiceService = inject(AssignmentServiceService)
   roleService: RoleServiceService = inject(RoleServiceService)
   keycloakService: KeycloakService = inject(KeycloakService)
@@ -37,6 +34,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
   availableRoleIds = new Set<number>();
   selectedRoleIds = new Set<number>();
   selectedStatusFilter: AssignmentStatusFilter = 'all';
+  private assignmentSocketSubscription?: Subscription;
 
   private employeeSubject$ = new BehaviorSubject<Employee | null>(null);
 
@@ -47,10 +45,11 @@ export class EmployeeShiftOverviewComponent implements OnInit{
     map(([roles, emp]) => {
       if (!emp || !emp.roles) return [];
 
-      // Dein "Holzhammer"-Filter
-      return roles.filter(role =>
-        emp.roles.some(empRole => role.id === (empRole as unknown as number))
+      const employeeRoleIds = new Set(
+        emp.roles.map(role => typeof role === 'number' ? role : role.id)
       );
+
+      return roles.filter(role => employeeRoleIds.has(role.id));
     })
   );
 
@@ -61,7 +60,25 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       this.buildAssignmentsFromSubject(assignments);
     });
     this.loadAssignments()
+    this.initAssignmentSocket()
     //this.setStatusFilter('open')
+  }
+
+  ngOnDestroy() {
+    this.assignmentSocketSubscription?.unsubscribe();
+    this.assignmentService.disconnectAssignmentSocket();
+  }
+
+  private async initAssignmentSocket() {
+    try {
+      const token = await this.keycloakService.getToken();
+      this.assignmentService.connectAssignmentSocket(token);
+      this.assignmentSocketSubscription = this.assignmentService.assignmentSocketMessages$.subscribe(() => {
+        this.loadAssignments();
+      });
+    } catch (error) {
+      console.error('Failed to initialize assignment websocket', error);
+    }
   }
 
   loadAssignments(){
@@ -88,33 +105,18 @@ export class EmployeeShiftOverviewComponent implements OnInit{
       this.fullAssignments = [];
       return;
     }
-/**
-    const requests = assignments.map(assignment =>
-      this.shiftService.getShiftById(assignment.shift.id).pipe(
-        map(shift => ({
-          id: assignment.id,
-          shift,
-          employee: assignment.employee,
-          role: this.roleService.getRoleById(assignment.role.id),
-          confirmed: assignment.confirmed
-        } as AssignmentFull))
-      )
-    );
+    const now = new Date().getTime();
 
-    forkJoin(requests).subscribe(result => {
-      const now = new Date().getTime();
-
-      this.allAssignments = result.filter(assignment => {
-        const end = assignment.shift?.endTime ? new Date(assignment.shift.endTime).getTime() : null;
-        return end !== null && end > now;
-      });
-
-      this.applyFilters();
+    this.allAssignments = assignments.filter(assignment => {
+      const end = assignment.shift?.endTime ? new Date(assignment.shift.endTime).getTime() : null;
+      return end !== null && end > now;
     });
+
+    this.applyFilters();
   }
 
 
-  confirmAssignment(assignment: AssignmentFull) {
+  confirmAssignment(assignment: Assignment) {
     assignment.confirmed = true;
     this.applyFilters();
     this.assignmentService.confirmAssignment(assignment.id).subscribe(() => {
@@ -123,7 +125,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
     })
   }
 
-  declineAssignment(assignment: AssignmentFull) {
+  declineAssignment(assignment: Assignment) {
     assignment.confirmed = false;
     this.applyFilters();
     this.assignmentService.declineAssignment(assignment.id).subscribe(() => {
@@ -132,7 +134,7 @@ export class EmployeeShiftOverviewComponent implements OnInit{
     })
   }
 
-  isShiftPastDate(shift: Shift): boolean {
+  isShiftPastDate(shift: ShiftShort): boolean {
     if (!shift) {
       return false
     }
@@ -238,11 +240,10 @@ export class EmployeeShiftOverviewComponent implements OnInit{
 
   getCardBorderClass(confirmed: boolean | null) {
     return {
-      'border-l-green-500': confirmed === true,
+      'border-l-green-base': confirmed === true,
       'border-l-yellow-400': confirmed === null,
-      'border-l-red-500': confirmed === false
+      'border-l-red-800': confirmed === false
     };
-      **/
   }
 
 }

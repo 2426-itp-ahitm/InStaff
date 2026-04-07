@@ -87,7 +87,7 @@
                 <div class="sm:col-span-6">
                   <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
                   <div class="mt-2">
-                    <input formControlName="telephone" value="" id="telephone" name="telephone" type="text" autocomplete="tel" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                    <input formControlName="telephone" value="" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field ">
                   </div>
                   @if (addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched) {
                     <div class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
@@ -98,7 +98,7 @@
                 <div class="sm:col-span-5">
                   <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
                   <div class="mt-2">
-                    <input formControlName="address" value="" id="address" name="address" type="text" autocomplete="address" class="input-field">
+                    <input formControlName="address" value="" id="address" name="address" type="text" autocomplete="address" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                   </div>
                   @if (addEmployeeForm.get('address')?.invalid && addEmployeeForm.get('address')?.touched) {
                   }
