@@ -39,18 +39,21 @@ Since ease of use is a top priority for us, we'd like to show you what the emplo
 # Slide 7 – Practical Application – Phiz
 And to show you how this all works in practice, let's bring in our three little helpers.
 
-# Slide 8 – Team – Phiz
+# Slide 8 – Video Practical Application – Phiz
+
+
+# Slide 9 – Team – Phiz
 And since you're probably curious about who's standing in front of you, we'd like to take a moment to introduce ourselves:
 Tobias Klement is our Project Manager, primarily responsible for the web app and the overall design.
 Alexander Hahn is our Mobile Developer, as well as co-developer for Keycloak and the web app.
 And my name is Philip Pfarrhofer — I'm responsible for the backend and deployment, and also work with Keycloak.
 
-# Slide 9 – Tech Stack – Phiz
+# Slide 10 – Tech Stack – Phiz
 Our frontend is built with Angular and Tailwind as our CSS library. The Android app is developed in Java and XML, and the iOS app in Swift. Authentication is handled via Keycloak, and our backend runs on Quarkus with a PostgreSQL database. The entire application is deployed using Kubernetes and Docker.
 
-# Slide 9 – Vision – Phiz
+# Slide 11 – Vision – Phiz
 And because there's always room to grow, we'd like to share our vision with you. First and foremost, our goal is to make both employees and managers happy. Beyond that, we already have two hospitality businesses — a traditional restaurant and a ski lodge — that are planning their future with our software. We also aim to simplify shift scheduling through a dedicated AI, introduce automation for shift cancellations, and give employees the ability to proactively sign up for open shifts.
 
-# Slide 10 – Questions? – Phiz
+# Slide 12 – Questions? – Phiz
 With that, we'd like to thank you for your attention — and we're happy to take any questions you may have.Sonnet 4.6Claude ist eine KI und kann Fehler machen. Bitte überprüfe die Antworten.
     
