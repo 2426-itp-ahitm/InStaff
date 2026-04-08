@@ -54,6 +54,7 @@ export class ShiftTemplateAddComponent implements OnInit {
   }
 
   save(): void {
+    console.log(this.addedRoles);
     const newRoles: TemplateroleCreate[] = this.addedRoles.map(tr => ({
       roleId: tr.roleId,
       count: Math.max(1, tr.count)
@@ -82,6 +83,28 @@ export class ShiftTemplateAddComponent implements OnInit {
     // initialize selectedEmployees with nulls
     const selectedEmployees = Array(count).fill(null);
     this.addedRoles.push({ roleId, count, selectedEmployees });
+  }
+
+  updateRoleCount(index: number, rawValue: string | number): void {
+    const parsed = Number(rawValue);
+    const normalizedCount = Number.isFinite(parsed) ? Math.max(1, Math.floor(parsed)) : 1;
+
+    const roleEntry = this.addedRoles[index];
+    if (!roleEntry) {
+      return;
+    }
+
+    roleEntry.count = normalizedCount;
+
+    if (roleEntry.selectedEmployees.length > normalizedCount) {
+      roleEntry.selectedEmployees = roleEntry.selectedEmployees.slice(0, normalizedCount);
+      return;
+    }
+
+    if (roleEntry.selectedEmployees.length < normalizedCount) {
+      const missing = normalizedCount - roleEntry.selectedEmployees.length;
+      roleEntry.selectedEmployees = [...roleEntry.selectedEmployees, ...Array(missing).fill(null)];
+    }
   }
 
   removeAddedRole(index: number) {

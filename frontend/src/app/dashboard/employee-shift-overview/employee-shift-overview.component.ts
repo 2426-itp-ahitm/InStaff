@@ -1,11 +1,11 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AsyncPipe, DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
 import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
 import {ShiftShort} from '../../interfaces/shift-short';
@@ -15,9 +15,7 @@ type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 @Component({
   selector: 'app-employee-shift-overview',
   imports: [
-    NgForOf,
     DatePipe,
-    NgIf,
     NgClass,
     AsyncPipe
   ],
@@ -25,6 +23,8 @@ type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
   styleUrl: './employee-shift-overview.component.css'
 })
 export class EmployeeShiftOverviewComponent implements OnInit{
+  @Input() stickyTop: string = '3rem';
+
   assignmentService: AssignmentServiceService = inject(AssignmentServiceService)
   roleService: RoleServiceService = inject(RoleServiceService)
   keycloakService: KeycloakService = inject(KeycloakService)

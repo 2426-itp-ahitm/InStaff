@@ -1,70 +1,77 @@
-import {inject, Injectable} from '@angular/core';
-import {CompanyServiceService} from '../../services/company-service/company-service.service';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject} from 'rxjs';
-import {Employee} from '../../interfaces/employee';
-import {ApiUrlService} from '../../services/api-url/api-url.service';
+import { inject, Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { NewsWebsocketServiceService } from '../news-websocket-serivce/news-websocket-service.service';
+import { AssignmentNews } from '../../interfaces/assignment-news';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewsService {
-  /*
-  constructor(private companyService: CompanyServiceService) {}
+export class NewsService implements OnDestroy {
+  private websocketService = inject(NewsWebsocketServiceService);
 
-  httpClient: HttpClient = inject(HttpClient);
-  apiUrl: ApiUrlService = new ApiUrlService();
-
-  private newsSubject = new BehaviorSubject<News[]>([]);
+  private newsSubject = new BehaviorSubject<AssignmentNews[]>([]);
   public news$ = this.newsSubject.asObservable();
 
-  private getApiUrl(): string {
-    return this.apiUrl.getApiUrl();
+  private subscriptions: Subscription[] = [];
+
+  constructor() {
+    this.initializeWebsocket();
   }
 
-  getNews() {
-    this.httpClient.get<News[]>(`${this.getApiUrl()}/news`).subscribe((listOfNews: News[]) => {
-      this.newsSubject.next(listOfNews);
-    });
-  }
+  private initializeWebsocket(): void {
+    // Connect to the websocket
+    this.websocketService.connect();
 
-  deleteNewsItem(id: number) {
-    this.httpClient.delete(`${this.getApiUrl()}/news/${id}`).subscribe({
-      next: () => {
-        this.getNews();
+    // Subscribe to assignment updates
+    const updateSub = this.websocketService.assignmentUpdate$.subscribe(
+      (assignment: AssignmentNews) => {
+        this.upsertNews(assignment);
       }
-    })
-  }
+    );
 
-  recievedDeleteNewsItem(id: number) {
-    if(id == -1) {
-      this.newsSubject.next([]);
-      return;
-    }else {
-      const current = this.newsSubject.getValue();
-      const updated = current.filter(newsItem => newsItem.id !== id);
-      this.newsSubject.next(updated);
-    }
-  }
-
-  deleteAllNewsItem() {
-    this.httpClient.delete(`${this.getApiUrl()}/news/-1`).subscribe({
-      next: () => {
-        this.getNews();
+    // Subscribe to assignment seen events
+    const seenSub = this.websocketService.assignmentSeen$.subscribe(
+      (assignmentId: number) => {
+        // Handle seen updates if needed
+        console.log('Assignment seen:', assignmentId);
       }
-    })
+    );
+
+    this.subscriptions.push(updateSub, seenSub);
   }
 
-  addNews(msg: string) {
-    const raw = JSON.parse(msg);
-    const news: News = {
-      ...raw
-    }
+  private upsertNews(newsItem: AssignmentNews): void {
     const current = this.newsSubject.getValue();
-    this.newsSubject.next([news, ...current]);
+    const exists = current.some(item => item.id === newsItem.id);
+    
+    if (exists) {
+      // Update existing item
+      const updated = current.map(item => 
+        item.id === newsItem.id ? newsItem : item
+      );
+      this.newsSubject.next(updated);
+    } else {
+      // Add to the beginning of the list
+      this.newsSubject.next([newsItem, ...current]);
+    }
   }
 
-   */
+  deleteNewsItem(id: number): void {
+    const current = this.newsSubject.getValue();
+    const updated = current.filter(newsItem => newsItem.id !== id);
+    this.newsSubject.next(updated);
+  }
 
+  deleteAllNewsItems(): void {
+    this.newsSubject.next([]);
+  }
 
+  getNews(): Observable<AssignmentNews[]> {
+    return this.news$;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.websocketService.disconnect();
+  }
 }

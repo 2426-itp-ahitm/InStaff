@@ -1,9 +1,9 @@
-import {Component, inject, OnInit, Output, EventEmitter} from '@angular/core';
-import {NewsService} from '../news-service/news.service';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
-import {NewsWebsocketServiceService} from '../news-websocket-serivce/news-websocket-service.service';
-import {environment} from '../../../environments/environment';
-import {DateService} from '../../services/date-service/date.service';
+import { Component, inject, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { NewsService } from '../news-service/news.service';
+import { NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
+import { DateService } from '../../services/date-service/date.service';
+import { Subscription } from 'rxjs';
+import { AssignmentNews } from '../../interfaces/assignment-news';
 
 @Component({
   selector: 'app-news',
@@ -15,63 +15,66 @@ import {DateService} from '../../services/date-service/date.service';
   templateUrl: './news.component.html',
   styleUrl: './news.component.css'
 })
-export class NewsComponent implements OnInit {
-  ngOnInit() {
+export class NewsComponent implements OnInit, OnDestroy {
+  private newsService = inject(NewsService);
+  private dateService = inject(DateService);
 
-  }
-  /*
-  message: string = '';
+  @Output() shiftSelected = new EventEmitter<number>();
 
-  constructor(private ws: NewsWebsocketServiceService) {}
+  news: AssignmentNews[] = [];
+  private subscriptions: Subscription[] = [];
 
-
-
-
-  newsService: NewsService = inject(NewsService);
-  dateService: DateService = inject(DateService);
-
-  news: News[] = []
-  ngOnInit() {
-    this.newsService.news$.subscribe((data) => {
-      this.news = data;
-    })
-    this.newsService.getNews()
-    this.ws.connect(`${environment.wsUrl}/news`)
-      .subscribe(msg => {
-        console.log("Received:", msg);
-        if(msg.charAt(0) == 'd' && msg.charAt(1) == 'a'){
-          this.newsService.recievedDeleteNewsItem(-1);
-        } else if(msg.charAt(0) == 'd') {
-          const id = parseInt(msg.substring(1));
-          this.newsService.recievedDeleteNewsItem(id);
-        } else {
-          this.message = msg;
-          this.newsService.addNews(msg);
-        }
-
-
-      });
+  ngOnInit(): void {
+    const newsSub = this.newsService.getNews().subscribe(items => {
+      this.news = items;
+    });
+    this.subscriptions.push(newsSub);
   }
 
-  dateToString(shift_date: Date) {
-    return this.dateService.dateToString(shift_date);
+  deleteNewsItem(id: number): void {
+    this.newsService.deleteNewsItem(id);
   }
 
-
-  openShiftEditWithId(shift_id: number) {
-    this.shiftSelected.emit(shift_id);
+  deleteAllNewsItems(): void {
+    this.newsService.deleteAllNewsItems();
   }
 
-  @Output() shiftSelected: EventEmitter<number> = new EventEmitter<number>();
-
-  deleteNewsItem(id:number) {
-    this.newsService.deleteNewsItem(id)
+  openShiftEditWithId(shiftId?: number): void {
+    if (!shiftId) {
+      return;
+    }
+    this.shiftSelected.emit(shiftId);
   }
 
-   deleteAllNewsItems() {
-     this.newsService.deleteAllNewsItem()
+  dateToString(dateString?: string): string {
+    if (!dateString) {
+      return '-';
+    }
 
-   }
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) {
+      return '-';
+    }
 
-   */
+    try {
+      return this.dateService.dateToString(date);
+    } catch {
+      return '-';
+    }
+  }
+
+  getEmployeeName(news: AssignmentNews): string {
+    if (!news.employee) {
+      return 'Mitarbeiter';
+    }
+
+    const first = news.employee.firstname ?? '';
+    const last = news.employee.lastname ?? '';
+    const name = `${first} ${last}`.trim();
+    return name.length > 0 ? name : 'Mitarbeiter';
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
 }
