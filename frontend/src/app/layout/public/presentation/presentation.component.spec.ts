@@ -11,12 +11,13 @@ describe('PresentationComponent', () => {
   let httpSpy: jasmine.SpyObj<HttpClient>;
   let routerSpy: jasmine.SpyObj<Router>;
   const resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
+  const jumpToDemoStorageKey = 'presentation.jumpToDemo';
 
   const presentationResponse = JSON.stringify({
     name: 'Demo',
     slides: [
       {id: 1, content: []},
-      {id: 2, content: [], isScrollTrigger: true},
+      {id: 2, content: [{id: 21, slideId: 2, text: '<div class="bg-gradient text-h1">Demo</div>'}], isScrollTrigger: true},
       {id: 3, content: []}
     ]
   });
@@ -63,6 +64,18 @@ describe('PresentationComponent', () => {
     expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBeNull();
   });
 
+  it('prioritizes demo slide when demo-jump flag is stored', () => {
+    window.sessionStorage.setItem(resumeSlideIndexStorageKey, '0');
+    window.sessionStorage.setItem(jumpToDemoStorageKey, '1');
+
+    fixture = TestBed.createComponent(PresentationComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.slideIndex).toBe(1);
+    expect(window.sessionStorage.getItem(jumpToDemoStorageKey)).toBeNull();
+  });
+
   it('stores the current scroll-trigger slide before navigating away', () => {
     component.slideIndex = 1;
 
@@ -70,5 +83,13 @@ describe('PresentationComponent', () => {
 
     expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBe('1');
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/']);
+  });
+
+  it('jumps to the demo slide on O key press', () => {
+    component.slideIndex = 0;
+
+    component.onKeyDown({key: 'o', preventDefault: jasmine.createSpy('preventDefault')} as unknown as KeyboardEvent);
+
+    expect(component.slideIndex).toBe(1);
   });
 });

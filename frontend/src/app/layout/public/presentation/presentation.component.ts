@@ -30,6 +30,7 @@ export class PresentationComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
+  private readonly jumpToDemoStorageKey = 'presentation.jumpToDemo';
 
     @ViewChildren('videoElement') videoElements!: QueryList<any>;
 
@@ -67,6 +68,11 @@ export class PresentationComponent implements OnInit {
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
       this.prevSlide();
+    }
+    if (event.key.toLowerCase() === 'o') {
+      event.preventDefault();
+      this.slideIndex = this.getDemoSlideIndex();
+      this.playSlideVideos();
     }
   }
 
@@ -126,6 +132,24 @@ export class PresentationComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  private getInitialSlideIndex(): number {
+    if (this.shouldJumpToDemo()) {
+      return this.getDemoSlideIndex();
+    }
+
+    return this.getResumeSlideIndex();
+  }
+
+  private shouldJumpToDemo(): boolean {
+    const storedValue = window.sessionStorage.getItem(this.jumpToDemoStorageKey);
+    if (storedValue === null) {
+      return false;
+    }
+
+    window.sessionStorage.removeItem(this.jumpToDemoStorageKey);
+    return storedValue === '1';
+  }
+
   private getResumeSlideIndex(): number {
     const storedValue = window.sessionStorage.getItem(this.resumeSlideIndexStorageKey);
     if (storedValue === null) {
@@ -141,6 +165,33 @@ export class PresentationComponent implements OnInit {
 
     const slide = this.presentation.slides[parsedIndex];
     return slide?.isScrollTrigger === true ? parsedIndex : 0;
+  }
+
+  private getDemoSlideIndex(): number {
+    if (!this.presentation || this.presentation.slides.length === 0) {
+      return 0;
+    }
+
+    const demoIndex = this.presentation.slides.findIndex(slide =>
+      slide.content.some(content => this.hasDemoHeading(content.text))
+    );
+
+    return demoIndex >= 0 ? demoIndex : 0;
+  }
+
+  private hasDemoHeading(text: string | null): boolean {
+    if (!text) {
+      return false;
+    }
+
+    const normalizedText = text.replace(/\s+/g, ' ');
+    const matchesH1Demo = /<h1\b[^>]*>\s*Demo\s*<\/h1>/i.test(normalizedText);
+    if (matchesH1Demo) {
+      return true;
+    }
+
+    const matchesTextH1Demo = /<[^>]*class=["'][^"']*\btext-h1\b[^"']*["'][^>]*>\s*Demo\s*<\/[^>]+>/i.test(normalizedText);
+    return matchesTextH1Demo;
   }
   
     private playSlideVideos(): void {
@@ -211,7 +262,7 @@ export class PresentationComponent implements OnInit {
         }
 
         this.presentation = parsed;
-        this.slideIndex = this.getResumeSlideIndex();
+        this.slideIndex = this.getInitialSlideIndex();
         this.playSlideVideos();
         this.isLoading = false;
       },

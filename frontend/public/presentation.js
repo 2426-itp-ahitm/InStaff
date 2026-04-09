@@ -116,7 +116,7 @@
         {
           "id": 2,
           "slideId": 4,
-          "text": "<div class=\"bg-gradient text-h3\">Providing a simple, intuitive application for managing shifts, both for employees and employers</div>",
+          "text": "<div class=\"bg-gradient text-h3 text-center\">Providing a simple, intuitive application for managing shifts, both for employees and employers</div>",
           "image": null,
           "video": null,
           "scale": 100,
@@ -209,32 +209,6 @@
       "id": 9,
       "content": [
         {
-          "id": 2,
-          "slideId": 9,
-          "text": "<div class=\"bg-gradient team-box\"><img src=\"presentation/klement.png\" class=\"team-pic\"><p class=\"text-h3\">Tobias Klement</p><p class=\"team-text\">Projektmanager</p><p class=\"team-text\">Webapp</p><p class=\"team-text\">Design</p></div>",
-          "image": null,
-          "video": null,
-          "scale": 100,
-          "zIndex": 1,
-          "positionX": 20,
-          "positionY": 50,
-          "inAnimation": null,
-          "outAnimation": null
-        },
-        {
-          "id": 3,
-          "slideId": 9,
-          "text": "<div class=\"bg-gradient team-box\"><img src=\"presentation/hahn.png\" class=\"team-pic\"><p class=\"text-h3\">Alexander Hahn</p><p class=\"team-text\">iOS App</p><p class=\"team-text\">Keykloak</p><p class=\"team-text\">Webapp</p></div>",
-          "image": null,
-          "video": null,
-          "scale": 100,
-          "zIndex": 1,
-          "positionX": 50,
-          "positionY": 50,
-          "inAnimation": null,
-          "outAnimation": null
-        },
-        {
           "id": 4,
           "slideId": 9,
           "text": "<div class=\"bg-gradient team-box\"><img src=\"presentation/pfarrhofer.png\" class=\"team-pic\"><p class=\"text-h3\">Philip Pfarrhofer</p><p class=\"team-text\">Backend</p><p class=\"team-text\">Keykloack</p><p class=\"team-text\">Deployment</p></div>",
@@ -257,6 +231,32 @@
           "zIndex": 1,
           "positionX": 12,
           "positionY": 7,
+          "inAnimation": null,
+          "outAnimation": null
+        },
+        {
+          "id": 3,
+          "slideId": 9,
+          "text": "<div class=\"bg-gradient team-box\"><img src=\"presentation/hahn.png\" class=\"team-pic\"><p class=\"text-h3\">Alexander Hahn</p><p class=\"team-text\">Mobile Apps</p><p class=\"team-text\">Keykloak</p><p class=\"team-text\">Webapp</p></div>",
+          "image": null,
+          "video": null,
+          "scale": 100,
+          "zIndex": 1,
+          "positionX": 50,
+          "positionY": 50,
+          "inAnimation": null,
+          "outAnimation": null
+        },
+        {
+          "id": 2,
+          "slideId": 9,
+          "text": "<div class=\"bg-gradient team-box\"><img src=\"presentation/klement.png\" class=\"team-pic\"><p class=\"text-h3\">Tobias Klement</p><p class=\"team-text\">Projectmanager</p><p class=\"team-text\">Webapp</p><p class=\"team-text\">Design</p></div>",
+          "image": null,
+          "video": null,
+          "scale": 100,
+          "zIndex": 1,
+          "positionX": 20,
+          "positionY": 50,
           "inAnimation": null,
           "outAnimation": null
         }
@@ -314,7 +314,7 @@
         {
           "id": 4,
           "slideId": 11,
-          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3\">Ability to proactively<br>sign up for open shifts</p></div>",
+          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3 text-center\">Ability to proactively<br>sign up for open shifts</p></div>",
           "image": null,
           "video": null,
           "scale": 100,
@@ -327,7 +327,7 @@
         {
           "id": 2,
           "slideId": 11,
-          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3\">Make both employees <br> and managers happy</p></div>",
+          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3 text-center\">Make both employees <br> and managers happy</p></div>",
           "image": null,
           "video": null,
           "scale": 100,
@@ -340,7 +340,7 @@
         {
           "id": 3,
           "slideId": 11,
-          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3\">Implementation <br> in businesses</p></div>",
+          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3 text-center\">Implementation <br> in businesses</p></div>",
           "image": null,
           "video": null,
           "scale": 100,
@@ -353,7 +353,7 @@
         {
           "id": 5,
           "slideId": 11,
-          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3\">Scheduling with<br>the support of AI</p></div>",
+          "text": "<div class=\"bg-gradient-small\"><p class=\"text-h3 text-center\">Scheduling with<br>the support of AI</p></div>",
           "image": null,
           "video": null,
           "scale": 100,

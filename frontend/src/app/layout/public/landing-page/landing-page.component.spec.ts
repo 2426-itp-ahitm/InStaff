@@ -8,6 +8,7 @@ describe('LandingPageComponent', () => {
   let fixture: ComponentFixture<LandingPageComponent>;
   let routerSpy: jasmine.SpyObj<Router>;
   const resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
+  const jumpToDemoStorageKey = 'presentation.jumpToDemo';
 
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -34,18 +35,21 @@ describe('LandingPageComponent', () => {
 
   it('navigates to the first slide with P and clears the resume state', () => {
     window.sessionStorage.setItem(resumeSlideIndexStorageKey, '2');
+    window.sessionStorage.setItem(jumpToDemoStorageKey, '1');
 
     component.onKeydown({key: 'p', preventDefault: jasmine.createSpy('preventDefault'), target: null} as unknown as KeyboardEvent);
 
     expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBeNull();
+    expect(window.sessionStorage.getItem(jumpToDemoStorageKey)).toBeNull();
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/presentation']);
   });
 
-  it('navigates back to the demo slide with O without clearing the resume state', () => {
+  it('navigates to presentation with O and sets the demo jump flag', () => {
     window.sessionStorage.setItem(resumeSlideIndexStorageKey, '2');
 
     component.onKeydown({key: 'o', preventDefault: jasmine.createSpy('preventDefault'), target: null} as unknown as KeyboardEvent);
 
+    expect(window.sessionStorage.getItem(jumpToDemoStorageKey)).toBe('1');
     expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBe('2');
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/presentation']);
   });
