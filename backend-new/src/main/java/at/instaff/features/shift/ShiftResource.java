@@ -56,6 +56,16 @@ public class ShiftResource {
         return Response.ok(shifts.stream().map(ShiftDTO::toResource)).build();
     }
 
+    @GET
+    @Path("/employee/self")
+    public Response getShiftsSelf(@Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
+        List<Shift> shifts = Shift.list("SELECT s FROM Shift s JOIN s.assignments a WHERE a.employee.id = ?1", principal.getEmployeeId());
+
+        return Response.ok(shifts.stream().map(ShiftDTO::toResource)).build();
+    }
+
     @POST
     @Transactional
     public Response createShift(ShiftCreateDTO dto, @Context SecurityContext sc) {
