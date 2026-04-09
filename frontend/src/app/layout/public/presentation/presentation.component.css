@@ -26,7 +26,7 @@
   max-height: 50vh;
   border-radius: 0.4rem;
 }
- 
+
 .slide-video {
   display: block;
   max-width: 100%;
@@ -104,7 +104,7 @@
 }
 
 .text-h3 {
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: bold;
   color: #fff;
 }
@@ -113,13 +113,21 @@
   background-image: url("/presentation/green-gradient.jpg");
   background-size: cover;
   background-position: center;
-  
+
   border: 2px solid #fff;
   border-radius: 1rem;
   padding: 6rem 10rem;
 }
 
+.bg-gradient-small{
+  background-image: url("/presentation/green-gradient.jpg");
+  background-size: cover;
+  background-position: center;
 
+  border: 2px solid #fff;
+  border-radius: 1rem;
+  padding: 2rem 3rem;
+}
 
 .team-box {
   text-align: center;
