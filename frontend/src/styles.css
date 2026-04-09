@@ -116,10 +116,18 @@ h2{
 
 /* modal */
 .modal-bg{
-  @apply fixed inset-0 bg-black/50 transition
+  @apply fixed inset-0 bg-black/50 transition;
+  z-index: 60;
 }
 .modal-card-1{
-  @apply fixed inset-0 z-10 w-screen overflow-y-auto
+  @apply fixed inset-0 w-screen overflow-y-auto;
+  z-index: 70;
+}
+
+/* Ensure modal stacking context always stays above sticky list headers (e.g. z-40). */
+[role="dialog"][aria-modal="true"] {
+  position: relative;
+  z-index: 80 !important;
 }
 .modal-card-2{
   @apply flex min-h-full justify-center p-4 text-center items-center

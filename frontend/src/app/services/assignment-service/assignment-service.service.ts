@@ -1,7 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {Shift} from '../../interfaces/shift';
 import {Assignment} from '../../interfaces/assignment';
 import {ApiUrlService} from '../api-url/api-url.service';
@@ -30,6 +31,12 @@ export class AssignmentServiceService {
 
   getAssignmentsForEmployee(employeeId: number): void {
     this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/employee/${employeeId}`)
+      .pipe(
+        catchError(() => {
+          this.assignmentSubject.next([]);
+          return of([] as Assignment[]);
+        })
+      )
       .subscribe((ass: Assignment[]) => {
         this.assignmentSubject.next(ass)
       })
@@ -43,7 +50,7 @@ export class AssignmentServiceService {
 
 
   confirmAssignment(assignmentId: number): Observable<any> {
-    const url = `${this.getApiUrl()}/confirmation/confirm/${assignmentId}`;
+    const url = `${this.getApiUrl()}/assignments/${assignmentId}/confirm/true`;
     return this.httpClient.put<any>(url, {});
   }
 
@@ -52,7 +59,7 @@ export class AssignmentServiceService {
   }
 
   declineAssignment(assignmentId: number): Observable<any> {
-    const url = `${this.getApiUrl()}/confirmation/decline/${assignmentId}`;
+    const url = `${this.getApiUrl()}/assignments/${assignmentId}/confirm/false`;
     return this.httpClient.put<any>(url, {});
   }
 }

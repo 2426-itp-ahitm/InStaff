@@ -1,134 +1,124 @@
-<div class="max-h-screen  p-6">
-  <div class="max-w-3xl mx-auto space-y-6 p-t-10">
-    <!-- Role Filter -->
-    <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
-      <h3 class="text-md font-semibold text-gray-800 mb-3">
-        Rollen Filter
-      </h3>
-      <!--
-      <div class="flex flex-wrap gap-4">
-        <label
-          *ngFor="let role of (filteredRoles$ | async)"
-          class="flex items-center gap-2 text-sm text-gray-700"
-        >
-          <input
-            type="checkbox"
-            class="accent-green-dark"
-            [checked]="isRoleSelected(role.id)"
-            (change)="toggleRole(role.id)"
-          />
-          {{ role.roleName }}
-        </label>
-      </div>
-
-      <h3 class="text-md font-semibold text-gray-800 my-3">
-        Status Filter
-      </h3>
-
-      <div class="flex flex-wrap gap-2">
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-          [ngClass]="isStatusFilterSelected('all') ? 'bg-green-base text-white border-green-base' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-          (click)="setStatusFilter('all')">
-          Alle
-        </button>
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-          [ngClass]="isStatusFilterSelected('open') ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-          (click)="setStatusFilter('open')">
-          Offen
-        </button>
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-          [ngClass]="isStatusFilterSelected('accepted') ? 'bg-green-dark text-white border-green-dark' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-          (click)="setStatusFilter('accepted')">
-          Angenommen
-        </button>
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-          [ngClass]="isStatusFilterSelected('declined') ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-          (click)="setStatusFilter('declined')">
-          Abgelehnt
-        </button>
-      </div>
-    </div>
-
-
-
-    <div
-      *ngFor="let assignment of fullAssignments"
-      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition border-l-4"
-      [ngClass]="getCardBorderClass(assignment.confirmed)"
-    >
-
-
-      <div class="mb-4">
-        <div class="flex items-center justify-between gap-3">
-          <h2 class="text-lg font-semibold text-gray-800">
-            {{ assignment.role.roleName }}
-          </h2>
-
-          <span
-            class="text-sm px-3 py-1.5 rounded-full font-semibold min-w-28 text-center border"
-            [ngClass]="getStatusClass(assignment.confirmed)">
-            {{ getStatusLabel(assignment.confirmed) }}
-          </span>
+<div class="min-h-full">
+  <div class="max-w-3xl pb-4 mx-auto space-y-6">
+    <div class="sticky z-40 -mx-6 px-6 py-3 bg-white border-b border-green-light" [style.top]="stickyTop">
+      <div class="max-w-3xl mx-auto flex flex-col gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm font-semibold text-gray-800 mr-2">Rollen:</span>
+          @for (role of (filteredRoles$ | async); track role.id) {
+            <label class="inline-flex items-center gap-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-md px-2.5 py-1">
+              <input
+                type="checkbox"
+                class="accent-green-dark"
+                [checked]="isRoleSelected(role.id)"
+                (change)="toggleRole(role.id)"
+              />
+              {{ role.roleName }}
+            </label>
+          }
         </div>
 
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm font-semibold text-gray-800 mr-2">Status:</span>
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+            [ngClass]="isStatusFilterSelected('all') ? 'bg-green-base text-white border-green-base' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            (click)="setStatusFilter('all')">
+            Alle
+          </button>
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+            [ngClass]="isStatusFilterSelected('open') ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            (click)="setStatusFilter('open')">
+            Offen
+          </button>
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+            [ngClass]="isStatusFilterSelected('accepted') ? 'bg-green-dark text-white border-green-dark' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            (click)="setStatusFilter('accepted')">
+            Angenommen
+          </button>
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
+            [ngClass]="isStatusFilterSelected('declined') ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            (click)="setStatusFilter('declined')">
+            Abgelehnt
+          </button>
+        </div>
+      </div>
+    </div>
 
 
-        <p class="text-gray-600 mt-1">
-          {{ assignment.shift.startTime | date:'dd.MM.yyyy HH:mm' }}
-          -
-          {{ assignment.shift.endTime | date:'HH:mm' }}
-        </p>
+    @for (assignment of fullAssignments; track assignment.id) {
+      <div
+        class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition border-l-4"
+        [ngClass]="getCardBorderClass(assignment.confirmed)"
+      >
 
-        <div
-          *ngIf="isShiftPastDate(assignment.shift)"
-          class="mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"
-        >
-          Diese Schicht hat bereits begonnen oder ist vorbei.
+
+        <div class="mb-4">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-gray-800">
+              {{ assignment.role.roleName }}
+            </h2>
+
+            <span
+              class="text-sm px-3 py-1.5 rounded-full font-semibold min-w-28 text-center border"
+              [ngClass]="getStatusClass(assignment.confirmed)">
+              {{ getStatusLabel(assignment.confirmed) }}
+            </span>
+          </div>
+
+
+
+          <p class="text-gray-600 mt-1">
+            {{ assignment.shift.startTime | date:'dd.MM.yyyy HH:mm' }}
+            -
+            {{ assignment.shift.endTime | date:'HH:mm' }}
+          </p>
+
+          @if (isShiftPastDate(assignment.shift)){
+            <div
+              class="mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"
+            >
+              Diese Schicht hat bereits begonnen oder ist vorbei.
+            </div>
+          }
+
         </div>
 
+        <div class="flex gap-4 mt-4">
+
+          <button
+            [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
+            (click)="confirmAssignment(assignment)"
+            class="button-accept"
+          >
+            Annehmen
+          </button>
+
+          <button
+            [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
+            (click)="declineAssignment(assignment)"
+            class="button-decline"
+          >
+            Ablehnen
+          </button>
+
+        </div>
       </div>
+    }
 
-      <div class="flex gap-4 mt-4">
-
-        <button
-          [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
-          (click)="confirmAssignment(assignment)"
-          class="button-accept"
-        >
-          Annehmen
-        </button>
-
-        <button
-          [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
-          (click)="declineAssignment(assignment)"
-          class="button-decline"
-        >
-          Ablehnen
-        </button>
-
+    @if (fullAssignments.length === 0) {
+      <div
+        class="text-center text-gray-500 mt-10"
+      >
+        Keine Schichten vorhanden.
       </div>
-
-    </div>
-
-    <div
-      *ngIf="fullAssignments.length === 0"
-      class="text-center text-gray-500 mt-10"
-    >
-      Keine offenen Schichten vorhanden.
-    </div>
-     -->
+    }
 
   </div>
-
-
-</div>
-
 </div>

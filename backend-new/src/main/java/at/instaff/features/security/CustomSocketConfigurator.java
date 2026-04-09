@@ -1,30 +1,30 @@
 package at.instaff.features.security;
 
-import at.instaff.features.employee.Employee;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.quarkus.logging.Log;
-import jakarta.websocket.server.HandshakeRequest;
-import jakarta.websocket.HandshakeResponse;
-import jakarta.websocket.server.ServerEndpointConfig;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
+
+import org.eclipse.microprofile.config.ConfigProvider;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.websocket.HandshakeResponse;
+import jakarta.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator {
 
@@ -32,18 +32,11 @@ public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator 
     public void modifyHandshake(ServerEndpointConfig config,
                                 HandshakeRequest request,
                                 HandshakeResponse response) {
-
-        String authHeader = request.getHeaders()
-                .getOrDefault("Authorization", List.of())
-                .stream()
-                .findFirst()
-                .orElse(null);
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String token = extractToken(request);
+        if (token == null || token.isBlank()) {
+            System.err.println("WebSocket auth failed: missing token");
             throw new RuntimeException("Missing token");
         }
-
-        String token = authHeader.substring(7);
 
         try {
             RSAPublicKey publicKey = getPublicKey(fetchRealmPublicKey());
@@ -60,24 +53,71 @@ public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator 
             config.getUserProperties().put("userId", keycloakUserId);
 
         } catch (Exception e) {
+            System.err.println("WebSocket auth failed: " + e.getMessage());
             throw new RuntimeException("Unauthorized");
         }
     }
 
-    private Long extractCompanyId(String keycloakUserId) {
-        //Employee employee = Employee.find("keycloakUserId=?1", keycloakUserId).singleResult();
-        return Employee.getEntityManager().createQuery("select company.id from Employee where keycloakUserId = :id", Long.class)
-                .setParameter("id", keycloakUserId).getSingleResult();
+    private String extractToken(HandshakeRequest request) {
+        String authHeader = request.getHeaders()
+                .getOrDefault("Authorization", List.of())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+
+        String query = request.getQueryString();
+        if (query == null || query.isBlank()) {
+            return null;
+        }
+
+        for (String part : query.split("&")) {
+            int idx = part.indexOf('=');
+            if (idx <= 0) {
+                continue;
+            }
+
+            String key = URLDecoder.decode(part.substring(0, idx), StandardCharsets.UTF_8);
+            if (!"access_token".equals(key)) {
+                continue;
+            }
+
+            return URLDecoder.decode(part.substring(idx + 1), StandardCharsets.UTF_8);
+        }
+
+        return null;
     }
 
-    /*Long companyId = em.createQuery(
-    "SELECT e.company.id FROM Employee e WHERE e.keycloakUserId = :id", Long.class)
-    .setParameter("id", keycloakUserId)
-    .getSingleResult();*/
+    private String fetchRealmPublicKey() throws IOException, InterruptedException {
+        String keycloakUrl = ConfigProvider.getConfig()
+                .getOptionalValue("keycloak.url", String.class)
+                .orElse("http://localhost:8081");
+        String realm = ConfigProvider.getConfig()
+                .getOptionalValue("keycloak.realm", String.class)
+                .orElse("demo");
 
-    private String fetchRealmPublicKey() throws URISyntaxException, IOException, InterruptedException {
+        String normalizedBaseUrl = keycloakUrl.replaceAll("/$", "");
+        URI realmUri = URI.create(normalizedBaseUrl + "/realms/" + realm);
 
-        return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApC/o0bkDKz5F5Tcx3bsrz0DqDhFK+k2+Jz89X49ALg5STEHlKum4tsj7bKY7nvT0mdudDtYyGnrX8gWXLpycqmTRS7omI3sT+KwmMWagUMxHS9vqoAksmf6xJhZvNDp0Iz2YXw3HckbOO4x/BlpA37QlMQcZkWh5g4h/TzuFThBdC3K8ry9zvO/i1e9GL7UcHadRuXkSQTMy+10F+EKnKezVEKAlZbf7Z7m1zZyNNksPMZ7NcQsXvPlc/xEiHcZFMXZVnPG4PnyuZ4ZIg5kc4kBbrBdRAacNVxXkG791YPZPnU++n72e5vtP2n+nxNRGOSMTuX6tf5QhV1Vgxd/HRwIDAQAB";
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder(realmUri).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            throw new RuntimeException("Failed to fetch realm key: HTTP " + response.statusCode());
+        }
+
+        JsonNode jsonNode = new ObjectMapper().readTree(response.body());
+        String publicKey = jsonNode.path("public_key").asText();
+
+        if (publicKey == null || publicKey.isBlank()) {
+            throw new RuntimeException("Realm public_key is missing");
+        }
+
+        return publicKey;
     }
 
     private RSAPublicKey getPublicKey(String base64PublicKey) throws Exception {
