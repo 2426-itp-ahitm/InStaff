@@ -40,7 +40,7 @@ export class ShiftServiceService {
   }
 
   getShiftByEmployeeId(empId: number): void {
-    this.httpClient.get<Shift[]>(`${this.getApiUrl()}/shifts/employee/${empId}`).
+    this.httpClient.get<Shift[]>(`${this.getApiUrl()}/shifts/employee/self/`).
     subscribe((shifts: Shift[]) => {
       this.employeeShiftsSubject.next(shifts);
     });

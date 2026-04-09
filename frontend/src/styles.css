@@ -114,6 +114,11 @@ h2{
   @apply grid p-4 rounded-md bg-white border-gray-200 border-2 text-left shadow-md shadow-gray-200
 }
 
+
+.sticky-topbar {
+  @apply sticky top-13 z-40 -mx-6 px-6 py-3 bg-white  mb-4
+}
+
 /* modal */
 .modal-bg{
   @apply fixed inset-0 bg-black/50 transition;
