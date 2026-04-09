@@ -9,7 +9,7 @@ values
     (1, 'Koch', 'Ist verantwortlich für die Küche und kocht das Essen', 1),
     (2, 'Küchenhilfe', 'Unterstützt den Koch in der Küche', 1),
     (3, 'Kellner', 'Ist für den Service der Gäste verantwortlich', 1),
-    (4, 'Barkeeper', 'Serviert (anti-)akoholische Getränke an der Bar', 1),
+    (4, 'Barkeeper', 'Serviert (anti-)alkoholische Getränke an der Bar', 1),
     (5, 'Spülkraft', 'Reinigt und sortiert das Geschirr', 1);
 
 /* EMPLOYEE */

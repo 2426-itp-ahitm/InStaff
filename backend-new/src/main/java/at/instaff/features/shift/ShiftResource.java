@@ -30,7 +30,14 @@ public class ShiftResource {
     @Path("/{id}")
     public Response getShift(@PathParam("id") long id, @Context SecurityContext sc) {
         CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-        Shift shift = Shift.find("id=?1 and company.id=?2", id, principal.getCompanyId()).singleResult();
+        Shift shift = Shift.find(
+                "select distinct s from Shift s " +
+                        "left join fetch s.assignments a " +
+                        "left join fetch a.employee " +
+                        "left join fetch a.role " +
+                        "where s.id=?1 and s.company.id=?2",
+                id, principal.getCompanyId()
+        ).singleResult();
 
         return Response.ok(ShiftDTO.toResource(shift)).build();
     }
