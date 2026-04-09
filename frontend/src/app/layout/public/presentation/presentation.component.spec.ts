@@ -1,16 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {of} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 import { PresentationComponent } from './presentation.component';
 
 describe('PresentationComponent', () => {
   let component: PresentationComponent;
   let fixture: ComponentFixture<PresentationComponent>;
+  let httpSpy: jasmine.SpyObj<HttpClient>;
+  let routerSpy: jasmine.SpyObj<Router>;
+  const resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
+
+  const presentationResponse = JSON.stringify({
+    name: 'Demo',
+    slides: [
+      {id: 1, content: []},
+      {id: 2, content: [], isScrollTrigger: true},
+      {id: 3, content: []}
+    ]
+  });
 
   beforeEach(async () => {
+    httpSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    httpSpy.get.and.returnValue(of(presentationResponse));
+    window.sessionStorage.clear();
+
     await TestBed.configureTestingModule({
-      imports: [PresentationComponent]
+      imports: [PresentationComponent],
+      providers: [
+        {provide: HttpClient, useValue: httpSpy},
+        {provide: Router, useValue: routerSpy}
+      ]
     })
     .compileComponents();
+  });
+
+  afterEach(() => {
+    window.sessionStorage.clear();
+  });
+
+  beforeEach(() => {
 
     fixture = TestBed.createComponent(PresentationComponent);
     component = fixture.componentInstance;
@@ -19,5 +50,25 @@ describe('PresentationComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('restores the scroll-trigger slide when a resume index is stored', () => {
+    window.sessionStorage.setItem(resumeSlideIndexStorageKey, '1');
+
+    fixture = TestBed.createComponent(PresentationComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.slideIndex).toBe(1);
+    expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBeNull();
+  });
+
+  it('stores the current scroll-trigger slide before navigating away', () => {
+    component.slideIndex = 1;
+
+    component.onScroll({deltaY: 1, preventDefault: jasmine.createSpy('preventDefault')} as unknown as WheelEvent);
+
+    expect(window.sessionStorage.getItem(resumeSlideIndexStorageKey)).toBe('1');
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/']);
   });
 });

@@ -29,6 +29,7 @@ import {SlideContent} from '../../../interfaces/slide-content';
 export class PresentationComponent implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
 
     @ViewChildren('videoElement') videoElements!: QueryList<any>;
 
@@ -114,11 +115,32 @@ export class PresentationComponent implements OnInit {
       return;
     }
 
+    if (this.currentSlide?.isScrollTrigger) {
+      window.sessionStorage.setItem(this.resumeSlideIndexStorageKey, String(this.slideIndex));
+    }
+
     this.scrollTimeout = window.setTimeout(() => {
       this.scrollTimeout = null;
     }, 800);
 
     this.router.navigate(['/']);
+  }
+
+  private getResumeSlideIndex(): number {
+    const storedValue = window.sessionStorage.getItem(this.resumeSlideIndexStorageKey);
+    if (storedValue === null) {
+      return 0;
+    }
+
+    window.sessionStorage.removeItem(this.resumeSlideIndexStorageKey);
+
+    const parsedIndex = Number(storedValue);
+    if (!Number.isInteger(parsedIndex) || parsedIndex < 0 || !this.presentation) {
+      return 0;
+    }
+
+    const slide = this.presentation.slides[parsedIndex];
+    return slide?.isScrollTrigger === true ? parsedIndex : 0;
   }
   
     private playSlideVideos(): void {
@@ -189,8 +211,8 @@ export class PresentationComponent implements OnInit {
         }
 
         this.presentation = parsed;
-        this.slideIndex = 0;
-            this.playSlideVideos();
+        this.slideIndex = this.getResumeSlideIndex();
+        this.playSlideVideos();
         this.isLoading = false;
       },
       error: () => {

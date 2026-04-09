@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 })
 export class LandingPageComponent {
   private readonly router = inject(Router);
+  private readonly resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
@@ -22,6 +23,13 @@ export class LandingPageComponent {
     }
 
     if (event.key.toLowerCase() === 'p') {
+      window.sessionStorage.removeItem(this.resumeSlideIndexStorageKey);
+      event.preventDefault();
+      this.router.navigate(['/presentation']);
+      return;
+    }
+
+    if (event.key.toLowerCase() === 'o') {
       event.preventDefault();
       this.router.navigate(['/presentation']);
     }

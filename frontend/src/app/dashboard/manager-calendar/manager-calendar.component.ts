@@ -173,10 +173,10 @@ export class ManagerCalendarComponent implements OnInit {
     let startTime: Date = arg.date;
     let endTime: Date = arg.date;
 
-    console.log(startTime.getHours().toString());
-
-    if(startTime.getHours().toString() == "00:00:00"){
-
+    if(startTime.getHours().toString() == "0" && endTime.getHours().toString() == "0"){
+      startTime.setHours(this.companyService.getDefaultStartingHour())
+      endTime.setDate(endTime.getDate() -1);
+      endTime.setHours(this.companyService.getDefaultEndingHour())
     }
 
     let  newShift: ShiftCreate = {
@@ -188,14 +188,20 @@ export class ManagerCalendarComponent implements OnInit {
   }
 
   handleDateSelected(arg: DateSelectArg) {
-    const newStartTime: Date = arg.start;
-    const newEndTime: Date = arg.end;
+    let startTime: Date = arg.start;
+    let endTime: Date = arg.end;
+
+    if(startTime.getHours().toString() == "0" && endTime.getHours().toString() == "0"){
+      startTime.setHours(this.companyService.getDefaultStartingHour())
+      endTime.setDate(endTime.getDate() -1);
+      endTime.setHours(this.companyService.getDefaultEndingHour())
+    }
+
     let  newShift: ShiftCreate = {
       shiftName: "",
-      startTime: newStartTime,
-      endTime: newEndTime,
+      startTime: startTime,
+      endTime: endTime
     }
-    //2024-12-19T09:00:00
     this.openAddShift(newShift);
   }
 
