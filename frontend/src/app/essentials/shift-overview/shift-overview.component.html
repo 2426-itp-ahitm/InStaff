@@ -75,7 +75,8 @@
 
 
           <p class="text-gray-600 mt-1">
-            {{ assignment.shift.startTime | date:'dd.MM.yyyy HH:mm' }}
+            {{ assignment.shift.shiftName }} -
+            {{ assignment.shift.startTime | date:'dd.MM.yyyy: HH:mm' }}
             -
             {{ assignment.shift.endTime | date:'HH:mm' }}
           </p>

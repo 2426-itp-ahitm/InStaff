@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, HostListener, inject, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
@@ -11,7 +21,10 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
   templateUrl: './role-add.component.html',
   styleUrl: './role-add.component.css'
 })
-export class RoleAddComponent {
+export class RoleAddComponent implements OnInit{
+  ngOnInit(): void {
+
+  }
   roleService: RoleServiceService = inject(RoleServiceService)
 
   @ViewChild('roleNameInput') roleNameInput!: ElementRef;
@@ -19,6 +32,7 @@ export class RoleAddComponent {
 
 
   @Output() close = new EventEmitter<void>();
+  @Input() roleName?: string;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {

@@ -31,6 +31,6 @@
     <app-shift-template-edit [shiftTemplate]="selectedShiftTemplate" (closeShiftTemplateEdit)="closeShiftTemplateEdit()"></app-shift-template-edit>
   }
   @else if(isAddMode){
-    <app-shift-template-add (close)="closeShiftTemplateAdd()"></app-shift-template-add>
+    <app-shift-template-add [shiftTemplateName]="searchTerm" (close)="closeShiftTemplateAdd()"></app-shift-template-add>
   }
 </div>

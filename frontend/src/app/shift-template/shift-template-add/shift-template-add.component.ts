@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, inject, Output, ViewChild, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Output, ViewChild, OnInit, Input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
@@ -22,6 +22,8 @@ export class ShiftTemplateAddComponent implements OnInit {
   companyService: CompanyServiceService = inject(CompanyServiceService)
 
   @ViewChild('shiftTemplateNameInput') shiftTemplateNameInput!: ElementRef;
+  @Input() shiftTemplateName?: string;
+
 
   @Output() close = new EventEmitter<void>();
   // state for roles / employees UI

@@ -1,12 +1,12 @@
 <ng-container *ngIf="isLandingPage(); else routedPublicPage">
-  <nav class="fixed top-0 left-0 bg-green-darkest w-full shadow-md hidden md:flex justify-center z-50">
-    <div class="w-3/5 flex items-center justify-between py-2">
+  <nav class="fixed top-0 left-0 bg-green-darkest/20 bg-liquid-glass w-full shadow-md hidden md:flex justify-center z-50">
+    <div class="w-12/12 flex items-center justify-between py-2 px-2">
 
       <div class="flex items-center">
-        <img src="./logo_white.png" class="h-10">
+        <img src="./logo_bg_green.png" class="h-10 bg-green-dark p-1 rounded-md" alt="InStaff">
       </div>
 
-      <div class="flex flex-row space-x-4 items-center">
+      <div class="flex flex-row space-x-4 items-center ">
         <a (click)="scrollToSection('start')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'start'}">Start</a>
         <a (click)="scrollToSection('features')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'features'}">Funktionen</a>
         <a (click)="scrollToSection('about')" class="menu-item-big" [ngClass]="{'bg-green-base text-white': activeSection === 'about'}">Über uns</a>
@@ -14,7 +14,7 @@
       </div>
 
       <div class="flex items-center">
-        <button (click)="goToDashboard()" class="menu-item-big">
+        <button (click)="goToDashboard()" class="menu-item-big ">
           Login
         </button>
       </div>

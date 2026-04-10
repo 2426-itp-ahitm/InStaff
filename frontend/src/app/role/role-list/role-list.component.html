@@ -21,9 +21,9 @@
   }
 
   @if (isEditMode) {
-      <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
+    <app-role-edit [role]="selectedRole" (closeRoleEdit)="closeRoleEdit()"></app-role-edit>
   } @else if (isAddMode){
-    <app-role-add (close)="closeAddRole()"></app-role-add>
+    <app-role-add [roleName]="searchTerm" (close)="closeAddRole()"></app-role-add>
   }
 
 </div>
