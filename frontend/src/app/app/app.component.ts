@@ -1,7 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import tailwindcss from '@tailwindcss/vite'
-import {MenuComponent} from '../essentials/menu/menu.component';
 import {FeedbackBannerComponent} from '../feedback/feedback-banner/feedback-banner.component';
 import {Feedback} from '../interfaces/feedback';
 import {FeedbackServiceService} from '../feedback/feedback-service/feedback-service.service';
@@ -12,7 +10,7 @@ import {PresentationEditComponent} from '../layout/public/presentation-edit/pres
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FeedbackBannerComponent, PresentationComponent, PresentationEditComponent],
+  imports: [RouterOutlet, FeedbackBannerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 
@@ -20,7 +18,7 @@ import {PresentationEditComponent} from '../layout/public/presentation-edit/pres
 export class AppComponent implements OnInit {
   keycloakService: KeycloakService = inject(KeycloakService);
   feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
-  title = 'frontend';
+  title = 'InStaff';
 
   feedback!: Feedback;
 
