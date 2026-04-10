@@ -123,22 +123,22 @@ export class ManagerCalendarComponent implements OnInit {
 
   setResponsiveCalendarView(): void {
     if (this.isSmallScreen()) {
-      this.calendarOptions.initialView = 'listMonth'
+      this.calendarOptions.initialView = 'listWeek'
       this.calendarOptions.headerToolbar = {
         start: '',
         center: 'title',
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,next',
-        end: 'timeGridDay,listMonth'
+        start: 'prev,today,next',
+        end: 'dayGridMonth,timeGridDay,listWeek'
       }
     } else {
       this.calendarOptions.initialView = this.initialView;
       this.calendarOptions.headerToolbar = {
         start: 'prev,today,next',
         center: 'title',
-        end: 'dayGridMonth,timeGridDay,listMonth'
+        end: 'dayGridMonth,timeGridDay,listWeek'
       }
       this.calendarOptions.footerToolbar = {
         start: '',

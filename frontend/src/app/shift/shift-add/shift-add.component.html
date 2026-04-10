@@ -6,7 +6,7 @@
         <div class="modal-card-4">
 
           <!-- Step 1: Date/Time -->
-          <div *ngIf="step === 0">
+          @if(step === 0){
             <h3 class="text-lg font-semibold mb-2">Start / Ende wählen</h3>
             <div class="space-y-3">
               <div>
@@ -18,10 +18,10 @@
                 <input type="datetime-local" [(ngModel)]="endTime" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2" />
               </div>
             </div>
-          </div>
+          }
 
           <!-- Step 2: Template choose or skip -->
-          <div *ngIf="step === 1">
+          @if(step === 1){
             <h3 class="text-lg font-semibold mb-2">Schichtvorlage wählen oder überspringen</h3>
             <div class="flex gap-2 items-center">
               <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2">
@@ -29,10 +29,10 @@
                 <option *ngFor="let template of shiftTemplates" [value]="template.id">{{ template.shiftTemplateName }}</option>
               </select>
             </div>
-          </div>
+          }
 
           <!-- Step 3: Assign employees -->
-          <div *ngIf="step === 2">
+          @if(step === 2){
             <label for="shift-name" class="block text-sm/6 font-medium text-gray-900">Schicht Name</label>
             <div class="mb-2">
               <input [(ngModel)]="shiftName" type="text" name="shift-name" id="shift-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
@@ -47,29 +47,32 @@
                 </div>
 
                 <div class="space-y-2">
-                  <div *ngFor="let i of [].constructor(tmpRole.count); let idx = index" class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
-                    <span class="text-sm font-medium text-gray-600 min-w-20">{{ roleNameMap[tmpRole.roleId] }} {{ idx + 1 }}:</span>
-                    <ng-container *ngIf="initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)">
-                      <select
-                        [id]="'employee-select-' + tmpRole.roleId + '-' + idx"
-                        [ngModel]="getSelectedEmployeeId(tmpRole.roleId, idx)"
-                        (ngModelChange)="onEmployeeSelect(tmpRole.roleId, idx, $event)"
-                        class="flex-1 block rounded-md bg-white px-2 py-1 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2">
-                        <option [value]="-1" class="text-gray-400">offen</option>
-                        <ng-container *ngFor="let emp of employees">
-                          <option *ngIf="checkIfEmpHasRole(emp, tmpRole.roleId)" [value]="emp.id">{{ emp.firstname }} {{ emp.lastname }}</option>
-                        </ng-container>
-                      </select>
-                    </ng-container>
-
-                    <button
-                      type="button"
-                      class="text-red-500 hover:text-red-700 text-sm font-bold px-2"
-                      (click)="removeAssignment(tmpRole.roleId, idx)"
-                      title="Zuweisung entfernen">
-                      ×
-                    </button>
-                  </div>
+                  @for(item of [].constructor(tmpRole.count); let idx = $index; track idx){
+                    <div class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
+                      <span class="text-sm font-medium text-gray-600 min-w-20">{{ roleNameMap[tmpRole.roleId] }} {{ idx + 1 }}:</span>
+                      @if(initializeSelectedEmployees(tmpRole.roleId, tmpRole.count)){
+                        <select
+                          [id]="'employee-select-' + tmpRole.roleId + '-' + idx"
+                          [ngModel]="getSelectedEmployeeId(tmpRole.roleId, idx)"
+                          (ngModelChange)="onEmployeeSelect(tmpRole.roleId, idx, $event)"
+                          class="flex-1 block rounded-md bg-white px-2 py-1 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2">
+                          <option [value]="-1" class="text-gray-400">offen</option>
+                          @for (emp of employees; track emp.id){
+                            @if(checkIfEmpHasRole(emp, tmpRole.roleId)){
+                              <option  [value]="emp.id">{{ emp.firstname }} {{ emp.lastname }}</option>
+                            }
+                          }
+                        </select>
+                      }
+                      <button
+                        type="button"
+                        class="text-red-500 hover:text-red-700 text-sm font-bold px-2"
+                        (click)="removeAssignment(tmpRole.roleId, idx)"
+                        title="Zuweisung entfernen">
+                        ×
+                      </button>
+                    </div>
+                  }
                 </div>
                 <button
                   type="button"
@@ -88,7 +91,9 @@
                   [(ngModel)]="selectedNewRoleId"
                   class="flex-1 block rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2">
                   <option [value]="-1">Wähle Rolle</option>
-                  <option *ngFor="let r of roles" [value]="r.id">{{ r.roleName }}</option>
+                  @for (r of roles; track r.id){
+                    <option [value]="r.id">{{ r.roleName }}</option>
+                  }
                 </select>
                 <button
                   type="button"
@@ -99,14 +104,19 @@
                 </button>
               </div>
             </div>
-          </div>
-
+          }
           <!-- bottom navigation -->
           <div class="mt-6 flex items-center justify-end gap-x-4">
             <button type="button" class="button-cancel" (click)="closeAddShift()">Abbrechen</button>
-            <button type="button" class="button-cancel" (click)="back()" *ngIf="step !== 0">Zurück</button>
-            <button *ngIf="step < 2" type="button" class="button-green" (click)="next()">Weiter</button>
-            <button *ngIf="step === 2" type="button" class="button-green" (click)="save()">Speichern</button>
+            @if(step !== 0){
+              <button type="button" class="button-cancel" (click)="back()" >Zurück</button>
+            }
+            @if(step < 2){
+              <button type="button" class="button-green" (click)="next()">Weiter</button>
+
+            }@else if (step === 2) {
+              <button type="button" class="button-green" (click)="save()">Speichern</button>
+            }
           </div>
 
         </div>
