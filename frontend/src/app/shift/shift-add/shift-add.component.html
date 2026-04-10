@@ -26,7 +26,9 @@
             <div class="flex gap-2 items-center">
               <select #shiftTemplateInput name="shift-template" id="shift-template" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-2">
                 <option [value]="-1">Keine Vorlage</option>
-                <option *ngFor="let template of shiftTemplates" [value]="template.id">{{ template.shiftTemplateName }}</option>
+                @for (template of shiftTemplates; track template.id) {
+                  <option [value]="template.id">{{ template.shiftTemplateName }}</option>
+                }
               </select>
             </div>
           }
