@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../../interfaces/role';
+import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Component({
   selector: 'app-role-wiki',
@@ -14,7 +15,9 @@ import {Role} from '../../interfaces/role';
   styleUrl: './role-wiki.component.css'
 })
 export class RoleWikiComponent {
-  constructor(private roleService: RoleServiceService) {}
+
+  private roleService: RoleServiceService = inject(RoleServiceService)
+  private feedbackService: FeedbackServiceService = inject(FeedbackServiceService)
 
   roles: Role[] = []
   searchTerm: string = '';
@@ -38,6 +41,10 @@ export class RoleWikiComponent {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.roles;
     return this.roles.filter(r => r.roleName.toLowerCase().includes(q));
+  }
+
+  protected testFeedback(rolename: string) {
+    this.feedbackService.newFeedback( {message: rolename, type: 'info', showFeedback: true})
   }
 }
 

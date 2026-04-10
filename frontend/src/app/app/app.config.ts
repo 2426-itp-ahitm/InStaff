@@ -7,6 +7,7 @@ import {provideClientHydration} from '@angular/platform-browser';
 import {KeycloakBearerInterceptor, KeycloakService} from 'keycloak-angular';
 import {initializeKeycloak} from '../init/keycloak.init.factory';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {provideAnimations} from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideClientHydration(),
     provideAnimationsAsync(),
+    provideAnimations(),
     KeycloakService,
     {
       provide: APP_INITIALIZER,
