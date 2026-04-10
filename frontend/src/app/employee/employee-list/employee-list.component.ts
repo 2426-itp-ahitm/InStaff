@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {EmployeeEditComponent} from '../employee-edit/employee-edit.component';
 import {EmployeeAddComponent} from '../employee-add/employee-add.component';
 import {CardComponent} from '../../essentials/card/card.component';
@@ -18,6 +18,7 @@ import {RoleServiceService} from '../../role/role-service/role-service.service';
     EmployeeEditComponent,
     EmployeeAddComponent,
     EmployeeCardComponent,
+    NgOptimizedImage,
   ],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.css'

@@ -1,26 +1,27 @@
 <div class="mx-6">
-  <div class="sticky-searchbar bg-liquid-glass bg-green-dark/10">
-    <input type="search" placeholder="Mitarbeiter suchen..." class="input-field max-md:w-full max-md:max-w-none" (input)="onSearch($any($event.target).value)">
-    <button (click)="openAddEmployee()" type="button" class="button-green-add max-md:w-full max-md:max-w-none">Mitarbeiter hinzufügen</button>
+  <div class="sticky-searchbar bg-liquid-glass bg-green-dark/10 ">
+    <div class="max-w-5xl mx-auto flex max-md:flex-col max-md:items-stretch justify-center items-center gap-2">
+      <input type="search" placeholder="Mitarbeiter suchen..." class="input-field-frameless max-md:w-full max-md:max-w-none" (input)="onSearch($any($event.target).value)">
+      <img class="icon-button-big" (click)="openAddEmployee()" ngSrc="/icons/add-green-dark.png" alt="edit" width="36" height="36">
+    </div>
   </div>
 
-    <div class="card-grid">
-      <app-employee-card *ngFor="let e of filteredEmployees" [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
+    <div class="card-grid  mb-6">
+      @for (e of filteredEmployees ; track e.id) {
+        <app-employee-card  [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
+
+      }
     </div>
 
-    <div *ngIf="filteredEmployees.length === 0" class="mt-4 text-sm text-center text-gray-500">
-      Keine Mitarbeiter gefunden.
-      <!--<img src="https://i.sstatic.net/kOnzy.gif" alt="loading">-->
-    </div>
+    @if (filteredEmployees.length === 0) {
+      <div class="mt-4 text-sm text-center text-gray-500">
+        Keine Mitarbeiter gefunden.
+      </div>
+    }
 
-    <div class="text-center">
-
-    </div>
-
-    <div *ngIf="isEditMode">
+    @if (isEditMode) {
       <app-employee-edit [employee]="selectedEmployee" (closeEmpEdit)="closeEmpEdit()"></app-employee-edit>
-    </div>
-    <div *ngIf="isAddMode">
+    }@else if(isAddMode){
       <app-employee-add (close)="closeAddEmployee()"></app-employee-add>
-    </div>
+    }
 </div>

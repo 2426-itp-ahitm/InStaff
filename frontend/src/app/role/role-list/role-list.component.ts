@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../../interfaces/role';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
@@ -25,6 +25,15 @@ export class RoleListComponent implements OnInit{
   selectedRole: Role = this.roles[0];
   isAddMode: boolean = false;
   isEditMode: boolean = false;
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.openAddRole()
+    }else if (event.key === 'Escape') {
+
+    }
+  }
 
   //als Erstes auf roles$ subscriben und dann getRole() ausführen (pusht die neuen roles in roles$ und dann bekommen wirs)
   ngOnInit(): void {

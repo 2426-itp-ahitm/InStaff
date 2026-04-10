@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, HostListener, inject, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {ShiftTemplateEditComponent} from '../shift-template-edit/shift-template-edit.component';
@@ -22,6 +22,15 @@ import {Shifttemplate} from '../../interfaces/shifttemplate';
 export class ShiftTemplateListComponent implements OnInit {
   private shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
   private roleService: RoleServiceService = inject(RoleServiceService);
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.openAddShiftTemplate()
+    }else if (event.key === 'Escape') {
+
+    }
+  }
 
 
   shiftTemplates: Shifttemplate[] = [];

@@ -124,7 +124,7 @@ h2{
 }
 
 .sticky-searchbar {
-  @apply sticky w-max rounded-3xl top-16 z-40 px-6 py-3 mb-4 mx-auto flex max-md:flex-col max-md:items-stretch justify-center items-center gap-2
+  @apply sticky w-max rounded-3xl top-16 z-40 px-6 py-1 mb-4 mx-auto flex max-md:flex-col max-md:items-stretch justify-center items-center gap-2 hover:scale-x-102 transition-all duration-300
 }
 
 /* modal */
@@ -160,6 +160,10 @@ h2{
 
 .input-field-long {
  @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6
+}
+
+.input-field-frameless {
+  @apply block rounded-md bg-transparent px-3 py-1.5 text-base text-gray-900 outline-none focus:outline-none sm:text-sm/6
 }
 
 
@@ -230,12 +234,14 @@ h2{
 }
 
 .icon-button{
-  @apply p-2 cursor-pointer rounded-3xl ml-2 bg-green-dark
+  @apply p-2 cursor-pointer rounded-3xl ml-2 bg-green-dark transition-all hover:bg-green-base
 }
 
-.icon-button:hover{
-  @apply bg-green-base
+.icon-button-big{
+  @apply hover:scale-110 transition-all
 }
+
+
 
 
 /* news */
