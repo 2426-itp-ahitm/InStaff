@@ -1,6 +1,5 @@
 import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {CalendarComponent} from '../../essentials/calendar/calendar.component';
-import {NewsComponent} from '../../news/news/news.component';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
 import {Shift} from '../../interfaces/shift';
 import {EmployeeCalendarComponent} from '../employee-calendar/employee-calendar.component';
@@ -8,7 +7,7 @@ import {NgIf} from '@angular/common';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
-import {EmployeeShiftOverviewComponent} from '../employee-shift-overview/employee-shift-overview.component';
+import {ShiftOverviewComponent} from '../../essentials/shift-overview/shift-overview.component';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -16,7 +15,7 @@ import {EmployeeShiftOverviewComponent} from '../employee-shift-overview/employe
     EmployeeCalendarComponent,
     NgIf,
     ShiftViewComponent,
-    EmployeeShiftOverviewComponent
+    ShiftOverviewComponent
   ],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css'

@@ -9,7 +9,6 @@ import {AuthGuard} from '../guard/auth.guard';
 import {ProfilComponent} from '../essentials/profil/profil.component';
 import {ManagerDashboardComponent} from '../dashboard/manager-dashboard/manager-dashboard.component';
 import {EmployeeDashboardComponent} from '../dashboard/employee-dashboard/employee-dashboard.component';
-import {EmployeeShiftOverviewComponent} from '../dashboard/employee-shift-overview/employee-shift-overview.component';
 import {RoleWikiComponent} from '../role/role-wiki/role-wiki.component';
 import {EmployeeCalendarComponent} from '../dashboard/employee-calendar/employee-calendar.component';
 import {PublicLayoutComponent} from '../layout/public/public-layout/public-layout.component';
@@ -20,6 +19,7 @@ import {LoginComponent} from '../layout/public/login/login';
 import {PrivateLayoutComponent} from '../layout/private-layout/private-layout.component';
 import {PresentationComponent} from '../layout/public/presentation/presentation.component';
 import {PresentationEditComponent} from '../layout/public/presentation-edit/presentation-edit.component';
+import {ShiftOverviewComponent} from '../essentials/shift-overview/shift-overview.component';
 
 export const routes: Routes = [
   {
@@ -66,7 +66,7 @@ export const routes: Routes = [
       },
       {
         path: 'shift-overview',
-        component: EmployeeShiftOverviewComponent,
+        component: ShiftOverviewComponent,
         title: 'InStaff',
         canActivate: [AuthGuard]
       },

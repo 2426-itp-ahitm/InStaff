@@ -120,7 +120,11 @@ h2{
 
 
 .sticky-topbar {
-  @apply sticky top-13 z-40 -mx-6 px-6 py-3 mb-4
+  @apply sticky rounded-2xl top-8 z-40 -mx-6 w-[calc(100%+3rem)] px-6 py-3 mb-4;
+}
+
+.sticky-searchbar {
+  @apply sticky w-max rounded-3xl top-16 z-40 px-6 py-3 mb-4 mx-auto flex max-md:flex-col max-md:items-stretch justify-center items-center gap-2
 }
 
 /* modal */

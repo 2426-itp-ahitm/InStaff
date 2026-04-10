@@ -1,29 +1,29 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
+import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
 import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
-import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
-import {KeycloakService} from 'keycloak-angular';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
+import {KeycloakService} from 'keycloak-angular';
+import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
+import {Assignment} from '../../interfaces/assignment';
+import {Employee} from '../../interfaces/employee';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
-import {Employee} from '../../interfaces/employee';
-import {Assignment} from '../../interfaces/assignment';
 import {ShiftShort} from '../../interfaces/shift-short';
 
 type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 
 @Component({
-  selector: 'app-employee-shift-overview',
+  selector: 'app-shift-overview',
   imports: [
+    AsyncPipe,
     DatePipe,
-    NgClass,
-    AsyncPipe
+    NgClass
   ],
-  templateUrl: './employee-shift-overview.component.html',
-  styleUrl: './employee-shift-overview.component.css'
+  templateUrl: './shift-overview.component.html',
+  styleUrl: './shift-overview.component.css'
 })
-export class EmployeeShiftOverviewComponent implements OnInit{
-  @Input() stickyTop: string = '3rem';
+export class ShiftOverviewComponent implements OnInit{
+  @Input() stickyTop: string = '0rem';
 
   assignmentService: AssignmentServiceService = inject(AssignmentServiceService)
   roleService: RoleServiceService = inject(RoleServiceService)
