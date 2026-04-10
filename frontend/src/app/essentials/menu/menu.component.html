@@ -1,23 +1,23 @@
 <div class="fixed top-0 left-0 w-full z-50">
   <a routerLink="/profil"
-     class="mr-0 md:mr-3 fixed top-2 right-2 flex items-center justify-center w-9 h-9 rounded-full bg-green-base text-white text-sm font-semibold hover:bg-green-light transition z-50">
+     class="duration-100 transition-opacity mr-0 md:mr-3 fixed top-2 right-2 flex items-center justify-center w-9 h-9 rounded-full bg-green-base text-white text-sm font-semibold hover:bg-green-light z-50">
     {{ userInitials }}
   </a>
   <!-- MOBILE NAV -->
-  <nav class="bg-green-darkest inline-flex rounded-md m-2 shadow-md md:hidden"
+   <nav class="inline-flex rounded-md m-2  md:hidden"
        (mouseover)="isMenuOpen=true"
        (mouseleave)="isMenuOpen=false"
-       (click)="isMenuOpen = !isMenuOpen">
+       (click)="!isMenuOpen && (isMenuOpen = true)">
 
-    <div class="p-1">
-      <div class="rounded-md px-4 py-3 space-y-1 w-min text-sm font-medium text-gray-300 cursor-pointer">
-        <svg width="20" height="20" viewBox="0 0 224 224" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M28 112H196M28 56H196M28 168H196" stroke="#F3F3F3" stroke-width="15" stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="flex-col space-y-1 px-2 pb-2 transition-all duration-700"
-           [ngClass]="{ 'hidden': !isMenuOpen, 'flex': isMenuOpen }">
+  <div class="">
+    <div class="bg-green-darkest rounded-md px-4 py-3 space-y-1 w-min text-sm font-medium cursor-pointer">
+      <svg width="20" height="20" viewBox="0 0 224 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28 112H196M28 56H196M28 168H196" stroke="#F3F3F3" stroke-width="15" stroke-linecap="round"
+              stroke-linejoin="round"/>
+      </svg>
+    </div>
+    @if (isMenuOpen){
+      <div @fadeInOut class="bg-green-darkest/10 bg-liquid-glass rounded-md mt-1 flex-col space-y-1 px-2 py-2 flex">
         <a (click)="$event.stopPropagation(); closeMenu()"
            routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big"
            *ngIf="!isAdmin()">Dashboard</a>
@@ -53,29 +53,26 @@
            routerLinkActive="bg-green-base text-white" class="menu-item-big"
         >Wiki</a>
       </div>
-    </div>
+    }
+  </div>
 
   </nav>
 
   <!-- DESKTOP NAV -->
-  <nav class="bg-green-darkest w-full shadow-md hidden md:flex justify-center">
-    <div class="flex flex-row space-x-4 items-center py-2">
-      <a routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="!isAdmin()"
-         (click)="closeMenu()">Dashboard</a>
-      <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
-         (click)="closeMenu()">Dashboard</a>
-      <a routerLink="/emp-calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isEmployee()"
-         (click)="closeMenu()">Kalender</a>
-      <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
-         (click)="closeMenu()">Kalender</a>
-      <a routerLink="/emp-shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big"
-         (click)="closeMenu()">Schichtübersicht</a>
-      <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
-         (click)="closeMenu()">Team</a>
-      <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" *ngIf="isAdmin()"
-         (click)="closeMenu()">Rollen</a>
-      <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big"
-         *ngIf="isAdmin()" (click)="closeMenu()">Schichtvorlagen</a>
+  <nav class="bg-green-darkest/10 bg-liquid-glass w-full shadow-md hidden md:flex justify-center">
+    <div class="flex flex-row space-x-4 items-center py-2 text-black">
+      @if (isEmployee()) {
+        <a routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Dashboard</a>
+        <a routerLink="/shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtübersicht</a>
+        <a routerLink="/emp-calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
+      }@if (isAdmin()) {
+        <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Dashboard</a>
+        <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
+        <a routerLink="/shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtübersicht</a>
+        <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Team</a>
+        <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Rollen</a>
+        <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtvorlagen</a>
+      }
       <a routerLink="/wiki" routerLinkActive="bg-green-base text-white" class="menu-item-big"
          (click)="closeMenu()">Wiki</a>
     </div>

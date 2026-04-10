@@ -44,7 +44,7 @@ export class RoleWikiComponent {
   }
 
   protected testFeedback(rolename: string) {
-    this.feedbackService.newFeedback( {message: rolename, type: 'info', showFeedback: true})
+    this.feedbackService.newFeedback( {message: `Das ist die Role mit dem Namen ${rolename}`, type: 'info', showFeedback: true})
   }
 }
 

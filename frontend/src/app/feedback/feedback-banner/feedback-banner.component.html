@@ -1,10 +1,10 @@
 @if (showFeedback){
   <div @slideInOut
-       class="fixed top-14 right-5 z-50 px-4 py-2 rounded shadow-lg text-white transition-opacity duration-300 backdrop-blur-lg border border-white/20"
+       class="fixed top-6 right-5 z-50 px-4 py-2 rounded shadow-lg text-black transition-opacity duration-300 bg-liquid-glass"
        [ngClass]="{
-         'bg-green-base/10': feedback.type === 'success',
-         'bg-red-500/10': feedback.type === 'error',
-         'bg-green-dark': feedback.type === 'info'
+         'bg-green-base/30': feedback.type === 'success',
+         'bg-red-500/20': feedback.type === 'error',
+         'bg-green-dark/20': feedback.type === 'info'
        }"
        (click)="hideFeedback()"
   >

@@ -65,7 +65,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'emp-shift-overview',
+        path: 'shift-overview',
         component: EmployeeShiftOverviewComponent,
         title: 'InStaff',
         canActivate: [AuthGuard]

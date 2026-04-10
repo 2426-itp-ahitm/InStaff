@@ -5,6 +5,7 @@ import {KeycloakService} from 'keycloak-angular';
 import {KeycloakOperationService} from '../../services/keycloak-service/keycloak.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {Employee} from '../../interfaces/employee';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-menu',
@@ -13,6 +14,17 @@ import {Employee} from '../../interfaces/employee';
     RouterLinkActive,
     NgClass,
     NgIf
+  ],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('100ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('100ms ease-in', style({ opacity: 0 }))
+      ])
+    ])
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'

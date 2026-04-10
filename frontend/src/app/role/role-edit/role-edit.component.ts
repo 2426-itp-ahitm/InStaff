@@ -64,7 +64,6 @@ export class RoleEditComponent implements OnInit {
     };
     this.roleService.updateRole(updatedRole, this.role.id);
     this.close();
-    this.feedbackService.newFeedback({message:"Rolle erfolgreich gespeichert", type: 'success', showFeedback: true})
 
   }
 
@@ -78,7 +77,6 @@ export class RoleEditComponent implements OnInit {
       return;
     }
     this.roleService.deleteRole(roleToDelete.id);
-    this.feedbackService.newFeedback({message:"Rolle erfolgreich gelöscht", type: 'error', showFeedback: true})
 
     this.close();
   }

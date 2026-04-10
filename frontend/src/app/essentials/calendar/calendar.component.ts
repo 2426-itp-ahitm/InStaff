@@ -92,6 +92,8 @@ export class CalendarComponent implements OnInit {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
+    handleWindowResize: false,
+    viewHeight: 'auto',
 
     /* you can update a remote database when these fire:
     eventAdd:
@@ -105,10 +107,6 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.setResponsiveCalendarView();
-
-    window.addEventListener('resize', () => {
-      this.setResponsiveCalendarView();
-    });
 
     if(!this.isAllowedToEdit){
       this.isAllowedToEdit = this.keycloakOperationService.getUserRoles().includes('user-is-manager');
@@ -124,28 +122,18 @@ export class CalendarComponent implements OnInit {
 
   setResponsiveCalendarView(): void {
     if (this.isSmallScreen()) {
-      console.log("SMALL")
       this.calendarOptions.initialView = 'listMonth'
       this.calendarOptions.headerToolbar = {
-        start: '',
+        left: '',
         center: 'title',
-        end: ''
+        right: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,today,next',
-        end: 'timeGridDay,listMonth'
+        left: 'prev,today,next',
+        right: 'timeGridDay,listMonth'
       }
     } else {
-      this.calendarOptions.initialView = this.initialView;
-      this.calendarOptions.headerToolbar = {
-        start: 'prev,today,next',
-        center: 'title',
-        end: 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
-      }
-      this.calendarOptions.footerToolbar = {
-        start: '',
-        end: ''
-      }
+      this.calendarOptions.initialView = this.initialView || 'dayGridMonth';
     }
   }
 
