@@ -15,6 +15,6 @@
   </div>
 
 </div>
-<div *ngIf="isViewMode">
+@if(isViewMode){
   <app-shift-view [shiftId]="selectedShift.id" (closeShiftView)="closeShiftView()"></app-shift-view>
-</div>
+}

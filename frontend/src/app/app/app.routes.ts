@@ -56,7 +56,6 @@ export const routes: Routes = [
         component: CalendarComponent,
         title: 'InStaff',
         canActivate: [AuthGuard],
-        data: {'rolesAllowed': ['user-is-manager']}
       },
       {
         path: 'emp-calendar',

@@ -1,6 +1,5 @@
 import {Component, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {Role} from '../../interfaces/role';
@@ -14,17 +13,14 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
 import {ShiftCreate} from '../../interfaces/shift-create';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
 import {AssignmentCreate} from '../../interfaces/assignment-create';
-import {Templaterole} from '../../interfaces/templaterole';
-import {forkJoin} from 'rxjs';
+
 import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
 
 @Component({
   selector: 'app-shift-add',
   imports: [
     FormsModule,
-    NgForOf,
     ReactiveFormsModule,
-    NgIf
   ],
   templateUrl: './shift-add.component.html',
   styleUrl: './shift-add.component.css'

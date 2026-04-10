@@ -8,6 +8,8 @@ import {CompanyServiceService} from '../../services/company-service/company-serv
 import {ApiUrlService} from '../../services/api-url/api-url.service';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {EmployeeCreate} from '../../interfaces/employee-create';
+import {Shifttemplate} from '../../interfaces/shifttemplate';
+import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,7 @@ export class EmployeeServiceService {
 
   httpClient: HttpClient = inject(HttpClient);
   apiUrl: ApiUrlService = inject(ApiUrlService);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
 
   private employeesSubject = new BehaviorSubject<Employee[]>([]);
   public employees$ = this.employeesSubject.asObservable();
@@ -80,11 +83,17 @@ export class EmployeeServiceService {
 
   /* DELETE */
 
-  deleteEmployee(id: number): Observable<HttpResponse<Employee>> {
-    return this.httpClient.delete<Employee>(
-      `${this.getEmployeeApiUrl()}/${id}`,
-      { observe: 'response' }
-    );
+  deleteEmployee(id: number):boolean{
+    let deleteSucceeded = true;
+    this.httpClient.delete<Employee>(`${this.getEmployeeApiUrl()}/${id}`)
+      .subscribe((response) => {
+        const currentEmps = this.employeesSubject.getValue();
+        const updatedEmps = currentEmps.filter(e => e.id !== id);
+        this.employeesSubject.next(updatedEmps);
+        this.feedbackService.newFeedback({message:"Mitarbeiter erfolgreich gelöscht", type: 'success', showFeedback: true})
+      });
+    return deleteSucceeded;
+
   }
 
 

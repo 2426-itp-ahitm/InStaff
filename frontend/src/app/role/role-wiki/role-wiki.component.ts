@@ -1,16 +1,11 @@
 import {Component, inject} from '@angular/core';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../../interfaces/role';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Component({
   selector: 'app-role-wiki',
-  imports: [
-    NgForOf,
-    NgIf,
-    NgOptimizedImage
-  ],
+  imports: [],
   templateUrl: './role-wiki.component.html',
   styleUrl: './role-wiki.component.css'
 })

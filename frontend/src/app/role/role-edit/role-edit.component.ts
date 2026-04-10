@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import {Role} from '../../interfaces/role';
 import {FormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Employee} from '../../interfaces/employee';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
@@ -21,9 +20,7 @@ import {RoleCreate} from '../../interfaces/role-create';
 @Component({
   selector: 'app-role-edit',
   imports: [
-    FormsModule,
-    NgForOf,
-    NgIf
+    FormsModule
   ],
   templateUrl: './role-edit.component.html',
   styleUrl: './role-edit.component.css'
@@ -76,9 +73,10 @@ export class RoleEditComponent implements OnInit {
     if (!confirmed) {
       return;
     }
-    this.roleService.deleteRole(roleToDelete.id);
+    if(this.roleService.deleteRole(roleToDelete.id)){
+      this.close();
 
-    this.close();
+    };
   }
 
   removeEmployeeFromRole(id: number) {

@@ -1,9 +1,5 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {NgIf} from '@angular/common';
-import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
-import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
-import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {Shift} from '../../interfaces/shift';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';

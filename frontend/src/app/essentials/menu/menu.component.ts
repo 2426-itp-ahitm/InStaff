@@ -1,6 +1,5 @@
 import {Component, ElementRef, HostListener, inject, OnInit} from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
-import {NgClass, NgIf} from '@angular/common';
 import {KeycloakService} from 'keycloak-angular';
 import {KeycloakOperationService} from '../../services/keycloak-service/keycloak.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
@@ -11,9 +10,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
   selector: 'app-menu',
   imports: [
     RouterLink,
-    RouterLinkActive,
-    NgClass,
-    NgIf
+    RouterLinkActive
   ],
   animations: [
     trigger('fadeInOut', [

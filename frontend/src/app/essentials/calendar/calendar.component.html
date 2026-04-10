@@ -2,13 +2,13 @@
   <div class="max-h-[99vh] overflow-auto m-4">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
-  <div *ngIf="isEditMode && !isAllowedToEdit">
-    <app-shift-view [shiftId]="selectedShift.id" (closeShiftView)="closeShiftEdit()"></app-shift-view>
-  </div>
-  <div *ngIf="isEditMode && isAllowedToEdit">
-    <app-shift-edit [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit>
-  </div>
-  <div *ngIf="isAddMode">
+  @if (isEditMode) {
+    @if (isAllowedToEdit) {
+      <app-shift-edit [shiftId]="selectedShift.id" (closeShiftEdit)="closeShiftEdit()"></app-shift-edit>
+    }@else {
+      <app-shift-view [shiftId]="selectedShift.id" (closeShiftView)="closeShiftEdit()"></app-shift-view>
+    }
+  }@else if (isAddMode){
     <app-shift-add (close)="closeAddShift()"></app-shift-add>
-  </div>
+  }
 </div>

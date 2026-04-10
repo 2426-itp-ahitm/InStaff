@@ -1,15 +1,13 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {RoleServiceService} from '../role-service/role-service.service';
 import {Role} from '../../interfaces/role';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage} from '@angular/common';
 import {RoleEditComponent} from '../role-edit/role-edit.component';
 import {RoleAddComponent} from '../role-add/role-add.component';
 
 @Component({
   selector: 'app-role-list',
   imports: [
-    NgForOf,
-    NgIf,
     RoleEditComponent,
     RoleAddComponent,
     NgOptimizedImage

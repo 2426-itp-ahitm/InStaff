@@ -9,7 +9,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
@@ -22,10 +21,8 @@ import {Employee} from '../../interfaces/employee';
 @Component({
   selector: 'app-employee-edit',
   imports: [
-    NgForOf,
     FormsModule,
-    ReactiveFormsModule,
-    NgIf
+    ReactiveFormsModule
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.css'
@@ -164,13 +161,10 @@ export class EmployeeEditComponent implements OnInit {
       return;
     }
 
-    this.employeeService.deleteEmployee(emp.id).subscribe({
-      next: (res) => {
-        this.closeEmployeeEdit();
-        this.feedbackService.newFeedback({message:"Mitarbeiter erfolgreich gelöscht", type: 'success', showFeedback: true})
-      }
-    });
-
+    if(this.employeeService.deleteEmployee(emp.id)){
+      console.log("deleted")
+      this.closeEmployeeEdit();
+    }
 
   }
 

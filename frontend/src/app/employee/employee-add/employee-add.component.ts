@@ -1,6 +1,5 @@
-import {Component, ElementRef, ViewChild, Output, EventEmitter, OnInit, inject, HostListener} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
+import {Component, Output, EventEmitter, OnInit, inject, HostListener} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
 import {Role} from '../../interfaces/role';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
@@ -12,9 +11,7 @@ import {EmployeeCreate} from '../../interfaces/employee-create';
   selector: 'app-employee-add',
   imports: [
     FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    NgIf
+    ReactiveFormsModule
   ],
   templateUrl: 'employee-add.component.html',
   styleUrl: 'employee-add.component.css'

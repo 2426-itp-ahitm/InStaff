@@ -3,7 +3,6 @@ import {CalendarComponent} from '../../essentials/calendar/calendar.component';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
 import {Shift} from '../../interfaces/shift';
 import {NewsComponent} from '../../news/news/news.component';
-import {NgIf} from '@angular/common';
 import {ShiftAddComponent} from '../../shift/shift-add/shift-add.component';
 import {ShiftEditComponent} from '../../shift/shift-edit/shift-edit.component';
 import {ManagerCalendarComponent} from '../manager-calendar/manager-calendar.component';
@@ -20,7 +19,6 @@ import {ShiftCreate} from '../../interfaces/shift-create';
   selector: 'app-manager-dashboard',
   imports: [
     NewsComponent,
-    NgIf,
     ShiftAddComponent,
     ShiftEditComponent,
     ManagerCalendarComponent

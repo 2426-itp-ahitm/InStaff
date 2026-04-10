@@ -33,14 +33,16 @@ export class ShiftTemplateServiceService {
       });
   }
 
-  deleteShiftTemplate(id: number) {
-    this.httpClient.delete<Shifttemplate>(`${this.getApiUrl()}/shift-templates/delete/${id}`)
+  deleteShiftTemplate(id: number):boolean {
+    let deleteSucceded = true
+    this.httpClient.delete<Shifttemplate>(`${this.getApiUrl()}/shift-templates/${id}`)
       .subscribe((response) => {
         const currentShifts = this.shiftTemplatesSubject.getValue();
         const updatedShifts = currentShifts.filter(sT => sT.id !== id);
         this.shiftTemplatesSubject.next(updatedShifts);
         this.feedbackService.newFeedback({message:"Schicht Vorlage erfolgreich gelöscht", type: 'success', showFeedback: true})
       });
+    return deleteSucceded;
   }
   //TODO mit Phiz besprechen
   /*

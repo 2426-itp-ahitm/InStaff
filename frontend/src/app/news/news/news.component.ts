@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { NewsService } from '../news-service/news.service';
-import { NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { DateService } from '../../services/date-service/date.service';
 import { Subscription } from 'rxjs';
 import { AssignmentNews } from '../../interfaces/assignment-news';
@@ -8,9 +8,7 @@ import { AssignmentNews } from '../../interfaces/assignment-news';
 @Component({
   selector: 'app-news',
   imports: [
-    NgForOf,
-    NgOptimizedImage,
-    NgIf
+    NgOptimizedImage
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.css'

@@ -66,15 +66,17 @@ export class RoleServiceService {
     return returnValue;
   }
 
-  deleteRole(id: number): void {
-    this.httpClient.delete<Role>(`${this.getApiUrl()}/roles/remove/${id}`)
+  deleteRole(id: number): boolean {
+    let deletedSucceeded = true
+    this.httpClient.delete<Role>(`${this.getApiUrl()}/roles/${id}`)
       .subscribe((response) => {
         const currentRoles = this.rolesSubject.getValue();
         const updatedRoles = currentRoles.filter(r => r.id !== id);
         this.rolesSubject.next(updatedRoles);
-        this.feedbackService.newFeedback({message:"Rolle erfolgreich gelöscht", type: 'error', showFeedback: true})
+        this.feedbackService.newFeedback({message:"Rolle erfolgreich gelöscht", type: 'success', showFeedback: true})
 
       });
+    return deletedSucceeded;
   }
 
   getRoleById(id: number): Role {

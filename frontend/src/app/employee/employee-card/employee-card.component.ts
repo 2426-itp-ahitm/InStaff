@@ -1,14 +1,12 @@
 import {Component, inject, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import { Employee } from "../../interfaces/employee";
 import {EmployeeServiceService} from '../employee-service/employee-service.service';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {DateService} from '../../services/date-service/date.service';
 
 @Component({
   selector: 'app-employee-card',
   imports: [
-    NgForOf,
-    NgIf,
     NgOptimizedImage
   ],
   templateUrl: './employee-card.component.html',

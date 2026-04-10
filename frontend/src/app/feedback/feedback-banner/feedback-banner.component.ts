@@ -1,5 +1,5 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
-import {NgClass, NgIf} from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {NgClass} from '@angular/common';
 import {FeedbackServiceService} from '../feedback-service/feedback-service.service';
 import {Feedback} from '../../interfaces/feedback';
 import {animate, style, transition, trigger} from '@angular/animations';
@@ -9,7 +9,6 @@ import {animate, style, transition, trigger} from '@angular/animations';
   templateUrl: './feedback-banner.component.html',
   styleUrls: ['./feedback-banner.component.css'],
   imports: [
-    NgIf,
     NgClass
   ],
   standalone: true,

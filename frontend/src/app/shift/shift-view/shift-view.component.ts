@@ -10,7 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {Shift} from '../../interfaces/shift';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
@@ -27,8 +27,6 @@ import {Shifttemplate} from '../../interfaces/shifttemplate';
   selector: 'app-shift-view',
   imports: [
     FormsModule,
-    NgForOf,
-    NgIf,
     ReactiveFormsModule,
     NgClass
   ],

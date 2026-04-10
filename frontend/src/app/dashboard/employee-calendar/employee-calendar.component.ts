@@ -1,6 +1,5 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {NgIf} from '@angular/common';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {Shift} from '../../interfaces/shift';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
@@ -19,7 +18,6 @@ import {KeycloakService} from 'keycloak-angular';
   selector: 'app-employee-calendar',
   imports: [
     FullCalendarModule,
-    NgIf,
     ShiftViewComponent
   ],
   templateUrl: './employee-calendar.component.html',

@@ -1,5 +1,5 @@
 import {Component, HostListener, inject, OnInit} from '@angular/core';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {ShiftTemplateServiceService} from '../shift-template-service/shift-template-service.service';
 import {ShiftTemplateEditComponent} from '../shift-template-edit/shift-template-edit.component';
 import {ShiftTemplateAddComponent} from '../shift-template-add/shift-template-add.component';
@@ -10,8 +10,6 @@ import {Shifttemplate} from '../../interfaces/shifttemplate';
 @Component({
   selector: 'app-shift-template-list',
   imports: [
-    NgForOf,
-    NgIf,
     ShiftTemplateEditComponent,
     ShiftTemplateAddComponent,
     NgOptimizedImage

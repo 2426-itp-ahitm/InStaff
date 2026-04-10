@@ -3,7 +3,6 @@ import {CalendarComponent} from '../../essentials/calendar/calendar.component';
 import {ShiftServiceService} from '../../shift/shift-service/shift-service.service';
 import {Shift} from '../../interfaces/shift';
 import {EmployeeCalendarComponent} from '../employee-calendar/employee-calendar.component';
-import {NgIf} from '@angular/common';
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
@@ -13,7 +12,6 @@ import {ShiftOverviewComponent} from '../../essentials/shift-overview/shift-over
   selector: 'app-employee-dashboard',
   imports: [
     EmployeeCalendarComponent,
-    NgIf,
     ShiftViewComponent,
     ShiftOverviewComponent
   ],

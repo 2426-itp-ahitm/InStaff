@@ -70,8 +70,9 @@ export class ShiftTemplateEditComponent implements OnInit {
     if (!confirmed) {
       return;
     }
-    this.shiftTemplateService.deleteShiftTemplate(shiftTemplateToDelte.id);
-    this.close();
+    if(this.shiftTemplateService.deleteShiftTemplate(shiftTemplateToDelte.id)){
+      this.close();
+    }
   }
 
   getRoleName(roleId: number): string {
