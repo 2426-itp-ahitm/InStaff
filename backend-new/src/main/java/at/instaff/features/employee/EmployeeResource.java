@@ -94,6 +94,7 @@ public class EmployeeResource {
         Employee employee = EmployeeCreateDTO.toEmployee(dto, principal.getCompanyId());
 
         Employee.persist(employee);
+        employee.keycloakUserId = keycloakAdminService.createUser(employee);
         return Response.status(Response.Status.CREATED).entity(EmployeeDTO.toResource(employee)).build();
     }
 
@@ -107,7 +108,7 @@ public class EmployeeResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         String oldEmail = employee.email;
-        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()), dto.isActive());
+        employee.updateEmployee(dto.firstname(), dto.lastname(), dto.email(), dto.telephone(), dto.birthDate(), dto.hourlyWage(), dto.address(), dto.isManager(), Role.findByIds(dto.roles()), dto.isActive(), dto.isSelfManaged());
         keycloakAdminService.syncEmployee(employee, oldEmail != null && !oldEmail.equals(dto.email()));
 
         employee.persist();

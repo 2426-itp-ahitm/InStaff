@@ -23,7 +23,8 @@ public record EmployeeCreateDTO(
         List<Long> roles, // List of role IDs
         double hourlyWage,
         String address,
-        boolean isActive
+        boolean isActive,
+        boolean isSelfManaged
 ) {
     public static Employee toEmployee(EmployeeCreateDTO dto, long companyId) {
         return new Employee(dto.firstname(),
@@ -36,6 +37,7 @@ public record EmployeeCreateDTO(
                 dto.isManager(),
                 Company.findById(companyId),
                 Role.findByIds(dto.roles),
-                dto.isActive());
+                dto.isActive(),
+                dto.isSelfManaged());
     }
 }

@@ -5,6 +5,7 @@ import at.instaff.features.role.Role;
 import at.instaff.features.security.CustomPrincipal;
 import at.instaff.features.shift.Shift;
 import at.instaff.features.shift.ShiftDTO;
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -151,7 +152,12 @@ public class AssignmentResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            assignment = new Assignment(employee, shift, role);
+            assignment = new Assignment(employee, shift, role, null);
+
+            if (!employee.isSelfManaged) {
+                Log.info("Assignment " + assignment.id + " is self-managed");
+                assignment.confirmed = true;
+            }
         } else {
             assignment = new Assignment(shift, role);
         }
@@ -189,6 +195,11 @@ public class AssignmentResource {
         assignment.shift = shift;
         assignment.role = role;
         assignment.employee = employee;
+
+        if (!employee.isSelfManaged) {
+            assignment.confirmed = true;
+        }
+
         assignment.persist();
         assignmentSocket.assignmentUpdated(assignment);
         return Response.ok(AssignmentDTO.toResource(assignment)).build();

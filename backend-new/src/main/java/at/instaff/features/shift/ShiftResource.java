@@ -123,7 +123,11 @@ public class ShiftResource {
 
             if (role != null) {
                 Assignment assignment = new Assignment(employee, Shift.findById(shift.id),
-                        role);
+                        role, null);
+
+                if (!employee.isSelfManaged) {
+                    assignment.confirmed = true;
+                }
                 assignment.persist();
             } else {
                 status = 207;

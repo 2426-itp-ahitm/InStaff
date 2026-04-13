@@ -1,7 +1,7 @@
 /* COMPANY */
 insert into company (id, company_name)
 values
-    (1, 'Stoaboch Wirt');
+    (1, 'Leondinger Wirt');
 
 /* ROLE */
 insert into role (id, role_name, description, company_id)
@@ -13,16 +13,16 @@ values
     (5, 'Spülkraft', 'Reinigt und sortiert das Geschirr', 1);
 
 /* EMPLOYEE */
-insert into employee (id, birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage, is_active)
+insert into employee (id, birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage, is_active, is_self_managed)
 values
-    (1, '2004-11-11 00:00:00', 'paul.mueller@instaff.at', 'Paul', 'Müller', '+436641234567', 1, false, 'Limesstraße 12, 4060 Leonding', 15, true),
-    (2, '2003-04-21 00:00:00', 'alexander.hahn@instaff.at', 'Alexander', 'Hahn', '+436601112233', 1, false, 'Stadtplatz 4, 4020 Linz', 16, true),
-    (3, '1998-06-15 00:00:00', 'anna.schmid@instaff.at', 'Anna', 'Schmid', '+436763334455', 1, false, 'Unionstraße 18, 4020 Linz', 17, true),
-    (4, '1985-02-27 00:00:00', 'bernhard.penkner@instaff.at', 'Bernhard', 'Penkner', '+436991234567', 1, true, 'Limesstraße 30, 4060 Leonding', 22, true),
-    (5, '1995-03-22 00:00:00', 'michael.brown@instaff.at', 'Michael', 'Brown', '+436504445566', 1, false, 'Hauptstraße 7, 4050 Traun', 15, true),
-    (6, '1992-08-17 00:00:00', 'sarah.jones@instaff.at', 'Sarah', 'Jones', '+436644443322', 1, false, 'Bahnhofstraße 11, 4020 Linz', 16, true),
-    (7, '1988-12-01 00:00:00', 'daniel.white@instaff.at', 'Daniel', 'White', '+436801234890', 1, false, 'Marktplatz 2, 4061 Pasching', 18, true),
-    (8, '1985-05-03 00:00:00', 'alois.ernst@instaff.at', 'Alois', 'Ernst', '+4306820235843', 1, true, 'Hofberg 18, 4020 Linz', 40, true);
+    (1, '2004-11-11 00:00:00', 'paul.mueller@instaff.at', 'Paul', 'Müller', '+436641234567', 1, false, 'Limesstraße 12, 4060 Leonding', 15, true, true),
+    (2, '2003-04-21 00:00:00', 'alexander.hahn@instaff.at', 'Alexander', 'Hahn', '+436601112233', 1, false, 'Stadtplatz 4, 4020 Linz', 16, true, true),
+    (3, '1998-06-15 00:00:00', 'grandma.schmid@instaff.at', 'Grandma', 'Schmid', '+436763334455', 1, false, 'Unionstraße 18, 4020 Linz', 17, true, false),
+    (4, '1985-02-27 00:00:00', 'bernhard.penkner@instaff.at', 'Bernhard', 'Penkner', '+436991234567', 1, true, 'Limesstraße 30, 4060 Leonding', 22, true, true),
+    (5, '1995-03-22 00:00:00', 'michael.brown@instaff.at', 'Michael', 'Brown', '+436504445566', 1, false, 'Hauptstraße 7, 4050 Traun', 15, true, true),
+    (6, '1992-08-17 00:00:00', 'sarah.jones@instaff.at', 'Sarah', 'Jones', '+436644443322', 1, false, 'Bahnhofstraße 11, 4020 Linz', 16, true, true),
+    (7, '1988-12-01 00:00:00', 'daniel.white@instaff.at', 'Daniel', 'White', '+436801234890', 1, false, 'Marktplatz 2, 4061 Pasching', 18, true, true),
+    (8, '1985-05-03 00:00:00', 'alois.ernst@instaff.at', 'Alois', 'Ernst', '+4306820235843', 1, true, 'Hofberg 18, 4020 Linz', 40, true, true);
 
 /* SHIFT */
 insert into shift (id, shift_name, start_time, end_time, company_id)
@@ -148,24 +148,66 @@ values
     (75, 5,20,2,false),
     (76, 2,20,3,false),
 
-    (77, 4,21,1,false),(78, 1,21,2,false),(79, 7,21,3,false),
-    (80, 8,22,1,false),(81, 5,22,2,false),(82, 3,22,3,false),
-    (83, 1,23,1,false),(84, 5,23,2,false),(85, 2,23,3,false),
+    (77, 4,21,1,false),
+    (78, 1,21,2,false),
+    (79, 7,21,3,false),
+    (80, 8,22,1,false),
+    (81, 5,22,2,false),
+    (82, 3,22,3,false),
+    (83, 1,23,1,false),
+    (84, 5,23,2,false),
+    (85, 2,23,3,false),
 
-    (86, 4,24,1,false),(87, 8,24,1,false),(88, 1,24,2,false),(89, 2,24,3,false),(90, 3,24,3,false),(91, 7,24,3,false),(92, 6,24,5,false),
-    (93, 1,25,1,false),(94, 4,25,1,false),(95, 5,25,2,false),(96, 2,25,3,false),(97, 3,25,3,false),(98, 6,25,5,false),
+    (86, 4,24,1,false),
+    (87, 8,24,1,false),
+    (88, 1,24,2,false),
+    (89, 2,24,3,false),
+    (90, 3,24,3,false),
+    (91, 7,24,3,false),
+    (92, 6,24,5,false),
+    (93, 1,25,1,false),
+    (94, 4,25,1,false),
+    (95, 5,25,2,false),
+    (96, 2,25,3,false),
+    (97, 3,25,3,false),
+    (98, 6,25,5,false),
 
-    (99, 1,26,1,false),(100, 5,26,2,false),(101, 2,26,3,false),
-    (102, 4,27,1,false),(103, 1,27,2,false),(104, 7,27,3,false),
-    (105, 8,28,1,false),(106, 5,28,2,false),(107, 3,28,3,false),
-    (108, 1,29,1,false),(109, 5,29,2,false),(110, 2,29,3,false),
+    (99, 1,26,1,false),
+    (100, 5,26,2,false),
+    (101, 2,26,3,false),
+    (102, 4,27,1,false),
+    (103, 1,27,2,false),
+    (104, 7,27,3,false),
+    (105, 8,28,1,false),
+    (106, 5,28,2,false),
+    (107, 3,28,3,false),
+    (108, 1,29,1,false),
+    (109, 5,29,2,false),
+    (110, 2,29,3,false),
 
-    (111, 4,30,1,false),(112, 8,30,1,false),(113, 1,30,2,false),(114, 2,30,3,false),(115, 3,30,3,false),(116, 7,30,3,false),(117, 6,30,5,false),
-    (118, 1,31,1,false),(119, 4,31,1,false),(120, 5,31,2,false),(121, 2,31,3,false),(122, 3,31,3,false),(123, 6,31,5,false),
+    (111, 4,30,1,false),
+    (112, 8,30,1,false),
+    (113, 1,30,2,false),
+    (114, 2,30,3,false),
+    (115, 3,30,3,false),
+    (116, 7,30,3,false),
+    (117, 6,30,5,false),
+    (118, 1,31,1,false),
+    (119, 4,31,1,false),
+    (120, 5,31,2,false),
+    (121, 2,31,3,false),
+    (122, 3,31,3,false),
+    (123, 6,31,5,false),
 
-    (124, 1,32,1,false),(125, 5,32,2,false),(126, 2,32,3,false),
-    (127, 4,33,1,false),(128, 1,33,2,false),(129, 7,33,3,false),
-    (130, 8,34,1,false),(131, 5,34,2,false),(132, 3,34,3,false);
+    (124, 1,32,1,false),
+    (125, 5,32,2,false),
+    (126, 2,32,3,false),
+    (127, 4,33,1,false),
+    (128, 1,33,2,false),
+    (129, 7,33,3,false),
+    (130, 8,34,1,false),
+    (131, 5,34,2,false),
+    (132, 3,34,3,false);
 
 /* SHIFT TEMPLATE */
 insert into shift_template (id, shift_template_name, company_id)

@@ -25,12 +25,13 @@ public record EmployeeDTO(
         double hourlyWage,
         String address,
         Boolean isActive,
+        Boolean isSelfManaged,
         CompanyDTO company,
         List<RoleDTO> roles
 ) {
     public static EmployeeDTO toResource(Employee employee) {
         return new EmployeeDTO(employee.id, employee.keycloakUserId, employee.firstName, employee.lastName, employee.email, employee.telephone, employee.birthDate,
-                employee.isManager, employee.hourlyWage, employee.address, employee.isActive, CompanyDTO.toResource(employee.company),
+                employee.isManager, employee.hourlyWage, employee.address, employee.isActive, employee.isSelfManaged, CompanyDTO.toResource(employee.company),
                 employee.roles.stream().map(RoleDTO::toResource).toList());
     }
 }

@@ -27,10 +27,11 @@ public class Assignment extends PanacheEntity {
 
     public Assignment() {}
 
-    public Assignment(Employee employee, Shift shift, Role role) {
+    public Assignment(Employee employee, Shift shift, Role role, Boolean confirmed) {
         this.employee = employee;
         this.shift = shift;
         this.role = role;
+        this.confirmed = confirmed;
     }
 
     public Assignment(Shift shift, Role role) {
