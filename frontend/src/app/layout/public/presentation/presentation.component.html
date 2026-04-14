@@ -1,18 +1,27 @@
 <div class="presentation-bg">
-  <div class="slide" *ngIf="!isLoading && currentSlide as slide" [@slideIn]="slideIndex">
-    <div
-      *ngFor="let item of slide.content"
-      class="slide-content-item"
-      [ngStyle]="getContentStyles(item)"
-    >
-      <div class="slide-content-render" [style.animation]="getContentAnimation(item)">
-        <div *ngIf="item.text" [innerHTML]="item.text"></div>
-        <img *ngIf="item.image" [src]="item.image" alt="Slide image" class="slide-image" [ngStyle]="getMediaStyles(item)">
-        <video *ngIf="item.video" #videoElement class="slide-video" muted [ngStyle]="getMediaStyles(item)">
-          <source [src]="item.video" type="video/mp4">
-          Ihr Browser unterstützt das Video-Element nicht.
-        </video>
-      </div>
+  @if (!isLoading && currentSlide; as slide) {
+    <div class="slide" [@slideIn]="slideIndex">
+      @for (item of slide.content; track item) {
+        <div
+          class="slide-content-item"
+          [ngStyle]="getContentStyles(item)"
+          >
+          <div class="slide-content-render" [style.animation]="getContentAnimation(item)">
+            @if (item.text) {
+              <div [innerHTML]="item.text"></div>
+            }
+            @if (item.image) {
+              <img [src]="item.image" alt="Slide image" class="slide-image" [ngStyle]="getMediaStyles(item)">
+            }
+            @if (item.video) {
+              <video #videoElement class="slide-video" muted [ngStyle]="getMediaStyles(item)">
+                <source [src]="item.video" type="video/mp4">
+                Ihr Browser unterstützt das Video-Element nicht.
+              </video>
+            }
+          </div>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>

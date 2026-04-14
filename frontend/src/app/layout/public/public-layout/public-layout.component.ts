@@ -4,7 +4,7 @@ import {FeaturesComponent} from '../features/features.component';
 import {LandingPageComponent} from '../landing-page/landing-page.component';
 import {AboutUsComponent} from '../about-us/about-us.component';
 import {KeycloakService} from 'keycloak-angular';
-import {NgClass, NgIf} from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-public-layout',
@@ -13,9 +13,8 @@ import {NgClass, NgIf} from '@angular/common';
     FeaturesComponent,
     LandingPageComponent,
     AboutUsComponent,
-    NgClass,
-    NgIf
-  ],
+    NgClass
+],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css'
 })

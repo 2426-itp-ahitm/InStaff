@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DateSelectArg, EventClickArg} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -19,12 +19,11 @@ import {ShiftCreate} from '../../interfaces/shift-create';
 @Component({
   selector: 'app-calendar',
   imports: [
-    CommonModule,
     FullCalendarModule,
     ShiftAddComponent,
     ShiftEditComponent,
     ShiftViewComponent
-  ],
+],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })

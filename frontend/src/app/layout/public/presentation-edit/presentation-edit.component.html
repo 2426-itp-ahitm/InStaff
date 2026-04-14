@@ -1,172 +1,201 @@
 <div class="editor-shell">
-	<header class="ribbon">
-		<div class="ribbon-title-group">
-			<h1>Presentation Studio</h1>
-			<p>PowerPoint-aehnlicher Editor</p>
-		</div>
-		<form [formGroup]="presentationForm" class="name-form">
-			<input type="text" formControlName="name" class="name-input" placeholder="Praesentationsname">
-		</form>
-		<div class="ribbon-actions">
-			<button type="button" (click)="updatePresentationMeta()" class="btn btn-primary">Name Speichern</button>
-			<button type="button" (click)="exportPresentationAsJson()" class="btn btn-dark">Als .js Speichern</button>
-			<label class="btn btn-upload">
-				Upload
-				<input type="file" accept=".js,.json" class="hidden" (change)="uploadPresentation($event)">
-			</label>
-		</div>
-	</header>
+  <header class="ribbon">
+    <div class="ribbon-title-group">
+      <h1>Presentation Studio</h1>
+      <p>PowerPoint-aehnlicher Editor</p>
+    </div>
+    <form [formGroup]="presentationForm" class="name-form">
+      <input type="text" formControlName="name" class="name-input" placeholder="Praesentationsname">
+    </form>
+    <div class="ribbon-actions">
+      <button type="button" (click)="updatePresentationMeta()" class="btn btn-primary">Name Speichern</button>
+      <button type="button" (click)="exportPresentationAsJson()" class="btn btn-dark">Als .js Speichern</button>
+      <label class="btn btn-upload">
+        Upload
+        <input type="file" accept=".js,.json" class="hidden" (change)="uploadPresentation($event)">
+      </label>
+    </div>
+  </header>
 
-	<div *ngIf="infoMessage" class="info-banner">{{ infoMessage }}</div>
+  @if (infoMessage) {
+    <div class="info-banner">{{ infoMessage }}</div>
+  }
 
-	<div class="workspace">
-		<aside class="slides-panel">
-			<div class="slides-panel-header">
-				<h2>Slides</h2>
-				<button type="button" (click)="addSlide()" class="btn btn-secondary">Neue Slide</button>
-			</div>
-			<div class="slides-list">
-				<button
-					type="button"
-					*ngFor="let slide of presentation.slides; let i = index"
-					class="slide-thumb"
-					(click)="goToPreviewSlide(i)"
-					[ngStyle]="getPreviewSlideStyle(i)"
-				>
-					<span>Slide {{ i + 1 }}</span>
-					<small>#{{ slide.id }} | {{ slide.content.length }} Elemente</small>
-					<div class="slide-trigger-mark" *ngIf="slide.isScrollTrigger" title="Scroll-Trigger aktiviert">
-						✓
-					</div>
-				</button>
-			</div>
-			<div class="slides-actions" *ngIf="previewSlide">
-				<button type="button" class="btn btn-secondary" (click)="toggleScrollTrigger(previewSlide.id)">
-					{{ previewSlide.isScrollTrigger ? 'Scroll-Trigger deaktivieren' : 'Als Scroll-Trigger setzen' }}
-				</button>
-				<button type="button" class="btn btn-danger" (click)="deleteSlide(previewSlide.id)">Aktive Slide loeschen</button>
-			</div>
-		</aside>
+  <div class="workspace">
+    <aside class="slides-panel">
+      <div class="slides-panel-header">
+        <h2>Slides</h2>
+        <button type="button" (click)="addSlide()" class="btn btn-secondary">Neue Slide</button>
+      </div>
+      <div class="slides-list">
+        @for (slide of presentation.slides; track slide; let i = $index) {
+          <button
+            type="button"
+            class="slide-thumb"
+            (click)="goToPreviewSlide(i)"
+            [ngStyle]="getPreviewSlideStyle(i)"
+            >
+            <span>Slide {{ i + 1 }}</span>
+            <small>#{{ slide.id }} | {{ slide.content.length }} Elemente</small>
+            @if (slide.isScrollTrigger) {
+              <div class="slide-trigger-mark" title="Scroll-Trigger aktiviert">
+                ✓
+              </div>
+            }
+          </button>
+        }
+      </div>
+      @if (previewSlide) {
+        <div class="slides-actions">
+          <button type="button" class="btn btn-secondary" (click)="toggleScrollTrigger(previewSlide.id)">
+            {{ previewSlide.isScrollTrigger ? 'Scroll-Trigger deaktivieren' : 'Als Scroll-Trigger setzen' }}
+          </button>
+          <button type="button" class="btn btn-danger" (click)="deleteSlide(previewSlide.id)">Aktive Slide loeschen</button>
+        </div>
+      }
+    </aside>
 
-		<main class="main-stage">
-			<div class="preview-toolbar" *ngIf="presentation.slides.length > 0">
-				<button type="button" class="btn btn-nav" (click)="previousPreviewSlide()">Zurueck</button>
-				<span>Slide {{ previewSlideIndex + 1 }} / {{ presentation.slides.length }}</span>
-				<button type="button" class="btn btn-nav" (click)="nextPreviewSlide()">Weiter</button>
-			</div>
+    <main class="main-stage">
+      @if (presentation.slides.length > 0) {
+        <div class="preview-toolbar">
+          <button type="button" class="btn btn-nav" (click)="previousPreviewSlide()">Zurueck</button>
+          <span>Slide {{ previewSlideIndex + 1 }} / {{ presentation.slides.length }}</span>
+          <button type="button" class="btn btn-nav" (click)="nextPreviewSlide()">Weiter</button>
+        </div>
+      }
 
-			<div class="slide-preview-canvas" style="aspect-ratio: 16 / 9;">
-				<div *ngIf="previewSlide; else noSlide" class="slide-preview-stage">
-					<div
-						*ngFor="let item of previewSlide.content"
-						class="preview-content-item"
-						[ngStyle]="getPreviewContentStyles(item)"
-					>
-						<div class="preview-content-inner" [style.animation]="item.inAnimation ? (item.inAnimation.type + ' ' + item.inAnimation.duration + 'ms ease ' + item.inAnimation.delay + 'ms both') : null">
-							<div *ngIf="item.text" [innerHTML]="item.text"></div>
-							<img *ngIf="item.image" [src]="item.image" alt="Slide image" class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" />
-							<video *ngIf="item.video" class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" muted controls>
-								<source [src]="item.video" type="video/mp4">
-								Ihr Browser unterstützt das Video-Element nicht.
-							</video>
-						</div>
-					</div>
-				</div>
-				<ng-template #noSlide>
-					<div class="no-slide">Fuege eine Slide hinzu oder lade eine Datei hoch.</div>
-				</ng-template>
-			</div>
+      <div class="slide-preview-canvas" style="aspect-ratio: 16 / 9;">
+        @if (previewSlide) {
+          <div class="slide-preview-stage">
+            @for (item of previewSlide.content; track item) {
+              <div
+                class="preview-content-item"
+                [ngStyle]="getPreviewContentStyles(item)"
+                >
+                <div class="preview-content-inner" [style.animation]="item.inAnimation ? (item.inAnimation.type + ' ' + item.inAnimation.duration + 'ms ease ' + item.inAnimation.delay + 'ms both') : null">
+                  @if (item.text) {
+                    <div [innerHTML]="item.text"></div>
+                  }
+                  @if (item.image) {
+                    <img [src]="item.image" alt="Slide image" class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" />
+                  }
+                  @if (item.video) {
+                    <video class="preview-image" [ngStyle]="getPreviewMediaStyles(item)" muted controls>
+                      <source [src]="item.video" type="video/mp4">
+                      Ihr Browser unterstützt das Video-Element nicht.
+                    </video>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="no-slide">Fuege eine Slide hinzu oder lade eine Datei hoch.</div>
+        }
+      </div>
 
-			<section class="editor-card">
-				<h3>Slide-Content hinzufuegen</h3>
-				<form [formGroup]="contentForm" class="content-grid">
-					<label>
-						<span>Position X (%)</span>
-						<input type="number" min="0" max="100" step="0.1" formControlName="positionX">
-					</label>
-					<label>
-						<span>Position Y (%)</span>
-						<input type="number" min="0" max="100" step="0.1" formControlName="positionY">
-					</label>
-					<label>
-						<span>zIndex</span>
-						<input type="number" formControlName="zIndex">
-					</label>
-					<label class="full">
-						<span>Text (HTML)</span>
-						<input type="text" formControlName="text">
-					</label>
-					<label class="full">
-						<span>Bild URL / Pfad</span>
-						<input type="text" formControlName="image">
-					</label>
-					<label class="full">
-						<span>Video URL / Pfad</span>
-						<input type="text" formControlName="video">
-					</label>
-					<label>
-						<span>Skalierung (%)</span>
-						<input type="number" min="1" max="300" step="1" formControlName="scale">
-					</label>
-					<label>
-						<span>In Animation</span>
-						<select formControlName="inAnimationIndex">
-							<option [ngValue]="null">Keine</option>
-							<option *ngFor="let animation of animations; let i = index" [ngValue]="i">{{ i }} - {{ animation.type }}</option>
-						</select>
-					</label>
-					<label>
-						<span>Out Animation</span>
-						<select formControlName="outAnimationIndex">
-							<option [ngValue]="null">Keine</option>
-							<option *ngFor="let animation of animations; let i = index" [ngValue]="i">{{ i }} - {{ animation.type }}</option>
-						</select>
-					</label>
-				</form>
-				<div class="editor-actions">
-					<button type="button" class="btn btn-accent" (click)="saveContent()">{{ editingContent ? 'Content speichern' : 'Content hinzufuegen' }}</button>
-					<button *ngIf="editingContent" type="button" class="btn btn-muted" (click)="cancelContentEdit()">Abbrechen</button>
-				</div>
-			</section>
+      <section class="editor-card">
+        <h3>Slide-Content hinzufuegen</h3>
+        <form [formGroup]="contentForm" class="content-grid">
+          <label>
+            <span>Position X (%)</span>
+            <input type="number" min="0" max="100" step="0.1" formControlName="positionX">
+          </label>
+          <label>
+            <span>Position Y (%)</span>
+            <input type="number" min="0" max="100" step="0.1" formControlName="positionY">
+          </label>
+          <label>
+            <span>zIndex</span>
+            <input type="number" formControlName="zIndex">
+          </label>
+          <label class="full">
+            <span>Text (HTML)</span>
+            <input type="text" formControlName="text">
+          </label>
+          <label class="full">
+            <span>Bild URL / Pfad</span>
+            <input type="text" formControlName="image">
+          </label>
+          <label class="full">
+            <span>Video URL / Pfad</span>
+            <input type="text" formControlName="video">
+          </label>
+          <label>
+            <span>Skalierung (%)</span>
+            <input type="number" min="1" max="300" step="1" formControlName="scale">
+          </label>
+          <label>
+            <span>In Animation</span>
+            <select formControlName="inAnimationIndex">
+              <option [ngValue]="null">Keine</option>
+              @for (animation of animations; track animation; let i = $index) {
+                <option [ngValue]="i">{{ i }} - {{ animation.type }}</option>
+              }
+            </select>
+          </label>
+          <label>
+            <span>Out Animation</span>
+            <select formControlName="outAnimationIndex">
+              <option [ngValue]="null">Keine</option>
+              @for (animation of animations; track animation; let i = $index) {
+                <option [ngValue]="i">{{ i }} - {{ animation.type }}</option>
+              }
+            </select>
+          </label>
+        </form>
+        <div class="editor-actions">
+          <button type="button" class="btn btn-accent" (click)="saveContent()">{{ editingContent ? 'Content speichern' : 'Content hinzufuegen' }}</button>
+          @if (editingContent) {
+            <button type="button" class="btn btn-muted" (click)="cancelContentEdit()">Abbrechen</button>
+          }
+        </div>
+      </section>
 
-			<section class="editor-card" *ngIf="previewSlide && previewSlide.content.length > 0">
-				<h3>Elemente auf aktueller Slide</h3>
-				<div class="elements-list">
-					<div class="element-row" *ngFor="let item of previewSlide.content">
-						<div>
-							<strong>#{{ item.id }}</strong>
-							<span>{{ item.text || 'Bild/leer' }}</span>
-						</div>
-						<div class="row-actions">
-							<button type="button" class="btn btn-small" (click)="startEditContent(previewSlide.id, item.id)">Bearbeiten</button>
-							<button type="button" class="btn btn-small-danger" (click)="deleteContent(previewSlide.id, item.id)">Loeschen</button>
-						</div>
-					</div>
-				</div>
-			</section>
-		</main>
+      @if (previewSlide && previewSlide.content.length > 0) {
+        <section class="editor-card">
+          <h3>Elemente auf aktueller Slide</h3>
+          <div class="elements-list">
+            @for (item of previewSlide.content; track item) {
+              <div class="element-row">
+                <div>
+                  <strong>#{{ item.id }}</strong>
+                  <span>{{ item.text || 'Bild/leer' }}</span>
+                </div>
+                <div class="row-actions">
+                  <button type="button" class="btn btn-small" (click)="startEditContent(previewSlide.id, item.id)">Bearbeiten</button>
+                  <button type="button" class="btn btn-small-danger" (click)="deleteContent(previewSlide.id, item.id)">Loeschen</button>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    </main>
 
-		<aside class="right-panel">
-			<section class="editor-card">
-				<h3>Animationen</h3>
-				<form [formGroup]="animationForm" class="anim-grid">
-					<label>
-						<span>Typ</span>
-						<select formControlName="type">
-							<option *ngFor="let type of animationTypes" [value]="type">{{ type }}</option>
-						</select>
-					</label>
-					<label>
-						<span>Dauer (ms)</span>
-						<input type="number" formControlName="duration">
-					</label>
-					<label>
-						<span>Delay (ms)</span>
-						<input type="number" formControlName="delay">
-					</label>
-				</form>
-				<button type="button" class="btn btn-secondary full-width" (click)="addAnimation()">Animation anlegen</button>
-			</section>
-		</aside>
-	</div>
+    <aside class="right-panel">
+      <section class="editor-card">
+        <h3>Animationen</h3>
+        <form [formGroup]="animationForm" class="anim-grid">
+          <label>
+            <span>Typ</span>
+            <select formControlName="type">
+              @for (type of animationTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </label>
+          <label>
+            <span>Dauer (ms)</span>
+            <input type="number" formControlName="duration">
+          </label>
+          <label>
+            <span>Delay (ms)</span>
+            <input type="number" formControlName="delay">
+          </label>
+        </form>
+        <button type="button" class="btn btn-secondary full-width" (click)="addAnimation()">Animation anlegen</button>
+      </section>
+    </aside>
+  </div>
 </div>

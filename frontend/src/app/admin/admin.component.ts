@@ -3,11 +3,11 @@ import { Employee } from '../interfaces/employee';
 import { Assignment } from '../interfaces/assignment';
 import { EmployeeServiceService } from '../employee/employee-service/employee-service.service';
 import { AssignmentServiceService } from '../services/assignment-service/assignment-service.service';
-import { NgForOf, NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-admin',
-  imports: [NgForOf, NgIf],
+  imports: [],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })

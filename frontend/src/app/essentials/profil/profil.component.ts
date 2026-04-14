@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgIf} from '@angular/common';
+
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
@@ -14,9 +14,8 @@ import {Role} from '../../interfaces/role';
   selector: 'app-profil',
   imports: [
     FormsModule,
-    NgIf,
     ReactiveFormsModule
-  ],
+],
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.css'
 })
