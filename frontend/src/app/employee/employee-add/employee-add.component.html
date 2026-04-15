@@ -11,9 +11,10 @@
       To: "opacity-0"
   -->
   <div class="modal-bg" aria-hidden="true"></div>
-  <div class="modal-card-1">
+  <div class="modal-card-1" animate.enter="enter-animation">
     <div class="modal-card-2">
       <div class="modal-card-3">
+        <img class="float-right m-2 cursor-pointer hover:scale-105 transition-all" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" (click)="closeAddEmployee()">
         <div class="modal-card-4">
       <!--
         Modal panel, show/hide based on modal state.
@@ -26,17 +27,17 @@
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
           <div class="">
-            <h3>Neuen Mitarbeiter hinzufügen</h3>
+
           </div>
           <form [formGroup]="addEmployeeForm" (ngSubmit)="save()">
             <div class="space-y-1">
               <div class="">
 
                 <!-- FIRSTNAME -->
-                <div class="sm:col-span-3">
+                <div class="sm:col-span-3 mt-2">
                   <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
-                  <div class="mt-2">
-                    <input formControlName="firstname" value="" type="text" name="firstname" id="firstname" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                  <div class="">
+                    <input formControlName="firstname" value="" type="text" name="firstname" id="firstname" class="input-field-long">
                   </div>
                   @if (addEmployeeForm.get('firstname')?.invalid && addEmployeeForm.get('firstname')?.touched) {
                     <div class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
@@ -44,60 +45,65 @@
                 </div>
 
                 <!-- LASTNAME -->
-                <div class="sm:col-span-3">
+                <div class="sm:col-span-3 mt-2">
                   <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
-                  <div class="mt-2">
-                    <input formControlName="lastname" value="" type="text" name="lastname" id="lastname" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                  <div class="">
+                    <input formControlName="lastname" value="" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field-long">
                   </div>
                   @if (addEmployeeForm.get('lastname')?.invalid && addEmployeeForm.get('lastname')?.touched) {
                     <div class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
                   }
                 </div>
 
-                <!-- BDAY -->
-                <div class="sm:col-span-4">
-                  <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
-                  <input formControlName="birthdate" value="" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
-                  @if (addEmployeeForm.get('birthdate')?.touched) {
-                    <div class="text-red-600 text-sm">
-                      @if (addEmployeeForm.get('birthdate')?.hasError('required')) {
-                        <div >Geburtsdatum ist erforderlich.</div>
-                      } @else if (addEmployeeForm.get('birthdate')?.hasError('futureBirthdate')){
-                        <div >Geburtsdatum darf nicht in der Zukunft liegen.</div>
-                      } @else if (addEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')){
-                        <div>Ungültiges Datumsformat.</div>
-                      }
-                    </div>
-                  }
+                <div class="flex gap-4 mt-2">
+                  <!-- BDAY -->
+                  <div class="sm:col-span-4">
+                    <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
+                    <input formControlName="birthdate" value="" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
+                    @if (addEmployeeForm.get('birthdate')?.touched) {
+                      <div class="text-red-600 text-sm">
+                        @if (addEmployeeForm.get('birthdate')?.hasError('required')) {
+                          <div >Geburtsdatum ist erforderlich.</div>
+                        } @else if (addEmployeeForm.get('birthdate')?.hasError('futureBirthdate')){
+                          <div >Geburtsdatum darf nicht in der Zukunft liegen.</div>
+                        } @else if (addEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')){
+                          <div>Ungültiges Datumsformat.</div>
+                        }
+                      </div>
+                    }
+                  </div>
 
+                  <!-- TELEPHONE -->
+                  <div class="sm:col-span-6">
+                    <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
+                    <div class="">
+                      <input formControlName="telephone" value="" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field ">
+                    </div>
+                    @if (addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched) {
+                      <div class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
+                    }
+                  </div>
                 </div>
 
+
+
                 <!-- EMAIL -->
-                <div class="sm:col-span-5">
+                <div class="sm:col-span-5 mt-2">
                   <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
-                  <div class="mt-2">
-                    <input formControlName="email" value="" id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
+                  <div class="">
+                    <input formControlName="email" value="" id="email" name="email" type="email" autocomplete="email" class="input-field-long">
                   </div>
                   @if (addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched) {
                     <div class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
                   }
                 </div>
 
-                <!-- TELEPHONE -->
-                <div class="sm:col-span-6">
-                  <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
-                  <div class="mt-2">
-                    <input formControlName="telephone" value="" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field ">
-                  </div>
-                  @if (addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched) {
-                    <div class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
-                  }
-                </div>
+
 
                 <!-- ADDRESS -->
-                <div class="sm:col-span-5">
+                <div class="sm:col-span-5 mt-2">
                   <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
-                  <div class="mt-2">
+                  <div class="">
                     <input formControlName="address" value="" id="address" name="address" type="text" autocomplete="address" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-green-base sm:text-sm/6">
                   </div>
                   @if (addEmployeeForm.get('address')?.invalid && addEmployeeForm.get('address')?.touched) {
@@ -105,9 +111,9 @@
                 </div>
 
                 <!-- HOURLY WAGE -->
-                <div class="sm:col-span-6">
+                <div class="sm:col-span-6 mt-2">
                   <label for="hourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
-                  <div class="mt-2">
+                  <div class="">
                     <input formControlName="hourlyWage" value="" id="hourlyWage" name="hourlyWage" type="number" class="input-field">
                   </div>
                   @if (addEmployeeForm.get('hourlyWage')?.invalid && addEmployeeForm.get('hourlyWage')?.touched){
@@ -135,7 +141,33 @@
                         </div>
                       </div>
                       <div class="text-sm/6">
-                        <label for="isActive" class="font-medium text-gray-900">Den Mitarbeiter aktiv/inaktiv setzen</label>
+                        <label for="isActive" class="font-medium text-gray-900">Der Mitarbeiter ist aktiv tätig</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- IS SELF MANAGED -->
+                <div class="sm:col-span-3 mt-2">
+                  <label for="isSelfManaged" class="block text-sm/6 font-medium text-gray-900">Verwaltung</label>
+                  <div class="">
+                    <div class="flex gap-3">
+                      <div class="flex h-6 shrink-0 items-center">
+                        <div class="group grid size-4 grid-cols-1">
+                          <input
+                            formControlName="isSelfManaged"
+                            type="checkbox"
+                            id="isSelfManaged"
+                            class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                          >
+                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="text-sm/6">
+                        <label for="isSelfManaged" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, sich selbst zu verwalten</label>
                       </div>
                     </div>
                   </div>
@@ -174,31 +206,31 @@
                   <div class="mt-2 space-y-10">
                     <fieldset>
                       <legend class="text-sm/6 font-semibold text-gray-900">Rollen</legend>
-                      <div class="max-h-40 overflow-y-scroll">
-                        <div class="mt-6 space-y-6">
+                      <div class="max-h-40 overflow-y-scroll mt-2">
                           @for (r of roles; track r.id) {
-                            <div class="flex gap-3">
-                              <div class="flex h-6 shrink-0 items-center">
-                                <div class="group grid size-4 grid-cols-1" >
-                                  <input
-                                    type="checkbox"
-                                    [id]="'role' + r.id"
-                                    [checked]="false"
-                                    (change)="onRoleChange(r.id, $event)"
-                                    class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                                  >
-                                  <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
-                                    <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                  </svg>
+                            <div class="mb-4 space-y-6">
+                              <div class="flex gap-3">
+                                <div class="flex h-6 shrink-0 items-center">
+                                  <div class="group grid size-4 grid-cols-1" >
+                                    <input
+                                      type="checkbox"
+                                      [id]="'role' + r.id"
+                                      [checked]="false"
+                                      (change)="onRoleChange(r.id, $event)"
+                                      class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                    >
+                                    <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
+                                      <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                      <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="text-sm/6">
-                                <label for="role{{ r.id }}" class="font-medium text-gray-900">{{ r.roleName }}</label>
+                                <div class="text-sm/6">
+                                  <label for="role{{ r.id }}" class="font-medium text-gray-900">{{ r.roleName }}</label>
+                                </div>
                               </div>
                             </div>
                           }
-                        </div>
                       </div>
 
                     </fieldset>
@@ -211,7 +243,6 @@
           </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="button" class="button-cancel" (click)="closeAddEmployee()">Abbrechen</button>
               <button type="submit" [disabled]="addEmployeeForm.invalid" class="button-green">Speichern</button>
             </div>
           </form>

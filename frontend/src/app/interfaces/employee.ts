@@ -10,6 +10,7 @@ export interface Employee {
   telephone: string;
   birthdate: Date;
   isManager: boolean;
+  isSelfManaged: boolean;
   hourlyWage: number;
   address: string;
   isActive: boolean;

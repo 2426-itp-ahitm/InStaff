@@ -1,14 +1,15 @@
 export interface EmployeeShort {
-    id: number;
-    keycloakUserId: string;
-    firstname: string;
-    lastname: string;
-    email: string;
-    telephone: string;
-    birthdate: Date;
-    isManager: boolean;
-    isActive: boolean;
-    roles: number[];
-    hourlyWage: number;
-    address: string;
+  id: number;
+  keycloakUserId: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  telephone: string;
+  birthdate: Date;
+  isManager: boolean;
+  isActive: boolean;
+  isSelfManaged: boolean;
+  roles: number[];
+  hourlyWage: number;
+  address: string;
 }

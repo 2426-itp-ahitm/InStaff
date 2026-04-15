@@ -6,12 +6,14 @@ import {CompanyServiceService} from '../../services/company-service/company-serv
 import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {EmployeeCreate} from '../../interfaces/employee-create';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-employee-add',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgOptimizedImage
   ],
   templateUrl: 'employee-add.component.html',
   styleUrl: 'employee-add.component.css'
@@ -54,7 +56,8 @@ export class EmployeeAddComponent implements OnInit {
       address: new FormControl('', Validators.required),
       hourlyWage: new FormControl('', Validators.required),
       isManager: new FormControl(false),
-      isActive: new FormControl(false),
+      isActive: new FormControl(true),
+      isSelfManaged: new FormControl(true),
       roles: new FormControl<Role[]>([]),
     });
 

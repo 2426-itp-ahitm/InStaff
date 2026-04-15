@@ -17,12 +17,15 @@ import {RoleServiceService} from '../../role/role-service/role-service.service';
 import {EmployeeCreate} from '../../interfaces/employee-create';
 import {Role} from '../../interfaces/role';
 import {Employee} from '../../interfaces/employee';
+import {NgOptimizedImage} from '@angular/common';
+import {delay} from 'rxjs';
 
 @Component({
   selector: 'app-employee-edit',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgOptimizedImage
   ],
   templateUrl: './employee-edit.component.html',
   styleUrl: './employee-edit.component.css'
@@ -72,6 +75,7 @@ export class EmployeeEditComponent implements OnInit {
       hourlyWage: new FormControl(this.employee.hourlyWage, Validators.required),
       isManager: new FormControl(this.employee.isManager),
       isActive: new FormControl(this.employee.isActive),
+      isSelfManaged: new FormControl(this.employee.isSelfManaged, Validators.required),
       roles: new FormControl<number[]>(this.employee.roles?.map(role => role.id) ?? [], Validators.required),
     });
 
@@ -87,6 +91,7 @@ export class EmployeeEditComponent implements OnInit {
         hourlyWage: this.employee.hourlyWage,
         isManager: this.employee.isManager,
         isActive: this.employee.isActive,
+        isSelfManaged: this.employee.isSelfManaged,
         roles: this.employee.roles.map(role => role.id)
       });
       this.updateRoleSelections();
@@ -114,6 +119,7 @@ export class EmployeeEditComponent implements OnInit {
         hourlyWage: formValue.hourlyWage,
         isManager: formValue.isManager,
         isActive: formValue.isActive,
+        isSelfManaged: formValue.isSelfManaged,
         roles: formValue.roles ?? []
       };
 
@@ -152,7 +158,9 @@ export class EmployeeEditComponent implements OnInit {
   }
 
   closeEmployeeEdit(): void {
-    this.closeEmpEdit.emit();
+    setTimeout(() => {
+      this.closeEmpEdit.emit();
+    }, 0)
   }
 
   deleteEmployee(emp: Employee) {
