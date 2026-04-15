@@ -1,12 +1,12 @@
-<div class="mx-6">
+<div class="mx-6 mb-10">
   <div class="sticky-searchbar bg-liquid-glass bg-green-dark/10 ">
-    <div class="max-w-5xl mx-auto flex max-md:flex-col max-md:items-stretch justify-center items-center gap-2">
+    <div class="max-w-5xl mx-auto flex justify-center items-center gap-2">
       <input type="search" placeholder="Mitarbeiter suchen..." class="input-field-frameless max-md:w-full max-md:max-w-none" (input)="onSearch($any($event.target).value)">
       <img class="icon-button-big" (click)="openAddEmployee()" ngSrc="/icons/add-green-dark.png" alt="edit" width="36" height="36">
     </div>
   </div>
 
-    <div class="card-grid  mb-6">
+    <div class="card-grid">
       @for (e of filteredEmployees ; track e.id) {
         <app-employee-card  [employee]="e" (editEmployee)="openEmpEdit($event)" class=""></app-employee-card>
 

@@ -133,7 +133,7 @@ h2{
   z-index: 60;
 }
 .modal-card-1{
-  @apply fixed inset-0 w-screen overflow-y-auto;
+  @apply fixed inset-0 w-screen overflow-y-hidden;
   z-index: 70;
 }
 
@@ -163,7 +163,7 @@ h2{
 }
 
 .input-field-frameless {
-  @apply block rounded-md bg-transparent px-3 py-1.5 text-base text-gray-900 outline-none focus:outline-none sm:text-sm/6
+  @apply block rounded-md bg-transparent px-2 py-1.5 self-center text-base text-gray-900 outline-none focus:outline-none sm:text-sm/6
 }
 
 
@@ -272,4 +272,24 @@ h2{
 }
 .btnDeclined {
   background-color: var(--color-red-500);
+}
+
+
+
+.enter-animation {
+  animation: fade-in 300ms;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.leave-animation {
+  opacity: 0;
+  transition: opacity 500ms ease-out
 }
