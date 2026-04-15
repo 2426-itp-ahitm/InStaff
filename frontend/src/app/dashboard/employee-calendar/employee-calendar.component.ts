@@ -142,19 +142,18 @@ export class EmployeeCalendarComponent implements OnInit {
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,today,next',
-        end: 'dayGridMonth,timeGridDay,listMonth'
+        center: 'prev,today,next',
       }
     } else {
       this.calendarOptions.initialView = this.initialView;
       this.calendarOptions.headerToolbar = {
-        start: 'prev,today,next',
+        start: '',
         center: 'title',
-        end: 'dayGridMonth,timeGridDay,listMonth'
+        end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: '',
-        end: ''
+        start: 'prev,today,next',
+        end: 'dayGridMonth,timeGridDay,listMonth'
       }
     }
   }
@@ -162,7 +161,7 @@ export class EmployeeCalendarComponent implements OnInit {
 
 
   isSmallScreen(): boolean {
-    return window.innerWidth < 1280; // Tailwind's `md` breakpoint
+    return window.innerWidth < 1000; // Tailwind's `md` breakpoint
   }
 
   loadShiftsToEvents(): void {

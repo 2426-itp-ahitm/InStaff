@@ -7,13 +7,15 @@ import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
 import {ShiftOverviewComponent} from '../../essentials/shift-overview/shift-overview.component';
+import {FullCalendarModule} from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-employee-dashboard',
   imports: [
     EmployeeCalendarComponent,
     ShiftViewComponent,
-    ShiftOverviewComponent
+    ShiftOverviewComponent,
+    FullCalendarModule
   ],
   templateUrl: './employee-dashboard.component.html',
   styleUrl: './employee-dashboard.component.css'

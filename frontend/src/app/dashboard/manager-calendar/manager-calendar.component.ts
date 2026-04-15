@@ -126,25 +126,24 @@ export class ManagerCalendarComponent implements OnInit {
         end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: 'prev,today,next',
-        end: 'dayGridMonth,timeGridDay,listWeek'
+        center: 'prev,today,next',
       }
     } else {
       this.calendarOptions.initialView = this.initialView;
       this.calendarOptions.headerToolbar = {
-        start: 'prev,today,next',
+        start: '',
         center: 'title',
-        end: 'dayGridMonth,timeGridDay,listWeek'
+        end: ''
       }
       this.calendarOptions.footerToolbar = {
-        start: '',
-        end: ''
+        start: 'prev,today,next',
+        end: 'dayGridMonth,timeGridDay,listMonth'
       }
     }
   }
 
   isSmallScreen(): boolean {
-    return window.innerWidth < 1300; // Tailwind's `md` breakpoint
+    return window.innerWidth < 1000; // Tailwind's `md` breakpoint
   }
 
   loadShiftsToEvents(data:Shift[]): void {

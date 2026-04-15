@@ -3,13 +3,12 @@
   <div class="mx-8 my-4 max-md:mt-0 shrink-0">
     <h1>Willkommen {{userName}}</h1>
   </div>
-  <div class="xl:flex mx-4 my-2 gap-5 h-min">
-    <div class="flex-1/2 mb-3 max-md:flex-2/5 card-center bg-glass h-[50vh] md:h-[66.667vh] overflow-hidden">
-      <div class="h-full w-full overflow-y-auto">
-        <app-shift-overview [stickyTop]="'0px'"></app-shift-overview>
-      </div>
+  <div class="md:flex mx-4 my-2 gap-5">
+    <div class="flex-1/2 mb-3 max-md:flex-2/4 card-center bg-glass md:h-[80vh] h-[80vh] overflow-hidden">
+        <app-shift-overview  [stickyTop]="'0px'"></app-shift-overview>
+
     </div>
-    <div class="flex-1/2 mb-3 md:flex-3/5 card-center bg-glass">
+    <div class="flex-1/2 mb-3 md:flex-2/4 card-center bg-glass">
       <app-employee-calendar (openShiftView)="openShiftViewWithId($event.id)" [initialView]="'listMonth'" [isAllowedToEdit]="false"  class="flex-1 min-h-0"></app-employee-calendar>
     </div>
   </div>

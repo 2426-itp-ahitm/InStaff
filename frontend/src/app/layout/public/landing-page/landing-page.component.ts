@@ -1,5 +1,6 @@
-import {Component, HostListener, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {KeycloakService} from 'keycloak-angular';
 
 
 @Component({
@@ -11,6 +12,32 @@ export class LandingPageComponent {
   private readonly router = inject(Router);
   private readonly resumeSlideIndexStorageKey = 'presentation.resumeSlideIndex';
   private readonly jumpToDemoStorageKey = 'presentation.jumpToDemo';
+  private keycloakService: KeycloakService = inject(KeycloakService);
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+
+
+  refresh() {
+    this.cdr.detectChanges();
+  }
+
+  async goToDashboard(): Promise<void> {
+    const isLoggedIn = await this.keycloakService.isLoggedIn();
+
+    if(isLoggedIn) {
+      await this.router.navigate(['/home'])
+      return
+    }
+
+    await this.login()
+  }
+
+  async login(): Promise<void> {
+    await this.keycloakService.login({
+      redirectUri: window.location.origin + '/home'
+    });
+  }
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
@@ -38,4 +65,5 @@ export class LandingPageComponent {
     }
   }
 
+  protected readonly visualViewport = visualViewport;
 }
