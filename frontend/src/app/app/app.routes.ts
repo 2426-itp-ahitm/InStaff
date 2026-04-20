@@ -19,7 +19,7 @@ import {LoginComponent} from '../layout/public/login/login';
 import {PrivateLayoutComponent} from '../layout/private-layout/private-layout.component';
 import {PresentationComponent} from '../layout/public/presentation/presentation.component';
 import {PresentationEditComponent} from '../layout/public/presentation-edit/presentation-edit.component';
-import {ShiftOverviewComponent} from '../essentials/shift-overview/shift-overview.component';
+import {ShiftOverviewComponent} from '../shift/shift-overview/shift-overview.component';
 
 export const routes: Routes = [
   {

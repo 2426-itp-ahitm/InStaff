@@ -6,7 +6,7 @@ import {EmployeeCalendarComponent} from '../employee-calendar/employee-calendar.
 import {ShiftViewComponent} from '../../shift/shift-view/shift-view.component';
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {KeycloakService} from 'keycloak-angular';
-import {ShiftOverviewComponent} from '../../essentials/shift-overview/shift-overview.component';
+import {ShiftOverviewComponent} from '../../shift/shift-overview/shift-overview.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
 
 @Component({

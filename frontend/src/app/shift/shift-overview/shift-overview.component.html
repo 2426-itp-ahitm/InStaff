@@ -55,16 +55,16 @@
 
     @for (assignment of fullAssignments; track assignment.id) {
       <div
-        class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition border-l-4"
+        class="bg-white rounded-xl shadow-md px-4 py-3 border border-gray-200 hover:shadow-lg transition border-l-4"
         [ngClass]="getCardBorderClass(assignment.confirmed)"
       >
 
 
         <div class="mb-4">
           <div class="flex items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold text-gray-800">
+            <p class="card-name">
               {{ assignment.role.roleName }}
-            </h2>
+            </p>
 
             <span
               class="text-sm px-3 py-1.5 rounded-full font-semibold min-w-28 text-center border"
@@ -93,22 +93,24 @@
         </div>
 
         <div class="flex gap-4 mt-4">
+          @if (!isShiftPastDate(assignment.shift)) {
+            <button
+              [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
+              (click)="confirmAssignment(assignment)"
+              class="button-accept"
+            >
+              Annehmen
+            </button>
 
-          <button
-            [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
-            (click)="confirmAssignment(assignment)"
-            class="button-accept"
-          >
-            Annehmen
-          </button>
+            <button
+              [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
+              (click)="declineAssignment(assignment)"
+              class="button-decline"
+            >
+              Ablehnen
+            </button>
+          }
 
-          <button
-            [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
-            (click)="declineAssignment(assignment)"
-            class="button-decline"
-          >
-            Ablehnen
-          </button>
 
         </div>
       </div>

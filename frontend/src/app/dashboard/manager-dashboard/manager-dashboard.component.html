@@ -3,11 +3,11 @@
   <div class="mx-8 my-4 max-md:mt-0 shrink-0">
     <h1>Willkommen {{userName}}</h1>
   </div>
-  <div class="md:flex mx-4 my-2 gap-5 h-min">
-    <div class="flex-1/2 mb-3 max-md:flex-2/5">
+  <div class="md:flex mx-4 my-2 gap-5 h-min ">
+    <div class="flex-1/2 mb-3 max-md:flex-2/5 hover:scale-101 transition-all">
       <app-news (shiftSelected)="openShiftEditWithId($event)"></app-news>
     </div>
-    <div class="flex-1/2 mb-7 md:flex-3/5 card-center bg-glass">
+    <div class="flex-1/2 mb-7 md:flex-3/5 card-center bg-glass hover:scale-101 transition-all">
       <app-manager-calendar (openShiftAdd)="openShiftAdd($event)" (openShiftEdit)="openShiftEditWithId($event.id)" [initialView]="'dayGridMonth'" [isAllowedToEdit]="true" class="flex-1 min-h-0"></app-manager-calendar>
     </div>
   </div>
