@@ -9,6 +9,7 @@ import {Employee} from '../../interfaces/employee';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ShiftShort} from '../../interfaces/shift-short';
+import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
 
 type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined';
 
@@ -99,7 +100,7 @@ export class ShiftOverviewComponent implements OnInit{
 
 
   confirmAssignment(assignment: Assignment) {
-    assignment.confirmed = true;
+    assignment.status = AssignmentStatus.CONFIRMED
     this.applyFilters();
     this.assignmentService.confirmAssignment(assignment.id).subscribe(() => {
       console.log("confirmed")
@@ -108,7 +109,7 @@ export class ShiftOverviewComponent implements OnInit{
   }
 
   declineAssignment(assignment: Assignment) {
-    assignment.confirmed = false;
+    assignment.status = AssignmentStatus.DECLINED;
     this.applyFilters();
     this.assignmentService.declineAssignment(assignment.id).subscribe(() => {
       console.log("declined")
@@ -169,12 +170,12 @@ export class ShiftOverviewComponent implements OnInit{
         return true;
       }
       if (this.selectedStatusFilter === 'open') {
-        return a.confirmed === null;
+        return a.status === AssignmentStatus.PENDING;
       }
       if (this.selectedStatusFilter === 'accepted') {
-        return a.confirmed === true;
+        return a.status === AssignmentStatus.CONFIRMED;
       }
-      return a.confirmed === false;
+      return a.status === AssignmentStatus.DECLINED;
     });
 
     this.fullAssignments = [...statusFiltered].sort((a, b) => {
@@ -182,17 +183,20 @@ export class ShiftOverviewComponent implements OnInit{
       const bTime = new Date(b.shift.startTime).getTime();
 
       if (this.selectedStatusFilter === 'all') {
-        const getStatusRank = (confirmed: boolean | null) => {
-          if (confirmed === null) {
+        const getStatusRank = (status: AssignmentStatus | null) => {
+          if (status === AssignmentStatus.CONFIRMED) {
             return 0;
           }
-          if (confirmed === true) {
+          if (status === AssignmentStatus.DECLINED) {
             return 1;
           }
-          return 2;
+          if (status === AssignmentStatus.PENDING) {
+            return 2;
+          }
+          return 3;
         };
 
-        const statusDiff = getStatusRank(a.confirmed) - getStatusRank(b.confirmed);
+        const statusDiff = getStatusRank(a.status) - getStatusRank(a.status);
         if (statusDiff !== 0) {
           return statusDiff;
         }
@@ -202,30 +206,40 @@ export class ShiftOverviewComponent implements OnInit{
     });
   }
 
-  getStatusLabel(confirmed: boolean | null) {
-    if (confirmed === true) {
+  getStatusLabel(status: AssignmentStatus | null) {
+    if (status === AssignmentStatus.CONFIRMED) {
       return 'Bestätigt';
     }
-    if (confirmed === false) {
+    if (status === AssignmentStatus.DECLINED) {
       return 'Abgelehnt';
+    }
+    if (status === AssignmentStatus.REQUESTED) {
+      return 'Angefragt';
+    }
+    if (status === AssignmentStatus.REQUEST_DECLINED) {
+      return 'Anfrage abgelehnt';
+    }
+    if (status === AssignmentStatus.REQUEST_CONFIRMED) {
+      return 'Anfrage bestätigt';
     }
     return 'Ausstehend';
   }
 
-  getStatusClass(confirmed: boolean | null) {
+  getStatusClass(status: AssignmentStatus | null) {
     return {
-      'bg-green-50 text-green-800 border-green-base': confirmed === true,
-      'bg-yellow-50 text-yellow-800 border-yellow-300': confirmed === null,
-      'bg-red-50 text-red-800 border-red-300': confirmed === false
+      'bg-green-50 text-green-800 border-green-base': status === AssignmentStatus.CONFIRMED || status === AssignmentStatus.REQUEST_CONFIRMED,
+      'bg-yellow-50 text-yellow-800 border-yellow-300': status === AssignmentStatus.PENDING || status === AssignmentStatus.REQUESTED,
+      'bg-red-50 text-red-800 border-red-300': status === AssignmentStatus.DECLINED || status === AssignmentStatus.REQUEST_DECLINED,
     };
   }
 
-  getCardBorderClass(confirmed: boolean | null) {
+  getCardBorderClass(status: AssignmentStatus | null) {
     return {
-      'border-l-green-base': confirmed === true,
-      'border-l-yellow-400': confirmed === null,
-      'border-l-red-800': confirmed === false
+      'border-l-green-base':status === AssignmentStatus.CONFIRMED || status === AssignmentStatus.REQUEST_CONFIRMED,
+      'border-l-yellow-400': status === AssignmentStatus.PENDING || status === AssignmentStatus.REQUESTED,
+      'border-l-red-800': status === AssignmentStatus.DECLINED || status === AssignmentStatus.REQUEST_DECLINED
     };
   }
 
+  protected readonly AssignmentStatus = AssignmentStatus;
 }

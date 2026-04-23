@@ -4,6 +4,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { DateService } from '../../services/date-service/date.service';
 import { Subscription } from 'rxjs';
 import { AssignmentNews } from '../../interfaces/assignment-news';
+import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
 
 @Component({
   selector: 'app-news',
@@ -75,4 +76,6 @@ export class NewsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
+  protected readonly AssignmentStatus = AssignmentStatus;
 }

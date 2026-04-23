@@ -21,10 +21,8 @@ import {AssignmentServiceService} from '../../services/assignment-service/assign
 import {Assignment} from '../../interfaces/assignment';
 import {Role} from '../../interfaces/role';
 import {DateService} from '../../services/date-service/date.service';
-import {AssignmentCreate} from '../../interfaces/assignment-create';
-import {ShiftCreate} from '../../interfaces/shift-create';
-import {ShiftCreateAssignments} from '../../interfaces/shift-create-assignments';
 import {EmployeeShort} from '../../interfaces/employee-short';
+import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
 
 @Component({
   selector: 'app-shift-edit',
@@ -133,10 +131,23 @@ export class ShiftEditComponent implements OnInit {
     return this.roleNameMap[roleId] || 'Unbekannte Rolle';
   }
 
-  getConfirmationStatus(confirmed: boolean | null): string {
-    if (confirmed === true) return 'bestätigt';
-    if (confirmed === false) return 'abgelehnt';
-    return 'ausstehend';
+  getConfirmationStatus(status: AssignmentStatus | null): string {
+    if (status === AssignmentStatus.CONFIRMED) {
+      return 'Bestätigt';
+    }
+    if (status === AssignmentStatus.DECLINED) {
+      return 'Abgelehnt';
+    }
+    if (status === AssignmentStatus.REQUESTED) {
+      return 'Angefragt';
+    }
+    if (status === AssignmentStatus.REQUEST_DECLINED) {
+      return 'Anfrage abgelehnt';
+    }
+    if (status === AssignmentStatus.REQUEST_CONFIRMED) {
+      return 'Anfrage bestätigt';
+    }
+    return 'Ausstehend';
   }
 
   closeEditShift() {
@@ -202,7 +213,7 @@ export class ShiftEditComponent implements OnInit {
   protected addAssignmentToRole(group: {role: Role, assignments:Assignment[]}): void {
     const newAssignment: Assignment = {
       id: -Date.now(),
-      confirmed: null,
+      status: AssignmentStatus.PENDING,
       seen: false,
       employee: { id: 0 } as EmployeeShort,
       shift: {
@@ -232,4 +243,5 @@ export class ShiftEditComponent implements OnInit {
   }
 
 
+  protected readonly AssignmentStatus = AssignmentStatus;
 }

@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Employee } from '../interfaces/employee';
-import { Assignment } from '../interfaces/assignment';
-import { EmployeeServiceService } from '../employee/employee-service/employee-service.service';
-import { AssignmentServiceService } from '../services/assignment-service/assignment-service.service';
+import {Component, inject, OnInit} from '@angular/core';
+import {Employee} from '../interfaces/employee';
+import {Assignment} from '../interfaces/assignment';
+import {EmployeeServiceService} from '../employee/employee-service/employee-service.service';
+import {AssignmentServiceService} from '../services/assignment-service/assignment-service.service';
+import {AssignmentStatus} from '../interfaces/AssignmentStatus';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class AdminComponent implements OnInit {
     if (!this.selectedEmployeeId) return;
     this.assignmentService.confirmAssignment(a.id).subscribe({
       next: () => {
-        a.confirmed = true;
+        a.status = AssignmentStatus.CONFIRMED;
         this.statusMessage = `Zuweisung ${a.id} akzeptiert.`;
       },
       error: () => { this.statusMessage = 'Fehler beim Akzeptieren.' }
@@ -53,7 +54,7 @@ export class AdminComponent implements OnInit {
     if (!this.selectedEmployeeId) return;
     this.assignmentService.declineAssignment(a.id).subscribe({
       next: () => {
-        a.confirmed = false;
+        a.status = AssignmentStatus.DECLINED;
         this.statusMessage = `Zuweisung ${a.id} abgelehnt.`;
       },
       error: () => { this.statusMessage = 'Fehler beim Ablehnen.' }
@@ -63,4 +64,5 @@ export class AdminComponent implements OnInit {
 
   clearMessage() { this.statusMessage = null; }
 
+  protected readonly AssignmentStatus = AssignmentStatus;
 }

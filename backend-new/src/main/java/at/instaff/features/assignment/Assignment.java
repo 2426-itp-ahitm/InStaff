@@ -23,7 +23,7 @@ public class Assignment extends PanacheEntity {
     public Role role;
 
     @Enumerated(EnumType.STRING)
-    public AssignmentStatus status;
+    public AssignmentStatus status = AssignmentStatus.PENDING;
     public boolean seen = false;
 
     public Assignment() {}

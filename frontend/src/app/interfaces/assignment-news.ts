@@ -1,3 +1,5 @@
+import {AssignmentStatus} from './AssignmentStatus';
+
 export interface AssignmentNewsEmployee {
   id: number;
   firstname: string;
@@ -18,7 +20,7 @@ export interface AssignmentNewsRole {
 
 export interface AssignmentNews {
   id: number;
-  confirmed: boolean | null;
+  status: AssignmentStatus | null;
   seen: boolean;
   employee: AssignmentNewsEmployee | null;
   shift: AssignmentNewsShift;

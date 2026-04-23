@@ -55,11 +55,11 @@
                         <span
                             class="text-xs px-2 py-1 rounded"
                             [ngClass]="{
-                            'bg-green-100 text-green-800': assignment.confirmed === true,
-                            'bg-red-100 text-red-800': assignment.confirmed === false,
-                            'bg-yellow-100 text-yellow-800': assignment.confirmed === null
+                            'bg-green-100 text-green-800': assignment.status === AssignmentStatus.CONFIRMED,
+                            'bg-red-100 text-red-800': assignment.status === AssignmentStatus.DECLINED,
+                            'bg-yellow-100 text-yellow-800': assignment.status === AssignmentStatus.PENDING
                           }">
-                          {{ getConfirmationStatus(assignment.confirmed) }}
+                          {{ getConfirmationStatus(assignment.status)}}
                         </span>
                       }
 

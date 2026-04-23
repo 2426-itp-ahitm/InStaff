@@ -8,13 +8,13 @@
   <div class="mt-2">
     @for (n of news; track n.id) {
       <div class="news-item" >
-        @if (n.confirmed) {
-          <img class="rounded-full" ngSrc="/icons/accept-black.png" alt="edit" width="36" height="36" [class.bg-green-200]="n.confirmed">
-        } @else if (!n.confirmed){
-          <img class="rounded-full" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" [class.bg-red-200]="!n.confirmed" >
+        @if (n.status === AssignmentStatus.CONFIRMED || n.status === AssignmentStatus.REQUEST_CONFIRMED) {
+          <img class="rounded-full" ngSrc="/icons/accept-black.png" alt="edit" width="36" height="36" [class.bg-green-200]="n.status === AssignmentStatus.CONFIRMED">
+        } @else if (n.status === AssignmentStatus.DECLINED || n.status === AssignmentStatus.REQUEST_DECLINED){
+          <img class="rounded-full" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" [class.bg-red-200]="n.status === AssignmentStatus.DECLINED" >
         }
         <p class="ml-2 text-left" (click)="openShiftEditWithId(n.shift.id)">
-          {{getEmployeeName(n)}} hat für die Schicht "{{ n.shift.shiftName }}" am {{dateToString(n.shift.startTime)}} {{n.confirmed? "zugesagt" : "abgesagt"}}
+          {{getEmployeeName(n)}} hat für die Schicht "{{ n.shift.shiftName }}" am {{dateToString(n.shift.startTime)}} {{n.status === AssignmentStatus.CONFIRMED? "zugesagt" : "abgesagt"}}
         </p>
         <img class="icon-button" ngSrc="/icons/trash-white.png" alt="edit" width="36" height="36" (click)="deleteNewsItem(n.id)">
       </div>

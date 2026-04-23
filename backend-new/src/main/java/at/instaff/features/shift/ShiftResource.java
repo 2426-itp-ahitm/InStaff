@@ -127,7 +127,7 @@ public class ShiftResource {
                         role, null);
 
                 if (!employee.isSelfManaged) {
-                    assignment.status = AssignmentStatus.confirmed;
+                    assignment.status = AssignmentStatus.CONFIRMED;
                 }
                 assignment.persist();
             } else {

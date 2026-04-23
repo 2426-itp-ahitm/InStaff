@@ -100,9 +100,9 @@ public class AssignmentResource {
         }
 
         if (isConfirmed) {
-            assignment.status = AssignmentStatus.confirmed;
+            assignment.status = AssignmentStatus.CONFIRMED;
         } else {
-            assignment.status = AssignmentStatus.declined;
+            assignment.status = AssignmentStatus.DECLINED;
         }
 
         assignment.seen = false;
@@ -160,7 +160,7 @@ public class AssignmentResource {
             assignment = new Assignment(employee, shift, role, null);
 
             if (!employee.isSelfManaged) {
-                assignment.status = AssignmentStatus.confirmed;
+                assignment.status = AssignmentStatus.CONFIRMED;
             }
         } else {
             assignment = new Assignment(shift, role);
@@ -201,7 +201,7 @@ public class AssignmentResource {
         assignment.employee = employee;
 
         if (!employee.isSelfManaged) {
-            assignment.status = AssignmentStatus.confirmed;
+            assignment.status = AssignmentStatus.CONFIRMED;
         }
 
         assignment.persist();

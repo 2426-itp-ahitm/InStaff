@@ -22,6 +22,7 @@ import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
 import {ShiftCreate} from '../../interfaces/shift-create';
 import {Shifttemplate} from '../../interfaces/shifttemplate';
+import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
 
 @Component({
   selector: 'app-shift-view',
@@ -152,4 +153,6 @@ export class ShiftViewComponent implements OnInit {
       return "Abgelehnt";
     }
   }
+
+  protected readonly AssignmentStatus = AssignmentStatus;
 }

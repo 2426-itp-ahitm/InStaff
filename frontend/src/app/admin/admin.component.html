@@ -35,10 +35,10 @@
             <td class="py-1">{{ a.id }}</td>
             <td class="py-1">{{ a.shift }}</td>
             <td class="py-1">{{ a.role }}</td>
-            <td class="py-1">{{ a.confirmed }}</td>
+            <td class="py-1">{{ a.status }}</td>
             <td class="py-1">
-              <button class="text-xs px-2 py-1 mr-2 border rounded bg-green-100" (click)="acceptAssignment(a)" [disabled]="a.confirmed">Akzeptieren</button>
-              <button class="text-xs px-2 py-1 border rounded bg-red-100" (click)="declineAssignment(a)" [disabled]="!a.confirmed">Ablehnen</button>
+              <button class="text-xs px-2 py-1 mr-2 border rounded bg-green-100" (click)="acceptAssignment(a)" [disabled]="AssignmentStatus.CONFIRMED">Akzeptieren</button>
+              <button class="text-xs px-2 py-1 border rounded bg-red-100" (click)="declineAssignment(a)" [disabled]="AssignmentStatus.DECLINED">Ablehnen</button>
             </td>
           </tr>
         }

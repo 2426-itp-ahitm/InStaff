@@ -56,7 +56,7 @@
     @for (assignment of fullAssignments; track assignment.id) {
       <div
         class="bg-white rounded-xl shadow-md px-4 py-3 border border-gray-200 hover:shadow-lg transition border-l-4"
-        [ngClass]="getCardBorderClass(assignment.confirmed)"
+        [ngClass]="getCardBorderClass(assignment.status)"
       >
 
 
@@ -68,8 +68,8 @@
 
             <span
               class="text-sm px-3 py-1.5 rounded-full font-semibold min-w-28 text-center border"
-              [ngClass]="getStatusClass(assignment.confirmed)">
-              {{ getStatusLabel(assignment.confirmed) }}
+              [ngClass]="getStatusClass(assignment.status)">
+              {{ getStatusLabel(assignment.status) }}
             </span>
           </div>
 
@@ -95,7 +95,7 @@
         <div class="flex gap-4 mt-4">
           @if (!isShiftPastDate(assignment.shift)) {
             <button
-              [disabled]="isShiftPastDate(assignment.shift) || assignment.confirmed"
+              [disabled]="isShiftPastDate(assignment.shift) || assignment.status == AssignmentStatus.CONFIRMED"
               (click)="confirmAssignment(assignment)"
               class="button-accept"
             >
@@ -103,7 +103,7 @@
             </button>
 
             <button
-              [disabled]="isShiftPastDate(assignment.shift) || !assignment.confirmed && assignment.confirmed != null"
+              [disabled]="isShiftPastDate(assignment.shift) || assignment.status === AssignmentStatus.DECLINED && assignment.status != null"
               (click)="declineAssignment(assignment)"
               class="button-decline"
             >
