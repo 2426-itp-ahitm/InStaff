@@ -160,7 +160,6 @@ public class AssignmentResource {
             assignment = new Assignment(employee, shift, role, null);
 
             if (!employee.isSelfManaged) {
-                Log.info("Assignment " + assignment.id + " is self-managed");
                 assignment.status = AssignmentStatus.confirmed;
             }
         } else {
