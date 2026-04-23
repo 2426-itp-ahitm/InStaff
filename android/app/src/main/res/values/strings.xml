@@ -13,9 +13,12 @@
     <string name="empty_shifts">Du hast derzeit keine Schichten.</string>
     <string name="shifts_role_filter_hint">Rolle filtern</string>
     <string name="shifts_role_filter_all">Alle Rollen</string>
-    <string name="status_open">Offen</string>
-    <string name="status_accepted">Angenommen</string>
+    <string name="status_pending">Ausstehend</string>
+    <string name="status_confirmed">Angenommen</string>
     <string name="status_declined">Abgelehnt</string>
+    <string name="status_requested">Angefragt</string>
+    <string name="status_request_confirmed">Anfrage bestaetigt</string>
+    <string name="status_request_declined">Anfrage abgelehnt</string>
     <string name="action_accept">Annehmen</string>
     <string name="action_decline">Ablehnen</string>
     <string name="generic_load_error">Daten konnten nicht geladen werden. Bitte versuche es erneut.</string>

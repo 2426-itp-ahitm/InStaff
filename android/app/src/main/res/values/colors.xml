@@ -9,9 +9,12 @@
     <color name="instaff_text">#FF1F261F</color>
     <color name="instaff_text_muted">#FF6B756B</color>
     <color name="instaff_border">#FFD9D3C5</color>
-    <color name="status_open">#FFE0A432</color>
-    <color name="status_accepted">#FF4D8B55</color>
+    <color name="status_pending">#FFE0A432</color>
+    <color name="status_confirmed">#FF4D8B55</color>
     <color name="status_declined">#FFD95555</color>
+    <color name="status_requested">#FFE0A432</color>
+    <color name="status_request_confirmed">#FF4D8B55</color>
+    <color name="status_request_declined">#FFD95555</color>
     <color name="status_past">#FF9A9A9A</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>

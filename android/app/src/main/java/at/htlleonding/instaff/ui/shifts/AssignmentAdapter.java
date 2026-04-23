@@ -16,6 +16,7 @@ import java.util.List;
 
 import at.htlleonding.instaff.R;
 import at.htlleonding.instaff.data.model.Assignment;
+import at.htlleonding.instaff.data.model.AssignmentStatus;
 import at.htlleonding.instaff.databinding.ItemAssignmentBinding;
 import at.htlleonding.instaff.databinding.ItemAssignmentHeaderBinding;
 import at.htlleonding.instaff.util.AssignmentUiUtils;
@@ -103,30 +104,14 @@ public class AssignmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ));
             binding.shiftRole.setText(assignment.getRole().getRoleName());
 
-            if (assignment.getConfirmed() == null) {
-                binding.statusChip.setText(R.string.status_open);
-                tintChip(context, binding.getRoot(), binding.statusChip, isPast ? R.color.status_past : R.color.status_open);
-            } else if (assignment.getConfirmed()) {
-                binding.statusChip.setText(R.string.status_accepted);
-                tintChip(context, binding.getRoot(), binding.statusChip, isPast ? R.color.status_past : R.color.status_accepted);
-            } else {
-                binding.statusChip.setText(R.string.status_declined);
-                tintChip(context, binding.getRoot(), binding.statusChip, isPast ? R.color.status_past : R.color.status_declined);
-            }
+            AssignmentStatus status = AssignmentUiUtils.normalizedStatus(assignment.getStatus());
+            binding.statusChip.setText(getStatusTextRes(status));
+            tintChip(context, binding.getRoot(), binding.statusChip, isPast ? R.color.status_past : getStatusColorRes(status));
 
-            binding.acceptButton.setVisibility(View.GONE);
-            binding.declineButton.setVisibility(View.GONE);
-
-            if (!isPast) {
-                if (assignment.getConfirmed() == null) {
-                    binding.acceptButton.setVisibility(View.VISIBLE);
-                    binding.declineButton.setVisibility(View.VISIBLE);
-                } else if (assignment.getConfirmed()) {
-                    binding.declineButton.setVisibility(View.VISIBLE);
-                } else {
-                    binding.acceptButton.setVisibility(View.VISIBLE);
-                }
-            }
+            binding.acceptButton.setVisibility(isPast ? View.GONE : View.VISIBLE);
+            binding.declineButton.setVisibility(isPast ? View.GONE : View.VISIBLE);
+            binding.acceptButton.setEnabled(AssignmentUiUtils.canAccept(status, isPast));
+            binding.declineButton.setEnabled(AssignmentUiUtils.canDecline(status, isPast));
 
             binding.acceptButton.setOnClickListener(v -> actionListener.onAccept(assignment));
             binding.declineButton.setOnClickListener(v -> actionListener.onDecline(assignment));
@@ -139,6 +124,42 @@ public class AssignmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int color = ContextCompat.getColor(context, colorRes);
             chip.setChipBackgroundColor(ColorStateList.valueOf(color));
             chip.setTextColor(ContextCompat.getColor(context, R.color.white));
+        }
+
+        private int getStatusTextRes(@NonNull AssignmentStatus status) {
+            switch (status) {
+                case CONFIRMED:
+                    return R.string.status_confirmed;
+                case DECLINED:
+                    return R.string.status_declined;
+                case REQUESTED:
+                    return R.string.status_requested;
+                case REQUEST_CONFIRMED:
+                    return R.string.status_request_confirmed;
+                case REQUEST_DECLINED:
+                    return R.string.status_request_declined;
+                case PENDING:
+                default:
+                    return R.string.status_pending;
+            }
+        }
+
+        private int getStatusColorRes(@NonNull AssignmentStatus status) {
+            switch (status) {
+                case CONFIRMED:
+                    return R.color.status_confirmed;
+                case DECLINED:
+                    return R.color.status_declined;
+                case REQUESTED:
+                    return R.color.status_requested;
+                case REQUEST_CONFIRMED:
+                    return R.color.status_request_confirmed;
+                case REQUEST_DECLINED:
+                    return R.color.status_request_declined;
+                case PENDING:
+                default:
+                    return R.color.status_pending;
+            }
         }
     }
 }

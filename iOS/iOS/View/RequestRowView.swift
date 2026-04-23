@@ -80,13 +80,14 @@ struct RequestRowView: View {
             RoleTag(roleName: assignment.role.roleName)
 
             let (confirmationText, confirmationColor): (String, Color) = {
-                switch assignment.confirmed {
-                case true:
+                let normalizedStatus = AssignmentStatus.normalized(assignment.status)
+                switch normalizedStatus {
+                case .confirmed, .requestConfirmed:
                     return ("Angenommen", .green)
-                case false:
+                case .declined, .requestDeclined:
                     return ("Abgelehnt", .red)
                 default:
-                    return ("Nicht ausgewählt", .blue)
+                    return (normalizedStatus.rowLabel, .yellow)
                 }
             }()
 

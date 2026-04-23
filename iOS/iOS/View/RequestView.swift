@@ -116,6 +116,7 @@ struct RequestView: View {
     @ViewBuilder
     private func assignmentRow(_ assignment: Assignment) -> some View {
         let past = isPast(assignment)
+        let status = AssignmentStatus.normalized(assignment.status)
 
         HStack {
             RequestRowView(roleViewModel: roleViewModel, shiftViewModel: shiftViewModel, assignment: assignment)
@@ -129,7 +130,7 @@ struct RequestView: View {
                 Label("Annehmen", systemImage: "checkmark")
             }
             .tint(.green)
-            .disabled(past)
+            .disabled(past || status.isAccepted)
         }
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
@@ -137,7 +138,7 @@ struct RequestView: View {
             } label: {
                 Label("Ablehnen", systemImage: "xmark")
             }
-            .disabled(past)
+            .disabled(past || status.isDeclined)
             .tint(.red)
         }
     }

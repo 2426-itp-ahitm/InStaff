@@ -2,7 +2,7 @@ package at.htlleonding.instaff.data.model;
 
 public class Assignment {
     private long id;
-    private Boolean confirmed;
+    private AssignmentStatus status;
     private EmployeeSummary employee;
     private ShiftSummary shift;
     private Role role;
@@ -11,8 +11,8 @@ public class Assignment {
         return id;
     }
 
-    public Boolean getConfirmed() {
-        return confirmed;
+    public AssignmentStatus getStatus() {
+        return status;
     }
 
     public EmployeeSummary getEmployee() {

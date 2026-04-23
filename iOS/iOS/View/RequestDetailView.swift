@@ -104,12 +104,13 @@ struct RequestDetailView: View {
                     
                     VStack {
                         HStack(spacing: 10) {
-                            // Tri-state based on optional confirmation
-                            let confirmed = assignment.confirmed // Bool?
+                            let status = AssignmentStatus.normalized(assignment.status)
+                            let canAccept = !status.isAccepted
+                            let canDecline = !status.isDeclined
                             
                             // Accept appearance
-                            let acceptIcon: String = (confirmed == true) ? "checkmark.circle.fill" : "checkmark.circle"
-                            let acceptColor: Color = (confirmed == true) ? .green : .gray
+                            let acceptIcon: String = status.isAccepted ? "checkmark.circle.fill" : "checkmark.circle"
+                            let acceptColor: Color = status.isAccepted ? .green : .gray
                             
                             HStack(spacing: 8) {
                                 Image(systemName: acceptIcon)
@@ -118,7 +119,7 @@ struct RequestDetailView: View {
                                 Button("Annehmen") {
                                     assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: true)
                                 }
-                                .disabled(isPastShift)
+                                .disabled(isPastShift || !canAccept)
                             }
                             .padding(5)
                             .background(
@@ -128,8 +129,8 @@ struct RequestDetailView: View {
                             .foregroundColor(acceptColor)
                             
                             // Decline appearance
-                            let declineIcon: String = (confirmed == false) ? "xmark.circle.fill" : "xmark.circle"
-                            let declineColor: Color = (confirmed == false) ? .red : .gray
+                            let declineIcon: String = status.isDeclined ? "xmark.circle.fill" : "xmark.circle"
+                            let declineColor: Color = status.isDeclined ? .red : .gray
                             
                             HStack(spacing: 8) {
                                 Image(systemName: declineIcon)
@@ -138,7 +139,7 @@ struct RequestDetailView: View {
                                 Button("Ablehnen") {
                                     assignmentViewModel.confirmAssignment(assignmentId: assignment.id, isAccepted: false)
                                 }
-                                .disabled(isPastShift)
+                                .disabled(isPastShift || !canDecline)
                             }
                             .padding(5)
                             .background(

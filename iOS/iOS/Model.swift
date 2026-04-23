@@ -77,7 +77,7 @@ struct Employee: Identifiable, Decodable, Equatable {
 
 struct Assignment: Identifiable, Decodable {
     let id: Int
-    var confirmed: Bool?
+    var status: AssignmentStatus?
     var employee: Employee
     var shift: Shift
     var role: Role

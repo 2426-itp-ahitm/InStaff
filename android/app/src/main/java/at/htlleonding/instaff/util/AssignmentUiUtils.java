@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import at.htlleonding.instaff.data.model.Assignment;
+import at.htlleonding.instaff.data.model.AssignmentStatus;
 
 public final class AssignmentUiUtils {
     public static final String SECTION_UPCOMING = "upcoming";
@@ -66,5 +67,33 @@ public final class AssignmentUiUtils {
         filtered.sort((left, right) -> DateUtils.parseDateTime(right.getShift().getStartTime())
                 .compareTo(DateUtils.parseDateTime(left.getShift().getStartTime())));
         return filtered;
+    }
+
+    @NonNull
+    public static AssignmentStatus normalizedStatus(AssignmentStatus status) {
+        return status != null ? status : AssignmentStatus.PENDING;
+    }
+
+    public static boolean isOpenStatus(AssignmentStatus status) {
+        AssignmentStatus normalized = normalizedStatus(status);
+        return normalized == AssignmentStatus.PENDING || normalized == AssignmentStatus.REQUESTED;
+    }
+
+    public static boolean isAcceptedStatus(AssignmentStatus status) {
+        AssignmentStatus normalized = normalizedStatus(status);
+        return normalized == AssignmentStatus.CONFIRMED || normalized == AssignmentStatus.REQUEST_CONFIRMED;
+    }
+
+    public static boolean isDeclinedStatus(AssignmentStatus status) {
+        AssignmentStatus normalized = normalizedStatus(status);
+        return normalized == AssignmentStatus.DECLINED || normalized == AssignmentStatus.REQUEST_DECLINED;
+    }
+
+    public static boolean canAccept(AssignmentStatus status, boolean isPast) {
+        return !isPast && !isAcceptedStatus(status);
+    }
+
+    public static boolean canDecline(AssignmentStatus status, boolean isPast) {
+        return !isPast && !isDeclinedStatus(status);
     }
 }
