@@ -22,16 +22,17 @@ public class Assignment extends PanacheEntity {
     @JoinColumn(name = "role_id")
     public Role role;
 
-    public Boolean confirmed;
+    @Enumerated(EnumType.STRING)
+    public AssignmentStatus status;
     public boolean seen = false;
 
     public Assignment() {}
 
-    public Assignment(Employee employee, Shift shift, Role role, Boolean confirmed) {
+    public Assignment(Employee employee, Shift shift, Role role, AssignmentStatus status) {
         this.employee = employee;
         this.shift = shift;
         this.role = role;
-        this.confirmed = confirmed;
+        this.status = status;
     }
 
     public Assignment(Shift shift, Role role) {

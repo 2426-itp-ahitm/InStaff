@@ -2,6 +2,7 @@ package at.instaff.features.shift;
 
 import at.instaff.features.assignment.Assignment;
 import at.instaff.features.assignment.AssignmentCreateDTO;
+import at.instaff.features.assignment.AssignmentStatus;
 import at.instaff.features.company.Company;
 import at.instaff.features.employee.Employee;
 import at.instaff.features.role.Role;
@@ -126,7 +127,7 @@ public class ShiftResource {
                         role, null);
 
                 if (!employee.isSelfManaged) {
-                    assignment.confirmed = true;
+                    assignment.status = AssignmentStatus.confirmed;
                 }
                 assignment.persist();
             } else {

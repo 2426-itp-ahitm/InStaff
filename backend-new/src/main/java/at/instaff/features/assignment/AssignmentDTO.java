@@ -8,7 +8,7 @@ import java.util.List;
 
 public record AssignmentDTO(
         long id,
-        Boolean confirmed,
+        AssignmentStatus status,
         Boolean seen,
         EmployeeShortDTO employee,
         ShiftShortDTO shift,
@@ -21,7 +21,7 @@ public record AssignmentDTO(
             employeeShortDTO = EmployeeShortDTO.toResource(assignment.employee);
         }
 
-        return new AssignmentDTO(assignment.id, assignment.confirmed, assignment.seen, employeeShortDTO, ShiftShortDTO.toResource(assignment.shift),
+        return new AssignmentDTO(assignment.id, assignment.status, assignment.seen, employeeShortDTO, ShiftShortDTO.toResource(assignment.shift),
                 RoleDTO.toResource(assignment.role));
     }
 }

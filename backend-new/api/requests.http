@@ -15,7 +15,7 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=password&
 client_id=frontend&
 client_secret=backend-secret-instaff&
-username=bernhard@penkner.com&
+username=bernhard.penkner@instaff.at&
 password=admin
 
 > {% client.global.set("access_token", response.body.access_token); %}
@@ -240,19 +240,19 @@ GET http://localhost:8080/api/assignments/employee/1/2025-03-24/2025-03-27
 ###
 
 ### Confirm assignment
-PUT http://localhost:8080/api/assignments/36/confirm/true
+PUT http://localhost:8080/api/assignments/2/confirm/true
 Authorization: Bearer {{access_token}}
 
 ###
 
 ### Decline assignment
-PUT http://localhost:8080/api/assignments/30/confirm/false
+PUT http://localhost:8080/api/assignments/2/confirm/false
 Authorization: Bearer {{access_token}}
 
 ###
 
 ### Mark Assignment as seen
-PUT http://localhost:8080/api/assignments/36/mark-seen
+PUT http://localhost:8080/api/assignments/2/mark-seen
 Authorization: Bearer {{access_token}}
 
 

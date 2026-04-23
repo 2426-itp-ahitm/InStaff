@@ -99,7 +99,12 @@ public class AssignmentResource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        assignment.confirmed = isConfirmed;
+        if (isConfirmed) {
+            assignment.status = AssignmentStatus.confirmed;
+        } else {
+            assignment.status = AssignmentStatus.declined;
+        }
+
         assignment.seen = false;
         assignment.persist();
         assignmentSocket.assignmentUpdated(assignment);
@@ -156,7 +161,7 @@ public class AssignmentResource {
 
             if (!employee.isSelfManaged) {
                 Log.info("Assignment " + assignment.id + " is self-managed");
-                assignment.confirmed = true;
+                assignment.status = AssignmentStatus.confirmed;
             }
         } else {
             assignment = new Assignment(shift, role);
@@ -197,7 +202,7 @@ public class AssignmentResource {
         assignment.employee = employee;
 
         if (!employee.isSelfManaged) {
-            assignment.confirmed = true;
+            assignment.status = AssignmentStatus.confirmed;
         }
 
         assignment.persist();
