@@ -9,6 +9,11 @@ import {initializeKeycloak} from '../init/keycloak.init.factory';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideAnimations} from '@angular/platform-browser/animations';
 
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
