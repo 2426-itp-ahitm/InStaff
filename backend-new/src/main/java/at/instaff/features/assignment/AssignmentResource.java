@@ -145,22 +145,26 @@ public class AssignmentResource {
         }
 
         Assignment assignment;
+        Employee employee = Employee.find(
+                "id = ?1 and company.id = ?2",
+                dto.employeeId(),
+                principal.getCompanyId()
+        ).firstResult();
 
-        //if (dto.employeeId() != null) {
-            Employee employee = Employee.find(
-                    "id = ?1 and company.id = ?2",
-                    dto.employeeId(),
-                    principal.getCompanyId()
-            ).firstResult();
-
+        if (employee != null) {
             assignment = new Assignment(employee, shift, role, AssignmentStatus.PENDING);
+        } else {
+            assignment = new Assignment();
+            assignment.shift = shift;
+            assignment.role = role;
+            assignment.status = AssignmentStatus.PENDING;
+            assignment.seen = false;
+            assignment.employee = null;
+        }
 
-            if (!employee.isSelfManaged) {
-                assignment.status = AssignmentStatus.CONFIRMED;
-            }
-        //} else {
-        //    assignment = new Assignment(shift, role);
-        //}
+        if (employee != null && !employee.isSelfManaged) {
+            assignment.status = AssignmentStatus.CONFIRMED;
+        }
 
         assignment.persist();
 
@@ -184,8 +188,8 @@ public class AssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Employee employee = null;
-        if (dto.employeeId() != null) {
+        Employee employee = Employee.findById(dto.employeeId());
+        if (employee != null) {
             employee = Employee.findById(dto.employeeId());
 
             if (!employee.roles.contains(role)) {
@@ -197,7 +201,9 @@ public class AssignmentResource {
         assignment.employee = employee;
         assignment.seen = false;
 
-        if (!employee.isSelfManaged) {
+        if (employee == null) {
+            assignment.status = AssignmentStatus.PENDING;
+        } else if (employee.isSelfManaged) {
             assignment.status = AssignmentStatus.CONFIRMED;
         }
 

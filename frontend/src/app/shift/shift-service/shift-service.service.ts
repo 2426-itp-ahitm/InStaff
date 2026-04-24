@@ -57,7 +57,7 @@ export class ShiftServiceService {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   }
 
-  // TODO: empty assignemnts don't work
+  // TODO: empty assignments don't work
   addShift(shiftWithAssignments:ShiftCreateAssignments): Observable<Response> {
     const payload = {
       ...shiftWithAssignments,
@@ -82,7 +82,7 @@ export class ShiftServiceService {
 
   }
 
-  // TODO: add assignemnts
+  // TODO: add assignments
   updateShift(shiftId: number, newShift: ShiftCreate): Observable<Shift> {
     console.log("*****0***")
     console.log(newShift);

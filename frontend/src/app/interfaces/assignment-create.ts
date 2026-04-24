@@ -1,4 +1,4 @@
 export interface AssignmentCreate {
-  employeeId: number|null;
+  employeeId: number | null;
   roleId: number;
 }

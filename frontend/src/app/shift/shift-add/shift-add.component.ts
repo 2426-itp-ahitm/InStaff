@@ -277,9 +277,7 @@ export class ShiftAddComponent implements OnInit {
       for (let j = 0; j < count; j++) {
         const value = sel[j] ?? null;
         // Backend expects a non-null employeeId; skip open slots.
-        if (value !== null) {
-          assignments.push({ employeeId: value, roleId: roleId });
-        }
+        assignments.push({ employeeId: value, roleId: roleId });
       }
     }
     return assignments;

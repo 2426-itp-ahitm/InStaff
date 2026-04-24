@@ -36,8 +36,9 @@ public class Assignment extends PanacheEntity {
         this.status = status != null ? status : AssignmentStatus.PENDING;
     }
 
-    public Assignment(Shift shift, Role role) {
+    public Assignment(Shift shift, Role role,  AssignmentStatus status) {
         this.shift = shift;
         this.role = role;
+        this.status = status != null ? status : AssignmentStatus.PENDING;
     }
 }
