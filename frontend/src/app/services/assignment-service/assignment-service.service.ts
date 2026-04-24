@@ -62,4 +62,9 @@ export class AssignmentServiceService {
     const url = `${this.getApiUrl()}/assignments/${assignmentId}/confirm/false`;
     return this.httpClient.put<any>(url, {});
   }
+
+  deleteAssignment(id: number): Observable<void> {
+    console.log(this.getApiUrl() + '/assignments/' + id);
+    return this.httpClient.delete<void>(`${this.getApiUrl()}/assignments/${id}`);
+  }
 }

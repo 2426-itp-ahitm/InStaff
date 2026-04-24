@@ -23,6 +23,7 @@ import {Role} from '../../interfaces/role';
 import {DateService} from '../../services/date-service/date.service';
 import {EmployeeShort} from '../../interfaces/employee-short';
 import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
+import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-service.service';
 
 @Component({
   selector: 'app-shift-edit',
@@ -55,6 +56,8 @@ export class ShiftEditComponent implements OnInit {
   roleService:RoleServiceService = inject(RoleServiceService);
   assignmentService:AssignmentServiceService = inject(AssignmentServiceService);
   dateService: DateService = inject(DateService);
+  feedbackService: FeedbackServiceService = inject(FeedbackServiceService);
+
 
   shift!:Shift;
   shiftStartTime!: string;
@@ -206,8 +209,20 @@ export class ShiftEditComponent implements OnInit {
     });
   }
 
-  protected removeAssignment(id: number) {
-
+  protected removeAssignment(assignmentId: number): void {
+    this.assignmentService.deleteAssignment(assignmentId).subscribe({
+      next: () => {
+        this.groupedAssignments = this.groupedAssignments
+          .map(group => ({
+            ...group,
+            assignments: group.assignments.filter(a => a.id !== assignmentId)
+          }))
+          .filter(group => group.assignments.length > 0)
+      },
+      error: err => {
+        console.error(err)
+      }
+    })
   }
 
   protected addAssignmentToRole(group: {role: Role, assignments:Assignment[]}): void {
@@ -235,13 +250,11 @@ export class ShiftEditComponent implements OnInit {
   //TODO
   protected save() {
 
-
   }
 
   protected deleteShift() {
 
   }
-
 
   protected readonly AssignmentStatus = AssignmentStatus;
 }

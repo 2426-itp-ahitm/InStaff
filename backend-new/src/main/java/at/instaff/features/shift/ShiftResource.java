@@ -126,7 +126,7 @@ public class ShiftResource {
                 Assignment assignment = new Assignment(employee, Shift.findById(shift.id),
                         role, null);
 
-                if (!employee.isSelfManaged) {
+                if (employee!= null && !employee.isSelfManaged) {
                     assignment.status = AssignmentStatus.CONFIRMED;
                 }
                 assignment.persist();
