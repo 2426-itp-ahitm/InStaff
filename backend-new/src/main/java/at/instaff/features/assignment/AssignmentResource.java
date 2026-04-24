@@ -107,7 +107,7 @@ public class AssignmentResource {
 
         assignment.seen = false;
         assignment.persist();
-        assignmentSocket.assignmentUpdated(assignment);
+        assignmentSocket.broadcastAssignments(assignment);
 
         return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
@@ -127,7 +127,7 @@ public class AssignmentResource {
 
         assignment.seen = true;
         assignment.persist();
-        assignmentSocket.assignmentSeen(assignment);
+        assignmentSocket.broadcastAssignments(assignment);
 
         return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
@@ -195,13 +195,14 @@ public class AssignmentResource {
         assignment.shift = shift;
         assignment.role = role;
         assignment.employee = employee;
+        assignment.seen = false;
 
         if (!employee.isSelfManaged) {
             assignment.status = AssignmentStatus.CONFIRMED;
         }
 
         assignment.persist();
-        assignmentSocket.assignmentUpdated(assignment);
+        assignmentSocket.broadcastAssignments(assignment);
         return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
 

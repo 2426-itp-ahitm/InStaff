@@ -1,5 +1,7 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { NewsWebsocketServiceService } from '../news-websocket-serivce/news-websocket-service.service';
 import { AssignmentNews } from '../../interfaces/assignment-news';
 
@@ -8,6 +10,7 @@ import { AssignmentNews } from '../../interfaces/assignment-news';
 })
 export class NewsService implements OnDestroy {
   private websocketService = inject(NewsWebsocketServiceService);
+  private http = inject(HttpClient);
 
   private newsSubject = new BehaviorSubject<AssignmentNews[]>([]);
   public news$ = this.newsSubject.asObservable();
@@ -43,10 +46,10 @@ export class NewsService implements OnDestroy {
   private upsertNews(newsItem: AssignmentNews): void {
     const current = this.newsSubject.getValue();
     const exists = current.some(item => item.id === newsItem.id);
-    
+
     if (exists) {
       // Update existing item
-      const updated = current.map(item => 
+      const updated = current.map(item =>
         item.id === newsItem.id ? newsItem : item
       );
       this.newsSubject.next(updated);
@@ -57,13 +60,27 @@ export class NewsService implements OnDestroy {
   }
 
   deleteNewsItem(id: number): void {
-    const current = this.newsSubject.getValue();
-    const updated = current.filter(newsItem => newsItem.id !== id);
-    this.newsSubject.next(updated);
+    this.http.put(`${environment.apiUrl}/assignments/${id}/mark-seen`, {}).subscribe(() => {
+      const current = this.newsSubject.getValue();
+      const updated = current.filter(newsItem => newsItem.id !== id);
+      this.newsSubject.next(updated);
+    });
   }
 
   deleteAllNewsItems(): void {
-    this.newsSubject.next([]);
+    const current = this.newsSubject.getValue();
+
+    if (current.length === 0) {
+      return;
+    }
+
+    forkJoin(
+      current.map(newsItem =>
+        this.http.put(`${environment.apiUrl}/assignments/${newsItem.id}/mark-seen`, {})
+      )
+    ).subscribe(() => {
+      this.newsSubject.next([]);
+    });
   }
 
   getNews(): Observable<AssignmentNews[]> {

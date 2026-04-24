@@ -13,7 +13,7 @@ export class NewsWebsocketServiceService {
   private assignmentUpdateSubject = new Subject<AssignmentNews>();
   private assignmentSeenSubject = new Subject<number>();
   private connectionStateSubject = new BehaviorSubject<boolean>(false);
-  
+
   public assignmentUpdate$ = this.assignmentUpdateSubject.asObservable();
   public assignmentSeen$ = this.assignmentSeenSubject.asObservable();
   public isConnected$ = this.connectionStateSubject.asObservable();
@@ -29,7 +29,7 @@ export class NewsWebsocketServiceService {
       this.socket = new WebSocket(wsUrl);
 
       this.socket.onopen = () => {
-        console.log('WebSocket connected to assignments');
+        //console.log('WebSocket connected to assignments');
         this.connectionStateSubject.next(true);
       };
 
@@ -38,12 +38,12 @@ export class NewsWebsocketServiceService {
       };
 
       this.socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        //console.error('WebSocket error:', error);
         this.connectionStateSubject.next(false);
       };
 
       this.socket.onclose = () => {
-        console.log('WebSocket disconnected');
+        //console.log('WebSocket disconnected');
         this.connectionStateSubject.next(false);
       };
     } catch (error) {
@@ -56,31 +56,31 @@ export class NewsWebsocketServiceService {
     const wsBase = environment.wsUrl.replace(/\/$/, '');
     const assignmentsUrl = `${wsBase}/assignments`;
 
-    try {
-      const token = await this.keycloakService.getToken();
-      if (token && token.length > 0) {
-        return `${assignmentsUrl}?access_token=${encodeURIComponent(token)}`;
-      }
-    } catch (error) {
-      console.warn('No Keycloak token available for websocket connection', error);
-    }
-
-    return assignmentsUrl;
+    const token = await this.keycloakService.getToken();
+    return `${assignmentsUrl}?access_token=${encodeURIComponent(token)}`;
   }
 
   private handleMessage(data: string): void {
+    //console.log('WebSocket raw message:', data);
+
+    if (data === 'connected') {
+      //console.log('WebSocket connection confirmed');
+      return;
+    }
+
     if (data.startsWith('seen ')) {
-      // Handle assignment seen message
       const assignmentId = parseInt(data.substring(5));
+      //console.log('WebSocket assignment seen:', assignmentId);
       this.assignmentSeenSubject.next(assignmentId);
-    } else {
-      // Handle assignment update message
-      try {
-        const assignment: AssignmentNews = JSON.parse(data);
-        this.assignmentUpdateSubject.next(assignment);
-      } catch (error) {
-        console.error('Failed to parse assignment message:', error);
-      }
+      return;
+    }
+
+    try {
+      const assignment: AssignmentNews = JSON.parse(data);
+      //console.log('WebSocket assignment update:', assignment);
+      this.assignmentUpdateSubject.next(assignment);
+    } catch (error) {
+      console.error('Failed to parse assignment message:', error, data);
     }
   }
 
