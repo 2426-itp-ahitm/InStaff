@@ -20,21 +20,23 @@ public class AssignmentSocket {
     private Set<Session> sessions = new CopyOnWriteArraySet<>();
 
     @OnOpen
+    @Transactional
     public void onOpen(Session session, EndpointConfig config) {
         String userId = (String) config.getUserProperties().get("userId");
 
-        Uni.createFrom().item(() -> {
-                    // Blocking DB call auf Worker-Thread
-                    return Employee.getEntityManager()
-                            .createQuery("select company.id from Employee where keycloakUserId = :id", Long.class)
-                            .setParameter("id", userId)
-                            .getSingleResult();
-                })
-                .runSubscriptionOn(Infrastructure.getDefaultExecutor())
-                .subscribe().with(companyId -> {
-                    session.getUserProperties().put("companyId", companyId);
-                    sessions.add(session);
-                });
+        System.out.println("Socket opened, userId = " + userId);
+
+        Long companyId = Employee.getEntityManager()
+                .createQuery("select company.id from Employee where keycloakUserId = :id", Long.class)
+                .setParameter("id", userId)
+                .getSingleResult();
+
+        session.getUserProperties().put("companyId", companyId);
+        sessions.add(session);
+
+        session.getAsyncRemote().sendText("connected");
+
+        System.out.println("Socket session added, companyId = " + companyId);
     }
 
     @OnClose

@@ -22,6 +22,7 @@ public class Assignment extends PanacheEntity {
     @JoinColumn(name = "role_id")
     public Role role;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     public AssignmentStatus status = AssignmentStatus.PENDING;
     public boolean seen = false;
@@ -32,7 +33,7 @@ public class Assignment extends PanacheEntity {
         this.employee = employee;
         this.shift = shift;
         this.role = role;
-        this.status = status;
+        this.status = status != null ? status : AssignmentStatus.PENDING;
     }
 
     public Assignment(Shift shift, Role role) {

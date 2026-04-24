@@ -146,25 +146,21 @@ public class AssignmentResource {
 
         Assignment assignment;
 
-        if (dto.employeeId() != null) {
+        //if (dto.employeeId() != null) {
             Employee employee = Employee.find(
                     "id = ?1 and company.id = ?2",
                     dto.employeeId(),
                     principal.getCompanyId()
             ).firstResult();
 
-            if (employee == null || !employee.roles.contains(role)) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-
-            assignment = new Assignment(employee, shift, role, null);
+            assignment = new Assignment(employee, shift, role, AssignmentStatus.PENDING);
 
             if (!employee.isSelfManaged) {
                 assignment.status = AssignmentStatus.CONFIRMED;
             }
-        } else {
-            assignment = new Assignment(shift, role);
-        }
+        //} else {
+        //    assignment = new Assignment(shift, role);
+        //}
 
         assignment.persist();
 
