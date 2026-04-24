@@ -115,7 +115,7 @@ export class ShiftServiceService {
   }
 
 
-  deleteShift(shiftId: number) {
-    return this.httpClient.delete<Shift>(`${this.getApiUrl()}/shifts/delete/${shiftId}`)
+  deleteShift(shiftId: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.getApiUrl()}/shifts/${shiftId}`)
   }
 }

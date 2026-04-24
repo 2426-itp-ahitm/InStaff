@@ -31,7 +31,6 @@ export class ManagerCalendarComponent implements OnInit {
   @Output() openShiftAdd = new EventEmitter<ShiftCreate>();
 
 
-
   shiftService: ShiftServiceService = inject(ShiftServiceService)
   companyService: CompanyServiceService = inject(CompanyServiceService)
   keycloakOperationService: KeycloakOperationService = inject(KeycloakOperationService);
@@ -93,6 +92,7 @@ export class ManagerCalendarComponent implements OnInit {
     eventRemove:
     */
   };
+
 
 
 
@@ -217,7 +217,9 @@ export class ManagerCalendarComponent implements OnInit {
   }
 
   closeShiftEdit() {
+    console.log("test 2")
     this.isEditMode = false;
+    this.shiftService.getShifts();
   }
 
   openAddShift(newShift: ShiftCreate): void {

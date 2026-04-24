@@ -36,7 +36,7 @@ import {FeedbackServiceService} from '../../feedback/feedback-service/feedback-s
 })
 export class ShiftEditComponent implements OnInit {
 
-  @Output() closeShiftEdit = new EventEmitter<unknown>();
+  @Output('closeShiftEdit') closeShiftEdit = new EventEmitter<unknown>();
 
   @Input() shiftId!: number;
   @ViewChild('shiftNameInput') shiftNameInput!: ElementRef;
@@ -217,10 +217,11 @@ export class ShiftEditComponent implements OnInit {
             ...group,
             assignments: group.assignments.filter(a => a.id !== assignmentId)
           }))
-          .filter(group => group.assignments.length > 0)
+          .filter(group => group.assignments.length > 0);
+        this.feedbackService.newFeedback({message: 'Eintrag erfolgreich gelöscht', type: 'success', showFeedback: true})
       },
       error: err => {
-        console.error(err)
+        this.feedbackService.newFeedback({message: 'Fehler beim Löschen des Eintrags. Bitte erneut versuchen.', type: 'error', showFeedback: true})
       }
     })
   }
@@ -243,7 +244,6 @@ export class ShiftEditComponent implements OnInit {
     group.assignments.push(newAssignment);
     this.shift.assignments = [...(this.shift.assignments ?? []), newAssignment];
     this.somethingChanged = true;
-
   }
 
 
@@ -253,7 +253,15 @@ export class ShiftEditComponent implements OnInit {
   }
 
   protected deleteShift() {
-
+    this.shiftService.deleteShift(this.shift.id).subscribe({
+      next: () => {
+        this.closeEditShift()
+        this.feedbackService.newFeedback({message: 'Schicht erfolgreich gelöscht', type:'success', showFeedback: true})
+      },
+      error: err => {
+        this.feedbackService.newFeedback({message: 'Fehler beim Löschen der Schicht. Bitte erneut versuchen.', type: 'error', showFeedback: true})
+      }
+    })
   }
 
   protected readonly AssignmentStatus = AssignmentStatus;

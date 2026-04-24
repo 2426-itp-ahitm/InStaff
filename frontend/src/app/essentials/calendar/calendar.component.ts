@@ -209,12 +209,16 @@ export class CalendarComponent implements OnInit {
   }
 
   openShiftEdit(shift: Shift): void {
+    console.log("test")
     this.isEditMode = true;
     this.selectedShift = shift;
-    console.log("test")
+
   }
   closeShiftEdit() {
+    console.log("test")
     this.isEditMode = false;
+
+    this.shiftService.getShifts();
   }
 
   openAddShift(newShift: ShiftCreate): void {
