@@ -20,6 +20,9 @@ import {PrivateLayoutComponent} from '../layout/private-layout/private-layout.co
 import {PresentationComponent} from '../layout/public/presentation/presentation.component';
 import {PresentationEditComponent} from '../layout/public/presentation-edit/presentation-edit.component';
 import {ShiftOverviewComponent} from '../shift/shift-overview/shift-overview.component';
+import {
+  OpenForRequestComponent
+} from '../essentials/open-for-request/open-for-request.component';
 
 export const routes: Routes = [
   {
@@ -110,6 +113,11 @@ export const routes: Routes = [
         title: 'InStaff',
         canActivate: [AuthGuard],
       },
+      {
+        path: 'open-for-request',
+        component: OpenForRequestComponent,
+        canActivate: [AuthGuard],
+      }
     ]
   },
   {

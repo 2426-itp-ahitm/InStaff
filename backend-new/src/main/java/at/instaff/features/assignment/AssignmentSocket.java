@@ -81,6 +81,8 @@ public class AssignmentSocket {
         });
     }
 
+
+
     private record SocketData(Long companyId, Boolean isManager, List<String> initialMessages) {
     }
 
@@ -112,5 +114,4 @@ public class AssignmentSocket {
             }
         }
     }
-
 }

@@ -1,0 +1,15 @@
+@keyframes role-scroll-hint {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-10px);
+  }
+  70% {
+    transform: translateY(0);
+  }
+}
+
+.animate-role-scroll-hint {
+  animation: role-scroll-hint 700ms ease-out 250ms 2;
+}

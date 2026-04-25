@@ -32,27 +32,6 @@
               <button
                 type="button"
                 class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-                [ngClass]="isStatusFilterSelected('open') ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-                (click)="setStatusFilter('open')">
-                Offen
-              </button>
-              <button
-                type="button"
-                class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-                [ngClass]="isStatusFilterSelected('accepted') ? 'bg-green-dark text-white border-green-dark' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-                (click)="setStatusFilter('accepted')">
-                Angenommen
-              </button>
-              <button
-                type="button"
-                class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-                [ngClass]="isStatusFilterSelected('declined') ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-                (click)="setStatusFilter('declined')">
-                Abgelehnt
-              </button>
-              <button
-                type="button"
-                class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
                 [ngClass]="isStatusFilterSelected('requested') ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
                 (click)="setStatusFilter('requested')">
                 Angefragt
@@ -60,8 +39,8 @@
               <button
                 type="button"
                 class="px-3 py-1.5 rounded-md text-sm font-medium border transition"
-                [ngClass]="isStatusFilterSelected('request_confiremd') ? 'bg-green-dark text-white border-green-dark' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
-                (click)="setStatusFilter('request_confiremd')">
+                [ngClass]="isStatusFilterSelected('request_confirmed') ? 'bg-green-base text-white border-green-base' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+                (click)="setStatusFilter('request_confirmed')">
                 Anfrage angenommen
               </button>
               <button
@@ -117,19 +96,19 @@
             <div class="flex gap-4 mt-4">
               @if (!isShiftPastDate(assignment.shift)) {
                 <button
-                  [disabled]="isShiftPastDate(assignment.shift) || assignment.status === AssignmentStatus.CONFIRMED || assignment.status === AssignmentStatus.REQUESTED || assignment.status === AssignmentStatus.REQUEST_CONFIRMED || assignment.status === AssignmentStatus.REQUEST_DECLINED"
-                  (click)="confirmAssignment(assignment)"
+                  [disabled]="isShiftPastDate(assignment.shift) || assignment.status != AssignmentStatus.PENDING"
+                  (click)="requestAssignment(assignment)"
                   class="button-accept"
                 >
-                  Annehmen
+                  Anfragen
                 </button>
 
                 <button
-                  [disabled]="isShiftPastDate(assignment.shift) || assignment.status === AssignmentStatus.DECLINED || assignment.status === AssignmentStatus.REQUESTED || assignment.status === AssignmentStatus.REQUEST_CONFIRMED || assignment.status === AssignmentStatus.REQUEST_DECLINED"
-                  (click)="declineAssignment(assignment)"
+                  [disabled]="isShiftPastDate(assignment.shift) || assignment.status !== AssignmentStatus.REQUESTED  && assignment.status != null"
+                  (click)="withdrawAssignment(assignment)"
                   class="button-decline"
                 >
-                  Ablehnen
+                  Anfrage zurückziehen
                 </button>
               }
 

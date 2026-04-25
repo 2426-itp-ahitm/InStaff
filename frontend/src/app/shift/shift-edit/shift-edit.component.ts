@@ -80,6 +80,7 @@ export class ShiftEditComponent implements OnInit {
   selectedNewRoleId = -1;
   somethingChanged = false;
   isSaving = false;
+  requestDecisionLoadingIds = new Set<number>();
   duplicateEmployeeIds = new Set<number>();
   lastDeletedAssignment: Assignment | null = null;
   lastDeletedRoleGroup: AssignmentGroup | null = null;
@@ -322,6 +323,14 @@ export class ShiftEditComponent implements OnInit {
       type: 'success',
       showFeedback: true
     });
+  }
+
+  confirmRequestedAssignment(assignment: Assignment): void {
+    this.handleRequestedAssignmentDecision(assignment, true);
+  }
+
+  declineRequestedAssignment(assignment: Assignment): void {
+    this.handleRequestedAssignmentDecision(assignment, false);
   }
 
   protected addAssignmentToRole(group: AssignmentGroup): void {
@@ -628,6 +637,59 @@ export class ShiftEditComponent implements OnInit {
       }),
       catchError((error) => of({ok: false, action: 'shift', error} as BaseSaveResult))
     );
+  }
+
+  private handleRequestedAssignmentDecision(assignment: Assignment, isConfirmed: boolean): void {
+    if (!assignment || assignment.id <= 0) {
+      this.feedbackService.newFeedback({
+        message: 'Anfrage kann für diesen Eintrag nicht bearbeitet werden.',
+        type: 'error',
+        showFeedback: true
+      });
+      return;
+    }
+
+    if (assignment.status !== AssignmentStatus.REQUESTED) {
+      this.feedbackService.newFeedback({
+        message: 'Nur angefragte Einträge können bestätigt oder abgelehnt werden.',
+        type: 'info',
+        showFeedback: true
+      });
+      return;
+    }
+
+    if (this.requestDecisionLoadingIds.has(assignment.id)) {
+      return;
+    }
+
+    this.requestDecisionLoadingIds.add(assignment.id);
+    this.assignmentService.confirmRequestForAssignment(assignment.id, isConfirmed).subscribe({
+      next: (updatedAssignment) => {
+        this.replaceAssignmentById(assignment.id, updatedAssignment);
+        this.originalAssignmentsSnapshot = this.originalAssignmentsSnapshot.map((a) => {
+          if (a.id !== updatedAssignment.id) {
+            return a;
+          }
+          return this.cloneAssignment(updatedAssignment);
+        });
+        this.feedbackService.newFeedback({
+          message: isConfirmed ? 'Anfrage wurde bestätigt.' : 'Anfrage wurde abgelehnt.',
+          type: 'success',
+          showFeedback: true
+        });
+        this.requestDecisionLoadingIds.delete(assignment.id);
+      },
+      error: () => {
+        this.feedbackService.newFeedback({
+          message: isConfirmed
+            ? 'Anfrage konnte nicht bestätigt werden.'
+            : 'Anfrage konnte nicht abgelehnt werden.',
+          type: 'error',
+          showFeedback: true
+        });
+        this.requestDecisionLoadingIds.delete(assignment.id);
+      }
+    });
   }
 
   private runDeletePhase(deleteIds: number[]): Observable<BaseSaveResult[]> {

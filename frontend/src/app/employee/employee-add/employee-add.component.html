@@ -206,7 +206,7 @@
                   <div class="mt-2 space-y-10">
                     <fieldset>
                       <legend class="text-sm/6 font-semibold text-gray-900">Rollen</legend>
-                      <div class="max-h-40 overflow-y-scroll mt-2">
+                      <div class="max-h-40 overflow-y-scroll mt-2 animate-role-scroll-hint">
                           @for (r of roles; track r.id) {
                             <div class="mb-4 space-y-6">
                               <div class="flex gap-3">
@@ -243,6 +243,7 @@
           </div>
 
             <div class="mt-6 flex items-center justify-end gap-x-6">
+              <button type="button" (click)="cancelAddEmployee()" class="button-cancel">Abbrechen</button>
               <button type="submit" [disabled]="addEmployeeForm.invalid" class="button-green">Speichern</button>
             </div>
           </form>

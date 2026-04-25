@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 @Path("/assignments")
@@ -192,9 +194,9 @@ public class AssignmentResource {
 
         Employee employee = Employee.findById(dto.employeeId());
         if (employee != null) {
-            employee = Employee.findById(dto.employeeId());
-
-            if (!employee.roles.contains(role)) {
+            boolean hasRole = employee.roles != null && employee.roles.stream()
+                    .anyMatch(employeeRole -> employeeRole != null && employeeRole.id == role.id);
+            if (!hasRole) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
         }
@@ -236,4 +238,181 @@ public class AssignmentResource {
         Assignment.deleteById(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+    @GET
+    @Path("/openForRequest")
+    public Response getAssignmentsOpenForRequest(@Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
+        Employee employee = Employee.findById(principal.getEmployeeId());
+        if (employee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        List<Assignment> userAssignments = Assignment.<Assignment>list(
+                "employee.id = ?1 and shift.company.id = ?2",
+                principal.getEmployeeId(),
+                principal.getCompanyId()
+        );
+
+        Set<Long> blockedShiftIds = userAssignments.stream()
+                .filter(a -> a.status != AssignmentStatus.DECLINED)
+                .filter(a -> a.status != AssignmentStatus.REQUEST_DECLINED)
+                .map(a -> a.shift.id)
+                .collect(HashSet::new, HashSet::add, HashSet::addAll);
+
+        Set<String> blockedDeclinedRoleKeys = userAssignments.stream()
+                .filter(a -> a.status == AssignmentStatus.REQUEST_DECLINED)
+                .map(a -> a.shift.id + "-" + a.role.id)
+                .collect(HashSet::new, HashSet::add, HashSet::addAll);
+
+        List<Assignment> ownRequestAssignments = userAssignments.stream()
+                .filter(a -> a.status == AssignmentStatus.REQUESTED
+                        || a.status == AssignmentStatus.REQUEST_CONFIRMED
+                        || a.status == AssignmentStatus.REQUEST_DECLINED)
+                .toList();
+
+        Set<String> openShiftRoleKeys = new HashSet<>();
+        List<Assignment> openAssignableAssignments = Assignment.<Assignment>list(
+                "employee is null and shift.company.id = ?1",
+                principal.getCompanyId()
+        ).stream()
+                .filter(a -> a.status == AssignmentStatus.PENDING)
+                .filter(a -> !blockedShiftIds.contains(a.shift.id))
+                .filter(a -> !blockedDeclinedRoleKeys.contains(a.shift.id + "-" + a.role.id))
+                .filter(a -> hasRole(employee, a.role))
+                .filter(a -> openShiftRoleKeys.add(a.shift.id + "-" + a.role.id))
+                .toList();
+
+        List<Assignment> assignmentList = new java.util.ArrayList<>();
+        assignmentList.addAll(ownRequestAssignments);
+        assignmentList.addAll(openAssignableAssignments);
+
+        return Response.ok(assignmentList.stream().map(AssignmentDTO::toResource)).build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{assignmentId}/request")
+    public Response requestAssignment(@PathParam("assignmentId") long assignmentId, @Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
+        Assignment assignment = Assignment.findById(assignmentId);
+        if (assignment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Employee employee = Employee.findById(principal.getEmployeeId());
+        if (employee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if (assignment.shift.company.id != principal.getCompanyId()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if (assignment.employee != null || assignment.status != AssignmentStatus.PENDING) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if (!hasRole(employee, assignment.role)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        assignment.status = AssignmentStatus.REQUESTED;
+        assignment.employee = employee;
+        assignment.seen = false;
+
+        assignment.persist();
+        assignmentSocket.broadcastAssignments(assignment);
+
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{assignmentId}/withdrawRequest")
+    public Response withdrawAssignment(@PathParam("assignmentId") long assignmentId, @Context SecurityContext sc) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
+        Assignment assignment = Assignment.findById(assignmentId);
+        if (assignment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Employee employee = Employee.findById(principal.getEmployeeId());
+        if (employee == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if (assignment.shift.company.id != principal.getCompanyId()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        boolean isOwner = assignment.employee != null
+                && assignment.employee.id == principal.getEmployeeId();
+
+        if (!isOwner) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if (assignment.status != AssignmentStatus.REQUESTED) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        assignment.status = AssignmentStatus.PENDING;
+        assignment.employee = null;
+        assignment.seen = false;
+
+        assignment.persist();
+        assignmentSocket.broadcastAssignments(assignment);
+
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{assignmentId}/confirmRequest/{isConfirmed}")
+    public Response confirmRequestForAssignment(@Context SecurityContext sc, @PathParam("assignmentId") long assignmentId, @PathParam("isConfirmed") boolean isConfirmed) {
+        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+
+        Assignment assignment = Assignment.findById(assignmentId);
+        if (assignment == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Employee employee = Employee.findById(principal.getEmployeeId());
+
+        if (!employee.isManager) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if (assignment.shift.company.id != principal.getCompanyId()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        if (assignment.status != AssignmentStatus.REQUESTED || assignment.employee == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if (isConfirmed) {
+            assignment.status = AssignmentStatus.REQUEST_CONFIRMED;
+        } else {
+            assignment.status = AssignmentStatus.REQUEST_DECLINED;
+        }
+
+        assignment.seen = false;
+        assignment.persist();
+        assignmentSocket.broadcastAssignments(assignment);
+
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
+    }
+
+    private boolean hasRole(Employee employee, Role role) {
+        return employee != null
+                && employee.roles != null
+                && role != null
+                && employee.roles.stream().anyMatch(r -> r != null && r.id == role.id);
+    }
+
 }

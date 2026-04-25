@@ -56,12 +56,33 @@
                         <span
                             class="text-xs px-2 py-1 rounded"
                             [ngClass]="{
-                            'bg-green-100 text-green-800': assignment.status === AssignmentStatus.CONFIRMED,
-                            'bg-red-100 text-red-800': assignment.status === AssignmentStatus.DECLINED,
+                            'bg-green-100 text-green-800': assignment.status === AssignmentStatus.CONFIRMED || assignment.status === AssignmentStatus.REQUEST_CONFIRMED,
+                            'bg-red-100 text-red-800': assignment.status === AssignmentStatus.DECLINED || assignment.status === AssignmentStatus.REQUEST_DECLINED,
                             'bg-yellow-100 text-yellow-800': assignment.status === AssignmentStatus.PENDING
                           }">
                           {{ getConfirmationStatus(assignment.status)}}
                         </span>
+                      }
+
+                      @if (assignment.status === AssignmentStatus.REQUESTED) {
+                        <div class="flex items-center gap-1">
+                          <button
+                            type="button"
+                            class="rounded-full p-1 bg-green-200 hover:bg-green-300 transition-colors disabled:opacity-50"
+                            title="Anfrage bestätigen"
+                            (click)="confirmRequestedAssignment(assignment)"
+                            [disabled]="isSaving || requestDecisionLoadingIds.has(assignment.id)">
+                            <img src="/icons/accept-black.png" alt="Anfrage bestätigen" class="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            class="rounded-full p-1 bg-red-200 hover:bg-red-300 transition-colors disabled:opacity-50"
+                            title="Anfrage ablehnen"
+                            (click)="declineRequestedAssignment(assignment)"
+                            [disabled]="isSaving || requestDecisionLoadingIds.has(assignment.id)">
+                            <img src="/icons/decline-black.png" alt="Anfrage ablehnen" class="w-4 h-4" />
+                          </button>
+                        </div>
                       }
 
 

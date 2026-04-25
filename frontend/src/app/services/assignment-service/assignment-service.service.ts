@@ -17,6 +17,8 @@ export class AssignmentServiceService {
   httpClient: HttpClient = inject(HttpClient);
   private assignmentSubject = new BehaviorSubject<Assignment[]>([]);
   public assignments$ = this.assignmentSubject.asObservable();
+  private openAssignmentSubject = new BehaviorSubject<Assignment[]>([]);
+  public openAssignments$ = this.openAssignmentSubject.asObservable();
 
   getAssignmentByShiftId(shiftId: number): Observable<Assignment[]> {
     return this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/shift/${shiftId}`)
@@ -68,5 +70,40 @@ export class AssignmentServiceService {
 
   private getApiUrl(): string {
     return this.apiUrl.getApiUrl();
+  }
+
+  getOpenAssignments(): void{
+    this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/openForRequest`)
+      .pipe(
+        catchError(() => {
+          this.openAssignmentSubject.next([]);
+          return of([] as Assignment[]);
+        })
+      )
+      .subscribe((ass: Assignment[]) => {
+        this.openAssignmentSubject.next(ass)
+      })
+  }
+
+  requestAssignment(assignmentId: number): Observable<Assignment> {
+    return this.httpClient.put<Assignment>(`${this.getApiUrl()}/assignments/${assignmentId}/request`, {})
+      .pipe(
+        catchError(error => {
+          throw error
+        })
+      )
+  }
+
+  withdrawAssignment(assignmentId: number): Observable<Assignment> {
+    return this.httpClient.put<Assignment>(`${this.getApiUrl()}/assignments/${assignmentId}/withdrawRequest`, {})
+      .pipe(
+        catchError(error => {
+          throw error
+        })
+      )
+  }
+
+  confirmRequestForAssignment(assignmentId: number, isConfirmed: boolean): Observable<Assignment> {
+    return this.httpClient.put<Assignment>(`${this.getApiUrl()}/assignments/${assignmentId}/confirmRequest/${isConfirmed}`, {});
   }
 }

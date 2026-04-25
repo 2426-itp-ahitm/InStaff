@@ -12,9 +12,11 @@
           <img class="rounded-full" ngSrc="/icons/accept-black.png" alt="edit" width="36" height="36" [class.bg-green-200]="n.status === AssignmentStatus.CONFIRMED">
         } @else if (n.status === AssignmentStatus.DECLINED || n.status === AssignmentStatus.REQUEST_DECLINED){
           <img class="rounded-full" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" [class.bg-red-200]="n.status === AssignmentStatus.DECLINED" >
+        } @else if (n.status === AssignmentStatus.REQUESTED){
+          <img class="rounded-full" ngSrc="/icons/phone-black.png" alt="edit" width="36" height="36" [class.bg-orange-200]="n.status === AssignmentStatus.REQUESTED" >
         }
         <p class="ml-2 text-left" (click)="openShiftEditWithId(n.shift.id)">
-          {{getEmployeeName(n)}} hat für die Schicht "{{ n.shift.shiftName }}" am {{dateToString(n.shift.startTime)}} {{n.status === AssignmentStatus.CONFIRMED? "zugesagt" : "abgesagt"}}
+          {{getEmployeeName(n)}} hat für die Schicht "{{ n.shift.shiftName }}" am {{dateToString(n.shift.startTime)}} {{n.status === AssignmentStatus.REQUESTED ? "als " + n.role.roleName + " angefragt" : n.status === AssignmentStatus.CONFIRMED || n.status === AssignmentStatus.REQUEST_CONFIRMED ? "zugesagt" : "abgesagt"}}
         </p>
         <img class="icon-button" ngSrc="/icons/trash-white.png" alt="edit" width="36" height="36" (click)="deleteNewsItem(n.id)">
       </div>
@@ -24,4 +26,3 @@
     <div class="mt-4 text-sm text-center text-gray-500">Es gibt zurzeit keine Neuigkeiten</div>
   }
 </div>
-

@@ -25,9 +25,12 @@
              routerLinkActive="bg-green-base text-white"
              class="menu-item-big"
           >Kalender</a>
-          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/emp-shift-overview"
+          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/shift-overview"
              routerLinkActive="bg-green-base text-white"
              class="menu-item-big">Schichtübersicht</a>
+          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/open-for-request"
+             routerLinkActive="bg-green-base text-white"
+             class="menu-item-big">Offene Schichten</a>
         }
         @if (isAdmin()) {
           <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/home"
@@ -35,9 +38,12 @@
           <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/calendar"
              routerLinkActive="bg-green-base text-white"
              class="menu-item-big">Kalender</a>
-          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/emp-shift-overview"
+          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/shift-overview"
              routerLinkActive="bg-green-base text-white"
              class="menu-item-big">Schichtübersicht</a>
+          <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/open-for-request"
+             routerLinkActive="bg-green-base text-white"
+             class="menu-item-big">Offene Schichten</a>
           <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/team"
              routerLinkActive="bg-green-base text-white" class="menu-item-big">Team</a>
           <a (click)="$event.stopPropagation(); closeMenu()" routerLink="/role-list"
@@ -62,11 +68,13 @@
       @if (isEmployee()) {
         <a routerLink="/emp-home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Dashboard</a>
         <a routerLink="/shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtübersicht</a>
+        <a routerLink="/open-for-request" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Offene Schichten</a>
         <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
       }@if (isAdmin()) {
         <a routerLink="/home" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Dashboard</a>
         <a routerLink="/calendar" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Kalender</a>
         <a routerLink="/shift-overview" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtübersicht</a>
+        <a routerLink="/open-for-request" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Offene Schichten</a>
         <a routerLink="/team" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Team</a>
         <a routerLink="/role-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Rollen</a>
         <a routerLink="/shift-template-list" routerLinkActive="bg-green-base text-white" class="menu-item-big" (click)="closeMenu()">Schichtvorlagen</a>

@@ -1,9 +1,10 @@
-<div class="relative z-10"  aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="modal-bg" aria-hidden="true"></div>
   <div class="modal-card-1" animate.enter="enter-animation" animate.leave="leave-animation">
     <div class="modal-card-2">
       <div class="modal-card-3">
-        <img class="float-right m-2 cursor-pointer hover:scale-105 transition-all" ngSrc="/icons/decline-black.png" alt="edit" width="36" height="36" (click)="closeEmployeeEdit()">
+        <img class="float-right m-2 cursor-pointer hover:scale-105 transition-all" ngSrc="/icons/decline-black.png"
+             alt="edit" width="36" height="36" (click)="closeEmployeeEdit()">
         <div class="modal-card-4">
           <form [formGroup]="editEmployeeForm" (ngSubmit)="save()">
             <div class="space-y-1">
@@ -12,7 +13,8 @@
                 <div class="sm:col-span-3 mt-2">
                   <label for="firstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
                   <div class="">
-                    <input formControlName="firstname" type="text" name="firstname" id="firstname" class="input-field-long">
+                    <input formControlName="firstname" type="text" name="firstname" id="firstname"
+                           class="input-field-long">
                   </div>
                   @if (editEmployeeForm.get('firstname')?.invalid) {
                     <div class="text-red-600 text-sm">Ein gültiger Vorname ist erforderlich!</div>
@@ -23,7 +25,8 @@
                 <div class="sm:col-span-3 mt-2">
                   <label for="lastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
                   <div class="">
-                    <input formControlName="lastname" type="text" name="lastname" id="lastname" autocomplete="family-name" class="input-field-long">
+                    <input formControlName="lastname" type="text" name="lastname" id="lastname"
+                           autocomplete="family-name" class="input-field-long">
                   </div>
                   @if (editEmployeeForm.get('lastname')?.invalid) {
                     <div class="text-red-600 text-sm">Ein gültiger Nachname ist erforderlich!</div>
@@ -34,14 +37,15 @@
                   <!-- BDAY -->
                   <div class="sm:col-span-4">
                     <label for="birthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
-                    <input formControlName="birthdate" type="date" name="birthdate" id="birthdate" autocomplete="bday" class="input-field">
+                    <input formControlName="birthdate" type="date" name="birthdate" id="birthdate" autocomplete="bday"
+                           class="input-field">
                     @if (editEmployeeForm.get('birthdate')?.touched) {
                       <div class="text-red-600 text-sm">
                         @if (editEmployeeForm.get('birthdate')?.hasError('required')) {
                           <div>Geburtsdatum ist erforderlich.</div>
-                        } @else if (editEmployeeForm.get('birthdate')?.hasError('futureBirthdate')){
+                        } @else if (editEmployeeForm.get('birthdate')?.hasError('futureBirthdate')) {
                           <div>Geburtsdatum darf nicht in der Zukunft liegen.</div>
-                        } @else if (editEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')){
+                        } @else if (editEmployeeForm.get('birthdate')?.hasError('invalidBirthdate')) {
                           <div>Ungültiges Datumsformat.</div>
                         }
                       </div>
@@ -52,7 +56,8 @@
                   <div class="sm:col-span-6">
                     <label for="telephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
                     <div class="">
-                      <input formControlName="telephone" id="telephone" name="telephone" type="text" autocomplete="tel" class="input-field">
+                      <input formControlName="telephone" id="telephone" name="telephone" type="text" autocomplete="tel"
+                             class="input-field">
                     </div>
                     @if (editEmployeeForm.get('telephone')?.invalid) {
                       <div class="text-red-600 text-sm">Eine gültige Telefonnummer ist erforderlich</div>
@@ -61,12 +66,12 @@
                 </div>
 
 
-
                 <!-- EMAIL -->
                 <div class="sm:col-span-5 mt-2">
                   <label for="email" class="block text-sm/6 font-medium text-gray-900">E-Mail-Adresse</label>
                   <div class="">
-                    <input formControlName="email" id="email" name="email" type="email" autocomplete="email" class="input-field-long">
+                    <input formControlName="email" id="email" name="email" type="email" autocomplete="email"
+                           class="input-field-long">
                   </div>
                   @if (editEmployeeForm.get('email')?.invalid) {
                     <div class="text-red-600 text-sm">Eine gültige E-Mail-Adresse ist erforderlich</div>
@@ -78,7 +83,8 @@
                 <div class="sm:col-span-5 mt-2">
                   <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
                   <div class="">
-                    <input formControlName="address" id="address" name="address" type="text" autocomplete="address" class="input-field-long">
+                    <input formControlName="address" id="address" name="address" type="text" autocomplete="address"
+                           class="input-field-long">
                   </div>
                   @if (editEmployeeForm.get('address')?.invalid) {
                     <div class="text-red-600 text-sm">Eine Adresse ist erforderlich</div>
@@ -89,9 +95,10 @@
                 <div class="sm:col-span-6 mt-2">
                   <label for="hourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
                   <div class="">
-                    <input formControlName="hourlyWage"  id="hourlyWage" name="hourlyWage" type="number" class="input-field">
+                    <input formControlName="hourlyWage" id="hourlyWage" name="hourlyWage" type="number"
+                           class="input-field">
                   </div>
-                  @if (editEmployeeForm.get('hourlyWage')?.invalid){
+                  @if (editEmployeeForm.get('hourlyWage')?.invalid) {
                     <div class="text-red-600 text-sm">Ein gültiger Stundenlohn ist erforderlich</div>
                   }
                 </div>
@@ -110,9 +117,13 @@
                             id="isActive"
                             class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                           >
-                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
-                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          <svg
+                            class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                            viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </div>
                       </div>
@@ -136,14 +147,19 @@
                             id="isSelfManaged"
                             class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                           >
-                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
-                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          <svg
+                            class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                            viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </div>
                       </div>
                       <div class="text-sm/6">
-                        <label for="isSelfManaged" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, sich selbst zu verwalten</label>
+                        <label for="isSelfManaged" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, sich
+                          selbst zu verwalten</label>
                       </div>
                     </div>
                   </div>
@@ -163,22 +179,23 @@
                             id="isManager"
                             class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                           >
-                          <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
-                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          <svg
+                            class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                            viewBox="0 0 14 14" fill="none">
+                            <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                            <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </div>
                       </div>
                       <div class="text-sm/6">
-                        <label for="isManager" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, das Unternehmen zu verwalten</label>
+                        <label for="isManager" class="font-medium text-gray-900">Dem Mitarbeiter erlauben, das
+                          Unternehmen zu verwalten</label>
                       </div>
                     </div>
                   </div>
                 </div>
-
-
-
-
 
 
               </div>
@@ -188,8 +205,8 @@
                 <div class="mt-3 space-y-10">
                   <fieldset>
                     <legend class="text-sm/6 font-semibold text-gray-900">Rollen</legend>
-                    <div class="max-h-40 overflow-y-scroll mt-2">
-                      @for (r of rolesWithBoolean ; track r.role.id) {
+                    <div class="max-h-40 overflow-y-scroll mt-2 animate-role-scroll-hint">
+                      @for (r of rolesWithBoolean; track r.role.id) {
                         <div class="mb-4 space-y-6">
                           <div class="flex gap-3">
                             <div class="flex h-6 shrink-0 items-center">
@@ -201,14 +218,19 @@
                                   (change)="onRoleChange(r.role.id, $event)"
                                   class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-base checked:bg-green-base indeterminate:border-green-base indeterminate:bg-green-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                 >
-                                <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25" viewBox="0 0 14 14" fill="none">
-                                  <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                  <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <svg
+                                  class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                                  viewBox="0 0 14 14" fill="none">
+                                  <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                  <path class="opacity-0 group-has-indeterminate:opacity-100" d="M3 7H11"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                               </div>
                             </div>
                             <div class="text-sm/6">
-                              <label [for]="'role' + r.role.id" class="font-medium text-gray-900">{{ r.role.roleName }}</label>
+                              <label [for]="'role' + r.role.id"
+                                     class="font-medium text-gray-900">{{ r.role.roleName }}</label>
                             </div>
                           </div>
                         </div>
@@ -223,6 +245,7 @@
 
             <div class="mt-6 flex items-center justify-end gap-x-4">
               <button type="button" (click)="deleteEmployee(employee)" class="button-delete">Löschen</button>
+              <button type="button" (click)="cancelEditEmployee()" class="button-cancel">Abbrechen</button>
               <button type="submit" [disabled]="editEmployeeForm.invalid" class="button-green">Speichern</button>
             </div>
           </form>

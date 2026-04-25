@@ -255,6 +255,10 @@ Authorization: Bearer {{access_token}}
 PUT http://localhost:8080/api/assignments/2/mark-seen
 Authorization: Bearer {{access_token}}
 
+### GET open assignments
+GET http://localhost:8080/api/assignments/openForRequest
+Authorization: Bearer {{access_token}}
+
 
 ###############################################
 # SHIFTS

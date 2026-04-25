@@ -97,4 +97,9 @@ export class EmployeeAddComponent implements OnInit {
   closeAddEmployee(): void {
     this.close.emit();
   }
+
+  cancelAddEmployee() {
+    this.addEmployeeForm.reset();
+    this.closeAddEmployee()
+  }
 }

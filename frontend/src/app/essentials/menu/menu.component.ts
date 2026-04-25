@@ -79,4 +79,6 @@ export class MenuComponent implements OnInit {
       this.isMenuOpen = false;
     }
   }
+
+  protected readonly close = close;
 }

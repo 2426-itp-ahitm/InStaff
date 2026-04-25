@@ -11,19 +11,20 @@ import {map} from 'rxjs/operators';
 import {ShiftShort} from '../../interfaces/shift-short';
 import {AssignmentStatus} from '../../interfaces/AssignmentStatus';
 
-type AssignmentStatusFilter = 'all' | 'open' | 'accepted' | 'declined' | 'requested' | 'request_confiremd' | 'request_declined';
+type AssignmentStatusFilter = 'all' | 'requested' | 'request_confirmed' | 'request_declined';
+
 
 @Component({
-  selector: 'app-shift-overview',
+  selector: 'app-open-for-request',
   imports: [
     AsyncPipe,
     DatePipe,
     NgClass
   ],
-  templateUrl: './shift-overview.component.html',
-  styleUrl: './shift-overview.component.css'
+  templateUrl: './open-for-request.component.html',
+  styleUrl: './open-for-request.component.css',
 })
-export class ShiftOverviewComponent implements OnInit{
+export class OpenForRequestComponent implements OnInit{
   @Input() stickyTop: string = '0rem';
 
   assignmentService: AssignmentServiceService = inject(AssignmentServiceService)
@@ -57,7 +58,7 @@ export class ShiftOverviewComponent implements OnInit{
   ngOnInit() {
     this.roleService.getRoles()
     this.employeeService.getAllEmployees()
-    this.assignmentService.assignments$.subscribe(assignments => {
+    this.assignmentService.openAssignments$.subscribe(assignments => {
       this.buildAssignmentsFromSubject(assignments);
     });
     this.loadAssignments()
@@ -78,7 +79,7 @@ export class ShiftOverviewComponent implements OnInit{
         return;
       }
 
-      this.assignmentService.getAssignmentsForEmployee(emp.id)
+      this.assignmentService.getOpenAssignments()
     });
   }
 
@@ -99,20 +100,20 @@ export class ShiftOverviewComponent implements OnInit{
   }
 
 
-  confirmAssignment(assignment: Assignment) {
-    assignment.status = AssignmentStatus.CONFIRMED
+  requestAssignment(assignment: Assignment) {
+    assignment.status = AssignmentStatus.REQUESTED
     this.applyFilters();
-    this.assignmentService.confirmAssignment(assignment.id).subscribe(() => {
-      console.log("confirmed")
+    this.assignmentService.requestAssignment(assignment.id).subscribe(() => {
+      console.log("requested")
       this.loadAssignments()
     })
   }
 
-  declineAssignment(assignment: Assignment) {
-    assignment.status = AssignmentStatus.DECLINED;
+  withdrawAssignment(assignment: Assignment) {
+    assignment.status = AssignmentStatus.PENDING;
     this.applyFilters();
-    this.assignmentService.declineAssignment(assignment.id).subscribe(() => {
-      console.log("declined")
+    this.assignmentService.withdrawAssignment(assignment.id).subscribe(() => {
+      console.log("request withdrawn")
       this.loadAssignments()
     })
   }
@@ -169,22 +170,13 @@ export class ShiftOverviewComponent implements OnInit{
       if (this.selectedStatusFilter === 'all') {
         return true;
       }
-      if (this.selectedStatusFilter === 'open') {
-        return a.status === AssignmentStatus.PENDING;
-      }
-      if (this.selectedStatusFilter === 'accepted') {
-        return a.status === AssignmentStatus.CONFIRMED;
-      }
       if (this.selectedStatusFilter === 'requested') {
         return a.status === AssignmentStatus.REQUESTED;
       }
-      if (this.selectedStatusFilter === 'request_confiremd') {
+      if (this.selectedStatusFilter === 'request_confirmed') {
         return a.status === AssignmentStatus.REQUEST_CONFIRMED;
       }
-      if (this.selectedStatusFilter === 'request_declined') {
-        return a.status === AssignmentStatus.REQUEST_DECLINED;
-      }
-      return a.status === AssignmentStatus.DECLINED;
+      return a.status === AssignmentStatus.REQUEST_DECLINED;
     });
 
     this.fullAssignments = [...statusFiltered].sort((a, b) => {
@@ -193,28 +185,19 @@ export class ShiftOverviewComponent implements OnInit{
 
       if (this.selectedStatusFilter === 'all') {
         const getStatusRank = (status: AssignmentStatus | null) => {
-          if (status === AssignmentStatus.CONFIRMED) {
+          if (status === AssignmentStatus.REQUESTED) {
             return 0;
           }
-          if (status === AssignmentStatus.DECLINED) {
+          if (status === AssignmentStatus.REQUEST_CONFIRMED) {
             return 1;
           }
-          if (status === AssignmentStatus.PENDING) {
+          if (status === AssignmentStatus.REQUEST_DECLINED) {
             return 2;
           }
-          if (status === AssignmentStatus.REQUESTED) {
-            return 3;
-          }
-          if (status === AssignmentStatus.REQUEST_CONFIRMED) {
-            return 4;
-          }
-          if (status === AssignmentStatus.REQUEST_DECLINED) {
-            return 5;
-          }
-          return 6;
+          return 3;
         };
 
-        const statusDiff = getStatusRank(a.status) - getStatusRank(a.status);
+        const statusDiff = getStatusRank(a.status) - getStatusRank(b.status);
         if (statusDiff !== 0) {
           return statusDiff;
         }
@@ -234,11 +217,11 @@ export class ShiftOverviewComponent implements OnInit{
     if (status === AssignmentStatus.REQUESTED) {
       return 'Angefragt';
     }
-    if (status === AssignmentStatus.REQUEST_CONFIRMED) {
-      return 'Anfrage bestätigt';
-    }
     if (status === AssignmentStatus.REQUEST_DECLINED) {
       return 'Anfrage abgelehnt';
+    }
+    if (status === AssignmentStatus.REQUEST_CONFIRMED) {
+      return 'Anfrage bestätigt';
     }
     return 'Ausstehend';
   }

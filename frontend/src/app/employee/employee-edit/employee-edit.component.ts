@@ -192,4 +192,8 @@ export class EmployeeEditComponent implements OnInit {
       selected: selectedRoleIds.has(role.id)
     }));
   }
+
+  cancelEditEmployee() {
+    this.closeEmployeeEdit();
+  }
 }

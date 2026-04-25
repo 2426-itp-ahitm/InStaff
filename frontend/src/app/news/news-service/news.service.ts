@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { NewsWebsocketServiceService } from '../news-websocket-serivce/news-websocket-service.service';
 import { AssignmentNews } from '../../interfaces/assignment-news';
+import { AssignmentStatus } from '../../interfaces/AssignmentStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,25 @@ export class NewsService implements OnDestroy {
   }
 
   private upsertNews(newsItem: AssignmentNews): void {
-    const current = this.newsSubject.getValue();
+    let current = this.newsSubject.getValue();
+
+    // Keep only one active REQUESTED item per employee and shift.
+    // This prevents stale request entries when an employee withdraws one role request
+    // and requests another role in the same shift.
+    if (
+      newsItem.status === AssignmentStatus.REQUESTED &&
+      newsItem.employee?.id &&
+      newsItem.shift?.id
+    ) {
+      current = current.filter((item) => {
+        const isDifferentAssignment = item.id !== newsItem.id;
+        const isRequested = item.status === AssignmentStatus.REQUESTED;
+        const sameEmployee = item.employee?.id === newsItem.employee?.id;
+        const sameShift = item.shift?.id === newsItem.shift?.id;
+        return !(isDifferentAssignment && isRequested && sameEmployee && sameShift);
+      });
+    }
+
     const exists = current.some(item => item.id === newsItem.id);
 
     if (exists) {
