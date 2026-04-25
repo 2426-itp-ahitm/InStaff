@@ -1,4 +1,3 @@
-
 <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="modal-bg" aria-hidden="true"></div>
   <div class="modal-card-1" animate.enter="enter-animation">
@@ -6,51 +5,53 @@
       <div class="modal-card-3">
         <div class="modal-card-4">
           <div class="mb-2">
-            <input #shiftNameInput [value]="(shift && shift.shiftName) || ''" (click)="somethingChangedSetTrue()" type="text" name="shift-name" id="shift-name" class="input-field">
+            <input [(ngModel)]="shiftName" (ngModelChange)="onShiftNameChanged()" type="text" name="shift-name" id="shift-name" class="input-field">
           </div>
 
           <div class="border-b-green-900 border-b-2 mb-1 pb-1">
-            <input type="datetime-local" [(ngModel)]="shiftStartTime" (ngModelChange)="somethingChangedSetTrue()"> - <input type="datetime-local" [(ngModel)]="shiftEndTime" (ngModelChange)="somethingChangedSetTrue()">
+            <input type="datetime-local" [(ngModel)]="shiftStartTime" (ngModelChange)="onShiftDateChanged()"> - <input type="datetime-local" [(ngModel)]="shiftEndTime" (ngModelChange)="onShiftDateChanged()">
           </div>
 
-          <!-- Gruppierte Anzeige der Zuweisungen nach Rollen -->
-          <div class="space-y-0 max-h-96 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300">
+          @if (duplicateEmployeeIds.size > 0) {
+            <div class="text-sm text-red-600 mt-2 mb-2">
+              Ein Mitarbeiter ist mehrfach eingeteilt. Bitte korrigieren, bevor du speicherst.
+            </div>
+          }
+
+          <div class="space-y-0 max-h-200 overflow-y-auto overflow-x-hidden pr-2 border-b border-gray-300">
             @if (groupedAssignments.length == 0) {
               <div class="mt-4 text-sm text-center text-gray-500">Es gibt für diese Schicht noch keine Einteilungen</div>
             }
-            <!--<h3 class="text-lg font-semibold">Schicht bearbeiten</h3>-->
             @for (group of groupedAssignments; track group.role.id){
               <div class="pb-5">
-                <!-- Rollen-Header -->
                 <div class="flex justify-between items-center mb-1">
                   <h4 class="font-semibold text-base">{{ group.role.roleName }} ({{ group.assignments.length }}x)</h4>
-                  <button type="button" (click)="removeRole(group.role.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100">
-                    <img src="/icons/trash-black.png" alt="trash" class="w-5 h-5" />
+                  <button type="button" (click)="removeRole(group.role.id)" aria-label="Entfernen" class="p-1 rounded hover:bg-gray-100" [disabled]="isSaving">
+                    <img ngSrc="/icons/trash-black.png" alt="trash" class="w-5 h-5" height="1024" width="1024"/>
                   </button>
                 </div>
 
-                <!-- Zuweisungen für diese Rolle -->
                 <div class="space-y-2">
-                  @for (assignment of group.assignments; let i=$index; track i){
+                  @for (assignment of group.assignments; let i=$index; track assignment.id){
                     <div class="flex items-center gap-2 bg-white p-2 rounded-md border border-gray-200">
                       <span class="text-sm font-medium text-gray-600 min-w-20">{{ group.role.roleName }} {{ i + 1 }}:</span>
 
-                      <!-- Mitarbeiter-Auswahl -->
                       <select
                         [ngModel]="getAssignmentEmployeeId(assignment)"
-                        (ngModelChange)="setAssignmentEmployeeId(assignment, $event); somethingChangedSetTrue()"
+                        (ngModelChange)="setAssignmentEmployeeId(assignment, $event)"
                         class="flex-1 block rounded-md bg-white px-2 py-1 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2"
+                        [ngClass]="{'outline-red-500! ring-1! ring-red-400!': isAssignmentConflicting(assignment)}"
+                        [disabled]="isSaving"
                       >
                         <option [ngValue]="0" class="text-gray-400">offen</option>
                         @for (emp of getEmployeesForRole(group.role.id); track emp.id){
-                          <option [ngValue]="emp.id">
+                          <option [ngValue]="emp.id" [disabled]="!isEmployeeSelectableForAssignment(assignment, emp.id)">
                             {{ emp.firstname }} {{ emp.lastname }}
                           </option>
                         }
 
                       </select>
 
-                      <!-- Status-Anzeige -->
                       @if (getAssignmentEmployeeId(assignment) !== 0) {
                         <span
                             class="text-xs px-2 py-1 rounded"
@@ -64,12 +65,12 @@
                       }
 
 
-                      <!-- Entfernen-Button -->
                       <button
                         type="button"
                         class="text-red-500 hover:text-red-700 text-sm font-bold px-2"
                         (click)="removeAssignment(assignment.id)"
-                        title="Zuweisung entfernen">
+                        title="Zuweisung entfernen"
+                        [disabled]="isSaving">
                         ×
                       </button>
                     </div>
@@ -77,23 +78,46 @@
 
                 </div>
 
-                <!-- Button zum Hinzufügen weiterer Positionen für diese Rolle -->
                 <button
                   type="button"
                   class="mt-2 text-sm text-green-700 hover:text-green-900 font-medium"
-                  (click)="addAssignmentToRole(group)">
+                  (click)="addAssignmentToRole(group)"
+                  [disabled]="isSaving">
                   + {{ group.role.roleName }} hinzufügen
                 </button>
               </div>
             }
+            <div class="mb-3 flex justify-start">
+              <button type="button" class="button-restore" (click)="addLastDeleted()" [disabled]="isSaving || (lastDeletedAssignment == null && lastDeletedRoleGroup == null)">Zuletzt gelöschtes wiederherstellen</button>
+            </div>
+
+            <div class="mb-4 p-1 mt-1">
+              <h4 class="text-sm font-semibold mb-2 text-gray-700">Neue Rolle hinzufügen</h4>
+              <div class="flex gap-2 items-center">
+                <select
+                  [(ngModel)]="selectedNewRoleId"
+                  class="flex-1 block rounded-md bg-white px-3 py-1.5 text-sm text-gray-900 outline-1 outline-gray-300 focus:outline-2"
+                  [disabled]="isSaving || getAvailableRolesForShift().length === 0">
+                  <option [value]="-1">Wähle Rolle</option>
+                  @for (r of getAvailableRolesForShift(); track r.id){
+                    <option [value]="r.id">{{ r.roleName }}</option>
+                  }
+                </select>
+                <button
+                  type="button"
+                  class="text-sm text-white font-semibold py-1.5 px-4 bg-green-base rounded-md transition-all disabled:bg-green-light disabled:cursor-not-allowed"
+                  (click)="addNewRole()"
+                  [disabled]="isSaving || selectedNewRoleId === -1 || getAvailableRolesForShift().length === 0">
+                  Hinzufügen
+                </button>
+              </div>
+            </div>
           </div>
 
-
-          <!-- bottom navigation -->
-          <div class="mt-6 flex items-center justify-end gap-x-4">
-            <button type="button" class="button-delete" (click)="deleteShift()">Löschen</button>
-            <button type="button" class="button-cancel" (click)="closeEditShift()">Abbrechen</button>
-            <button type="button" class="button-green" [disabled]="!somethingChanged" (click)="save()">Speichern</button>
+          <div class="mt-4 flex items-center justify-end gap-x-4">
+            <button type="button" class="button-delete" (click)="deleteShift()" [disabled]="isSaving">Löschen</button>
+            <button type="button" class="button-cancel" (click)="closeEditShift()" [disabled]="isSaving">Abbrechen</button>
+            <button type="button" class="button-green" [disabled]="isSaving || !somethingChanged || duplicateEmployeeIds.size > 0" (click)="save()">Speichern</button>
           </div>
 
         </div>

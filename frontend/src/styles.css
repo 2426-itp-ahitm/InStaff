@@ -106,11 +106,12 @@ h2{
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-green-base bg-transparent px-4 py-2 text-sm font-semibold text-green-base shadow-sm hover:bg-green-base hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-auto disabled:bg-transparent;
 }
 
-
-
 .button-decline {
   @apply place-self-center cursor-pointer transition-all rounded-md border-2 border-red-600 bg-transparent px-4 py-2 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-auto disabled:bg-transparent;
+}
 
+.button-restore {
+  @apply cursor-pointer transition-all rounded-md border border-green-dark/50 bg-transparent px-2 py-1 text-[11px] font-medium leading-tight text-green-dark/80 hover:border-green-dark hover:bg-green-dark/5 hover:text-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-base disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-auto disabled:bg-transparent;
 }
 
 

@@ -110,8 +110,8 @@ export class EmployeeCalendarComponent implements OnInit {
       this.loadShiftsToEvents();
     });
 
-    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe((emp) => {
-      this.shiftService.getShiftByEmployeeId(emp.id);
+    this.employeeService.getEmployeeByKeykloackId(this.keycloackService.getKeycloakInstance().subject!).subscribe(() => {
+      this.shiftService.getSelfShifts();
     });
 
   }

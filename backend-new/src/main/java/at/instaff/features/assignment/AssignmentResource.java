@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
+import java.util.Objects;
 
 @Path("/assignments")
 public class AssignmentResource {
@@ -181,6 +182,7 @@ public class AssignmentResource {
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        Long oldEmployeeId = assignment.employee != null ? assignment.employee.id : null;
 
         Shift shift = Shift.findById(dto.shiftId());
         Role role = Role.findById(dto.roleId());
@@ -200,11 +202,17 @@ public class AssignmentResource {
         assignment.role = role;
         assignment.employee = employee;
         assignment.seen = false;
+        Long newEmployeeId = assignment.employee != null ? assignment.employee.id : null;
+        boolean employeeChanged = !Objects.equals(oldEmployeeId, newEmployeeId);
 
         if (employee == null) {
             assignment.status = AssignmentStatus.PENDING;
         } else if (employee.isSelfManaged) {
             assignment.status = AssignmentStatus.CONFIRMED;
+        }
+
+        if (employeeChanged) {
+            assignment.status = AssignmentStatus.PENDING;
         }
 
         assignment.persist();

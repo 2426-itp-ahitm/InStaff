@@ -16,7 +16,6 @@ import {CompanyServiceService} from '../../services/company-service/company-serv
 import {EmployeeServiceService} from '../../employee/employee-service/employee-service.service';
 import {ShiftServiceService} from '../shift-service/shift-service.service';
 import {RoleServiceService} from '../../role/role-service/role-service.service';
-import {AssignmentServiceService} from '../../services/assignment-service/assignment-service.service';
 import {ShiftTemplateServiceService} from '../../shift-template/shift-template-service/shift-template-service.service';
 import {Employee} from '../../interfaces/employee';
 import {Assignment} from '../../interfaces/assignment';
@@ -61,7 +60,6 @@ export class ShiftViewComponent implements OnInit {
   employeeService: EmployeeServiceService = inject(EmployeeServiceService);
   shiftService: ShiftServiceService = inject(ShiftServiceService);
   roleService: RoleServiceService = inject(RoleServiceService);
-  assignmentService: AssignmentServiceService = inject(AssignmentServiceService);
   shiftTemplateService: ShiftTemplateServiceService = inject(ShiftTemplateServiceService);
 
   roleNameMap: { [id: number]: string } = {};
@@ -73,15 +71,10 @@ export class ShiftViewComponent implements OnInit {
     this.employeeService.getAllEmployees();
 
     this.shiftService.getShiftById(this.shiftId).subscribe((s: Shift) => {
-      console.log(s);
       this.shift = s
-      console.log(this.shift);
-    })
-
-    this.assignmentService.getAssignmentByShiftId(this.shiftId).subscribe((a: Assignment[]) => {
-      this.assignments = a;
+      this.assignments = s.assignments ?? [];
       this.buildGroupedAssignments();
-    })
+    });
 
     //get all Employees
     this.employeeService.getAllEmployees()
@@ -115,33 +108,34 @@ export class ShiftViewComponent implements OnInit {
 
   }
 
-  //TODO
   private buildGroupedAssignments(): void {
-    /*
-    const groups = new Map<number, Assignment[]>();
+    const groups = new Map<number, { roleName: string; assignments: Assignment[] }>();
 
-    for (const assignment of this.assignments) {
-      if (!groups.has(assignment.role)) {
-        groups.set(assignment.role, []);
+    this.assignments.forEach((assignment) => {
+      const roleId = assignment.role?.id;
+      if (!roleId) {
+        return;
       }
-      groups.get(assignment.role)!.push(assignment);
-    }
+
+      const current = groups.get(roleId);
+      if (current) {
+        current.assignments.push(assignment);
+        return;
+      }
+
+      groups.set(roleId, {
+        roleName: assignment.role.roleName || this.roleNameMap[roleId] || `Rolle ${roleId}`,
+        assignments: [assignment]
+      });
+    });
 
     this.groupedAssignments = Array.from(groups.entries())
-      .map(([roleId, roleAssignments]) => ({
+      .map(([roleId, roleGroup]) => ({
         roleId,
-        roleName: this.roleNameMap[roleId] ?? `Rolle ${roleId}`,
-        assignments: [...roleAssignments].sort((a, b) => {
-          const aEmployee = this.employeeService.getEmployeeById(a.employee);
-          const bEmployee = this.employeeService.getEmployeeById(b.employee);
-          const aName = `${aEmployee.firstName} ${aEmployee.lastname}`.trim();
-          const bName = `${bEmployee.firstname} ${bEmployee.lastname}`.trim();
-          return aName.localeCompare(bName, 'de');
-        })
+        roleName: roleGroup.roleName,
+        assignments: roleGroup.assignments
       }))
       .sort((a, b) => a.roleName.localeCompare(b.roleName, 'de'));
-
-     */
   }
 
   makeStringFromBoolean(confirmed: boolean | null) {
