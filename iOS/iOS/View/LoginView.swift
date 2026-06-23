@@ -32,7 +32,7 @@ struct LoginView: View {
     }
 
     func login() {
-        let issuer = URL(string: "http://localhost:8081/realms/demo")!
+        let issuer = URL(string: "http://localhost:8081/realms/instaff")!
 
         OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
 

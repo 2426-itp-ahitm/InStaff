@@ -50,12 +50,12 @@ public class JwtRequestFilter implements ContainerRequestFilter {
         Log.info("Using keycloakUrl = " + keycloakUrl);
         /* old version for production
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://it210157.cloud.htl-leonding.ac.at/auth/realms/demo"))
+                .uri(new URI("https://it210157.cloud.htl-leonding.ac.at/auth/realms/instaff"))
                 .GET()
                 .build();
          */
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(this.keycloakUrl + "/realms/demo"))
+                .uri(new URI(this.keycloakUrl + "/realms/instaff"))
                 .GET()
                 .build();
 

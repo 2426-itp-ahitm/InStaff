@@ -97,7 +97,7 @@ public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator 
                 .orElse("http://localhost:8081");
         String realm = ConfigProvider.getConfig()
                 .getOptionalValue("keycloak.realm", String.class)
-                .orElse("demo");
+                .orElse("instaff");
 
         String normalizedBaseUrl = keycloakUrl.replaceAll("/$", "");
         URI realmUri = URI.create(normalizedBaseUrl + "/realms/" + realm);

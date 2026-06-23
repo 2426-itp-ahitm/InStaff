@@ -1,6 +1,6 @@
 {
   "id": "b24676ef-9f68-4390-ae74-3766c931d9a1",
-  "realm": "demo",
+  "realm": "instaff",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -66,7 +66,7 @@
         }
       ],
       "realmRoles": [
-        "default-roles-demo",
+        "default-roles-instaff",
         "user-is-manager"
       ],
       "clientRoles": {
@@ -74,6 +74,26 @@
           "realm-admin"
         ]
       }
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "username": "alihahn@outlook.at",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Alexander",
+      "lastName": "Hahn",
+      "email": "alihahn@outlook.at",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "internal",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-instaff",
+        "user-is-internal-admin"
+      ]
     },
     {
       "username": "service-account-backend",
@@ -102,7 +122,7 @@
       },
       {
         "id": "a11e6dc3-cbc2-42e0-825d-efa7edc8a495",
-        "name": "default-roles-demo",
+        "name": "default-roles-instaff",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -134,6 +154,15 @@
         "id": "f2c9b8e1-4b8a-4c9d-9d1a-111111111111",
         "name": "user-is-manager",
         "description": "Marks users with manager privileges",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "b24676ef-9f68-4390-ae74-3766c931d9a1",
+        "attributes": {}
+      },
+      {
+        "id": "f2c9b8e1-4b8a-4c9d-9d1a-222222222222",
+        "name": "user-is-internal-admin",
+        "description": "Marks internal InStaff admin users",
         "composite": false,
         "clientRole": false,
         "containerId": "b24676ef-9f68-4390-ae74-3766c931d9a1",
@@ -484,7 +513,7 @@
   ],
   "defaultRole": {
     "id": "a11e6dc3-cbc2-42e0-825d-efa7edc8a495",
-    "name": "default-roles-demo",
+    "name": "default-roles-instaff",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -559,13 +588,13 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/demo/account/",
+      "baseUrl": "/realms/instaff/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/demo/account/*"
+        "/realms/instaff/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -606,13 +635,13 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/demo/account/",
+      "baseUrl": "/realms/instaff/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/demo/account/*"
+        "/realms/instaff/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -1082,13 +1111,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/demo/console/",
+      "baseUrl": "/admin/instaff/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/demo/console/*"
+        "/admin/instaff/console/*"
       ],
       "webOrigins": [
         "+"

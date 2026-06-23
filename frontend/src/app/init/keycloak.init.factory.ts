@@ -6,7 +6,7 @@ export function initializeKeycloak(keycloak: KeycloakService):() => Promise<bool
     keycloak.init({
       config: {
         url: environment.keycloakUrl,
-        realm: 'demo',
+        realm: 'instaff',
         clientId: 'frontend',
       },
       initOptions: {

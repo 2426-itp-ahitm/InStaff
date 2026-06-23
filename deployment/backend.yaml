@@ -32,6 +32,6 @@ spec:
             - name: QUARKUS_DATASOURCE_PASSWORD
               value: demo
             - name: QUARKUS_OIDC_AUTH_SERVER_URL
-              value: http://keycloak:8081/realms/demo
+              value: http://keycloak:8081/realms/instaff
             - name: QUARKUS_OIDC_CLIENT_ID
               value: backend
