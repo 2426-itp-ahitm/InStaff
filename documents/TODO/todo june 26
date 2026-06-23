@@ -1,0 +1,26 @@
+1. Company Setup Component
+   Verantwortlich: Ali
+   Ziel: Neue Firma initial einrichten, inklusive Basisdaten, Rollen und optionalen Schichtvorlagen.
+
+2. FullCalendar v7 Integration
+   Verantwortlich: Tobi
+   Ziel: Schichten im Kalender anzeigen, erstellen, bearbeiten und löschen.
+
+3. Kleine Backend fixes: 
+    Verantwortlich: Phiz
+    Ziel:   
+        manager entfernen und Manager nur über employee.is_manager bzw. Keycloak-Gruppe abbilden.
+        reservation entweder vollständig ins Backend aufnehmen oder aus der DB entfernen, falls nicht mehr verwendet.
+        news entweder vollständig ins Backend aufnehmen oder entfernen, falls nicht mehr verwendet.
+        Boolean-Typen in DTOs vereinheitlichen.
+        Für assignment.status klar definieren, welche Enum-Werte existieren, z. B. ASSIGNED, REQUESTED, ACCEPTED, DECLINED, OPEN.
+
+4. Hosting und Systemtests
+   Verantwortlich: Philip Parrhofer, mit Berni
+   Ziel: Frontend, Backend, Datenbank und Keycloak gemeinsam lauffähig bereitstellen und testen.
+
+5. Wiederholende Schichten
+   Ziel: Schichten automatisch für mehrere Tage oder Wochen erzeugen.
+
+6. Automatische Besetzung
+   Ziel: Mehrere benötigte Mitarbeiter pro Position automatisch oder halbautomatisch passenden Mitarbeitern zuordnen.
