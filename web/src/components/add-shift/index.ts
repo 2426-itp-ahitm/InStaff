@@ -1,1 +1,0 @@
-import "./add-shift-component";

@@ -1,1 +1,0 @@
-import "./manager-list-component"

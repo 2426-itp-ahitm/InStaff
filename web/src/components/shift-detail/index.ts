@@ -1,1 +1,0 @@
-import "./shift-detail-component"
