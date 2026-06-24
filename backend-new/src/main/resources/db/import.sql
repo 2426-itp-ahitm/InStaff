@@ -1,7 +1,7 @@
 /* COMPANY */
-insert into company (id, company_name)
+insert into company (id, company_name, uid_number, public_email, public_telephone, address, location_name, contact_person_name, contact_person_email, contact_person_telephone, status)
 values
-    (1, 'Leondinger Wirt');
+    (1, 'Leondinger Wirt', 'ATU12345678', 'office@leondinger-wirt.at', '+43732701234', 'Stadtplatz 1, 4060 Leonding', 'Leondinger Wirt Hauptstandort', 'Bernhard Penkner', 'bernhard.penkner@instaff.at', '+436991234567', 'ACTIVE');
 
 /* ROLE */
 insert into role (id, role_name, description, company_id)
@@ -13,16 +13,18 @@ values
     (5, 'Spülkraft', 'Reinigt und sortiert das Geschirr', 1);
 
 /* EMPLOYEE */
-insert into employee (id, birthdate, email, firstname, lastname, telephone, company_id, is_manager, address, hourly_wage, is_active, is_self_managed)
+insert into employee (id, birthdate, email, firstname, lastname, telephone, keycloak_user_id, company_id, is_manager, address, hourly_wage, is_active, is_self_managed)
 values
-    (1, '2004-11-11 00:00:00', 'paul.mueller@instaff.at', 'Paul', 'Müller', '+436641234567', 1, false, 'Limesstraße 12, 4060 Leonding', 15, true, true),
-    (2, '2003-04-21 00:00:00', 'alexander.hahn@instaff.at', 'Alexander', 'Hahn', '+436601112233', 1, false, 'Stadtplatz 4, 4020 Linz', 16, true, true),
-    (3, '1998-06-15 00:00:00', 'grandma.schmid@instaff.at', 'Grandma', 'Schmid', '+436763334455', 1, false, 'Unionstraße 18, 4020 Linz', 17, true, false),
-    (4, '1985-02-27 00:00:00', 'bernhard.penkner@instaff.at', 'Bernhard', 'Penkner', '+436991234567', 1, true, 'Limesstraße 30, 4060 Leonding', 22, true, true),
-    (5, '1995-03-22 00:00:00', 'michael.brown@instaff.at', 'Michael', 'Brown', '+436504445566', 1, false, 'Hauptstraße 7, 4050 Traun', 15, true, true),
-    (6, '1992-08-17 00:00:00', 'sarah.jones@instaff.at', 'Sarah', 'Jones', '+436644443322', 1, false, 'Bahnhofstraße 11, 4020 Linz', 16, true, true),
-    (7, '1988-12-01 00:00:00', 'daniel.white@instaff.at', 'Daniel', 'White', '+436801234890', 1, false, 'Marktplatz 2, 4061 Pasching', 18, true, true),
-    (8, '1985-05-03 00:00:00', 'alois.ernst@instaff.at', 'Alois', 'Ernst', '+4306820235843', 1, true, 'Hofberg 18, 4020 Linz', 40, true, true);
+    (1, '2004-11-11', 'paul.mueller@instaff.at', 'Paul', 'Müller', '+436641234567', null, 1, false, 'Limesstraße 12, 4060 Leonding', 15, true, true),
+    (2, '2003-04-21', 'alexander.hahn@instaff.at', 'Alexander', 'Hahn', '+436601112233', null, 1, false, 'Stadtplatz 4, 4020 Linz', 16, true, true),
+    (3, '1998-06-15', 'grandma.schmid@instaff.at', 'Grandma', 'Schmid', '+436763334455', null, 1, false, 'Unionstraße 18, 4020 Linz', 17, true, false),
+    (4, '1985-02-27', 'bernhard.penkner@instaff.at', 'Bernhard', 'Penkner', '+436991234567', '11111111-1111-1111-1111-111111111111', 1, true, 'Limesstraße 30, 4060 Leonding', 22, true, true),
+    (5, '1995-03-22', 'michael.brown@instaff.at', 'Michael', 'Brown', '+436504445566', null, 1, false, 'Hauptstraße 7, 4050 Traun', 15, true, true),
+    (6, '1992-08-17', 'sarah.jones@instaff.at', 'Sarah', 'Jones', '+436644443322', null, 1, false, 'Bahnhofstraße 11, 4020 Linz', 16, true, true),
+    (7, '1988-12-01', 'daniel.white@instaff.at', 'Daniel', 'White', '+436801234890', null, 1, false, 'Marktplatz 2, 4061 Pasching', 18, true, true),
+    (8, '1985-05-03', 'alois.ernst@instaff.at', 'Alois', 'Ernst', '+4306820235843', null, 1, true, 'Hofberg 18, 4020 Linz', 40, true, true);
+
+update company set owner_employee_id = 4 where id = 1;
 
 /* SHIFT */
 insert into shift (id, shift_name, start_time, end_time, company_id)

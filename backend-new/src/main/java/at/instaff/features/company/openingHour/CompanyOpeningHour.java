@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
+@Entity
 public class CompanyOpeningHour extends PanacheEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")

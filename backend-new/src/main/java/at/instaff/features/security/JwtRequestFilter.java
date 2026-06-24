@@ -100,8 +100,36 @@ public class JwtRequestFilter implements ContainerRequestFilter {
             String username = jwt.getClaim("preferred_username").asString();
             String fullName = jwt.getClaim("given_name").asString();
 
+            List<String> userRoles = extractRoles(jwt);
+            boolean isInternalAdmin = userRoles.contains("user-is-internal-admin");
+
+            // Check @RolesAllowed
+            Set<String> requiredRoles = getRolesAllowed();
+            if (!requiredRoles.isEmpty() && Collections.disjoint(userRoles, requiredRoles)) {
+                contextAbort(requestContext, Response.Status.FORBIDDEN, "Missing required role");
+                return;
+            }
+
+            CustomSecurityContext securityContext = new CustomSecurityContext();
+            securityContext.fullName = fullName;
+            securityContext.username = username;
+            securityContext.roles = userRoles;
+            securityContext.keycloakUserId = keycloakUserId;
+
+            // This is for the filter to use internalAdminPrincipal - needed for admin operations like creating a company invite - if wrong the emp/manager principal is used
+            if(isInternalAdmin) {
+                InternalAdminPrincipal principal = new InternalAdminPrincipal(username, keycloakUserId);
+                securityContext.setPrincipal(principal);
+                requestContext.setSecurityContext(securityContext);
+                return;
+            }
+
             Employee employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class)
-                    .setParameter("kcId", keycloakUserId).getResultStream().findFirst().orElse(null);
+                    .setParameter("kcId", keycloakUserId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
             if (employee == null) {
                 // Activate this for the .http-files to work
                 //employee = em.createQuery("SELECT e FROM Employee e WHERE e.keycloakUserId = :kcId", Employee.class).setParameter("kcId", "11111111-1111-1111-1111-111111111111").getResultStream().findFirst().orElse(null);
@@ -112,26 +140,9 @@ public class JwtRequestFilter implements ContainerRequestFilter {
                 return;
             }
 
-            List<String> userRoles = extractRoles(jwt);
-
-            // Check @RolesAllowed
-            Set<String> requiredRoles = getRolesAllowed();
-            if (!requiredRoles.isEmpty() && Collections.disjoint(userRoles, requiredRoles)) {
-                contextAbort(requestContext, Response.Status.FORBIDDEN, "Missing requred role");
-                return;
-            }
-
             CustomPrincipal principal = new CustomPrincipal(username, employee.company.id, employee.id);
-
-            CustomSecurityContext securityContext = new CustomSecurityContext();
-            securityContext.fullName = fullName;
-            securityContext.username = username;
-            securityContext.roles = userRoles;
             securityContext.employeeId = employee.id;
-            securityContext.keycloakUserId = keycloakUserId;
-
             requestContext.setProperty("employee", employee);
-
             securityContext.setPrincipal(principal);
             requestContext.setSecurityContext(securityContext);
 

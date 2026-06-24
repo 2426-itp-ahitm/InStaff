@@ -1,0 +1,33 @@
+### Get access token (password)
+POST http://localhost:8081/realms/instaff/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&
+client_id=frontend&
+client_secret=backend-secret-instaff&
+username=alihahn@outlook.at&
+password=internal
+
+> {% client.global.set("access_token", response.body.access_token); %}
+
+### POST new company setup invite
+POST http://localhost:8080/api/admin/company-setup/invites
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "preliminaryCompanyName": "Wirt`z Bairing",
+  "recipientEmail": "michi@bairing.at"
+}
+
+### Resend company setup invite
+POST http://localhost:8080/api/admin/company-setup/invites/1/resend
+Authorization: Bearer {{access_token}}
+
+### GET all company invites
+GET http://localhost:8080/api/admin/company-setup/invites
+Authorization: Bearer {{access_token}}
+
+### GET all companies
+GET http://localhost:8080/api/companies/all
+Authorization: Bearer {{access_token}}
