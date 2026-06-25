@@ -33,6 +33,7 @@ export class MenuComponent implements OnInit {
   isMenuOpen: boolean=false
   employee?: Employee;
   isManager: boolean = false;
+  isInternalAdmin: boolean = false;
   userInitials: string = "";
 
   constructor(private eRef: ElementRef) {}
@@ -40,6 +41,15 @@ export class MenuComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const isLoggedIn = await this.keycloakService.isLoggedIn();
     if (!isLoggedIn) {
+      return;
+    }
+
+    const roles = this.keycloakOperationService.getUserRoles();
+    this.isManager = roles.includes('user-is-manager');
+    this.isInternalAdmin = roles.includes('user-is-internal-admin');
+
+    if (this.isInternalAdmin) {
+      this.userInitials = 'IA';
       return;
     }
 
@@ -55,14 +65,17 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  isAdmin(): boolean {
-    //return true;
-    return this.keycloakOperationService.getUserRoles().includes('user-is-manager');
+  getIsManager(): boolean {
+    return this.isManager;
+  }
+
+  isInternalAdminUser(): boolean {
+    return this.isInternalAdmin;
   }
 
   isEmployee(): boolean {
     const roles = this.keycloakOperationService.getUserRoles();
-    return !roles.includes('user-is-manager');
+    return !roles.includes('user-is-manager') && !roles.includes('user-is-internal-admin');
   }
 
   logout() {

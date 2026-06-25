@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeycloakService } from 'keycloak-angular'
-import is = jasmine.is;
 
 @Component({
   selector: 'app-dashboard-redirect',
@@ -14,7 +13,13 @@ export class DashboardRedirectComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const isManager = this.keycloakService.isUserInRole('user-is-manager')
-    const isEmployee = !isManager;
+    const isAdmin = this.keycloakService.isUserInRole('user-is-internal-admin')
+    const isEmployee = !isManager && !isAdmin;
+
+    if (isAdmin) {
+      await this.router.navigate(['/admin-home'])
+      return
+    }
 
     if (isManager) {
       await this.router.navigate(['/home'])
@@ -25,6 +30,7 @@ export class DashboardRedirectComponent implements OnInit {
       await this.router.navigate(['/emp-home'])
       return
     }
+
 
     await this.router.navigate(['/'])
   }

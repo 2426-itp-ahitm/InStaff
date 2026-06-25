@@ -2,7 +2,7 @@ import {switchMap, map, catchError} from 'rxjs/operators';
 import {inject, Injectable} from '@angular/core';
 import {Employee} from '../../interfaces/employee';
 import {forkJoin, Observable, BehaviorSubject, throwError, of} from 'rxjs';
-import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
 import {Role} from '../../interfaces/role';
 import {CompanyServiceService} from '../../services/company-service/company-service.service';
 import {ApiUrlService} from '../../services/api-url/api-url.service';
@@ -30,8 +30,9 @@ export class EmployeeServiceService {
 
   /* GET */
 
-  getAllEmployees(): void{
-    this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}`).subscribe(employees => this.employeesSubject.next(employees));
+  getAllEmployees(companyId?: number): void{
+    const options = companyId ? { params: new HttpParams().set('companyId', companyId) } : {};
+    this.httpClient.get<Employee[]>(`${this.getEmployeeApiUrl()}`, options).subscribe(employees => this.employeesSubject.next(employees));
   }
 
   getEmployeeById(id: number): Observable<Employee> {

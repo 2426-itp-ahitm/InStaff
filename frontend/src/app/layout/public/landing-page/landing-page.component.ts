@@ -26,7 +26,7 @@ export class LandingPageComponent {
     const isLoggedIn = await this.keycloakService.isLoggedIn();
 
     if(isLoggedIn) {
-      await this.router.navigate(['/home'])
+      await this.router.navigate(['/dashboard'])
       return
     }
 
@@ -35,7 +35,7 @@ export class LandingPageComponent {
 
   async login(): Promise<void> {
     await this.keycloakService.login({
-      redirectUri: window.location.origin + '/home'
+      redirectUri: window.location.origin + '/dashboard'
     });
   }
 

@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {CompanyOverview} from '../../interfaces/company-overview';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +10,8 @@ import { Injectable } from '@angular/core';
 export class CompanyServiceService {
 
   constructor() { }
+
+  httpClient: HttpClient = inject(HttpClient);
 
   private companyId: number = 1;
   public isDataLoaded: boolean = false;
@@ -27,5 +33,9 @@ export class CompanyServiceService {
 
   getDefaultEndingHour(){
     return this.defaultEndingHour;
+  }
+
+  getAllCompanies(): Observable<CompanyOverview[]> {
+    return this.httpClient.get<CompanyOverview[]>(`${environment.apiUrl}/companies/all`);
   }
 }

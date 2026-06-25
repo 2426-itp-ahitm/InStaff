@@ -2,9 +2,8 @@ package at.instaff.features.employee;
 
 import at.instaff.features.role.Role;
 import at.instaff.features.security.CustomPrincipal;
-import at.instaff.features.security.CustomSecurityContext;
+import at.instaff.features.security.InternalAdminPrincipal;
 import at.instaff.features.security.KeycloakAdminService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -12,7 +11,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
-import java.nio.file.attribute.UserPrincipal;
+import java.security.Principal;
 import java.util.List;
 
 @Path("employees")
@@ -21,9 +20,8 @@ public class EmployeeResource {
     KeycloakAdminService keycloakAdminService;
 
     @GET
-    public Response getAllEmployees(@Context SecurityContext sc) {
-        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-        long companyId = principal.getCompanyId();
+    public Response getAllEmployees(@Context SecurityContext sc, @QueryParam("companyId") Long requestedCompanyId) {
+        long companyId = resolveCompanyId(sc, requestedCompanyId);
 
         List<Employee> employees = Employee.list("company.id", companyId);
         return Response.ok(employees.stream().map(EmployeeDTO::toResource)).build();
@@ -165,5 +163,22 @@ public class EmployeeResource {
         employee.roles.remove(role);
         employee.persist();
         return Response.ok(EmployeeDTO.toResource(employee)).build();
+    }
+
+    private long resolveCompanyId(SecurityContext sc, Long requestedCompanyId) {
+        Principal principal = sc.getUserPrincipal();
+
+        if (principal instanceof CustomPrincipal customPrincipal) {
+            return customPrincipal.getCompanyId();
+        }
+
+        if (principal instanceof InternalAdminPrincipal) {
+            if (requestedCompanyId == null) {
+                throw new WebApplicationException("companyId is required for internal admins", Response.Status.BAD_REQUEST);
+            }
+            return requestedCompanyId;
+        }
+
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
 }

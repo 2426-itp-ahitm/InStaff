@@ -42,9 +42,8 @@ export class AuthGuard extends KeycloakAuthGuard {
       this.keycloakService.isUserInRole(role)
     )
 
-    // Manager role required but user is employee
     if (!hasRequiredRole) {
-      this.router.navigate(['/emp-home'])
+      this.router.navigate(['/dashboard'])
       return false
     }
 

@@ -51,7 +51,7 @@ export class PublicLayoutComponent implements AfterViewInit {
 
   async login(): Promise<void> {
     await this.keycloakService.login({
-      redirectUri: window.location.origin + '/home'
+      redirectUri: window.location.origin + '/dashboard'
     });
   }
 
@@ -59,7 +59,7 @@ export class PublicLayoutComponent implements AfterViewInit {
     const isLoggedIn = await this.keycloakService.isLoggedIn();
 
     if(isLoggedIn) {
-      await this.router.navigate(['/home'])
+      await this.router.navigate(['/dashboard'])
       return
     }
 

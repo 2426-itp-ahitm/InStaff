@@ -4,7 +4,7 @@ import {NotFoundComponent} from '../essentials/not-found/not-found.component';
 import {EmployeeListComponent} from '../employee/employee-list/employee-list.component';
 import {RoleListComponent} from '../role/role-list/role-list.component';
 import {ShiftTemplateListComponent} from '../shift-template/shift-template-list/shift-template-list.component';
-import {AdminComponent} from '../admin/admin.component';
+import {AllocationsComponent} from '../admin/allocations/allocations.component';
 import {AuthGuard} from '../guard/auth.guard';
 import {ProfilComponent} from '../essentials/profil/profil.component';
 import {ManagerDashboardComponent} from '../dashboard/manager-dashboard/manager-dashboard.component';
@@ -23,6 +23,8 @@ import {ShiftOverviewComponent} from '../shift/shift-overview/shift-overview.com
 import {
   OpenForRequestComponent
 } from '../essentials/open-for-request/open-for-request.component';
+import {AdminDashboardComponent} from '../dashboard/admin-dashboard/admin-dashboard.component';
+import {DashboardRedirectComponent} from '../layout/protected/dashboard-redirect/dashboard-redirect.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +44,12 @@ export const routes: Routes = [
     component: PrivateLayoutComponent,
     children: [
       {
+        path: 'dashboard',
+        component: DashboardRedirectComponent,
+        title: 'InStaff',
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'home',
         component: ManagerDashboardComponent,
         title: 'InStaff',
@@ -53,6 +61,13 @@ export const routes: Routes = [
         component: EmployeeDashboardComponent,
         title: 'InStaff',
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'admin-home',
+        component: AdminDashboardComponent,
+        title: 'InStaff',
+        canActivate: [AuthGuard],
+        data: {'rolesAllowed': ['user-is-internal-admin']}
       },
       {
         path: 'calendar',
@@ -101,11 +116,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'admin',
-        component: AdminComponent, //COMPONENT CLASS NAME
+        path: 'allocations',
+        component: AllocationsComponent,
         title: 'InStaff',
         canActivate: [AuthGuard],
-        data: {'rolesAllowed': ['user-is-manager']}
+        data: {'rolesAllowed': ['user-is-internal-admin']}
       },
       {
         path: 'wiki',

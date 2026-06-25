@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {CompanyServiceService} from '../company-service/company-service.service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Assignment} from '../../interfaces/assignment';
@@ -24,8 +24,23 @@ export class AssignmentServiceService {
     return this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/shift/${shiftId}`)
   }
 
-  getAssignmentsForEmployee(employeeId: number): void {
-    this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/employee/${employeeId}`)
+  getAssignments(companyId?: number): void {
+    const options = companyId ? { params: this.companyParams(companyId) } : {};
+    this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments`, options)
+      .pipe(
+        catchError(() => {
+          this.assignmentSubject.next([]);
+          return of([] as Assignment[]);
+        })
+      )
+      .subscribe((ass: Assignment[]) => {
+        this.assignmentSubject.next(ass)
+      })
+  }
+
+  getAssignmentsForEmployee(employeeId: number, companyId?: number): void {
+    const options = companyId ? { params: this.companyParams(companyId) } : {};
+    this.httpClient.get<Assignment[]>(`${this.getApiUrl()}/assignments/employee/${employeeId}`, options)
       .pipe(
         catchError(() => {
           this.assignmentSubject.next([]);
@@ -42,9 +57,10 @@ export class AssignmentServiceService {
     return this.httpClient.put<any>(url, {confirmed});
   }
 
-  confirmAssignment(assignmentId: number): Observable<any> {
+  confirmAssignment(assignmentId: number, companyId?: number): Observable<any> {
     const url = `${this.getApiUrl()}/assignments/${assignmentId}/confirm/true`;
-    return this.httpClient.put<any>(url, {});
+    const options = companyId ? { params: this.companyParams(companyId) } : {};
+    return this.httpClient.put<any>(url, {}, options);
   }
 
   createAssignment(assignment: AssignmentCreateSingleResponse): Observable<Assignment> {
@@ -55,9 +71,10 @@ export class AssignmentServiceService {
     return this.httpClient.put<Assignment>(`${this.getApiUrl()}/assignments/${assignmentId}`, assignment);
   }
 
-  declineAssignment(assignmentId: number): Observable<any> {
+  declineAssignment(assignmentId: number, companyId?: number): Observable<any> {
     const url = `${this.getApiUrl()}/assignments/${assignmentId}/confirm/false`;
-    return this.httpClient.put<any>(url, {});
+    const options = companyId ? { params: this.companyParams(companyId) } : {};
+    return this.httpClient.put<any>(url, {}, options);
   }
 
   deleteAssignment(id: number): Observable<void> {
@@ -70,6 +87,10 @@ export class AssignmentServiceService {
 
   private getApiUrl(): string {
     return this.apiUrl.getApiUrl();
+  }
+
+  private companyParams(companyId: number): HttpParams {
+    return new HttpParams().set('companyId', companyId);
   }
 
   getOpenAssignments(): void{

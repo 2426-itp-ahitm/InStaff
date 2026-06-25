@@ -3,6 +3,7 @@ package at.instaff.features.assignment;
 import at.instaff.features.employee.Employee;
 import at.instaff.features.role.Role;
 import at.instaff.features.security.CustomPrincipal;
+import at.instaff.features.security.InternalAdminPrincipal;
 import at.instaff.features.shift.Shift;
 import at.instaff.features.shift.ShiftDTO;
 import io.quarkus.logging.Log;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,9 +28,9 @@ public class AssignmentResource {
     AssignmentSocket assignmentSocket;
 
     @GET
-    public Response getAssignments(@Context SecurityContext sc) {
-        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-        List<Assignment> assignments = assignmentRepository.getByCompanyId(principal.getCompanyId());
+    public Response getAssignments(@Context SecurityContext sc, @QueryParam("companyId") Long requestedCompanyId) {
+        long companyId = resolveCompanyId(sc, requestedCompanyId);
+        List<Assignment> assignments = assignmentRepository.getByCompanyId(companyId);
         return Response.ok(assignments.stream().map(AssignmentDTO::toResource)).build();
     }
 
@@ -63,13 +65,17 @@ public class AssignmentResource {
 
     @GET
     @Path("/employee/{employeeId}")
-    public Response getAssignmentsByEmployee(@PathParam("employeeId") long employeeId, @Context SecurityContext sc) {
-        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
+    public Response getAssignmentsByEmployee(
+            @PathParam("employeeId") long employeeId,
+            @Context SecurityContext sc,
+            @QueryParam("companyId") Long requestedCompanyId
+    ) {
+        long companyId = resolveCompanyId(sc, requestedCompanyId);
         Employee employee = Employee.findById(employeeId);
         if (employee == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        if (employee.company.id != principal.getCompanyId()) {
+        if (employee.company.id != companyId) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         List<Assignment> assignments = Assignment.list("employee.id", employeeId);
@@ -84,24 +90,49 @@ public class AssignmentResource {
     @PUT
     @Path("/{id}/confirm/{isConfirmed}")
     @Transactional
-    public Response confirmAssignment(@PathParam("id") long id, @Context SecurityContext sc, @PathParam("isConfirmed") boolean isConfirmed) {
-        CustomPrincipal principal = (CustomPrincipal) sc.getUserPrincipal();
-
+    public Response confirmAssignment(
+            @PathParam("id") long id,
+            @Context SecurityContext sc,
+            @PathParam("isConfirmed") boolean isConfirmed,
+            @QueryParam("companyId") Long requestedCompanyId
+    ) {
         Assignment assignment = Assignment.findById(id);
         if (assignment == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        Employee employee = Employee.findById(principal.getEmployeeId());
+        Principal principal = sc.getUserPrincipal();
+
+        if (principal instanceof InternalAdminPrincipal) {
+            long companyId = requireAdminCompanyId(requestedCompanyId);
+            if (assignment.shift.company.id != companyId) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+            applyConfirmation(assignment, isConfirmed);
+            return Response.ok(AssignmentDTO.toResource(assignment)).build();
+        }
+
+        CustomPrincipal customPrincipal = (CustomPrincipal) principal;
+        Employee employee = Employee.findById(customPrincipal.getEmployeeId());
 
         boolean isManager = employee.isManager;
         boolean isOwner = assignment.employee != null
-                && assignment.employee.id == principal.getEmployeeId();
+                && assignment.employee.id == customPrincipal.getEmployeeId();
 
         if (!isManager && !isOwner) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
+        if (assignment.shift.company.id != customPrincipal.getCompanyId()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        applyConfirmation(assignment, isConfirmed);
+        return Response.ok(AssignmentDTO.toResource(assignment)).build();
+    }
+
+    private void applyConfirmation(Assignment assignment, boolean isConfirmed) {
         if (isConfirmed) {
             assignment.status = AssignmentStatus.CONFIRMED;
         } else {
@@ -111,8 +142,6 @@ public class AssignmentResource {
         assignment.seen = false;
         assignment.persist();
         assignmentSocket.broadcastAssignments(assignment);
-
-        return Response.ok(AssignmentDTO.toResource(assignment)).build();
     }
 
     @PUT
@@ -413,6 +442,28 @@ public class AssignmentResource {
                 && employee.roles != null
                 && role != null
                 && employee.roles.stream().anyMatch(r -> r != null && r.id == role.id);
+    }
+
+    private long resolveCompanyId(SecurityContext sc, Long requestedCompanyId) {
+        Principal principal = sc.getUserPrincipal();
+
+        if (principal instanceof CustomPrincipal customPrincipal) {
+            return customPrincipal.getCompanyId();
+        }
+
+        if (principal instanceof InternalAdminPrincipal) {
+            return requireAdminCompanyId(requestedCompanyId);
+        }
+
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
+    private long requireAdminCompanyId(Long requestedCompanyId) {
+        if (requestedCompanyId == null) {
+            throw new WebApplicationException("companyId is required for internal admins", Response.Status.BAD_REQUEST);
+        }
+
+        return requestedCompanyId;
     }
 
 }
