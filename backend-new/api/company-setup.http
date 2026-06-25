@@ -20,6 +20,11 @@ Authorization: Bearer {{access_token}}
   "recipientEmail": "michi@bairing.at"
 }
 
+> {%
+    client.global.set("setup_token", response.body.setupToken);
+    client.global.set("setup_password", response.body.setupPassword);
+%}
+
 ### Resend company setup invite
 POST http://localhost:8080/api/admin/company-setup/invites/1/resend
 Authorization: Bearer {{access_token}}
@@ -31,3 +36,92 @@ Authorization: Bearer {{access_token}}
 ### GET all companies
 GET http://localhost:8080/api/companies/all
 Authorization: Bearer {{access_token}}
+
+### Check if token is valid
+GET http://localhost:8080/api/company-setup/{{setup_token}}
+
+### Setup login with token and setup password
+POST http://localhost:8080/api/company-setup/{{setup_token}}/login
+Content-Type: application/json
+
+{
+  "password": "{{setup_password}}"
+}
+
+> {%
+    client.global.set("setup_session_token", response.body.setupSessionToken);
+ %}
+
+### Submit complete setup and create company
+POST http://localhost:8080/api/company-setup/company
+Content-Type: application/json
+X-Setup-Session: {{setup_session_token}}
+
+{
+  "company": {
+    "companyName": "Wirt'z Bairing",
+    "uidNumber": "ATU87654321",
+    "publicEmail": "office@bairing.at",
+    "publicTelephone": "+43732123456",
+    "address": "Bairing 1, 4209 Engerwitzdorf",
+    "locationName": "Wirt'z Bairing Hauptstandort",
+    "contactPersonName": "Michael Bairing",
+    "contactPersonEmail": "michi@bairing.at",
+    "contactPersonTelephone": "+436641234567"
+  },
+  "owner": {
+    "firstname": "Michael",
+    "lastname": "Bairing",
+    "email": "michi@bairing.at",
+    "telephone": "+436641234567",
+    "birthdate": "1990-01-01",
+    "roleNames": ["Service"],
+    "hourlyWage": 0,
+    "address": "Bairing 1, 4209 Engerwitzdorf"
+  },
+  "openingHours": {
+    "openingHours": [
+      { "weekday": "MONDAY", "isClosed": false, "startTime": "09:00", "endTime": "22:00" },
+      { "weekday": "TUESDAY", "isClosed": false, "startTime": "09:00", "endTime": "22:00" },
+      { "weekday": "WEDNESDAY", "isClosed": false, "startTime": "09:00", "endTime": "22:00" },
+      { "weekday": "THURSDAY", "isClosed": false, "startTime": "09:00", "endTime": "22:00" },
+      { "weekday": "FRIDAY", "isClosed": false, "startTime": "09:00", "endTime": "23:00" },
+      { "weekday": "SATURDAY", "isClosed": false, "startTime": "10:00", "endTime": "23:00" },
+      { "weekday": "SUNDAY", "isClosed": true, "startTime": null, "endTime": null }
+    ]
+  },
+  "legalConfirmation": {
+    "dataIsCorrect": true,
+    "authorizedToRegisterCompany": true,
+    "acceptedPrivacyPolicy": true,
+    "acceptedTerms": true
+  },
+  "roles": [
+    { "roleName": "Service", "description": "Bedient Gäste" },
+    { "roleName": "Küche", "description": "Bereitet Speisen zu" }
+  ],
+  "shiftTemplates": [
+    {
+      "shiftTemplateName": "Abendbetrieb",
+      "templateRoles": [
+        { "roleName": "Service", "count": 2 },
+        { "roleName": "Küche", "count": 1 }
+      ]
+    }
+  ],
+  "employees": [
+    {
+      "firstname": "Anna",
+      "lastname": "Muster",
+      "email": "anna.muster@bairing.at",
+      "telephone": "+436641111111",
+      "birthdate": "1998-05-10",
+      "roleNames": ["Service"],
+      "hourlyWage": 14.5,
+      "address": "Musterstraße 1, 4209 Engerwitzdorf",
+      "isManager": false,
+      "isActive": true,
+      "isSelfManaged": true
+    }
+  ]
+}

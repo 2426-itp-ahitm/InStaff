@@ -1,5 +1,6 @@
 package at.instaff.features.company;
 
+import at.instaff.features.companySetupInvite.CompanySetupInvite;
 import at.instaff.features.security.CustomPrincipal;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
@@ -37,11 +38,18 @@ public class CompanyResource {
     @Path("all")
     @RolesAllowed("user-is-internal-admin")
     public Response getCompanies() {
-        return Response.ok(
-                Company.findAll()
-                        .stream()
-                        .map(company -> CompanyDTO.toResource((Company) company))
-                        .toList()
-        ).build();
+        List<CompanyOverviewDTO> companies = new ArrayList<>();
+
+        Company.findAll()
+                .stream()
+                .map(company -> CompanyOverviewDTO.fromCompany((Company) company))
+                .forEach(companies::add);
+
+        CompanySetupInvite.find("company is null")
+                .stream()
+                .map(invite -> CompanyOverviewDTO.fromInvite((CompanySetupInvite) invite))
+                .forEach(companies::add);
+
+        return Response.ok(companies).build();
     }
 }

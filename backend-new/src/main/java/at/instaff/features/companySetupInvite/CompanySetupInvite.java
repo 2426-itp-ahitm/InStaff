@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -105,14 +103,26 @@ public class CompanySetupInvite extends PanacheEntity {
     }
 
     public boolean passwordMatches(String rawPassword, String storedHash) {
+        if (rawPassword == null || storedHash == null) {
+            return false;
+        }
+
         String[] parts = storedHash.split(":");
         if (parts.length != 3) {
             return false;
         }
 
-        int iterations = Integer.parseInt(parts[0]);
-        byte[] salt = Base64.getDecoder().decode(parts[1]);
-        byte[] expectedHash = Base64.getDecoder().decode(parts[2]);
+        int iterations;
+        byte[] salt;
+        byte[] expectedHash;
+
+        try {
+            iterations = Integer.parseInt(parts[0]);
+            salt = Base64.getDecoder().decode(parts[1]);
+            expectedHash = Base64.getDecoder().decode(parts[2]);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
 
         byte[] actualHash = pbkdf2(rawPassword, salt, iterations);
 
