@@ -1,0 +1,50 @@
+<div class="mx-6">
+  <div class="mb-6 flex flex-col gap-2">
+    <p class="text-sm font-medium uppercase tracking-wide text-green-base">Company Setup</p>
+    <h2 class="text-2xl font-semibold text-gray-900">Firmen Anfragen</h2>
+    <p class="text-sm text-gray-600">Übersicht aller offenen Company-Setup-Einladungen.</p>
+  </div>
+
+  @if (companyInvitesList.length > 0) {
+    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <tr>
+          <th class="px-5 py-3">Firma</th>
+          <th class="px-5 py-3">UID Nummer</th>
+          <th class="px-5 py-3">Öffentliche E-Mail</th>
+          <th class="px-5 py-3">Öffentliche Telefonnummer</th>
+          <th class="px-5 py-3">Kontaktperson</th>
+          <th class="px-5 py-3">Status</th>
+          <th class="px-5 py-3 text-right">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 text-gray-700">
+          @for (invite of companyInvitesList; track invite.id) {
+            <tr class="transition-colors hover:bg-gray-50">
+              <td class="px-5 py-4 font-medium text-gray-900">{{ invite.companyName || 'Noch leer' }}</td>
+              <td class="px-5 py-4 text-gray-400">{{ invite.uidNumber || 'Noch leer' }}</td>
+              <td class="px-5 py-4 text-gray-400">{{ invite.publicEmail || 'Noch leer' }}</td>
+              <td class="px-5 py-4 text-gray-400">{{ invite.publicTelephone || 'Noch leer' }}</td>
+              <td class="px-5 py-4">{{ invite.contactPersonEmail || 'Noch leer' }}</td>
+              <td class="px-5 py-4">
+                <span [class]="statusBadgeClasses(invite.status)">
+                  {{ statusLabel(invite.status) }}
+                </span>
+              </td>
+              <td class="py-4 pl-10 pr-5">
+                <div class="flex justify-end gap-1">
+                  <img class="icon-button !ml-0" src="/icons/info-white.png" alt="Mehr Info" width="36" height="36">
+                  <img class="icon-button !ml-0" src="/icons/edit-white.png" alt="Bearbeiten" width="36" height="36">
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>Keine Anfragen Verfügbar...</p>
+  }
+
+</div>

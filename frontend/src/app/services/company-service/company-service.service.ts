@@ -38,4 +38,6 @@ export class CompanyServiceService {
   getAllCompanies(): Observable<CompanyOverview[]> {
     return this.httpClient.get<CompanyOverview[]>(`${environment.apiUrl}/companies/all`);
   }
+
+
 }

@@ -1,0 +1,8 @@
+export enum CompanyStatus {
+  OPEN = 'OFFEN',
+  IN_PROGRESS = 'IN ARBEIT',
+  COMPLETED = 'ABGESCHLOSSEN',
+  DISABLED = 'DEAKTIVIERT',
+  DELETED = 'ENTFERNT',
+  LOCKED = 'GESPERRT'
+}

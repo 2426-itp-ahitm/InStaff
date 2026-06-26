@@ -25,6 +25,9 @@ import {
 } from '../essentials/open-for-request/open-for-request.component';
 import {AdminDashboardComponent} from '../dashboard/admin-dashboard/admin-dashboard.component';
 import {DashboardRedirectComponent} from '../layout/protected/dashboard-redirect/dashboard-redirect.component';
+import {NewCompanyInviteComponent} from '../company/new-company-invite/new-company-invite.component';
+import {CompanyInvitesListComponent} from '../company/company-invites-list/company-invites-list.component';
+import {CompanyListComponent} from '../company-list/company-list.component';
 
 export const routes: Routes = [
   {
@@ -131,7 +134,29 @@ export const routes: Routes = [
       {
         path: 'open-for-request',
         component: OpenForRequestComponent,
+        title: 'InStaff',
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'company-invite',
+        component: NewCompanyInviteComponent,
+        title: 'InStaff',
+        canActivate: [AuthGuard],
+        data: {'rolesAllowed': ['user-is-internal-admin']}
+      },
+      {
+        path: 'company-invites-list',
+        component: CompanyInvitesListComponent,
+        title: 'InStaff',
+        canActivate: [AuthGuard],
+        data: {'rolesAllowed': ['user-is-internal-admin']}
+      },
+      {
+        path: 'company-list',
+        component: CompanyListComponent,
+        title: 'InStaff',
+        canActivate: [AuthGuard],
+        data: {'rolesAllowed': ['user-is-internal-admin']}
       }
     ]
   },
