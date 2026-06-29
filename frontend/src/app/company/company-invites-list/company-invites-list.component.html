@@ -5,6 +5,52 @@
     <p class="text-sm text-gray-600">Übersicht aller offenen Company-Setup-Einladungen.</p>
   </div>
 
+  <div class="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold text-gray-900">Neue Firmen Anfrage erstellen</h3>
+      <p class="text-sm text-gray-600"></p>
+    </div>
+
+    <form [formGroup]="createInviteForm" (ngSubmit)="createInvite()" class="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-start">
+      <div>
+        <label for="preliminaryCompanyName" class="block text-sm/6 font-medium text-gray-900">Vorläufiger Firmenname</label>
+        <input
+          id="preliminaryCompanyName"
+          type="text"
+          formControlName="preliminaryCompanyName"
+          class="input-field-long"
+          placeholder="Firmenname"
+        >
+        <div class="mt-1 min-h-4">
+          @if (createInviteForm.controls.preliminaryCompanyName.touched && createInviteForm.controls.preliminaryCompanyName.invalid) {
+            <p class="text-xs text-red-600">Firmenname ist erforderlich und muss länger als 3 Zeichen sein.</p>
+          }
+        </div>
+      </div>
+
+      <div>
+        <label for="recipientEmail" class="block text-sm/6 font-medium text-gray-900">Empfänger E-Mail</label>
+        <input
+          id="recipientEmail"
+          type="email"
+          formControlName="recipientEmail"
+          class="input-field-long"
+          placeholder="E-Mail der Kontaktperson"
+        >
+        <div class="mt-1 min-h-4">
+          @if (createInviteForm.controls.recipientEmail.touched && createInviteForm.controls.recipientEmail.invalid) {
+            <p class="text-xs text-red-600">Bitte gib eine gültige E-Mail ein.</p>
+          }
+        </div>
+      </div>
+
+      <button type="submit" class="button-green">
+        Erstellen
+      </button>
+    </form>
+  </div>
+
+
   @if (companyInvitesList.length > 0) {
     <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <table class="w-full text-left text-sm">
@@ -34,8 +80,8 @@
               </td>
               <td class="py-4 pl-10 pr-5">
                 <div class="flex justify-end gap-1">
-                  <img class="icon-button !ml-0" src="/icons/info-white.png" alt="Mehr Info" width="36" height="36">
-                  <img class="icon-button !ml-0" src="/icons/edit-white.png" alt="Bearbeiten" width="36" height="36">
+                  <img class="icon-button !ml-0" src="/icons/info-white.png" alt="Mehr Info" width="36" height="36" (click)="alert('Not implemented yet')">
+                  <img class="icon-button !ml-0" src="/icons/edit-white.png" alt="Bearbeiten" width="36" height="36" (click)="alert('Not implemented yet')">
                 </div>
               </td>
             </tr>

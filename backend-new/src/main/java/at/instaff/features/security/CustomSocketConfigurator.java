@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -46,11 +47,13 @@ public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator 
             DecodedJWT jwt = verifier.verify(token);
 
             String keycloakUserId = jwt.getSubject();
+            List<String> roles = extractRoles(jwt);
 
             //Long companyId = extractCompanyId(keycloakUserId);
 
             //config.getUserProperties().put("companyId", companyId);
             config.getUserProperties().put("userId", keycloakUserId);
+            config.getUserProperties().put("roles", roles);
 
         } catch (Exception e) {
             System.err.println("WebSocket auth failed: " + e.getMessage());
@@ -89,6 +92,20 @@ public class CustomSocketConfigurator extends ServerEndpointConfig.Configurator 
         }
 
         return null;
+    }
+
+    private List<String> extractRoles(DecodedJWT jwt) {
+        JsonNode realmAccess = new ObjectMapper()
+                .valueToTree(jwt.getClaim("realm_access").asMap());
+        JsonNode roles = realmAccess.path("roles");
+
+        if (!roles.isArray()) {
+            return List.of();
+        }
+
+        List<String> extractedRoles = new ArrayList<>();
+        roles.forEach(role -> extractedRoles.add(role.asText()));
+        return extractedRoles;
     }
 
     private String fetchRealmPublicKey() throws IOException, InterruptedException {

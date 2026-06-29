@@ -38,11 +38,17 @@ public class CompanySetupInviteResource {
 
     private final MailService mailService;
     private final KeycloakAdminService keycloakAdminService;
+    private final CompanySetupInviteSocket companySetupInviteSocket;
 
     @Inject
-    public CompanySetupInviteResource(MailService mailService, KeycloakAdminService keycloakAdminService) {
+    public CompanySetupInviteResource(
+            MailService mailService,
+            KeycloakAdminService keycloakAdminService,
+            CompanySetupInviteSocket companySetupInviteSocket
+    ) {
         this.mailService = mailService;
         this.keycloakAdminService = keycloakAdminService;
+        this.companySetupInviteSocket = companySetupInviteSocket;
     }
 
     @GET
@@ -74,6 +80,7 @@ public class CompanySetupInviteResource {
         String setupLink = "http://localhost:4200/newCompany/" + setupInvite.setupToken;
 
         mailService.sendCompanySetupInvite(setupInvite.recipientEmail, setupLink, setupPassword);
+        broadcastInviteList();
 
         return Response.status(Response.Status.CREATED).entity(CompanySetupInviteResponseDTO.toResource(setupInvite, setupPassword)).build();
     }
@@ -112,6 +119,7 @@ public class CompanySetupInviteResource {
         String setupLink = "http://localhost:4200/newCompany/" + setupInvite.setupToken;
 
         mailService.sendCompanySetupInvite(setupInvite.recipientEmail, setupLink, setupPassword);
+        broadcastInviteList();
 
         return Response.ok(CompanySetupInviteResponseDTO.toResource(setupInvite, setupPassword)).build();
     }
@@ -135,6 +143,8 @@ public class CompanySetupInviteResource {
             setupInvite.company.status = CompanyStatus.DISABLED;
         }
 
+        broadcastInviteList();
+
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
@@ -156,6 +166,8 @@ public class CompanySetupInviteResource {
         if (setupInvite.company != null) {
             setupInvite.company.status = CompanyStatus.DISABLED;
         }
+
+        broadcastInviteList();
 
         return Response.status(Response.Status.ACCEPTED).build();
     }
@@ -207,12 +219,15 @@ public class CompanySetupInviteResource {
                     .build();
         }
 
+        boolean inviteStatusResetAfterExpiredLock = false;
+
         if (setupInvite.lockedUntil != null) {
             setupInvite.failedAttempts = 0;
             setupInvite.lockedUntil = null;
             setupInvite.status = setupInvite.company == null
                     ? CompanySetupInviteStatus.OPEN
                     : CompanySetupInviteStatus.IN_PROGRESS;
+            inviteStatusResetAfterExpiredLock = true;
         }
 
         if (!setupInvite.passwordMatches(loginDTO.password(), setupInvite.setupPasswordHash)) {
@@ -221,10 +236,15 @@ public class CompanySetupInviteResource {
             if (setupInvite.failedAttempts >= MAX_FAILED_SETUP_LOGIN_ATTEMPTS) {
                 setupInvite.lockedUntil = LocalDateTime.now().plusMinutes(SETUP_LOGIN_LOCK_MINUTES);
                 setupInvite.status = CompanySetupInviteStatus.LOCKED;
+                broadcastInviteList();
 
                 return Response.status(Response.Status.UNAUTHORIZED)
                         .entity("Too many failed setup login attempts. Try again in 30 minutes.")
                         .build();
+            }
+
+            if (inviteStatusResetAfterExpiredLock) {
+                broadcastInviteList();
             }
 
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -234,6 +254,7 @@ public class CompanySetupInviteResource {
         setupInvite.lockedUntil = null;
 
         setupInvite.status = CompanySetupInviteStatus.IN_PROGRESS;
+        broadcastInviteList();
 
         CompanySetupSession existingSession = CompanySetupSession
                 .find("invite = ?1 and active = true", setupInvite)
@@ -301,8 +322,13 @@ public class CompanySetupInviteResource {
         invite.status = CompanySetupInviteStatus.COMPLETED;
         invite.completedAt = LocalDateTime.now();
         company.status = CompanyStatus.ACTIVE;
+        broadcastInviteList();
 
         return Response.status(Response.Status.CREATED).entity(CompanySetupDTO.toResource(invite)).build();
+    }
+
+    private void broadcastInviteList() {
+        companySetupInviteSocket.broadcastInvites();
     }
 
     private CompanySetupSession getValidSetupSession(String setupSessionToken) {

@@ -1,28 +1,79 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CompanyStatus} from '../../interfaces/company-status';
 import {AdminService} from '../../services/admin-service/admin.service';
 import {CompanyListDto} from '../../interfaces/company-list-dto';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CompanyInvite} from '../../interfaces/company-invite';
+import {CompanyInvitesWebsocketService} from '../company-invites-websocket-service/company-invites-websocket-service.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-company-invites-list',
-  imports: [],
+  imports: [
+    ReactiveFormsModule
+  ],
   templateUrl: './company-invites-list.component.html',
   styleUrl: './company-invites-list.component.css',
 })
-export class CompanyInvitesListComponent implements OnInit{
+export class CompanyInvitesListComponent implements OnInit, OnDestroy {
   adminService: AdminService = inject(AdminService);
+  companyInvitesWebsocketService: CompanyInvitesWebsocketService = inject(CompanyInvitesWebsocketService);
+  private companyInvitesSubscription?: Subscription;
+  private websocketSubscription?: Subscription;
 
   companyInvitesList: CompanyListDto[] = [];
+  createInviteForm = new FormGroup({
+    preliminaryCompanyName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)]
+    }),
+    recipientEmail: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email]
+    })
+  });
 
   CompanyStatus = CompanyStatus;
 
   ngOnInit() {
-    this.adminService.companyInviteList$.subscribe(companyInvites => {
+    this.companyInvitesSubscription = this.adminService.companyInviteList$.subscribe(companyInvites => {
       this.companyInvitesList = companyInvites;
       console.log(companyInvites)
     })
 
+    this.websocketSubscription = this.companyInvitesWebsocketService.companyInvites$.subscribe(companyInvites => {
+      this.adminService.setCompanyInvites(companyInvites);
+    });
+
     this.adminService.getAllCompanyInvites();
+    this.companyInvitesWebsocketService.connect();
+  }
+
+  ngOnDestroy() {
+    this.companyInvitesSubscription?.unsubscribe();
+    this.websocketSubscription?.unsubscribe();
+    this.companyInvitesWebsocketService.disconnect();
+  }
+
+  createInvite(): void {
+    if (this.createInviteForm.invalid) {
+      this.createInviteForm.markAllAsTouched();
+      alert('Bitte fülle Firmenname und eine gültige E-Mail aus.');
+      return;
+    }
+
+    const compInvite: CompanyInvite = {
+      preliminaryCompanyName: this.createInviteForm.value.preliminaryCompanyName || "Fehlgeschlagen",
+      recipientEmail: this.createInviteForm.value.recipientEmail || "wrong@email.com"
+    }
+
+    this.adminService.addNewCompanyInvite(compInvite).subscribe(
+      response => {
+        alert(JSON.stringify(response, null, 2));
+      }
+    )
+
+
   }
 
   statusBadgeClasses(status: CompanyStatus | string | null): string {
@@ -70,4 +121,6 @@ export class CompanyInvitesListComponent implements OnInit{
         return status || 'UNBEKANNT';
     }
   }
+
+  protected readonly alert = alert;
 }

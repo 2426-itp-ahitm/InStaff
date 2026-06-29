@@ -19,6 +19,10 @@ export class AdminService {
     this.httpClient.get<CompanyListDto[]>(`${environment.apiUrl}/admin/company-setup/invites`).subscribe(invites => this.companyInvitesListSubject.next(invites));
   }
 
+  setCompanyInvites(companyInvites: CompanyListDto[]): void {
+    this.companyInvitesListSubject.next(companyInvites);
+  }
+
   addNewCompanyInvite(companyInvite: CompanyInvite): Observable<CompanyInviteResponse> {
     return this.httpClient.post<CompanyInviteResponse>(`${environment.apiUrl}/admin/company-setup/invites`, companyInvite);
   }
