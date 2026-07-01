@@ -70,6 +70,7 @@ export class CompanyInvitesListComponent implements OnInit, OnDestroy {
     this.adminService.addNewCompanyInvite(compInvite).subscribe(
       response => {
         alert(JSON.stringify(response, null, 2));
+        this.createInviteForm.reset();
       }
     )
 

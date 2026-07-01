@@ -175,11 +175,24 @@ public class CompanySetupInviteResource {
     @GET
     @Path("/company-setup/{token}")
     @PermitAll
+    @Transactional
+    @Produces(MediaType.APPLICATION_JSON)
     public Response validateToken(@PathParam("token") String token) {
         CompanySetupInvite setupInvite = CompanySetupInvite.find("setupToken = ?1", token).firstResult();
 
         if (setupInvite == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        if (setupInvite.status == CompanySetupInviteStatus.LOCKED
+                && setupInvite.lockedUntil != null
+                && !setupInvite.lockedUntil.isAfter(LocalDateTime.now())) {
+            setupInvite.failedAttempts = 0;
+            setupInvite.lockedUntil = null;
+            setupInvite.status = setupInvite.company == null
+                    ? CompanySetupInviteStatus.OPEN
+                    : CompanySetupInviteStatus.IN_PROGRESS;
+            broadcastInviteList();
         }
 
         if (setupInvite.status != CompanySetupInviteStatus.OPEN
@@ -189,7 +202,7 @@ public class CompanySetupInviteResource {
                     .build();
         }
 
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(new CompanySetupTokenValidationDTO(true, setupInvite.preliminaryCompanyName)).build();
     }
 
     @POST

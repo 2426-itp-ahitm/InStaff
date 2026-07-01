@@ -28,6 +28,7 @@ import {DashboardRedirectComponent} from '../layout/protected/dashboard-redirect
 import {NewCompanyInviteComponent} from '../company/new-company-invite/new-company-invite.component';
 import {CompanyInvitesListComponent} from '../company/company-invites-list/company-invites-list.component';
 import {CompanyListComponent} from '../company-list/company-list.component';
+import {CompanySetupPageComponent} from '../company-setup/company-setup-page/company-setup-page.component';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,7 @@ export const routes: Routes = [
       { path: 'presentation', component: PresentationComponent},
       { path: 'presentation-edit', component: PresentationEditComponent},
       { path: 'login', component: LoginComponent },
+      { path: 'newCompany/:token', component: CompanySetupPageComponent },
     ]
   },
   {

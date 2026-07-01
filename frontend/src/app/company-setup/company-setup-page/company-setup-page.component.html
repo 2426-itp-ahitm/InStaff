@@ -1,0 +1,525 @@
+<div class="min-h-screen bg-main px-4 py-10">
+  <div class="mx-auto max-w-5xl">
+    <div class="mb-8 flex items-center gap-3">
+      <img src="/logo_bg_green.png" class="h-11 rounded-md bg-green-dark p-1" alt="InStaff">
+      <div>
+        <p class="text-sm font-medium uppercase tracking-wide text-green-base">Company Setup</p>
+        <h1 class="text-left text-3xl font-semibold text-gray-900 max-md:text-2xl">Willkommen bei InStaff</h1>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <p class="text-gray-600">Setup-Link wird geprüft...</p>
+      </div>
+    } @else if (completed) {
+      <div class="rounded-2xl border border-green-light bg-white p-8 text-center shadow-sm">
+        <p class="mb-2 text-sm font-medium uppercase tracking-wide text-green-base">Setup abgeschlossen</p>
+        <h2 class="mb-3 text-2xl font-semibold text-gray-900">Deine Firma wurde erfolgreich erstellt.</h2>
+        <p class="mb-6 text-gray-600">Du erhältst als Manager eine E-Mail für deinen InStaff-Zugang.</p>
+        <button type="button" class="button-green" (click)="router.navigate(['/'])">Zur Startseite</button>
+      </div>
+    } @else if (!tokenValid) {
+      <div class="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+        <p class="text-sm font-semibold text-red-700">Setup-Link nicht gültig</p>
+        <p class="mt-2 text-gray-600">{{ errorMessage }}</p>
+      </div>
+    } @else if (!loggedIn) {
+      <div class="mx-auto max-w-xl rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="mb-5">
+          <p class="text-sm font-medium uppercase tracking-wide text-green-base">Sicherheitsprüfung</p>
+          <h2 class="text-2xl font-semibold text-gray-900">Setup-Passwort eingeben</h2>
+          <p class="mt-2 text-sm text-gray-600">Das Passwort findest du in deiner Einladung per E-Mail.</p>
+        </div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="login()" class="space-y-4">
+          <div>
+            <label class="block text-sm/6 font-medium text-gray-900">Setup-Passwort</label>
+            <div class="mt-2 flex items-center justify-center gap-2 sm:gap-3">
+              @for (index of passwordCodeIndexes; track index) {
+                @if (index === 4) {
+                  <span class="px-1 text-2xl font-semibold text-gray-400">-</span>
+                }
+                <input
+                  #setupPasswordInput
+                  type="text"
+                  inputmode="text"
+                  autocomplete="one-time-code"
+                  maxlength="1"
+                  [formControlName]="'code' + index"
+                  class="h-14 w-12 rounded-lg border-2 border-gray-300 bg-white text-center text-2xl font-semibold uppercase text-gray-900 outline-none transition-all focus:border-green-base focus:ring-2 focus:ring-green-base/20 sm:h-16 sm:w-14"
+                  (input)="onPasswordInput($event, index)"
+                  (keydown)="onPasswordKeydown($event, index)"
+                  (paste)="onPasswordPaste($event)"
+                >
+              }
+            </div>
+            <div class="mt-1 min-h-5">
+              @if (passwordForm.touched && passwordForm.invalid) {
+                <p class="text-xs text-red-600">Bitte gib dein Setup-Passwort ein.</p>
+              }
+            </div>
+          </div>
+
+          @if (errorMessage) {
+            <p class="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{{ errorMessage }}</p>
+          }
+
+          <div class="flex justify-end">
+            <button type="submit" class="button-green">Setup starten</button>
+          </div>
+        </form>
+      </div>
+    } @else {
+      <div class="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div class="mb-4 flex items-center justify-between gap-4 max-md:flex-col max-md:items-start">
+          <div>
+            <p class="text-sm text-gray-500">Schritt {{ currentStepIndex + 1 }} von {{ steps.length }}</p>
+            <h2 class="text-2xl font-semibold text-gray-900">{{ currentStep.label }}</h2>
+          </div>
+          <p class="rounded-full bg-green-light/40 px-3 py-1 text-sm font-medium text-green-dark">{{ progressPercent }}%</p>
+        </div>
+
+        <div class="mb-5 h-2 overflow-hidden rounded-full bg-gray-100">
+          <div class="h-full rounded-full bg-green-base transition-all" [style.width.%]="progressPercent"></div>
+        </div>
+
+        <div class="grid gap-2 md:grid-cols-4">
+          @for (step of steps; track step.id; let stepIndex = $index) {
+            <button
+              type="button"
+              class="rounded-xl border px-3 py-2 text-left text-sm transition-all"
+              [class.border-green-base]="stepIndex === currentStepIndex"
+              [class.bg-green-base]="stepIndex === currentStepIndex"
+              [class.text-white]="stepIndex === currentStepIndex"
+              [class.border-gray-200]="stepIndex !== currentStepIndex"
+              [class.text-gray-600]="stepIndex !== currentStepIndex"
+              [class.opacity-50]="stepIndex > currentStepIndex"
+              (click)="goToStep(stepIndex)"
+            >
+              <span class="font-semibold">{{ stepIndex + 1 }}. {{ step.label }}</span>
+              @if (step.optional) {
+                <span class="block text-xs opacity-80">optional</span>
+              }
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <p class="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{{ errorMessage }}</p>
+      }
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        @if (currentStep.id === 'company') {
+          <form [formGroup]="companyForm" class="grid gap-4 md:grid-cols-2">
+            <div class="md:col-span-2">
+              <p class="mb-4 text-sm text-gray-600">Prüfe den vorgeschlagenen Firmennamen und ergänze die öffentlichen Firmendaten.</p>
+            </div>
+
+            <div>
+              <label for="companyName" class="block text-sm/6 font-medium text-gray-900">Firmenname</label>
+              <input id="companyName" formControlName="companyName" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'companyName')) { <p class="text-xs text-red-600">Firmenname ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="uidNumber" class="block text-sm/6 font-medium text-gray-900">UID-Nummer</label>
+              <input id="uidNumber" formControlName="uidNumber" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'uidNumber')) { <p class="text-xs text-red-600">UID-Nummer ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="publicEmail" class="block text-sm/6 font-medium text-gray-900">Öffentliche E-Mail</label>
+              <input id="publicEmail" type="email" formControlName="publicEmail" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'publicEmail')) { <p class="text-xs text-red-600">Gültige E-Mail erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="publicTelephone" class="block text-sm/6 font-medium text-gray-900">Öffentliche Telefonnummer</label>
+              <input id="publicTelephone" formControlName="publicTelephone" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'publicTelephone')) { <p class="text-xs text-red-600">Telefonnummer ist erforderlich.</p> }</div>
+            </div>
+
+            <div class="md:col-span-2">
+              <label for="address" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+              <input id="address" formControlName="address" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'address')) { <p class="text-xs text-red-600">Adresse ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="locationName" class="block text-sm/6 font-medium text-gray-900">Standortname</label>
+              <input id="locationName" formControlName="locationName" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'locationName')) { <p class="text-xs text-red-600">Standortname ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="contactPersonName" class="block text-sm/6 font-medium text-gray-900">Kontaktperson Name</label>
+              <input id="contactPersonName" formControlName="contactPersonName" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'contactPersonName')) { <p class="text-xs text-red-600">Kontaktperson ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="contactPersonEmail" class="block text-sm/6 font-medium text-gray-900">Kontaktperson E-Mail</label>
+              <input id="contactPersonEmail" type="email" formControlName="contactPersonEmail" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'contactPersonEmail')) { <p class="text-xs text-red-600">Gültige E-Mail erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="contactPersonTelephone" class="block text-sm/6 font-medium text-gray-900">Kontaktperson Telefonnummer</label>
+              <input id="contactPersonTelephone" formControlName="contactPersonTelephone" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(companyForm, 'contactPersonTelephone')) { <p class="text-xs text-red-600">Telefonnummer ist erforderlich.</p> }</div>
+            </div>
+          </form>
+        }
+
+        @if (currentStep.id === 'owner') {
+          <form [formGroup]="ownerForm" class="grid gap-4 md:grid-cols-2">
+            <div class="md:col-span-2">
+              <p class="mb-4 text-sm text-gray-600">Diese Person wird als erster Manager und Company Owner angelegt.</p>
+            </div>
+
+            <div>
+              <label for="ownerFirstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
+              <input id="ownerFirstname" formControlName="firstname" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'firstname')) { <p class="text-xs text-red-600">Vorname ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="ownerLastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
+              <input id="ownerLastname" formControlName="lastname" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'lastname')) { <p class="text-xs text-red-600">Nachname ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="ownerEmail" class="block text-sm/6 font-medium text-gray-900">E-Mail</label>
+              <input id="ownerEmail" type="email" formControlName="email" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'email')) { <p class="text-xs text-red-600">Gültige E-Mail erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="ownerTelephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
+              <input id="ownerTelephone" formControlName="telephone" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'telephone')) { <p class="text-xs text-red-600">Telefonnummer ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="ownerBirthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
+              <input id="ownerBirthdate" type="date" formControlName="birthdate" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'birthdate')) { <p class="text-xs text-red-600">Geburtsdatum ist erforderlich.</p> }</div>
+            </div>
+
+            <div>
+              <label for="ownerHourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
+              <input id="ownerHourlyWage" type="number" min="0" formControlName="hourlyWage" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'hourlyWage')) { <p class="text-xs text-red-600">Stundenlohn ist erforderlich.</p> }</div>
+            </div>
+
+            <div class="md:col-span-2">
+              <label for="ownerAddress" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+              <input id="ownerAddress" formControlName="address" class="input-field-long">
+              <div class="mt-1 min-h-5">@if (hasFieldError(ownerForm, 'address')) { <p class="text-xs text-red-600">Adresse ist erforderlich.</p> }</div>
+            </div>
+          </form>
+        }
+
+        @if (currentStep.id === 'openingHours') {
+          <div>
+            <div class="mb-5 rounded-xl bg-green-light/20 p-4 text-sm text-green-dark">
+              Wähle pro Wochentag eine Öffnungs- und Schließzeit in 30-Minuten-Schritten oder markiere den Tag als geschlossen.
+            </div>
+
+            <div class="space-y-3">
+              @for (openingHour of openingHourControls; track openingHour.controls['weekday'].value) {
+                <div [formGroup]="openingHour" class="grid items-center gap-3 rounded-xl border border-gray-200 p-4 md:grid-cols-[1fr_auto_1fr_1fr]">
+                  <p class="font-medium text-gray-900">{{ weekdays[$index].label }}</p>
+
+                  <label class="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" formControlName="isClosed" class="size-4 accent-green-base" (change)="toggleClosed(openingHour)">
+                    Geschlossen
+                  </label>
+
+                  <select formControlName="startTime" class="input-field-long" [disabled]="openingHour.controls['isClosed'].value">
+                    @for (time of timeOptions; track time) {
+                      <option [value]="time">{{ time }}</option>
+                    }
+                  </select>
+
+                  <select formControlName="endTime" class="input-field-long" [disabled]="openingHour.controls['isClosed'].value">
+                    @for (time of timeOptions; track time) {
+                      <option [value]="time">{{ time }}</option>
+                    }
+                  </select>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (currentStep.id === 'roles') {
+          <div>
+            <div class="mb-5 rounded-xl bg-green-light/20 p-4 text-sm text-green-dark">
+              Rollen beschreiben Tätigkeiten in deinem Unternehmen, z. B. Service, Küche oder Bar. Du kannst diesen Schritt auch leer lassen.
+            </div>
+
+            <form [formGroup]="roleForm" (ngSubmit)="addRole()" class="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-start">
+              <div>
+                <label for="roleName" class="block text-sm/6 font-medium text-gray-900">Rollenname</label>
+                <input id="roleName" formControlName="roleName" class="input-field-long" placeholder="Service">
+                <div class="mt-1 min-h-5">@if (hasFieldError(roleForm, 'roleName')) { <p class="text-xs text-red-600">Rollenname ist erforderlich.</p> }</div>
+              </div>
+
+              <div>
+                <label for="roleDescription" class="block text-sm/6 font-medium text-gray-900">Beschreibung</label>
+                <input id="roleDescription" formControlName="description" class="input-field-long" placeholder="Optional">
+                <div class="mt-1 min-h-5"></div>
+              </div>
+
+              <button type="submit" class="button-green">Rolle hinzufügen</button>
+            </form>
+
+            <div class="mt-5 grid gap-3 md:grid-cols-2">
+              @for (role of roles; track role.roleName) {
+                <div class="flex items-center justify-between rounded-xl border border-gray-200 p-4">
+                  <div>
+                    <p class="font-semibold text-gray-900">{{ role.roleName }}</p>
+                    <p class="text-sm text-gray-500">{{ role.description || 'Keine Beschreibung' }}</p>
+                  </div>
+                  <button type="button" class="button-decline" (click)="removeRole(role.roleName)">Entfernen</button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (currentStep.id === 'shiftTemplates') {
+          <div>
+            <div class="mb-5 rounded-xl bg-green-light/20 p-4 text-sm text-green-dark">
+              Schichtvorlagen helfen später beim schnellen Erstellen von Schichten. Sie sind optional und können Rollen mit Anzahl enthalten.
+            </div>
+
+            @if (roles.length === 0) {
+              <p class="mb-4 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-600">Noch keine Rollen vorhanden. Du kannst Schichtvorlagen auch später im System erstellen.</p>
+            }
+
+            <form [formGroup]="shiftTemplateForm" class="space-y-4">
+              <div>
+                <label for="shiftTemplateName" class="block text-sm/6 font-medium text-gray-900">Name der Schichtvorlage</label>
+                <input id="shiftTemplateName" formControlName="shiftTemplateName" class="input-field-long" placeholder="Abendbetrieb">
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+                <div>
+                  <label for="templateRoleName" class="block text-sm/6 font-medium text-gray-900">Rolle</label>
+                  <select id="templateRoleName" formControlName="roleName" class="input-field-long">
+                    <option value="">Rolle wählen</option>
+                    @for (role of roles; track role.roleName) {
+                      <option [value]="role.roleName">{{ role.roleName }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label for="templateRoleCount" class="block text-sm/6 font-medium text-gray-900">Anzahl</label>
+                  <input id="templateRoleCount" type="number" min="1" formControlName="count" class="input-field-long">
+                </div>
+
+                <button type="button" class="button-accept" (click)="addTemplateRole()" [disabled]="roles.length === 0">Rolle übernehmen</button>
+              </div>
+
+              @if (pendingTemplateRoles.length > 0) {
+                <div class="flex flex-wrap gap-2">
+                  @for (templateRole of pendingTemplateRoles; track templateRole.roleName) {
+                    <span class="inline-flex items-center gap-2 rounded-full bg-green-light/40 px-3 py-1 text-sm text-green-dark">
+                      {{ templateRole.roleName }} × {{ templateRole.count }}
+                      <button type="button" class="font-semibold" (click)="removeTemplateRole(templateRole.roleName)">×</button>
+                    </span>
+                  }
+                </div>
+              }
+
+              <button type="button" class="button-green" (click)="addShiftTemplate()">Schichtvorlage hinzufügen</button>
+            </form>
+
+            <div class="mt-5 space-y-3">
+              @for (template of shiftTemplates; track template.shiftTemplateName; let templateIndex = $index) {
+                <div class="flex items-center justify-between rounded-xl border border-gray-200 p-4">
+                  <div>
+                    <p class="font-semibold text-gray-900">{{ template.shiftTemplateName }}</p>
+                    <p class="text-sm text-gray-500">
+                      @if (template.templateRoles.length > 0) {
+                        @for (templateRole of template.templateRoles; track templateRole.roleName) {
+                          <span>{{ templateRole.roleName }} × {{ templateRole.count }} </span>
+                        }
+                      } @else {
+                        Keine Rollen hinterlegt
+                      }
+                    </p>
+                  </div>
+                  <button type="button" class="button-decline" (click)="removeShiftTemplate(templateIndex)">Entfernen</button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (currentStep.id === 'employees') {
+          <div>
+            <div class="mb-5 rounded-xl bg-green-light/20 p-4 text-sm text-green-dark">
+              Weitere Mitarbeiter sind optional. Der Manager aus dem vorherigen Schritt wird automatisch erstellt.
+            </div>
+
+            <form [formGroup]="employeeForm" class="grid gap-4 md:grid-cols-2">
+              <div>
+                <label for="employeeFirstname" class="block text-sm/6 font-medium text-gray-900">Vorname</label>
+                <input id="employeeFirstname" formControlName="firstname" class="input-field-long">
+              </div>
+              <div>
+                <label for="employeeLastname" class="block text-sm/6 font-medium text-gray-900">Nachname</label>
+                <input id="employeeLastname" formControlName="lastname" class="input-field-long">
+              </div>
+              <div>
+                <label for="employeeEmail" class="block text-sm/6 font-medium text-gray-900">E-Mail</label>
+                <input id="employeeEmail" type="email" formControlName="email" class="input-field-long">
+              </div>
+              <div>
+                <label for="employeeTelephone" class="block text-sm/6 font-medium text-gray-900">Telefonnummer</label>
+                <input id="employeeTelephone" formControlName="telephone" class="input-field-long">
+              </div>
+              <div>
+                <label for="employeeBirthdate" class="block text-sm/6 font-medium text-gray-900">Geburtsdatum</label>
+                <input id="employeeBirthdate" type="date" formControlName="birthdate" class="input-field-long">
+              </div>
+              <div>
+                <label for="employeeHourlyWage" class="block text-sm/6 font-medium text-gray-900">Stundenlohn</label>
+                <input id="employeeHourlyWage" type="number" min="0" formControlName="hourlyWage" class="input-field-long">
+              </div>
+              <div class="md:col-span-2">
+                <label for="employeeAddress" class="block text-sm/6 font-medium text-gray-900">Adresse</label>
+                <input id="employeeAddress" formControlName="address" class="input-field-long">
+              </div>
+
+              <div class="grid gap-3 md:col-span-2 md:grid-cols-3">
+                <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" formControlName="isManager" class="size-4 accent-green-base"> Manager</label>
+                <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" formControlName="isActive" class="size-4 accent-green-base"> Aktiv</label>
+                <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" formControlName="isSelfManaged" class="size-4 accent-green-base"> Selbstverwaltet</label>
+              </div>
+
+              @if (roles.length > 0) {
+                <div class="md:col-span-2">
+                  <p class="mb-2 text-sm font-medium text-gray-900">Rollen</p>
+                  <div class="flex flex-wrap gap-3">
+                    @for (role of roles; track role.roleName) {
+                      <label class="flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                        <input
+                          type="checkbox"
+                          class="size-4 accent-green-base"
+                          [checked]="isEmployeeRoleSelected(role.roleName)"
+                          (change)="toggleEmployeeRole(role.roleName, $any($event.target).checked)"
+                        >
+                        {{ role.roleName }}
+                      </label>
+                    }
+                  </div>
+                </div>
+              }
+
+              <div class="md:col-span-2">
+                <button type="button" class="button-green" (click)="addEmployee()">Mitarbeiter hinzufügen</button>
+              </div>
+            </form>
+
+            <div class="mt-5 space-y-3">
+              @for (employee of employees; track employee.email; let employeeIndex = $index) {
+                <div class="flex items-center justify-between rounded-xl border border-gray-200 p-4">
+                  <div>
+                    <p class="font-semibold text-gray-900">{{ employee.firstname }} {{ employee.lastname }}</p>
+                    <p class="text-sm text-gray-500">{{ employee.email }} · {{ employee.roleNames.length ? employee.roleNames.join(', ') : 'Keine Rollen' }}</p>
+                  </div>
+                  <button type="button" class="button-decline" (click)="removeEmployee(employeeIndex)">Entfernen</button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (currentStep.id === 'legal') {
+          <form [formGroup]="legalForm" class="space-y-4">
+            <p class="rounded-xl bg-green-light/20 p-4 text-sm text-green-dark">Bitte bestätige die rechtlichen Punkte. Alle Checkboxen sind Pflicht.</p>
+
+            <label class="flex gap-3 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+              <input type="checkbox" formControlName="dataIsCorrect" class="mt-1 size-4 accent-green-base">
+              Die eingegebenen Unternehmensdaten sind korrekt.
+            </label>
+            <label class="flex gap-3 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+              <input type="checkbox" formControlName="authorizedToRegisterCompany" class="mt-1 size-4 accent-green-base">
+              Ich bin berechtigt, dieses Unternehmen für InStaff zu registrieren.
+            </label>
+            <label class="flex gap-3 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+              <input type="checkbox" formControlName="acceptedPrivacyPolicy" class="mt-1 size-4 accent-green-base">
+              Ich akzeptiere die Datenschutzerklärung.
+            </label>
+            <label class="flex gap-3 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+              <input type="checkbox" formControlName="acceptedTerms" class="mt-1 size-4 accent-green-base">
+              Ich akzeptiere die Nutzungsbedingungen.
+            </label>
+          </form>
+        }
+
+        @if (currentStep.id === 'summary') {
+          <div class="space-y-5">
+            <p class="text-sm text-gray-600">Bitte prüfe deine Angaben. Nach dem Abschluss wird deine Firma aktiv erstellt.</p>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Unternehmen</p>
+                <p class="text-sm text-gray-600">{{ companyForm.controls.companyName.value }}</p>
+                <p class="text-sm text-gray-600">{{ companyForm.controls.address.value }}</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Manager</p>
+                <p class="text-sm text-gray-600">{{ ownerForm.controls.firstname.value }} {{ ownerForm.controls.lastname.value }}</p>
+                <p class="text-sm text-gray-600">{{ ownerForm.controls.email.value }}</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Rollen</p>
+                <p class="text-sm text-gray-600">{{ roles.length ? roles.length + ' eingerichtet' : 'Nicht eingerichtet, kann später nachgeholt werden.' }}</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Schichtvorlagen</p>
+                <p class="text-sm text-gray-600">{{ shiftTemplates.length ? shiftTemplates.length + ' eingerichtet' : 'Nicht eingerichtet, kann später nachgeholt werden.' }}</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Mitarbeiter</p>
+                <p class="text-sm text-gray-600">{{ employees.length ? employees.length + ' zusätzlich eingerichtet' : 'Keine zusätzlichen Mitarbeiter.' }}</p>
+              </div>
+              <div class="rounded-xl border border-gray-200 p-4">
+                <p class="font-semibold text-gray-900">Öffnungszeiten</p>
+                <p class="text-sm text-gray-600">7 Wochentage eingerichtet.</p>
+              </div>
+            </div>
+
+            <label class="flex gap-3 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+              <input type="checkbox" class="mt-1 size-4 accent-green-base" [checked]="reviewConfirmed" (change)="reviewConfirmed = $any($event.target).checked">
+              Ich habe alle Daten geprüft und bestätige, dass sie korrekt sind.
+            </label>
+          </div>
+        }
+      </div>
+
+      <div class="mt-6 flex items-center justify-between">
+        <button type="button" class="button-cancel" (click)="previousStep()" [disabled]="currentStepIndex === 0">Zurück</button>
+
+        @if (currentStep.id === 'summary') {
+          <button type="button" class="button-green" (click)="submitSetup()" [disabled]="submitting || !reviewConfirmed">
+            {{ submitting ? 'Wird abgeschlossen...' : 'Setup abschließen' }}
+          </button>
+        } @else {
+          <button type="button" class="button-green" (click)="nextStep()">
+            {{ currentStep.optional ? 'Weiter / Überspringen' : 'Weiter' }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
