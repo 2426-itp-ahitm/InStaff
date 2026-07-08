@@ -40,7 +40,7 @@ Out of scope for v1:
 
 ## Dev Environment
 
-The app targets local development services through the Android emulator:
+Debug builds target local development services through the Android emulator:
 
 - Backend API: `http://10.0.2.2:8080/api`
 - Keycloak: `http://10.0.2.2:8081`
@@ -50,6 +50,21 @@ Make sure:
 - the Quarkus backend in `backend-new` is running
 - Keycloak from the local Docker setup is running
 - the emulator can reach both services on `10.0.2.2`
+
+## Release APK Environment
+
+Release builds target the deployed test environment for manual APK installation:
+
+- Backend API: `https://it210157.cloud.htl-leonding.ac.at/api/`
+- Keycloak: `https://it210157.cloud.htl-leonding.ac.at/auth`
+
+The URLs are defined as Gradle `BuildConfig` fields in `app/build.gradle.kts`.
+Changing the release target only requires updating the `release` build type values there.
+
+The Keycloak client `instaff-android` must allow the redirect URI
+`at.htlleonding.instaff://oauth2redirect`. The realm export already contains this client in
+`docker/keycloak/realm-export.json`, but existing Keycloak databases do not auto-update from that file;
+re-import the realm or update the client manually if prod was already running.
 
 ## Authentication
 
@@ -98,7 +113,7 @@ Unit tests cover:
 
 ## Known Limitations
 
-- Dev endpoints are hardcoded for emulator-based local development
+- Debug builds support emulator-based local development only
 - No offline mode or local data cache in v1
 - No push notifications in v1
 

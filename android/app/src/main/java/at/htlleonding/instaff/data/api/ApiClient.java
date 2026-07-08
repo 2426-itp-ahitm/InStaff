@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
+import at.htlleonding.instaff.BuildConfig;
 import at.htlleonding.instaff.R;
 import at.htlleonding.instaff.auth.AuthManager;
 import at.htlleonding.instaff.auth.SessionManager;
@@ -16,7 +17,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class ApiClient {
-    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+    // Defined per build type in app/build.gradle.kts so debug stays local and release points to production.
+    private static final String BASE_URL = BuildConfig.API_BASE_URL;
     private static ApiClient instance;
 
     private final InStaffApi api;
