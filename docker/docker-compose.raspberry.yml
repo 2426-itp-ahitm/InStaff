@@ -1,0 +1,46 @@
+# Raspberry Pi 5 (ARM64 / aarch64) compose file.
+#
+# Differences vs. docker-compose.yml:
+#   - keycloak  : unchanged  (quay.io/keycloak/keycloak:26.3.0 ships a native arm64 manifest)
+#   - postgres  : unchanged  (postgres:16-alpine is multi-arch, incl. arm64)
+#   - mailhog   : REPLACED   (mailhog/mailhog:v1.0.1 is amd64-only and unmaintained).
+#                 Swapped for axllent/mailpit, a maintained, arm64-native drop-in
+#                 that exposes the same SMTP (1025) and Web UI (8025) ports.
+#
+# Usage on the Pi:
+#   docker compose -f docker-compose.raspberry.yml up -d
+#
+services:
+  keycloak:
+    build: ./keycloak
+    container_name: instaff-keycloak
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes
+    depends_on:
+      - mailhog
+
+  # arm64-native replacement for MailHog. Container is still named "mailhog"
+  # and keeps the same ports so nothing else in the stack needs to change.
+  mailhog:
+    image: axllent/mailpit:latest
+    container_name: instaff-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  postgres:
+    container_name: instaff-postgres
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=demo
+      - POSTGRES_USER=demo
+      - POSTGRES_DB=demo
+
+volumes:
+  postgres:
