@@ -2,7 +2,12 @@
 FROM node:24-alpine as build
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build -- --configuration production  # or ng build if globally installed
+# Drop any copied node_modules and the (Windows-generated) lockfile so npm
+# re-resolves platform-specific optional native deps (e.g. lightningcss arm64-musl)
+# for the target architecture. Fixes "Cannot find module '../lightningcss.linux-arm64-musl.node'".
+RUN rm -rf node_modules package-lock.json \
+    && npm install \
+    && npm run build -- --configuration production
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
