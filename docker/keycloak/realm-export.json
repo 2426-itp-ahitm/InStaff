@@ -846,11 +846,11 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "http://localhost:4200/*",
-        "https://it210157.cloud.htl-leonding.ac.at/*"
+        "https://philip-pfarrhofer.at/*"
       ],
       "webOrigins": [
         "http://localhost:4200",
-        "https://it210157.cloud.htl-leonding.ac.at"
+        "https://philip-pfarrhofer.at"
       ],
       "notBefore": 0,
       "bearerOnly": false,

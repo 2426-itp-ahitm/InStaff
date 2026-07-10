@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: "https://it210157.cloud.htl-leonding.ac.at/api",
-  keycloakUrl: "https://it210157.cloud.htl-leonding.ac.at/auth",
-  wsUrl: "wss://it210157.cloud.htl-leonding.ac.at/api/ws",
+  apiUrl: "https://api.philip-pfarrhofer.at/api",
+  keycloakUrl: "https://auth.philip-pfarrhofer.at",
+  wsUrl: "wss://api.philip-pfarrhofer.at/api/ws",
 };

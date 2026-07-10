@@ -1,0 +1,81 @@
+# ---------------------------------------------------------------------------
+# InStaff — full stack for Raspberry Pi 5 (arm64 / aarch64), behind Cloudflare.
+#
+# Everything is BUILT LOCALLY on the Pi (do NOT use the pfarrhoferphilip/* images
+# from Docker Hub — those are amd64-only). All base images are arm64-native.
+#
+# Cloudflare tunnels expected:
+#   api.philip-pfarrhofer.at   -> localhost:8080   (backend)
+#   philip-pfarrhofer.at       -> localhost:4200   (frontend)
+#   auth.philip-pfarrhofer.at  -> localhost:8081   (keycloak)   <-- add this one
+#
+# Run from the repo root:
+#   docker compose -f docker-compose.pi.yml up -d --build
+# ---------------------------------------------------------------------------
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: instaff-postgres
+    environment:
+      POSTGRES_DB: demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    volumes:
+      - postgres:/var/lib/postgresql/data   # persistent — survives restarts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  keycloak:
+    build: ./docker/keycloak
+    container_name: instaff-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Public URL Keycloak advertises in issuer/redirects (v2 hostname).
+      KC_HOSTNAME: https://auth.philip-pfarrhofer.at
+      # Trust X-Forwarded-* from the Cloudflare tunnel so Keycloak knows it's HTTPS.
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8081:8080"
+    volumes:
+      - keycloak:/opt/keycloak/data       # persist users/realm across restarts
+    restart: unless-stopped
+
+  # arm64-native mail catcher (drop-in for MailHog). SMTP 1025, UI 8025.
+  mailhog:
+    image: axllent/mailpit:latest
+    container_name: instaff-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend-new
+    container_name: instaff-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    environment:
+      QUARKUS_PROFILE: prod                # activates the %prod.* config
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: instaff-frontend
+    ports:
+      - "4200:80"                          # nginx :80 -> host :4200
+    restart: unless-stopped
+
+volumes:
+  postgres:
+  keycloak:
