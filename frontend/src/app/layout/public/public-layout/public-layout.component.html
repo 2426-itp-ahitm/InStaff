@@ -49,9 +49,9 @@
         </p>
         <div class="mt-4">
           <p class="text-sm font-medium text-white">Kontakt</p>
-          <a href="mailto:instaff@office.at"
+          <a href="mailto:alexander.hahn1@outlook.de"
             class="text-sm text-green-light hover:text-white transition">
-            instaffoffice.at
+            alexander.hahn1@outlook.de
           </a>
         </div>
       </div>
@@ -59,9 +59,9 @@
       <div>
         <h3 class="text-lg font-semibold mb-3">Rechtliches</h3>
         <ul class="space-y-2 text-sm">
-          <li><a class="hover:text-green-light transition cursor-pointer">Impressum</a></li>
-          <li><a class="hover:text-green-light transition cursor-pointer">Datenschutzerklärung</a></li>
-          <li><a class="hover:text-green-light transition cursor-pointer">AGB</a></li>
+          <li><a routerLink="/impressum" class="hover:text-green-light transition cursor-pointer">Impressum</a></li>
+          <li><a routerLink="/datenschutzerklaerung" class="hover:text-green-light transition cursor-pointer">Datenschutzerklärung</a></li>
+          <li><a routerLink="/agb" class="hover:text-green-light transition cursor-pointer">AGB</a></li>
         </ul>
       </div>
       <!-- Navigation -->
@@ -96,4 +96,3 @@
 } @else {
   <router-outlet></router-outlet>
 }
-

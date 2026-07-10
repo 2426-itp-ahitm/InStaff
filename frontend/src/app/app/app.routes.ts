@@ -15,6 +15,9 @@ import {PublicLayoutComponent} from '../layout/public/public-layout/public-layou
 import {LandingPageComponent} from '../layout/public/landing-page/landing-page.component';
 import {FeaturesComponent} from '../layout/public/features/features.component';
 import {AboutUsComponent} from '../layout/public/about-us/about-us.component';
+import {ImpressumComponent} from '../layout/public/impressum/impressum.component';
+import {DatenschutzerklaerungComponent} from '../layout/public/datenschutzerklaerung/datenschutzerklaerung.component';
+import {AgbComponent} from '../layout/public/agb/agb.component';
 import {LoginComponent} from '../layout/public/login/login';
 import {PrivateLayoutComponent} from '../layout/private-layout/private-layout.component';
 import {PresentationComponent} from '../layout/public/presentation/presentation.component';
@@ -42,6 +45,9 @@ export const routes: Routes = [
       { path: 'presentation-edit', component: PresentationEditComponent},
       { path: 'login', component: LoginComponent },
       { path: 'newCompany/:token', component: CompanySetupPageComponent },
+      { path: 'impressum', component: ImpressumComponent, title: 'Impressum | InStaff' },
+      { path: 'datenschutzerklaerung', component: DatenschutzerklaerungComponent, title: 'Datenschutzerklärung | InStaff' },
+      { path: 'agb', component: AgbComponent, title: 'AGB | InStaff' },
     ]
   },
   {

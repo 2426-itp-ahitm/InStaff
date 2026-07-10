@@ -1,5 +1,5 @@
 import {Component, inject, AfterViewInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FeaturesComponent} from '../features/features.component';
 import {LandingPageComponent} from '../landing-page/landing-page.component';
 import {AboutUsComponent} from '../about-us/about-us.component';
@@ -13,7 +13,8 @@ import { NgClass } from '@angular/common';
     FeaturesComponent,
     LandingPageComponent,
     AboutUsComponent,
-    NgClass
+    NgClass,
+    RouterLink
 ],
   templateUrl: './public-layout.component.html',
   styleUrl: './public-layout.component.css'
