@@ -47,9 +47,10 @@ services:
     volumes:
       - keycloak:/opt/keycloak/data       # persist users/realm across restarts
     # Report "healthy" only once Keycloak is actually ready (realm imported, HTTP up).
-    # The image has no curl/wget, so we probe /health/ready via bash /dev/tcp on port 9000.
+    # The image has no curl/wget, so we probe /health/ready via bash's /dev/tcp on the
+    # management port 9000. We call bash explicitly (kc.sh needs it, so it's present).
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200 OK'"]
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/localhost/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200 OK'"]
       interval: 10s
       timeout: 5s
       retries: 30
