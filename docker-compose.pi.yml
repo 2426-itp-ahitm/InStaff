@@ -20,8 +20,12 @@ services:
       POSTGRES_DB: demo
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: demo
+      # Passed through to the init script that creates Keycloak's own database.
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
     volumes:
       - postgres:/var/lib/postgresql/data   # persistent — survives restarts
+      # Runs ONCE on first init of an empty volume: creates the "keycloak" database + user.
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U demo"]
       interval: 5s
@@ -32,9 +36,15 @@ services:
   keycloak:
     build: ./docker/keycloak
     container_name: instaff-keycloak
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      # --- Persistent store: Keycloak uses its own Postgres database ---
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
       # Public URL Keycloak advertises in issuer/redirects (v2 hostname).
       KC_HOSTNAME: https://auth.philip-pfarrhofer.at
       # Trust X-Forwarded-* from the Cloudflare tunnel so Keycloak knows it's HTTPS.
@@ -42,10 +52,12 @@ services:
       KC_HTTP_ENABLED: "true"
       # Enable /health endpoints (served on the management port 9000) for the healthcheck below.
       KC_HEALTH_ENABLED: "true"
+      # Master-realm admin, created once on first start against the empty Postgres DB.
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
     ports:
       - "8081:8080"
-    volumes:
-      - keycloak:/opt/keycloak/data       # persist users/realm across restarts
+    # No data volume: all realm/user state lives in Postgres now.
     # Report "healthy" only once Keycloak is actually ready (realm imported, HTTP up).
     # The image has no curl/wget, so we probe /health/ready via bash's /dev/tcp on the
     # management port 9000. We call bash explicitly (kc.sh needs it, so it's present).
@@ -89,4 +101,3 @@ services:
 
 volumes:
   postgres:
-  keycloak:
